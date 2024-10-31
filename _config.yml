@@ -18,15 +18,15 @@
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
 
-title: Your Name's Blog
-email: your-email@example.com
+title: Pramod's Blog
+email: goyalpramod1729@gmail.com
 description: >-
-  A personal blog about [your interests/topics]. Featuring detailed blogs, 
+  A space Machine Learning, Philosophy, Life and Food. Featuring detailed blogs, 
   personal notes, and interactive visualizations.
 baseurl: ""
-url: "https://yourusername.github.io"
-twitter_username: yourtwitterhandle
-github_username:  yourgithubusername
+url: "https://goyalpramod.github.io"
+twitter_username: goyal__pramod
+github_username:  goyalpramod
 
 # Build settings
 theme: minima
