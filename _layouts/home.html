@@ -4,56 +4,40 @@ layout: default
 
 <div class="container">
   <div class="row">
-    <div class="col-md-8">
-      <h1 class="mb-4">{{ page.title }}</h1>
-      {{ content }}
+    <div class="col-md-12">
+      <!-- About Me Section -->
+      <section class="mb-5">
+        <h1 class="mb-4">Hi, I'm Pramod</h1>
+        <p>I like to make art. Currently working <a href="https://twitter.com/joindimension" target="_blank">@joindimension</a> on LLM Orchestration.</p>
+        <p>In my free time I like to make educational content and dive more into the amazing mathematical world of AI.</p>
+        <p>You can find my thoughts in the blog section and my philosophy of life in Notes.</p>
+      </section>
 
+      <!-- Latest Blog Post Section -->
       {% if site.blogs.size > 0 %}
-        <h2 class="mt-5 mb-4">Latest Blog Posts</h2>
-        <ul class="list-unstyled">
-          {% for post in site.blogs limit:3 %}
-            <li class="mb-4">
-              <h3>
-                <a href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
-              </h3>
-              <p class="text-muted">
-                {{ post.date | date: "%B %-d, %Y" }} • 
-                {% capture words %}{{ post.content | number_of_words }}{% endcapture %}
-                {% unless words contains "-" %}
-                  {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
-                {% endunless %}
-              </p>
-              {% if site.show_excerpts %}
-                {{ post.excerpt }}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-        <p><a href="{{ "/blog" | relative_url }}">View all blog posts</a></p>
+      <section class="mb-5">
+        <h2 class="mb-4">Latest Post</h2>
+        {% assign latest_post = site.blogs | first %}
+        <div class="card">
+          <div class="card-body">
+            <h3 class="card-title">
+              <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title | escape }}</a>
+            </h3>
+            <p class="text-muted">
+              {{ latest_post.date | date: "%B %-d, %Y" }} • 
+              {% capture words %}{{ latest_post.content | number_of_words }}{% endcapture %}
+              {% unless words contains "-" %}
+                {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
+              {% endunless %}
+            </p>
+            {% if site.show_excerpts %}
+              {{ latest_post.excerpt }}
+            {% endif %}
+            <a href="{{ "/blog" | relative_url }}" class="btn btn-primary mt-3">View all posts</a>
+          </div>
+        </div>
+      </section>
       {% endif %}
-
-      {% if site.notes.size > 0 %}
-        <h2 class="mt-5 mb-4">Recent Notes</h2>
-        <ul class="list-unstyled">
-          {% for note in site.notes limit:3 %}
-            <li class="mb-4">
-              <h3>
-                <a href="{{ note.url | relative_url }}">{{ note.title | escape }}</a>
-              </h3>
-              <p class="text-muted">
-                Last updated: {{ note.last_modified_at | date: "%B %-d, %Y" }}
-              </p>
-              {% if site.show_excerpts %}
-                {{ note.excerpt }}
-              {% endif %}
-            </li>
-          {% endfor %}
-        </ul>
-        <p><a href="{{ "/notes" | relative_url }}">View all notes</a></p>
-      {% endif %}
-    </div>
-    <div class="col-md-4">
-      {% include sidebar.html %}
     </div>
   </div>
 </div>
