@@ -4,7 +4,7 @@ title: Blog
 permalink: /blog/
 ---
 
-Here you'll find all my detailed blog posts.
+Here you'll find blogs on multiple ML topics.
 
 <ul class="list-unstyled">
   {% for post in site.blogs %}
