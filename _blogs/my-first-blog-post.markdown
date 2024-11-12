@@ -17,6 +17,7 @@ And each follow an amazing pedigogy, Helping one understand a singluar concept f
 
 But this hindered my own learning process, hence I have created this blog. Which will do the following 
 
+<!-- add redirects to each section  -->
 * Give an intition of how transformers work 
 * Explain what each section of the paper means and how you can understand and implement it 
 * Code it down using PyTorch from a beginners perspective 
