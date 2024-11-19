@@ -1,6 +1,6 @@
 ---
 layout: blog
-title: "My First Blog Post"
+title: "Transformers Laid Out"
 date: 2024-03-15 12:00:00 +0530
 categories: [personal, technology]
 ---
@@ -62,10 +62,41 @@ Subsequently after each completed code block I will keep a FAQ section where I w
 
 ## Understanding the Transformer 
 
-Let us begin with a single sentence and work from there 
+The original transformers was made for machine translation task and that is what we shall do as well.
+We will try to translate from English to Hindi.
+
+Let us begin with a single sentence and work from there
 
 "I like Pizza", first the sentence is broken down into it's respective words* and each word is embedded using an embeddings matrix that is trained along with the transformer. 
 
+Now these positional information is added to these embeddings, 
+The reason we need to do this is because Transformers take all the information in parallel i.e. at once, so they lose the positional 
+information which RNN or LSTM capture. 
+
+And positional information is important because "I like Pizza" =/= "Pizza like I" (It just gets weirder with longer sentences)
+
+Now these embeddings are passed to an "encoder" block which essentially does two things 
+- Applies self-attention (about which we will be learning in the next section) to understand the relationship of individual words with respect to the other words present
+- {continue}
+
+
+The decoder block takes the output from the encoder, runs it through it self. Produces an ouput and sends it back to itself to create the next word
+
+think of it like this. 
+
+The encoder understands your language let's call it e and another language called z 
+The decoder understands z and the language you are trying to transfor e to, lets call it d. 
+
+So z acts as the common language that both the encoder and decoder speak to produce the final output. 
+
+
+## Understanding Self-attention
+
+
+
+## Understanding The Encoder and Decoder Block 
+
+## Coding the transformer
 
 
 
