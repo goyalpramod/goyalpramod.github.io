@@ -24,6 +24,7 @@ But this hindered my own learning process, hence I have created this blog. Which
 
 ![Meme](https://imgs.xkcd.com/comics/standards_2x.png)
 {add this as a foot note} meme taken from [xkcd](https://xkcd.com/)
+{change this to make there are 14 transformers tutorial}
 
 ## How to use this blog 
 
