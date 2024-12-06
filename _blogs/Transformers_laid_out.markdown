@@ -92,9 +92,55 @@ So z acts as the common language that both the encoder and decoder speak to prod
 
 ## Understanding Self-attention
 
+We have all heard of the famous trio, "Query, Key and Values". I absolutely lost my head trying to understand how the team came up behind this idea 
+Was Q,K,Y related to dictionaries? (or maps in traditional CS) Was it inspired by a previous paper? if so how did they come up with?
+
+Let us first build an intuition behind the convention (then get rid of this convention to make more sense of it)
+Sentence (S): "Pramod loves pizza"
+
+Questions:
+1. Who loves pizza?
+
+You can come up with as many Questions (the queries) for the sentence as you want.
+Now for each query, you will have one specific piece of information (the key) that will give you the desired answer (the value)
+
+Query:
+1. Q ->Who loves pizza?
+K -> pizza, Pramod, loves (it will actually have all the words with different degree of importance)
+V -> pizza (The value is not directly the answer, but a representation as a matrix of something similar to the answer)
+
+This is an over simplification really, but it helps understand that the queries, keys and values all can be created only using the sentences
+
+Let us simplify this, I will help you understand it the best way it helped me understand. 
+Forget Q,K,V. Lets just call them matrices for now. m1,m2 and m3. 
+
+{here just make a matrix}
+m1 -> matrix representing query 
+pramod: embedding  
+loves: embedding
+pizza: embedding
+
+m2 -> matrix representing keys 
+pramod:
+loves:
+pizza:
+
+m3 -> {I am not sure about this}
+
+Now forget multi-head attention, attention blocks and all the HUGE BIG JARGON. 
+Lets say you are in point A and want to go to B in a huge city 
+Do you think there is only one path to go their? of course not, there are thousands of way to reach that point 
+
+so a single matrix multiplication will obviously not get you the best representation of query and key 
+Multiple queries can be made, multiple keys can be done for each of these query 
+That is the reason we do so many matrix multiplication to try and get the best key for a query that is relevant to the question asked by the user 
+
+That is all the reason there is to it. Have a look at the different illustrations to better understand it. 
 
 
 ## Understanding The Encoder and Decoder Block 
+
+
 
 ## Coding the transformer
 
