@@ -90,6 +90,7 @@ The decoder understands z and the language you are trying to transfor e to, lets
 
 So z acts as the common language that both the encoder and decoder speak to produce the final output. 
 
+*We are using words for easier understanding, most modern LLMs do not work with words. But rather "Tokens"
 
 ## Understanding Self-attention
 
@@ -141,7 +142,23 @@ That is all the reason there is to it. Have a look at the different illustration
 
 ## Understanding The Encoder and Decoder Block 
 
+If everything so far has made sense, this is going to be a cake walk for you. Because this is where we put everything together.
 
+A single tranformer can have multiple encoder, as well as decoder blocks. 
+
+Let's start with the encoder part first. 
+
+Our input sentence is first converted into tokens
+
+Then it is embedded through the embeddings matrix, then the positional encoding is added.
+
+Now all the tokens are processed in parallel, they go through the first encoder block, then the second till the nth(n here being any arbitrary number of blocks defined by you) block
+
+What this tries to do is capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
+
+Then this final output is given to all the decoder blocks as they process the data, the decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input
+
+That is all the high level understanding you need to have, to be able to write a transformer of your own. Now let us look at the paper as well as the code 
 
 ## Coding the transformer
 
@@ -153,7 +170,6 @@ That is all the reason there is to it. Have a look at the different illustration
 
 
 
-*We are using words for easier understanding, most modern LLMs do not work with words. But rather "Tokens"
 
 
 
@@ -179,4 +195,5 @@ That is all the reason there is to it. Have a look at the different illustration
 
 
 
-P.S All the code as well as assests can be accessed from my github and are free to use and distribute, Consider citing this work though :)
+
+P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
