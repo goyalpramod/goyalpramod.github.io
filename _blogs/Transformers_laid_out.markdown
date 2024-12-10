@@ -162,16 +162,111 @@ That is all the high level understanding you need to have, to be able to write a
 
 ## Coding the transformer
 
+For the following section I will recommend you have 3 tabs open. This blog, a jupyter notebook 
+and the [original paper](https://arxiv.org/pdf/1706.03762)
+
+### Abstract & Introduction 
+
+This section brings you upto speed about what the paper is about and why it was made in the first place.
+
+There are some concepts that can help you learn new things, [RNNs](https://www.youtube.com/watch?v=AsNTP8Kwu80), [Convolution neural network](https://www.youtube.com/watch?v=HGwBXDKFk9I) and about [BLEU](https://en.wikipedia.org/wiki/BLEU).
+
+Also it is important to know that transformers were originally created for text to text translation. I.E from one language to another. 
+
+Hence they have an encoder section and a decoder section. They pass around information and it is known as cross attention (more on the difference between self-attention and cross attention later)
+
+### Background 
+
+This section usually talks about the work done previously in the field, known issues and what people have used to fix them. 
+One very important thing for us to understand to keep in mind is. 
+
+"Keeping track of distant information". Transformers are amazing for multitude of reasons but one key one is that they can remember distant relations.
+
+Solutions like RNNs and LSTMs lose the contextual meaning as the sentence gets longer. But transformers do not run into such problem. (A problem tho, hopefully none existent when you read it is. The context window length. This fixes how much information the transformer can see)
+
+### Model Architecture
+
+The section all of us had been waiting for. I will divert a bit from the paper here. Because I find it easier to follow the data.
+
+{here make the names clickable to the section}
+We will first start with the Multi-Head Attention, then the feed forward network, followed by the positional encoding, Using these we will finish the Encoder Layer, subsequently we will move to the Decoder Layer, After which we will write the Encoder & Decoder block, and finally end it with writing the training loop for an entire Transformer on real world data.  
+
+The full notebook can be found [here](https://github.com/goyalpramod/transformer_from_scratch/blob/main/transformers.ipynb)
+
+![Image of a transformer](/assets/transformers.svg)
+
+Necessary imports 
+
+```python
+import math
+
+import torch
+import torch.nn as nn
+from torch.nn.functional import softmax
+```
+
+#### Multi-Head Attention 
+
+By now you should have good grasp of how attention works, so let us first start with coding the scaled dot-product attention (as MHA is basically multiple scaled dot-product stacked together). Reference section is 3.2.1 Scaled Dot-Product Attention
+
+```python 
+# try to finish this function on your own
+def scaled_dot_product_attention(query, key, value, mask=None):
+      """
+      Args:
+          query: (batch_size, num_heads, seq_len_q, d_k)
+          key: (batch_size, num_heads, seq_len_k, d_k)
+          value: (batch_size, num_heads, seq_len_v, d_v)
+          mask: Optional mask to prevent attention to certain positions
+      """
+      # get the size of d_k using the query or the key   
+
+      # calculate the attention score using the formula given. Be vary of the dimension of Q and K. And what you need to transpose to achieve the desired results.
+      
+      #YOUR CODE HERE
+
+      # hint 1: batch_size and num_heads should not change 
+      # hint 2: nXm @ mXn -> nXn, but you cannot do nXm @ nXm, the right dimension of the left matrix should match the left dimension of the right matrix. The easy way I visualize it is as, who face each other must be same
+
+      # add inf is a mask is given, This is used for the decoder layer. You can use help for this if you want to. I did!!
+      #YOUR CODE HERE
 
 
+      # get the attention weights by taking a softmax on the scores, again be wary of the dimensions. You do not want to take softmax of batch_size or num_heads. Only of the values. How can you do that? 
+      #YOUR CODE HERE
 
+      # return the attention by multiplying the attention weights with the Value (V)
+      #YOUR CODE HERE
 
+```
 
+```python
+# my implementation 
+def scaled_dot_product_attention(query, key, value, mask=None):
+      """
+      Args:
+          query: (batch_size, num_heads, seq_len_q, d_k)
+          key: (batch_size, num_heads, seq_len_k, d_k)
+          value: (batch_size, num_heads, seq_len_v, d_v)
+          mask: Optional mask to prevent attention to certain positions
+      """
+      # Shape checks
+      assert query.dim() == 4, f"Query should be 4-dim but got {query.dim()}-dim"
+      assert key.size(-1) == query.size(-1), "Key and query depth must be equal"
+      assert key.size(-2) == value.size(-2), "Key and value sequence length must be equal"
 
+      d_k = query.size(-1)
 
+      # Attention scores
+      scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(d_k)
 
+      if mask is not None:
+          scores = scores.masked_fill(mask == 0, float('-inf'))
 
+      attention_weights = softmax(scores, dim=-1)
 
+      return torch.matmul(attention_weights, value)
+```
 
 
 
