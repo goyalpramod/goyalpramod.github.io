@@ -405,6 +405,7 @@ class FeedForwardNetwork(nn.Module):
         dropout: dropout rate (default=0.1)
     """
     def __init__(self, d_model, d_ff, dropout=0.1):
+        super().__init__()
         #create a sequential ff model as mentioned in section 3.3
 
     def forward(self, x):
@@ -451,8 +452,67 @@ class FeedForwardNetwork(nn.Module):
         return self.model(x)
 ```
 
+#### Positional Encoding
 
+Section 3.5 
 
+```python
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_seq_length=5000):
+        super().__init__()
+
+        # Create matrix of shape (max_seq_length, d_model)
+        pe = torch.zeros(max_seq_length, d_model)
+
+        # Create position vector
+        position = torch.arange(0, max_seq_length).unsqueeze(1) # Shape: (max_seq_length, 1)
+
+        # Create division term
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+
+        # Compute positional encodings
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+
+        # Register buffer
+        self.register_buffer('pe', pe.unsqueeze(0))  # Shape: (1, max_seq_length, d_model)
+
+    def forward(self, x):
+        """
+        Args:
+            x: Tensor shape (batch_size, seq_len, d_model)
+        """
+        return x + self.pe[:, :x.size(1)]  # Add positional encoding up to sequence length
+```
+
+```python 
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_seq_length=5000):
+        super().__init__()
+
+        # Create matrix of shape (max_seq_length, d_model)
+        pe = torch.zeros(max_seq_length, d_model)
+
+        # Create position vector
+        position = torch.arange(0, max_seq_length).unsqueeze(1) # Shape: (max_seq_length, 1)
+
+        # Create division term
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+
+        # Compute positional encodings
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+
+        # Register buffer
+        self.register_buffer('pe', pe.unsqueeze(0))  # Shape: (1, max_seq_length, d_model)
+
+    def forward(self, x):
+        """
+        Args:
+            x: Tensor shape (batch_size, seq_len, d_model)
+        """
+        return x + self.pe[:, :x.size(1)]  # Add positional encoding up to sequence length
+```
 
 
 
