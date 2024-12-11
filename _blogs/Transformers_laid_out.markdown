@@ -278,7 +278,7 @@ def scaled_dot_product_attention(query, key, value, mask=None):
       return torch.matmul(attention_weights, value)
 ```
 
-Using this let us complete the MHA
+Using this let us complete the MHA, Section 3.2.2
 
 ```python
 class MultiHeadAttention(nn.Module):
@@ -302,28 +302,27 @@ class MultiHeadAttention(nn.Module):
       #YOUR IMPLEMENTATION HERE
 
     def forward(self, query, key, value, mask=None):
-      batch_size = query.size(0)
-      seq_len = query.size(1)
+      #get batch_size and sequence length
+      #YOUR CODE HERE
 
       # 1. Linear projections
-      Q = self.W_q(query)  # (batch_size, seq_len, d_model)
-      K = self.W_k(key)
-      V = self.W_v(value)
+      #YOUR CODE HERE
 
       # 2. Split into heads
-      Q = Q.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
-      K = K.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
-      V = V.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
+      #YOUR CODE HERE
 
       # 3. Apply attention
-      output = self.scaled_dot_product_attention(Q, K, V, mask)
+      #YOUR CODE HERE
 
       # 4. Concatenate heads
-      output = output.transpose(1, 2).contiguous().view(batch_size, seq_len, self.d_model)
+      #YOUR CODE HERE
 
       # 5. Final projection
-      return self.W_o(output)
+      #YOUR CODE HERE
 ```
+* I had a hard time understanding the difference between view and transpose. These 2 links should help you out, [When to use view,transpose & permute](https://www.reddit.com/r/learnmachinelearning/comments/17irzkc/why_do_we_use_view_and_then_transpose_when/) and [Difference between view & transpose](https://discuss.pytorch.org/t/different-between-permute-transpose-view-which-should-i-use/32916)
+* Contiguous and view, still eluded me. Till I read these, [Pytorch Internals](https://blog.ezyang.com/2019/05/pytorch-internals/) and [Contiguous & Non-Contiguous Tensor](https://medium.com/analytics-vidhya/pytorch-contiguous-vs-non-contiguous-tensor-view-understanding-view-reshape-73e10cdfa0dd)
+* [Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)
 
 ```python
 #my implementation
@@ -337,7 +336,6 @@ class MultiHeadAttention(nn.Module):
         self.d_k = d_model // num_heads  # Note: use integer division //
 
         # Create the learnable projection matrices
-        # Why do we need d_model -> d_model size for these?
         self.W_q = nn.Linear(d_model, d_model)
         self.W_k = nn.Linear(d_model, d_model)
         self.W_v = nn.Linear(d_model, d_model)
@@ -379,10 +377,6 @@ class MultiHeadAttention(nn.Module):
       V = self.W_v(value)
 
       # 2. Split into heads
-      # Your code: Q = Q.view(:,self.num_heads,:,self.d_k)
-      # Issues:
-      # 1. Missing batch_size
-      # 2. Incorrect dimension ordering
       Q = Q.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
       K = K.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
       V = V.view(batch_size, seq_len, self.num_heads, self.d_k).transpose(1, 2)
@@ -391,16 +385,104 @@ class MultiHeadAttention(nn.Module):
       output = self.scaled_dot_product_attention(Q, K, V, mask)
 
       # 4. Concatenate heads
-      # Your code: scaled_dot_product.view(:,:,d_model)
-      # Issues:
-      # 1. Need to transpose back
-      # 2. Need proper dimensions
       output = output.transpose(1, 2).contiguous().view(batch_size, seq_len, self.d_model)
 
       # 5. Final projection
-      # Your code: scaled_dot_product @ self.W_o.T
-      # Issues: Use the layer directly
       return self.W_o(output)
 ```
+
+#### Feed Forward Network
+
+Section 3.3
+
+```python
+class FeedForwardNetwork(nn.Module):
+    """Position-wise Feed-Forward Network
+
+    Args:
+        d_model: input/output dimension
+        d_ff: hidden dimension
+        dropout: dropout rate (default=0.1)
+    """
+    def __init__(self, d_model, d_ff, dropout=0.1):
+        #create a sequential ff model as mentioned in section 3.3
+
+    def forward(self, x):
+        """
+        Args:
+            x: Input tensor of shape (batch_size, seq_len, d_model)
+        Returns:
+            Output tensor of shape (batch_size, seq_len, d_model)
+        """
+        #YOUR CODE HERE
+```
+
+* [Dropout](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
+* [Where to put Dropout](https://stackoverflow.com/questions/46841362/where-dropout-should-be-inserted-fully-connected-layer-convolutional-layer)
+* [ReLU](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
+
+```python
+#my implementation
+class FeedForwardNetwork(nn.Module):
+    """Position-wise Feed-Forward Network
+
+    Args:
+        d_model: input/output dimension
+        d_ff: hidden dimension
+        dropout: dropout rate (default=0.1)
+    """
+    def __init__(self, d_model, d_ff, dropout=0.1):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.Linear(d_model, d_ff),
+            nn.ReLU(),
+            nn.Dropout(dropout),
+            nn.Linear(d_ff, d_model),
+            nn.Dropout(dropout)
+        )
+
+    def forward(self, x):
+        """
+        Args:
+            x: Input tensor of shape (batch_size, seq_len, d_model)
+        Returns:
+            Output tensor of shape (batch_size, seq_len, d_model)
+        """
+        return self.model(x)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Misc 
+Here are some resources and more information that can help you out in your journey which I could not decide where to put 
+
+[What is torch.nn really?](https://pytorch.org/tutorials/beginner/nn_tutorial.html)
+
+
+
+
+
+
+
+
+
+Congratulations for completing this tutorial/lesson/blog however you see it. It is by nature of human curosity that you must have a few questions now. 
+Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here in an FAQ section. 
+
+Cheers, 
+Pramod 
+
 
 P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
