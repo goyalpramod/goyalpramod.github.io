@@ -7,6 +7,8 @@ categories: [personal, technology]
 
 # Transformers Laid Out
 
+[STILL A WORK IN PROGRESS]
+
 I have encountered that there are mainly three types of blogs/videos/tutorials talking about transformers
 
 - Explaining how a transformer works (One of the best is [Jay Alammar's blog](https://jalammar.github.io/illustrated-transformer/))

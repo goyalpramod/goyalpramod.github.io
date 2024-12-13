@@ -4,7 +4,7 @@ title: About
 permalink: /about/
 ---
 <!-- Fix the link later -->
-Hi I am Pramod, I like to make art. Currently working [@joindimension]("https://twitter.com/joindimension") on LLM Orchestration 
+Hi I am Pramod, I like to make art. Currently working [@joindimension]("https://twitter.com/joindimension") on LLM Orchestration
 
 In my free time I like to make educational content and dive more into the amazing mathmatical world of AI
 
