@@ -123,7 +123,7 @@ Forget Q,K,V. Lets just call them matrices for now. m1,m2 and m3.
 
 {here just make a matrix}
 m1 -> matrix representing query
-pramod: embedding  
+pramod: embedding
 loves: embedding
 pizza: embedding
 
@@ -409,6 +409,7 @@ class FeedForwardNetwork(nn.Module):
     def __init__(self, d_model, d_ff, dropout=0.1):
         super().__init__()
         #create a sequential ff model as mentioned in section 3.3
+        #YOUR CODE HERE
 
     def forward(self, x):
         """
@@ -456,7 +457,34 @@ class FeedForwardNetwork(nn.Module):
 
 #### Positional Encoding
 
-Section 3.5 
+Section 3.5
+
+```python
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_seq_length=5000):
+        super().__init__()
+
+        # Create matrix of shape (max_seq_length, d_model)
+        #YOUR CODE HERE
+
+        # Create position vector
+        #YOUR CODE HERE
+
+        # Create division term
+        #YOUR CODE HERE
+
+        # Compute positional encodings
+        #YOUR CODE HERE
+
+        # Register buffer
+        #YOUR CODE HERE
+
+    def forward(self, x):
+        """
+        Args:
+            x: Tensor shape (batch_size, seq_len, d_model)
+        """
+```
 
 ```python
 class PositionalEncoding(nn.Module):
@@ -487,48 +515,519 @@ class PositionalEncoding(nn.Module):
         return x + self.pe[:, :x.size(1)]  # Add positional encoding up to sequence length
 ```
 
-```python 
-class PositionalEncoding(nn.Module):
-    def __init__(self, d_model, max_seq_length=5000):
+#### Encoder Layer
+
+```python
+class EncoderLayer(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
         super().__init__()
 
-        # Create matrix of shape (max_seq_length, d_model)
-        pe = torch.zeros(max_seq_length, d_model)
+        # 1. Multi-head attention
+        #YOUR CODE HERE
 
-        # Create position vector
-        position = torch.arange(0, max_seq_length).unsqueeze(1) # Shape: (max_seq_length, 1)
+        # 2. Layer normalization
+        #YOUR CODE HERE
 
-        # Create division term
-        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+        # 3. Feed forward
+        #YOUR CODE HERE
 
-        # Compute positional encodings
-        pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
+        # 4. Another layer normalization
+        #YOUR CODE HERE
 
-        # Register buffer
-        self.register_buffer('pe', pe.unsqueeze(0))  # Shape: (1, max_seq_length, d_model)
+        # 5. Dropout
+        #YOUR CODE HERE
 
-    def forward(self, x):
+    def forward(self, x, mask=None):
         """
         Args:
-            x: Tensor shape (batch_size, seq_len, d_model)
+            x: Input tensor of shape (batch_size, seq_len, d_model)
+            mask: Optional mask for padding
+        Returns:
+            x: Output tensor of shape (batch_size, seq_len, d_model)
         """
-        return x + self.pe[:, :x.size(1)]  # Add positional encoding up to sequence length
+        # 1. Multi-head attention with residual connection and layer norm
+        #YOUR CODE HERE
+
+        # 2. Feed forward with residual connection and layer norm
+        #YOUR CODE HERE
+        return x
+```
+
+
+```python
+class EncoderLayer(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
+        super().__init__()
+
+        # 1. Multi-head attention
+        self.mha = MultiHeadAttention(d_model,num_heads)
+
+        # 2. Layer normalization
+        self.layer_norm_1 = nn.LayerNorm(d_model)
+
+        # 3. Feed forward
+        self.ff = FeedForwardNetwork(d_model,d_ff)
+
+        # 4. Another layer normalization
+        self.layer_norm_2 = nn.LayerNorm(d_model)
+        # 5. Dropout
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, mask=None):
+        """
+        Args:
+            x: Input tensor of shape (batch_size, seq_len, d_model)
+            mask: Optional mask for padding
+        Returns:
+            x: Output tensor of shape (batch_size, seq_len, d_model)
+        """
+        # 1. Multi-head attention with residual connection and layer norm
+        # att_output = self.attention(...)
+        # x = x + att_output  # residual connection
+        # x = self.norm1(x)  # layer normalization
+        att_output = self.mha(x, x, x, mask)
+        x = self.dropout(x + att_output)  # Apply dropout after residual
+        x = self.layer_norm_1(x)
+
+        ff_output = self.ff(x)
+        x = self.dropout(x + ff_output)  # Apply dropout after residual
+        x = self.layer_norm_2(x)
+
+        # 2. Feed forward with residual connection and layer norm
+
+        return x
+```
+
+
+#### Decoder Layer
+
+```python
+class DecoderLayer(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
+        super().__init__()
+
+        # 1. Masked Multi-head attention
+        #YOUR CODE HERE
+
+        # 2. Layer norm for first sub-layer
+        #YOUR CODE HERE
+
+        # 3. Multi-head attention for cross attention with encoder output
+        # This will take encoder output as key and value
+        #YOUR CODE HERE
+
+        # 4. Layer norm for second sub-layer
+        #YOUR CODE HERE
+
+        # 5. Feed forward network
+        #YOUR CODE HERE
+
+        # 6. Layer norm for third sub-layer
+        #YOUR CODE HERE
+
+        # 7. Dropout
+        #YOUR CODE HERE
+
+    def forward(self, x, encoder_output, src_mask=None, tgt_mask=None):
+        """
+        Args:
+            x: Target sequence embedding (batch_size, target_seq_len, d_model)
+            encoder_output: Output from encoder (batch_size, source_seq_len, d_model)
+            src_mask: Mask for source padding
+            tgt_mask: Mask for target padding and future positions
+        """
+        # 1. Masked self-attention
+        # Remember: In decoder self-attention, query, key, value are all x
+        #YOUR CODE HERE
+```
+
+
+```python
+class DecoderLayer(nn.Module):
+    def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
+        super().__init__()
+
+        # 1. Masked Multi-head attention
+        self.mha_1 = MultiHeadAttention(d_model,num_heads)
+
+        # 2. Layer norm for first sub-layer
+        self.layer_norm_1 = nn.LayerNorm(d_model)
+
+        # 3. Multi-head attention for cross attention with encoder output
+        # This will take encoder output as key and value
+        self.mha_2 = MultiHeadAttention(d_model,num_heads)
+
+        # 4. Layer norm for second sub-layer
+        self.layer_norm_2 = nn.LayerNorm(d_model)
+
+        # 5. Feed forward network
+        self.ff = FeedForwardNetwork(d_model,d_ff)
+
+        # 6. Layer norm for third sub-layer
+        self.layer_norm_3 = nn.LayerNorm(d_model)
+
+        # 7. Dropout
+        self.dropout = nn.Dropout(dropout)
+
+    def forward(self, x, encoder_output, src_mask=None, tgt_mask=None):
+        """
+        Args:
+            x: Target sequence embedding (batch_size, target_seq_len, d_model)
+            encoder_output: Output from encoder (batch_size, source_seq_len, d_model)
+            src_mask: Mask for source padding
+            tgt_mask: Mask for target padding and future positions
+        """
+        # 1. Masked self-attention
+        # Remember: In decoder self-attention, query, key, value are all x
+        att_output = self.mha_1(x,x,x,tgt_mask)
+        x = self.dropout(x + att_output)
+        x = self.layer_norm_1(x)
+
+        att_output_2 = self.mha_2(x, encoder_output,encoder_output, src_mask)
+        x = self.dropout(x + att_output_2)
+        x = self.layer_norm_2(x)
+
+        ff_output = self.ff(x)
+        x = self.dropout(x + ff_output)
+        x = self.layer_norm_3(x)
+
+        return x
+```
+
+#### Encoder
+
+```python
+class Encoder(nn.Module):
+    def __init__(self,
+                 vocab_size,
+                 d_model,
+                 num_layers=6,
+                 num_heads=8,
+                 d_ff=2048,
+                 dropout=0.1,
+                 max_seq_length=5000):
+        super().__init__()
+
+        # 1. Input embedding
+        #YOUR CODE HERE
+
+        # 2. Positional encoding
+        #YOUR CODE HERE
+
+        # 3. Dropout
+        #YOUR CODE HERE
+
+        # 4. Stack of N encoder layers
+        #YOUR CODE HERE
+
+    def forward(self, x, mask=None):
+        """
+        Args:
+            x: Input tokens (batch_size, seq_len)
+            mask: Mask for padding positions
+        Returns:
+            encoder_output: (batch_size, seq_len, d_model)
+        """
+        # 1. Pass through embedding layer and scale
+        #YOUR CODE HERE
+
+        # 2. Add positional encoding and apply dropout
+        #YOUR CODE HERE
+
+        # 3. Pass through each encoder layer
+        #YOUR CODE HERE
+```
+
+```python
+class Encoder(nn.Module):
+    def __init__(self,
+                 vocab_size,
+                 d_model,
+                 num_layers=6,
+                 num_heads=8,
+                 d_ff=2048,
+                 dropout=0.1,
+                 max_seq_length=5000):
+        super().__init__()
+
+        # 1. Input embedding
+        self.embeddings = nn.Embedding(vocab_size, d_model)
+        self.scale = math.sqrt(d_model)
+
+        # 2. Positional encoding
+        self.pe = PositionalEncoding(d_model, max_seq_length)
+
+        # 3. Dropout
+        self.dropout = nn.Dropout(dropout)
+
+        # 4. Stack of N encoder layers
+        self.encoder_layers = nn.ModuleList([
+            EncoderLayer(d_model, num_heads, d_ff, dropout)
+            for _ in range(num_layers)
+        ])
+
+    def forward(self, x, mask=None):
+        """
+        Args:
+            x: Input tokens (batch_size, seq_len)
+            mask: Mask for padding positions
+        Returns:
+            encoder_output: (batch_size, seq_len, d_model)
+        """
+        # 1. Pass through embedding layer and scale
+        x = self.embeddings(x) * self.scale
+
+        # 2. Add positional encoding and apply dropout
+        x = self.dropout(self.pe(x))
+
+        # 3. Pass through each encoder layer
+        for layer in self.encoder_layers:
+            x = layer(x, mask)
+
+        return x
+```
+
+#### Decoder
+
+
+```python
+class Decoder(nn.Module):
+    def __init__(self,
+                 vocab_size,
+                 d_model,
+                 num_layers=6,
+                 num_heads=8,
+                 d_ff=2048,
+                 dropout=0.1,
+                 max_seq_length=5000):
+        super().__init__()
+
+        # 1. Output embedding
+        #YOUR CODE HERE
+
+        # 2. Positional encoding
+        #YOUR CODE HERE
+
+        # 3. Dropout
+        #YOUR CODE HERE
+
+        # 4. Stack of N decoder layers
+        #YOUR CODE HERE
+
+    def forward(self, x, encoder_output, src_mask=None, tgt_mask=None):
+        """
+        Args:
+            x: Target tokens (batch_size, target_seq_len)
+            encoder_output: Output from encoder (batch_size, source_seq_len, d_model)
+            src_mask: Mask for source padding
+            tgt_mask: Mask for target padding and future positions
+        Returns:
+            decoder_output: (batch_size, target_seq_len, d_model)
+        """
+        # 1. Pass through embedding layer and scale
+        #YOUR CODE HERE
+
+        # 2. Add positional encoding and dropout
+        #YOUR CODE HERE
+
+        # 3. Pass through each decoder layer
+        #YOUR CODE HERE
+```
+
+```python
+class Decoder(nn.Module):
+    def __init__(self,
+                 vocab_size,
+                 d_model,
+                 num_layers=6,
+                 num_heads=8,
+                 d_ff=2048,
+                 dropout=0.1,
+                 max_seq_length=5000):
+        super().__init__()
+
+        # 1. Output embedding
+        self.embeddings = nn.Embedding(vocab_size, d_model)
+        self.scale = math.sqrt(d_model)
+
+        # 2. Positional encoding
+        self.pe = PositionalEncoding(d_model, max_seq_length)
+
+        # 3. Dropout
+        self.dropout = nn.Dropout(dropout)
+
+        # 4. Stack of N decoder layers
+        self.decoder_layers = nn.ModuleList([
+            DecoderLayer(d_model, num_heads, d_ff, dropout)
+            for _ in range(num_layers)
+        ])
+
+    def forward(self, x, encoder_output, src_mask=None, tgt_mask=None):
+        """
+        Args:
+            x: Target tokens (batch_size, target_seq_len)
+            encoder_output: Output from encoder (batch_size, source_seq_len, d_model)
+            src_mask: Mask for source padding
+            tgt_mask: Mask for target padding and future positions
+        Returns:
+            decoder_output: (batch_size, target_seq_len, d_model)
+        """
+        # 1. Pass through embedding layer and scale
+        x = self.embeddings(x) * self.scale
+
+        # 2. Add positional encoding and dropout
+        x = self.dropout(self.pe(x))
+
+        # 3. Pass through each decoder layer
+        for layer in self.decoder_layers:
+            x = layer(x, encoder_output, src_mask, tgt_mask)
+
+        return x
+```
+
+#### Utility Code
+
+```python
+def create_padding_mask(seq):
+    """
+    Create mask for padding tokens (0s)
+    Args:
+        seq: Input sequence tensor (batch_size, seq_len)
+    Returns:
+        mask: Padding mask (batch_size, 1, 1, seq_len)
+    """
+    #YOUR CODE HERE
+
+def create_future_mask(size):
+    """
+    Create mask to prevent attention to future positions
+    Args:
+        size: Size of square mask (target_seq_len)
+    Returns:
+        mask: Future mask (1, 1, size, size)
+    """
+    # Create upper triangular matrix and invert it
+    #YOUR CODE HERE
+
+def create_masks(src, tgt):
+    """
+    Create all masks needed for training
+    Args:
+        src: Source sequence (batch_size, src_len)
+        tgt: Target sequence (batch_size, tgt_len)
+    Returns:
+        src_mask: Padding mask for encoder
+        tgt_mask: Combined padding and future mask for decoder
+    """
+    # 1. Create padding masks
+    #YOUR CODE HERE
+
+    # 2. Create future mask
+    #YOUR CODE HERE
+
+    # 3. Combine padding and future mask for target
+    # Both masks should be True for allowed positions
+    #YOUR CODE HERE
+```
+
+```python 
+
+```
+
+#### Transformer 
+
+```python
+class Transformer(nn.Module):
+    def __init__(self,
+                 src_vocab_size,
+                 tgt_vocab_size,
+                 d_model,
+                 num_layers=6,
+                 num_heads=8,
+                 d_ff=2048,
+                 dropout=0.1,
+                 max_seq_length=5000):
+        super().__init__()
+
+        # Pass all necessary parameters to Encoder and Decoder
+        #YOUR CODE HERE
+
+        # The final linear layer should project from d_model to tgt_vocab_size
+        #YOUR CODE HERE
+
+    def forward(self, src, tgt):
+        # Create masks for source and target
+        #YOUR CODE HERE
+
+        # Pass through encoder
+        #YOUR CODE HERE
+
+        # Pass through decoder
+        #YOUR CODE HERE
+
+        # Project to vocabulary size
+        #YOUR CODE HERE
+```
+
+```python
+class Transformer(nn.Module):
+    def __init__(self,
+                 src_vocab_size,
+                 tgt_vocab_size,
+                 d_model,
+                 num_layers=6,
+                 num_heads=8,
+                 d_ff=2048,
+                 dropout=0.1,
+                 max_seq_length=5000):
+        super().__init__()
+
+        # Pass all necessary parameters to Encoder and Decoder
+        self.encoder = Encoder(
+            src_vocab_size,
+            d_model,
+            num_layers,
+            num_heads,
+            d_ff,
+            dropout,
+            max_seq_length
+        )
+
+        self.decoder = Decoder(
+            tgt_vocab_size,
+            d_model,
+            num_layers,
+            num_heads,
+            d_ff,
+            dropout,
+            max_seq_length
+        )
+
+        # The final linear layer should project from d_model to tgt_vocab_size
+        self.final_layer = nn.Linear(d_model, tgt_vocab_size)
+
+    def forward(self, src, tgt):
+        # Create masks for source and target
+        src_mask, tgt_mask = create_masks(src, tgt)
+
+        # Pass through encoder
+        encoder_output = self.encoder(src, src_mask)
+
+        # Pass through decoder
+        decoder_output = self.decoder(tgt, encoder_output, src_mask, tgt_mask)
+
+        # Project to vocabulary size
+        output = self.final_layer(decoder_output)
+
+        # Note: Usually don't apply softmax here if using CrossEntropyLoss
+        # as it applies log_softmax internally
+        return output
 ```
 
 
 
-
-
-
-
-
-
-
-
-
-## Misc 
-Here are some resources and more information that can help you out in your journey which I could not decide where to put 
+## Misc
+Here are some resources and more information that can help you out in your journey which I could not decide where to put
 
 [What is torch.nn really?](https://pytorch.org/tutorials/beginner/nn_tutorial.html)
 
@@ -540,11 +1039,11 @@ Here are some resources and more information that can help you out in your journ
 
 
 
-Congratulations for completing this tutorial/lesson/blog however you see it. It is by nature of human curosity that you must have a few questions now. 
-Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here in an FAQ section. 
+Congratulations for completing this tutorial/lesson/blog however you see it. It is by nature of human curosity that you must have a few questions now.
+Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here in an FAQ section.
 
-Cheers, 
-Pramod 
+Cheers,
+Pramod
 
 
 P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
