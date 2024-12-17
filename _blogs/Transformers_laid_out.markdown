@@ -13,15 +13,17 @@ I have encountered that there are mainly three types of blogs/videos/tutorials t
 - Explaining the "Attention is all you need" paper ([The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/))
 - Coding tranformers in PyTorch ([Coding a ChatGPT Like Transformer From Scratch in PyTorch](https://www.youtube.com/watch?v=C9QSpl5nmrY))
 
-And each follow an amazing pedigogy, Helping one understand a singluar concept from multiple point of views.
+Each follows an amazing pedigogy, Helping one understand a singular concept from multiple point of views (This blog has been highly influenced by the above works)
 
-But this hindered my own learning process, as I constantly had to switch between different explanations to completely grasp the idea. Hence I have created this blog, which will do the following:
+Here I aim to:
 
 <!-- add redirects to each section  -->
 
 - Give an intition of how transformers work
 - Explain what each section of the paper means and how you can understand and implement it
 - Code it down using PyTorch from a beginners perspective
+
+All in one place.
 
 ![Meme](https://imgs.xkcd.com/comics/standards_2x.png)
 {add this as a foot note} meme taken from [xkcd](https://xkcd.com/)
@@ -46,7 +48,6 @@ class TransformerLRScheduler:
         """
         # Your code here
         # lrate = d_model^(-0.5) * min(step_num^(-0.5), step_num * warmup_steps^(-1.5))
-        # {add pytorch documentation links here}
 
     def step(self, step_num):
         """
@@ -55,19 +56,19 @@ class TransformerLRScheduler:
         # Your code here - implement the formula
 
 ```
+[documentation & helpful links here]
 
-I will recommend you copy this code block and try to implement that function by your self.
+I will recommend you copy these code blocks and try to implement that function by your self.
 
-To make it easier for you, before we start coding I will explain that part in detail, If you are still unable to solve it by yourself, come back and see my code implementation of that specific part.
+To make it easier, before we start coding I will explain that part in detail. If you are still unable to solve it, come back and see my implementation of that part.
 
 Subsequently after each completed code block I will keep a FAQ section where I will write down my own questions that I had while writing the transformer as well as some questions that I believe are important to understand the concepts.
 
 ## Understanding the Transformer
 
 The original transformers was made for machine translation task and that is what we shall do as well.
-We will try to translate from English to Hindi.
+We will try to translate "I like Pizza" from English to Hindi.
 
-Let us begin with a single sentence and work from there
 
 "I like Pizza", first the sentence is broken down into it's respective words\* and each word is embedded using an embeddings matrix that is trained along with the transformer.
 
