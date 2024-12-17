@@ -931,7 +931,53 @@ def create_masks(src, tgt):
 ```
 
 ```python 
+def create_padding_mask(seq):
+    """
+    Create mask for padding tokens (0s)
+    Args:
+        seq: Input sequence tensor (batch_size, seq_len)
+    Returns:
+        mask: Padding mask (batch_size, 1, 1, seq_len)
+    """
+    batch_size, seq_len = seq.shape
+    output = torch.eq(seq, 0).float()
+    return output.view(batch_size, 1, 1, seq_len)
 
+def create_future_mask(size):
+    """
+    Create mask to prevent attention to future positions
+    Args:
+        size: Size of square mask (target_seq_len)
+    Returns:
+        mask: Future mask (1, 1, size, size)
+    """
+    # Create upper triangular matrix and invert it
+    mask = torch.triu(torch.ones((1, 1, size, size)), diagonal=1) == 0
+    return mask
+
+def create_masks(src, tgt):
+    """
+    Create all masks needed for training
+    Args:
+        src: Source sequence (batch_size, src_len)
+        tgt: Target sequence (batch_size, tgt_len)
+    Returns:
+        src_mask: Padding mask for encoder
+        tgt_mask: Combined padding and future mask for decoder
+    """
+    # 1. Create padding masks
+    src_padding_mask = create_padding_mask(src)
+    tgt_padding_mask = create_padding_mask(tgt)
+
+    # 2. Create future mask
+    tgt_len = tgt.size(1)
+    tgt_future_mask = create_future_mask(tgt_len)
+
+    # 3. Combine padding and future mask for target
+    # Both masks should be True for allowed positions
+    tgt_mask = tgt_padding_mask & tgt_future_mask
+
+    return src_padding_mask, tgt_mask
 ```
 
 #### Transformer 
@@ -1023,9 +1069,620 @@ class Transformer(nn.Module):
         # as it applies log_softmax internally
         return output
 ```
+#### Utility code for Transformer
+
+```python
+class TransformerLRScheduler:
+    def __init__(self, optimizer, d_model, warmup_steps):
+        """
+        Args:
+            optimizer: Optimizer to adjust learning rate for
+            d_model: Model dimensionality
+            warmup_steps: Number of warmup steps
+        """
+        self.optimizer = optimizer
+        self.d_model = d_model
+        self.warmup_steps = warmup_steps
 
 
+    def step(self, step_num):
+        """
+        Update learning rate based on step number
+        """
+        # lrate = d_model^(-0.5) * min(step_num^(-0.5), step_num * warmup_steps^(-1.5))
+        #YOUR CODE HERE
 
+class LabelSmoothing(nn.Module):
+    def __init__(self, smoothing=0.1):
+        super().__init__()
+        self.smoothing = smoothing
+        self.confidence = 1.0 - smoothing
+
+    def forward(self, logits, target):
+        """
+        Args:
+            logits: Model predictions (batch_size, vocab_size) #each row of vocab_size contains probability score of each label
+            target: True labels (batch_size) #each row of batch size contains the index to the correct label
+        """
+        #Note: make sure to not save the gradients of these
+        # Create a soft target distribution
+        #create the zeros [0,0,...]
+        #fill with calculated value [0.000125..,0.000125...] (this is an arbitarary value for example purposes)
+        #add 1 to the correct index (read more on docs of pytorch)
+        return torch.mean(torch.sum(-true_dist * torch.log_softmax(logits, dim=-1), dim=-1)) #return cross entropy loss
+```
+
+```python
+class TransformerLRScheduler:
+    def __init__(self, optimizer, d_model, warmup_steps):
+        """
+        Args:
+            optimizer: Optimizer to adjust learning rate for
+            d_model: Model dimensionality
+            warmup_steps: Number of warmup steps
+        """
+        # Your code here
+        # lrate = d_model^(-0.5) * min(step_num^(-0.5), step_num * warmup_steps^(-1.5))
+        self.optimizer = optimizer
+        self.d_model = d_model
+        self.warmup_steps = warmup_steps
+
+
+    def step(self, step_num):
+        """
+        Update learning rate based on step number
+        """
+        # Your code here - implement the formula
+        lrate = torch.pow(self.d_model,-0.5)*torch.min(torch.pow(step_num,-0.5), torch.tensor(step_num) * torch.pow(self.warmup_steps,-1.5))
+
+class LabelSmoothing(nn.Module):
+    def __init__(self, smoothing=0.1):
+        super().__init__()
+        self.smoothing = smoothing
+        self.confidence = 1.0 - smoothing
+
+    def forward(self, logits, target):
+        """
+        Args:
+            logits: Model predictions (batch_size, vocab_size) #each row of vocab_size contains probability score of each label
+            target: True labels (batch_size) #each row of batch size contains the index to the correct label
+        """
+        vocab_size = logits.size(-1)
+        with torch.no_grad():
+            # Create a soft target distribution
+            true_dist = torch.zeros_like(logits) #create the zeros [0,0,...]
+            true_dist.fill_(self.smoothing / (vocab_size - 1)) #fill with calculated value [0.000125..,0.000125...] (this is an arbitarary value for example purposes)
+            true_dist.scatter_(1, target.unsqueeze(1), self.confidence) #add 1 to the correct index (read more on docs of pytorch)
+        return torch.mean(torch.sum(-true_dist * torch.log_softmax(logits, dim=-1), dim=-1)) #return cross entropy loss
+```
+
+#### Training transformers
+
+```python
+def train_transformer(model, train_dataloader, criterion, optimizer, scheduler, num_epochs, device='cuda'):
+    """
+    Training loop for transformer
+
+    Args:
+        model: Transformer model
+        train_dataloader: DataLoader for training data
+        criterion: Loss function (with label smoothing)
+        optimizer: Optimizer
+        scheduler: Learning rate scheduler
+        num_epochs: Number of training epochs
+    """
+    # 1. Setup
+    model = model.to(device)
+    model.train()
+
+    # For tracking training progress
+    total_loss = 0
+    all_losses = []
+
+    # 2. Training loop
+    for epoch in range(num_epochs):
+        print(f"Epoch {epoch + 1}/{num_epochs}")
+        epoch_loss = 0
+
+        for batch_idx, batch in enumerate(train_dataloader):
+            # Get source and target batches
+            src = batch['src'].to(device)
+            tgt = batch['tgt'].to(device)
+
+            # Create masks
+            src_mask, tgt_mask = create_masks(src, tgt)
+
+            # Prepare target for input and output
+            # Remove last token from target for input
+            tgt_input = tgt[:, :-1]
+            # Remove first token from target for output
+            tgt_output = tgt[:, 1:]
+
+            # Zero gradients
+            optimizer.zero_grad()
+
+            # Forward pass
+            outputs = model(src, tgt_input, src_mask, tgt_mask)
+
+            # Reshape outputs and target for loss calculation
+            outputs = outputs.view(-1, outputs.size(-1))
+            tgt_output = tgt_output.view(-1)
+
+            # Calculate loss
+            loss = criterion(outputs, tgt_output)
+
+            # Backward pass
+            loss.backward()
+
+            # Clip gradients
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
+            # Update weights
+            optimizer.step()
+            scheduler.step()
+
+            # Update loss tracking
+            epoch_loss += loss.item()
+
+            # Print progress every N batches
+            if batch_idx % 100 == 0:
+                print(f"Batch {batch_idx}, Loss: {loss.item():.4f}")
+
+        # Calculate average loss for epoch
+        avg_epoch_loss = epoch_loss / len(train_dataloader)
+        all_losses.append(avg_epoch_loss)
+        print(f"Epoch {epoch + 1} Loss: {avg_epoch_loss:.4f}")
+
+        # Save checkpoint
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': avg_epoch_loss,
+        }, f'checkpoint_epoch_{epoch+1}.pt')
+
+    return all_losses
+```
+
+```python
+def train_transformer(model, train_dataloader, criterion, optimizer, scheduler, num_epochs, device='cuda'):
+    """
+    Training loop for transformer
+
+    Args:
+        model: Transformer model
+        train_dataloader: DataLoader for training data
+        criterion: Loss function (with label smoothing)
+        optimizer: Optimizer
+        scheduler: Learning rate scheduler
+        num_epochs: Number of training epochs
+    """
+    # 1. Setup
+    model = model.to(device)
+    model.train()
+
+    # For tracking training progress
+    total_loss = 0
+    all_losses = []
+
+    # 2. Training loop
+    for epoch in range(num_epochs):
+        print(f"Epoch {epoch + 1}/{num_epochs}")
+        epoch_loss = 0
+
+        for batch_idx, batch in enumerate(train_dataloader):
+            # Get source and target batches
+            src = batch['src'].to(device)
+            tgt = batch['tgt'].to(device)
+
+            # Create masks
+            src_mask, tgt_mask = create_masks(src, tgt)
+
+            # Prepare target for input and output
+            # Remove last token from target for input
+            tgt_input = tgt[:, :-1]
+            # Remove first token from target for output
+            tgt_output = tgt[:, 1:]
+
+            # Zero gradients
+            optimizer.zero_grad()
+
+            # Forward pass
+            outputs = model(src, tgt_input, src_mask, tgt_mask)
+
+            # Reshape outputs and target for loss calculation
+            outputs = outputs.view(-1, outputs.size(-1))
+            tgt_output = tgt_output.view(-1)
+
+            # Calculate loss
+            loss = criterion(outputs, tgt_output)
+
+            # Backward pass
+            loss.backward()
+
+            # Clip gradients
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
+            # Update weights
+            optimizer.step()
+            scheduler.step()
+
+            # Update loss tracking
+            epoch_loss += loss.item()
+
+            # Print progress every N batches
+            if batch_idx % 100 == 0:
+                print(f"Batch {batch_idx}, Loss: {loss.item():.4f}")
+
+        # Calculate average loss for epoch
+        avg_epoch_loss = epoch_loss / len(train_dataloader)
+        all_losses.append(avg_epoch_loss)
+        print(f"Epoch {epoch + 1} Loss: {avg_epoch_loss:.4f}")
+
+        # Save checkpoint
+        torch.save({
+            'epoch': epoch,
+            'model_state_dict': model.state_dict(),
+            'optimizer_state_dict': optimizer.state_dict(),
+            'loss': avg_epoch_loss,
+        }, f'checkpoint_epoch_{epoch+1}.pt')
+
+    return all_losses
+```
+
+#### Setting up the Dataset and DataLoader
+
+```python
+import os
+import torch
+import spacy
+import urllib.request
+import zipfile
+from torch.utils.data import Dataset, DataLoader
+
+def download_multi30k():
+    """Download Multi30k dataset if not present"""
+    # Create data directory
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    # Download files if they don't exist
+    base_url = "https://raw.githubusercontent.com/multi30k/dataset/master/data/task1/raw/"
+    files = {
+        "train.de": "train.de.gz",
+        "train.en": "train.en.gz",
+        "val.de": "val.de.gz",
+        "val.en": "val.en.gz",
+        "test.de": "test_2016_flickr.de.gz",
+        "test.en": "test_2016_flickr.en.gz"
+    }
+
+    for local_name, remote_name in files.items():
+        filepath = f'data/{local_name}'
+        if not os.path.exists(filepath):
+            url = base_url + remote_name
+            urllib.request.urlretrieve(url, filepath + '.gz')
+            os.system(f'gunzip -f {filepath}.gz')
+
+def load_data(filename):
+    """Load data from file"""
+    with open(filename, 'r', encoding='utf-8') as f:
+        return [line.strip() for line in f]
+
+def create_dataset():
+    """Create dataset from files"""
+    # Download data if needed
+    download_multi30k()
+
+    # Load data
+    train_de = load_data('data/train.de')
+    train_en = load_data('data/train.en')
+    val_de = load_data('data/val.de')
+    val_en = load_data('data/val.en')
+
+    return (train_de, train_en), (val_de, val_en)
+
+class TranslationDataset(Dataset):
+    def __init__(self, src_texts, tgt_texts, src_vocab, tgt_vocab, src_tokenizer, tgt_tokenizer):
+        self.src_texts = src_texts
+        self.tgt_texts = tgt_texts
+        self.src_vocab = src_vocab
+        self.tgt_vocab = tgt_vocab
+        self.src_tokenizer = src_tokenizer
+        self.tgt_tokenizer = tgt_tokenizer
+
+    def __len__(self):
+        return len(self.src_texts)
+
+    def __getitem__(self, idx):
+        src_text = self.src_texts[idx]
+        tgt_text = self.tgt_texts[idx]
+
+        # Tokenize
+        src_tokens = [tok.text for tok in self.src_tokenizer(src_text)]
+        tgt_tokens = [tok.text for tok in self.tgt_tokenizer(tgt_text)]
+
+        # Convert to indices
+        src_indices = [self.src_vocab["<s>"]] + [self.src_vocab[token] for token in src_tokens] + [self.src_vocab["</s>"]]
+        tgt_indices = [self.tgt_vocab["<s>"]] + [self.tgt_vocab[token] for token in tgt_tokens] + [self.tgt_vocab["</s>"]]
+
+        return {
+            'src': torch.tensor(src_indices),
+            'tgt': torch.tensor(tgt_indices)
+        }
+
+def build_vocab_from_texts(texts, tokenizer, min_freq=2):
+    """Build vocabulary from texts"""
+    counter = {}
+    for text in texts:
+        for token in [tok.text for tok in tokenizer(text)]:
+            counter[token] = counter.get(token, 0) + 1
+
+    # Create vocabulary
+    vocab = {"<s>": 0, "</s>": 1, "<blank>": 2, "<unk>": 3}
+    idx = 4
+    for word, freq in counter.items():
+        if freq >= min_freq:
+            vocab[word] = idx
+            idx += 1
+    return vocab
+
+def create_dataloaders(batch_size=32):
+    # Load tokenizers
+    spacy_de = spacy.load("de_core_news_sm")
+    spacy_en = spacy.load("en_core_web_sm")
+
+    # Get data
+    (train_de, train_en), (val_de, val_en) = create_dataset()
+
+    # Build vocabularies
+    vocab_src = build_vocab_from_texts(train_de, spacy_de)
+    vocab_tgt = build_vocab_from_texts(train_en, spacy_en)
+
+    # Create datasets
+    train_dataset = TranslationDataset(
+        train_de, train_en,
+        vocab_src, vocab_tgt,
+        spacy_de, spacy_en
+    )
+
+    val_dataset = TranslationDataset(
+        val_de, val_en,
+        vocab_src, vocab_tgt,
+        spacy_de, spacy_en
+    )
+
+    # Create dataloaders
+    train_dataloader = DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        collate_fn=collate_batch
+    )
+
+    val_dataloader = DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        collate_fn=collate_batch
+    )
+
+    return train_dataloader, val_dataloader, vocab_src, vocab_tgt
+
+def collate_batch(batch):
+    src_tensors = [item['src'] for item in batch]
+    tgt_tensors = [item['tgt'] for item in batch]
+
+    # Pad sequences
+    src_padded = torch.nn.utils.rnn.pad_sequence(src_tensors, batch_first=True, padding_value=2)
+    tgt_padded = torch.nn.utils.rnn.pad_sequence(tgt_tensors, batch_first=True, padding_value=2)
+
+    return {
+        'src': src_padded,
+        'tgt': tgt_padded
+    }
+```
+
+```python 
+import os
+import torch
+import spacy
+import urllib.request
+import zipfile
+from torch.utils.data import Dataset, DataLoader
+
+def download_multi30k():
+    """Download Multi30k dataset if not present"""
+    # Create data directory
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    # Download files if they don't exist
+    base_url = "https://raw.githubusercontent.com/multi30k/dataset/master/data/task1/raw/"
+    files = {
+        "train.de": "train.de.gz",
+        "train.en": "train.en.gz",
+        "val.de": "val.de.gz",
+        "val.en": "val.en.gz",
+        "test.de": "test_2016_flickr.de.gz",
+        "test.en": "test_2016_flickr.en.gz"
+    }
+
+    for local_name, remote_name in files.items():
+        filepath = f'data/{local_name}'
+        if not os.path.exists(filepath):
+            url = base_url + remote_name
+            urllib.request.urlretrieve(url, filepath + '.gz')
+            os.system(f'gunzip -f {filepath}.gz')
+
+def load_data(filename):
+    """Load data from file"""
+    with open(filename, 'r', encoding='utf-8') as f:
+        return [line.strip() for line in f]
+
+def create_dataset():
+    """Create dataset from files"""
+    # Download data if needed
+    download_multi30k()
+
+    # Load data
+    train_de = load_data('data/train.de')
+    train_en = load_data('data/train.en')
+    val_de = load_data('data/val.de')
+    val_en = load_data('data/val.en')
+
+    return (train_de, train_en), (val_de, val_en)
+
+class TranslationDataset(Dataset):
+    def __init__(self, src_texts, tgt_texts, src_vocab, tgt_vocab, src_tokenizer, tgt_tokenizer):
+        self.src_texts = src_texts
+        self.tgt_texts = tgt_texts
+        self.src_vocab = src_vocab
+        self.tgt_vocab = tgt_vocab
+        self.src_tokenizer = src_tokenizer
+        self.tgt_tokenizer = tgt_tokenizer
+
+    def __len__(self):
+        return len(self.src_texts)
+
+    def __getitem__(self, idx):
+        src_text = self.src_texts[idx]
+        tgt_text = self.tgt_texts[idx]
+
+        # Tokenize
+        src_tokens = [tok.text for tok in self.src_tokenizer(src_text)]
+        tgt_tokens = [tok.text for tok in self.tgt_tokenizer(tgt_text)]
+
+        # Convert to indices
+        src_indices = [self.src_vocab["<s>"]] + [self.src_vocab[token] for token in src_tokens] + [self.src_vocab["</s>"]]
+        tgt_indices = [self.tgt_vocab["<s>"]] + [self.tgt_vocab[token] for token in tgt_tokens] + [self.tgt_vocab["</s>"]]
+
+        return {
+            'src': torch.tensor(src_indices),
+            'tgt': torch.tensor(tgt_indices)
+        }
+
+def build_vocab_from_texts(texts, tokenizer, min_freq=2):
+    """Build vocabulary from texts"""
+    counter = {}
+    for text in texts:
+        for token in [tok.text for tok in tokenizer(text)]:
+            counter[token] = counter.get(token, 0) + 1
+
+    # Create vocabulary
+    vocab = {"<s>": 0, "</s>": 1, "<blank>": 2, "<unk>": 3}
+    idx = 4
+    for word, freq in counter.items():
+        if freq >= min_freq:
+            vocab[word] = idx
+            idx += 1
+    return vocab
+
+def create_dataloaders(batch_size=32):
+    # Load tokenizers
+    spacy_de = spacy.load("de_core_news_sm")
+    spacy_en = spacy.load("en_core_web_sm")
+
+    # Get data
+    (train_de, train_en), (val_de, val_en) = create_dataset()
+
+    # Build vocabularies
+    vocab_src = build_vocab_from_texts(train_de, spacy_de)
+    vocab_tgt = build_vocab_from_texts(train_en, spacy_en)
+
+    # Create datasets
+    train_dataset = TranslationDataset(
+        train_de, train_en,
+        vocab_src, vocab_tgt,
+        spacy_de, spacy_en
+    )
+
+    val_dataset = TranslationDataset(
+        val_de, val_en,
+        vocab_src, vocab_tgt,
+        spacy_de, spacy_en
+    )
+
+    # Create dataloaders
+    train_dataloader = DataLoader(
+        train_dataset,
+        batch_size=batch_size,
+        shuffle=True,
+        collate_fn=collate_batch
+    )
+
+    val_dataloader = DataLoader(
+        val_dataset,
+        batch_size=batch_size,
+        shuffle=False,
+        collate_fn=collate_batch
+    )
+
+    return train_dataloader, val_dataloader, vocab_src, vocab_tgt
+
+def collate_batch(batch):
+    src_tensors = [item['src'] for item in batch]
+    tgt_tensors = [item['tgt'] for item in batch]
+
+    # Pad sequences
+    src_padded = torch.nn.utils.rnn.pad_sequence(src_tensors, batch_first=True, padding_value=2)
+    tgt_padded = torch.nn.utils.rnn.pad_sequence(tgt_tensors, batch_first=True, padding_value=2)
+
+    return {
+        'src': src_padded,
+        'tgt': tgt_padded
+    }
+```
+
+#### Starting the training loop and Some Analysis (with tips for good convergence)
+
+```python
+# Initialize your transformer with the vocabulary sizes
+model = Transformer(
+    src_vocab_size=len(vocab_src),
+    tgt_vocab_size=len(vocab_tgt),
+    d_model=512,
+    num_layers=6,
+    num_heads=8,
+    d_ff=2048,
+    dropout=0.1
+)
+criterion = LabelSmoothing(smoothing=0.1).to(device)
+
+# Now you can use your training loop
+losses = train_transformer(
+    model=model,
+    train_dataloader=train_dataloader,
+    criterion=criterion,
+    optimizer=optimizer,
+    scheduler=scheduler,
+    num_epochs=10
+)
+```
+
+```python
+# Initialize your transformer with the vocabulary sizes
+model = Transformer(
+    src_vocab_size=len(vocab_src),
+    tgt_vocab_size=len(vocab_tgt),
+    d_model=512,
+    num_layers=6,
+    num_heads=8,
+    d_ff=2048,
+    dropout=0.1
+)
+criterion = LabelSmoothing(smoothing=0.1).to(device)
+
+# Now you can use your training loop
+losses = train_transformer(
+    model=model,
+    train_dataloader=train_dataloader,
+    criterion=criterion,
+    optimizer=optimizer,
+    scheduler=scheduler,
+    num_epochs=10
+)
+```
 ## Misc
 Here are some resources and more information that can help you out in your journey which I could not decide where to put
 
