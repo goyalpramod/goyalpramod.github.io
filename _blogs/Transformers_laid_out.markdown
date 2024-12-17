@@ -31,7 +31,7 @@ All in one place.
 
 ## How to use this blog
 
-First I will give you a quick overview of how the transformer works and why it was developed in the first place.
+I will first give you a quick overview of how the transformer works and why it was developed in the first place.
 
 Once we have a baseline context setup, We will dive into the code itself.
 
@@ -58,9 +58,9 @@ class TransformerLRScheduler:
 ```
 [documentation & helpful links here]
 
-I will recommend you copy these code blocks and try to implement that function by your self.
+I recommend you copy these code blocks and try to implement them by yourself.
 
-To make it easier, before we start coding I will explain that part in detail. If you are still unable to solve it, come back and see my implementation of that part.
+To make it easier, before we start coding I will explain each part in detail. If you are still unable to solve it, come back and see my implementation.
 
 Subsequently after each completed code block I will keep a FAQ section where I will write down my own questions that I had while writing the transformer as well as some questions that I believe are important to understand the concepts.
 
