@@ -15,7 +15,7 @@ I have encountered that there are mainly three types of blogs/videos/tutorials t
 
 And each follow an amazing pedigogy, Helping one understand a singluar concept from multiple point of views.
 
-But this hindered my own learning process, hence I have created this blog. Which will do the following
+But this hindered my own learning process, as I constantly had to switch between different explanations to completely grasp the idea. Hence I have created this blog, which will do the following:
 
 <!-- add redirects to each section  -->
 
