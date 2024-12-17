@@ -5,8 +5,6 @@ date: 2024-03-15 12:00:00 +0530
 categories: [personal, technology]
 ---
 
-# Transformers Laid Out
-
 [STILL A WORK IN PROGRESS]
 
 I have encountered that there are mainly three types of blogs/videos/tutorials talking about transformers
@@ -144,6 +142,8 @@ That is the reason we do so many matrix multiplication to try and get the best k
 
 That is all the reason there is to it. Have a look at the different illustrations to better understand it.
 
+## Understanding the Positional Embedding
+
 ## Understanding The Encoder and Decoder Block
 
 If everything so far has made sense, this is going to be a cake walk for you. Because this is where we put everything together.
@@ -171,7 +171,7 @@ and the [original paper](https://arxiv.org/pdf/1706.03762)
 
 ### Abstract & Introduction
 
-This section brings you upto speed about what the paper is about and why it was made in the first place.
+This section brings you up to speed about what the paper is about and why it was made in the first place.
 
 There are some concepts that can help you learn new things, [RNNs](https://www.youtube.com/watch?v=AsNTP8Kwu80), [Convolution neural network](https://www.youtube.com/watch?v=HGwBXDKFk9I) and about [BLEU](https://en.wikipedia.org/wiki/BLEU).
 
