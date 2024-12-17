@@ -69,6 +69,7 @@ Subsequently after each completed code block I will keep a FAQ section where I w
 The original transformers was made for machine translation task and that is what we shall do as well.
 We will try to translate "I like Pizza" from English to Hindi.
 
+![Image of a transformer](/assets/transformers_laid_out/1.png)
 
 "I like Pizza", first the sentence is broken down into it's respective words\* and each word is embedded using an embeddings matrix that is trained along with the transformer.
 
@@ -198,7 +199,7 @@ We will first start with the Multi-Head Attention, then the feed forward network
 
 The full notebook can be found [here](https://github.com/goyalpramod/transformer_from_scratch/blob/main/transformers.ipynb)
 
-![Image of a transformer](/assets/transformers.svg)
+![Image of a transformer](/assets/transformers_laid_out/transformers.svg)
 
 Necessary imports
 
