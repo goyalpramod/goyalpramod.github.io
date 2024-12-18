@@ -5,9 +5,7 @@ last_modified_at: 2024-03-15 12:00:00 +0530
 categories: [lifestyle, self-help, growth]
 ---
 
-[STILL A WORK IN PROGRESS]
-
-Before we talk about how to change the world, let us ask ourselves. Why do you want to change the world?
+[STILL A WORK IN PROGRESS] Before we talk about how to change the world, let us ask ourselves. Why do you want to change the world?
 
 "The world has been the way it is way before you were born, and will stay the same way if you do or do not do anything about it.
 How dare you even have the audacity to think that you deserve to change the world, The world is absolutely perfect. And if it is not perfect, Let some other messiah.. GOD take care of it"
