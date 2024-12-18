@@ -41,6 +41,16 @@ One primary reason I believe being, that one does not have all the answers. It i
 
 Another way I see books is as, a man's years of life condensed in short 200-300 pages. That is huge. A good book contains knowledge that you would otherwise would have had to spend a lifetime to learn and know about.
 
+## Move; all study and no play makes jack a dull boy 
+
+One of the reasons homo sapiens were able to survive whilst other homo species perished was because of our strong herd mentality, and our ability to gossip.
+Wisdom was passed down as tales and folklore. So even if the saying is old, there is much to be learnt from it. 
+
+There is an immediate and profound effect that happens on your body when you move around. If you sit on your ass daily for long periods of time, consider 
+going for a run, exercising, anything that moves your body for a while. 
+
+You need a healthy body to have a sound mind and be able to do anything. 
+
 ## Dream; You are limited by your imagination
 
 "Dare to Dream". Even today when someone asks me what do you want to do? my answer remains what it was 10 years ago. "I want to change the world". You will be whatever you want to be and exactly that. 
@@ -61,11 +71,11 @@ The thing I want you to take away is build something with your knowledge.
 
 ## Question... Everything
 
-My favourite word in the english language is "Why?" Why? good question, because it helps my understanding of things. It can help in multitude of places. Let me illustrate some common times:
+My favorite word in the english language is "Why?" Why? good question, because it helps my understanding of things. It can help in multitude of places. Let me illustrate some common times:
 
-Why am I unhappy? Because I am alone. (or other variations of it no girlfriend/no friends/away from family which all boils down to lonelineless) Why am I alone? Because I have no friends. Why do I have no friends? Because I am too busy working all day. Why am I busy working all day? Because I want to create something that can help the world out. Why do you want to do that? Because I envision a world where noone is unhappy. And does that future not make you happy? yes it does. 
+Why am I unhappy? Because I am alone. (or other variations of it no girlfriend/no friends/away from family which all boils down to loneliness) Why am I alone? Because I have no friends. Why do I have no friends? Because I am too busy working all day. Why am I busy working all day? Because I want to create something that can help the world out. Why do you want to do that? Because I envision a world where no one is unhappy. And does that future not make you happy? yes it does.
 
-I call it the excercise of "reaching the logical end" I try to do it often with many things, but limited by expericence most of the times my logical ending is inconsistent with reality. But I am fine with it, Because I DREAM.
+I call it the exercise of "reaching the logical end" I try to do it often with many things, but limited by experience most of the times my logical ending is inconsistent with reality. But I am fine with it, Because I DREAM.
 
 Question because if you do not, why will you search and read about it, why will you dream of finding an answer, why will you build a solution, why will you write about what you learned
 
