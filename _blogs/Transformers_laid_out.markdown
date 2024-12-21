@@ -27,6 +27,7 @@ All in one place.
 
 ![Meme](https://imgs.xkcd.com/comics/standards_2x.png)
 {add this as a foot note} meme taken from [xkcd](https://xkcd.com/)
+
 <!-- {change this to make there are 14 transformers tutorial} -->
 
 ## How to use this blog
@@ -56,6 +57,7 @@ class TransformerLRScheduler:
         # Your code here - implement the formula
 
 ```
+
 [documentation & helpful links here]
 
 I recommend you copy these code blocks and try to implement them by yourself.
@@ -324,9 +326,10 @@ class MultiHeadAttention(nn.Module):
       # 5. Final projection
       #YOUR CODE HERE
 ```
-* I had a hard time understanding the difference between view and transpose. These 2 links should help you out, [When to use view,transpose & permute](https://www.reddit.com/r/learnmachinelearning/comments/17irzkc/why_do_we_use_view_and_then_transpose_when/) and [Difference between view & transpose](https://discuss.pytorch.org/t/different-between-permute-transpose-view-which-should-i-use/32916)
-* Contiguous and view, still eluded me. Till I read these, [Pytorch Internals](https://blog.ezyang.com/2019/05/pytorch-internals/) and [Contiguous & Non-Contiguous Tensor](https://medium.com/analytics-vidhya/pytorch-contiguous-vs-non-contiguous-tensor-view-understanding-view-reshape-73e10cdfa0dd)
-* [Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)
+
+- I had a hard time understanding the difference between view and transpose. These 2 links should help you out, [When to use view,transpose & permute](https://www.reddit.com/r/learnmachinelearning/comments/17irzkc/why_do_we_use_view_and_then_transpose_when/) and [Difference between view & transpose](https://discuss.pytorch.org/t/different-between-permute-transpose-view-which-should-i-use/32916)
+- Contiguous and view, still eluded me. Till I read these, [Pytorch Internals](https://blog.ezyang.com/2019/05/pytorch-internals/) and [Contiguous & Non-Contiguous Tensor](https://medium.com/analytics-vidhya/pytorch-contiguous-vs-non-contiguous-tensor-view-understanding-view-reshape-73e10cdfa0dd)
+- [Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)
 
 ```python
 #my implementation
@@ -423,9 +426,9 @@ class FeedForwardNetwork(nn.Module):
         #YOUR CODE HERE
 ```
 
-* [Dropout](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
-* [Where to put Dropout](https://stackoverflow.com/questions/46841362/where-dropout-should-be-inserted-fully-connected-layer-convolutional-layer)
-* [ReLU](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
+- [Dropout](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
+- [Where to put Dropout](https://stackoverflow.com/questions/46841362/where-dropout-should-be-inserted-fully-connected-layer-convolutional-layer)
+- [ReLU](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
 
 ```python
 #my implementation
@@ -555,7 +558,6 @@ class EncoderLayer(nn.Module):
         return x
 ```
 
-
 ```python
 class EncoderLayer(nn.Module):
     def __init__(self, d_model, num_heads, d_ff, dropout=0.1):
@@ -600,7 +602,6 @@ class EncoderLayer(nn.Module):
         return x
 ```
 
-
 #### Decoder Layer
 
 ```python
@@ -642,7 +643,6 @@ class DecoderLayer(nn.Module):
         # Remember: In decoder self-attention, query, key, value are all x
         #YOUR CODE HERE
 ```
-
 
 ```python
 class DecoderLayer(nn.Module):
@@ -791,7 +791,6 @@ class Encoder(nn.Module):
 
 #### Decoder
 
-
 ```python
 class Decoder(nn.Module):
     def __init__(self,
@@ -932,7 +931,7 @@ def create_masks(src, tgt):
     #YOUR CODE HERE
 ```
 
-```python 
+```python
 def create_padding_mask(seq):
     """
     Create mask for padding tokens (0s)
@@ -982,7 +981,7 @@ def create_masks(src, tgt):
     return src_padding_mask, tgt_mask
 ```
 
-#### Transformer 
+#### Transformer
 
 ```python
 class Transformer(nn.Module):
@@ -1071,6 +1070,7 @@ class Transformer(nn.Module):
         # as it applies log_softmax internally
         return output
 ```
+
 #### Utility code for Transformer
 
 ```python
@@ -1485,7 +1485,7 @@ def collate_batch(batch):
     }
 ```
 
-```python 
+```python
 import os
 import torch
 import spacy
@@ -1685,24 +1685,17 @@ losses = train_transformer(
     num_epochs=10
 )
 ```
+
 ## Misc
+
 Here are some resources and more information that can help you out in your journey which I could not decide where to put
 
 [What is torch.nn really?](https://pytorch.org/tutorials/beginner/nn_tutorial.html)
-
-
-
-
-
-
-
-
 
 Congratulations for completing this tutorial/lesson/blog however you see it. It is by nature of human curosity that you must have a few questions now.
 Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here in an FAQ section.
 
 Cheers,
 Pramod
-
 
 P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
