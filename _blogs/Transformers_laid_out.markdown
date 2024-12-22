@@ -19,7 +19,7 @@ Here I aim to:
 
 <!-- add redirects to each section  -->
 
-- Give an intition of how transformers work
+- Give an intuition of how transformers work
 - Explain what each section of the paper means and how you can understand and implement it
 - Code it down using PyTorch from a beginners perspective
 
@@ -73,7 +73,7 @@ We will try to translate "I like Pizza" from English to Hindi.
 
 ![Image of a transformer](/assets/transformers_laid_out/1.png)
 
-But before that, Let's have a brief look into the blackbox that is our Transformer. we can see that it consists of Encoders and Decoders
+But before that, Let's have a brief look into the blackbox that is our Transformer. we can see that it consists of [Encoders](#understanding-the-encoder-and-decoder-block) and [Decoders](#understanding-the-encoder-and-decoder-block)
 
 ![Image of Encoders and Decoders](/assets/transformers_laid_out/2.png)
 
@@ -85,14 +85,14 @@ To these embeddings [positional information](#understanding-positional-embedding
 ![Image of a transformer](/assets/transformers_laid_out/15.png)
 
 The reason we need to do this is because Transformers take all the information in parallel i.e. at once, so they lose the positional
-information which RNN or LSTM capture.
+information which [RNN]({add_info_here}) or [LSTM]({add_info_here}) capture.
 
 And positional information is important because "I like Pizza" =/= "Pizza like I" (It just gets weirder with longer sentences)
 
 Now these embeddings are passed to an "encoder" block which essentially does two things
 
 - Applies [self-attention](#understanding-self-attention) to understand the relationship of individual words with respect to the other words present
-- Output self-attention scores to a feed forward network 
+- Output self-attention scores to a feed forward network
 
 ![Image of a transformer](/assets/transformers_laid_out/4.png)
 
@@ -110,7 +110,7 @@ So Y acts as the common language that both the encoder and decoder speak to prod
 
 ## Understanding Self-attention
 
-We have all heard of the famous trio, "Query, Key and Values". I absolutely lost my head trying to understand how the team came up behind this idea
+We have all heard of the famous trio, "Query, Key and Values". I absolutely lost my head trying to understand how the terms came up behind this idea
 Was Q,K,Y related to dictionaries? (or maps in traditional CS) Was it inspired by a previous paper? if so how did they come up with?
 
 Let us first build an intuition behind the convention (then get rid of this convention to make more sense of it)
@@ -129,23 +129,20 @@ Query:
    K -> pizza, Pramod, loves (it will actually have all the words with different degree of importance)
    V -> pizza (The value is not directly the answer, but a representation as a matrix of something similar to the answer)
 
-This is an over simplification really, but it helps understand that the queries, keys and values all can be created only using the sentences
+This is an over simplification really, but it helps understand that the queries, keys and values all can be created only using the sentences.
 
-Let us simplify this, I will help you understand it the best way it helped me understand.
-Forget Q,K,V. Lets just call them matrices for now. m1,m2 and m3.
+Let us first understand how Self-attention is applied and subsequently understand why is it even done.
+Also, for the rest of the explanation treat Q,K,V purely as matrices and nothing else.
 
-{here just make a matrix}
-m1 -> matrix representing query
-pramod: embedding
-loves: embedding
-pizza: embedding
+First, The word "Delicious Pizza" is converted into embeddings. Then it is multiplied with the weights W_Q, W_K,W_V to produce Q,K,V vectors. 
 
-m2 -> matrix representing keys
-pramod:
-loves:
-pizza:
+These weights W_Q, W_K, W_V are trained alongside with the transformer. Notice how vector Q,K,V are smaller than the size of x1,x2. Namely, x1,x2 are vectors of size 512. Whereas Q,K,V are of size 64. 
+This is an architectural choice to make the computation smaller and faster. 
+![Image of a transformer](/assets/transformers_laid_out/7.png)
 
-m3 -> {I am not sure about this}
+Now using these Q,K,V vectors the attention score is calculated. 
+
+![Image of a transformer](/assets/transformers_laid_out/8.png)
 
 Now forget multi-head attention, attention blocks and all the HUGE BIG JARGON.
 Lets say you are in point A and want to go to B in a huge city
