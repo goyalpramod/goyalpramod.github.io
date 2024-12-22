@@ -14,6 +14,10 @@ It is well known that everyone has their own way of learning, but there are a fe
 
 ## Open Mind; If you think you can't do it, you can't do it
 
+"In 1939, a misunderstanding brought about surprising results. Near the beginning of a class, Professor Neyman wrote two problems on the blackboard. Dantzig arrived late and assumed that they were a homework assignment. According to Dantzig, they "seemed to be a little harder than usual", but a few days later he handed in completed solutions for both problems, still believing that they were an assignment that was overdue. Six weeks later, an excited Neyman eagerly told him that the "homework" problems he had solved were two of the most famous unsolved problems in statistics."[[1]](https://en.wikipedia.org/wiki/George_Dantzig)
+
+
+
 ## Gather; Find all the resources on the topic you possibly can
 
 ## Experiment; Try everything that you possibly can 
@@ -23,4 +27,3 @@ It is well known that everyone has their own way of learning, but there are a fe
 ## SMART; Specific Measuable Achievable, Relevant, and Time-bound
 
 ## Enjoy; What's the point if you are not having fun
-
