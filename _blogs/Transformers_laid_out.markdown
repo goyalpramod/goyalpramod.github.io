@@ -244,7 +244,7 @@ import torch.nn as nn
 from torch.nn.functional import softmax
 ```
 
-#### Multi-Head Attention
+### Multi-Head Attention
 
 By now you should have good grasp of how attention works, so let us first start with coding the scaled dot-product attention (as MHA is basically multiple scaled dot-product stacked together). Reference section is 3.2.1 Scaled Dot-Product Attention
 
@@ -429,7 +429,7 @@ class MultiHeadAttention(nn.Module):
       return self.W_o(output)
 ```
 
-#### Feed Forward Network
+### Feed Forward Network
 
 Section 3.3
 
@@ -491,7 +491,7 @@ class FeedForwardNetwork(nn.Module):
         return self.model(x)
 ```
 
-#### Positional Encoding
+### Positional Encoding
 
 Section 3.5
 
@@ -551,7 +551,7 @@ class PositionalEncoding(nn.Module):
         return x + self.pe[:, :x.size(1)]  # Add positional encoding up to sequence length
 ```
 
-#### Encoder Layer
+### Encoder Layer
 
 ```python
 class EncoderLayer(nn.Module):
@@ -633,7 +633,7 @@ class EncoderLayer(nn.Module):
         return x
 ```
 
-#### Decoder Layer
+### Decoder Layer
 
 ```python
 class DecoderLayer(nn.Module):
@@ -727,7 +727,7 @@ class DecoderLayer(nn.Module):
         return x
 ```
 
-#### Encoder
+### Encoder
 
 ```python
 class Encoder(nn.Module):
@@ -820,7 +820,7 @@ class Encoder(nn.Module):
         return x
 ```
 
-#### Decoder
+### Decoder
 
 ```python
 class Decoder(nn.Module):
@@ -917,7 +917,7 @@ class Decoder(nn.Module):
         return x
 ```
 
-#### Utility Code
+### Utility Code
 
 ```python
 def create_padding_mask(seq):
@@ -1012,7 +1012,7 @@ def create_masks(src, tgt):
     return src_padding_mask, tgt_mask
 ```
 
-#### Transformer
+### Transformer
 
 ```python
 class Transformer(nn.Module):
@@ -1102,7 +1102,7 @@ class Transformer(nn.Module):
         return output
 ```
 
-#### Utility code for Transformer
+### Utility code for Transformer
 
 ```python
 class TransformerLRScheduler:
@@ -1189,7 +1189,7 @@ class LabelSmoothing(nn.Module):
         return torch.mean(torch.sum(-true_dist * torch.log_softmax(logits, dim=-1), dim=-1)) #return cross entropy loss
 ```
 
-#### Training transformers
+### Training transformers
 
 ```python
 def train_transformer(model, train_dataloader, criterion, optimizer, scheduler, num_epochs, device='cuda'):
@@ -1363,7 +1363,7 @@ def train_transformer(model, train_dataloader, criterion, optimizer, scheduler, 
     return all_losses
 ```
 
-#### Setting up the Dataset and DataLoader
+### Setting up the Dataset and DataLoader
 
 ```python
 import os
@@ -1667,7 +1667,7 @@ def collate_batch(batch):
     }
 ```
 
-#### Starting the training loop and Some Analysis (with tips for good convergence)
+### Starting the training loop and Some Analysis (with tips for good convergence)
 
 ```python
 # Initialize your transformer with the vocabulary sizes
