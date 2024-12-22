@@ -142,8 +142,31 @@ This is an architectural choice to make the computation smaller and faster.
 
 Now using these Q,K,V vectors the attention score is calculated. 
 
+Calculating the attention score for the first word "Delicious" we take the query (q1) and key (k1) of the word and take a dot product of them. (Dot products are great to find similarity between things).
+Then we divide that by Square root of the dimension of key vector. This is done to stabalize training.
+The same process id done with the query of word one (q1) and all the keys of the different words in this case k1 & k2.
+Finally using all the values, we take a softmax of each out. 
+Then these are multiplied with the value of each word (v1,v2). Intuitvely to get the importance of each word with respect to the selected words. Less important words are drowned out by lets say multipling with 0.001
+And finally everything is summed up to get the Z vector
+
 ![Image of a transformer](/assets/transformers_laid_out/8.png)
 
+The thing that made transformers was that computation could be parallazined, So we do not deal with vectors. But rather matrices.
+
+The implementation remains the same.
+
+First calulate Q,K,V Matrix 
+![Image of a transformer](/assets/transformers_laid_out/9.png)
+Second calulate the attention scores
+![Image of a transformer](/assets/transformers_laid_out/10.png)
+Third Repeat the steps for each attention head 
+![Image of a transformer](/assets/transformers_laid_out/11.png)
+This is the how the output from each attention head will look like
+![Image of a transformer](/assets/transformers_laid_out/12.png)
+Finally Join the outputs from all the attention head and multiply it with a matrix WO (which is trained along with the model) To get the final attention score
+![Image of a transformer](/assets/transformers_laid_out/13.png)
+Here is a summary of everything that is going on
+![Image of a transformer](/assets/transformers_laid_out/14.png)
 Now forget multi-head attention, attention blocks and all the HUGE BIG JARGON.
 Lets say you are in point A and want to go to B in a huge city
 Do you think there is only one path to go their? of course not, there are thousands of way to reach that point
