@@ -58,7 +58,7 @@ class TransformerLRScheduler:
 
 ```
 
-[documentation & helpful links here]
+[documentation & helpful links would be here]
 
 I recommend you copy these code blocks and try to implement them by yourself.
 
@@ -73,9 +73,17 @@ We will try to translate "I like Pizza" from English to Hindi.
 
 ![Image of a transformer](/assets/transformers_laid_out/1.png)
 
-"I like Pizza", first the sentence is broken down into it's respective words\* and each word is embedded using an embeddings matrix that is trained along with the transformer.
+But before that, Let's have a brief look into the blackbox that is our Transformer. we can see that it consists of Encoders and Decoders
 
-Now these positional information is added to these embeddings,
+![Image of Encoders and Decoders](/assets/transformers_laid_out/2.png)
+
+Now, "I like Pizza", first the sentence is broken down into it's respective words* and each word is embedded using an embeddings matrix that is trained along with the transformer.
+
+![Image of a transformer](/assets/transformers_laid_out/random.png)
+
+To these embeddings [positional information](#understanding-positional-embedding) is added.
+![Image of a transformer](/assets/transformers_laid_out/15.png)
+
 The reason we need to do this is because Transformers take all the information in parallel i.e. at once, so they lose the positional
 information which RNN or LSTM capture.
 
@@ -83,17 +91,20 @@ And positional information is important because "I like Pizza" =/= "Pizza like I
 
 Now these embeddings are passed to an "encoder" block which essentially does two things
 
-- Applies self-attention (about which we will be learning in the next section) to understand the relationship of individual words with respect to the other words present
-- {continue}
+- Applies [self-attention](#understanding-self-attention) to understand the relationship of individual words with respect to the other words present
+- Output self-attention scores to a feed forward network 
+
+![Image of a transformer](/assets/transformers_laid_out/4.png)
 
 The decoder block takes the output from the encoder, runs it through it self. Produces an ouput and sends it back to itself to create the next word
 
-think of it like this.
+![Image of a transformer](/assets/transformers_laid_out/5.png)
 
-The encoder understands your language let's call it e and another language called z
-The decoder understands z and the language you are trying to transfor e to, lets call it d.
+Think of it like this.
+The encoder understands your language let's call it X and another language called Y
+The decoder understands Y and the language you are trying to translate X to, lets call it Z.
 
-So z acts as the common language that both the encoder and decoder speak to produce the final output.
+So Y acts as the common language that both the encoder and decoder speak to produce the final output.
 
 \*We are using words for easier understanding, most modern LLMs do not work with words. But rather "Tokens"
 
@@ -146,7 +157,7 @@ That is the reason we do so many matrix multiplication to try and get the best k
 
 That is all the reason there is to it. Have a look at the different illustrations to better understand it.
 
-## Understanding the Positional Embedding
+## Understanding Positional Embedding
 
 ## Understanding The Encoder and Decoder Block
 
