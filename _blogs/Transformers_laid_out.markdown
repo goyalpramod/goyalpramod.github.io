@@ -282,7 +282,7 @@ Here is a simple illustration showing how its done.
 
 Now expanding on the above this is how it looks like for the function
 
-![Image of a transformer](/assets/transformers_laid_out/PE.png)
+![Image of a transformer](/assets/transformers_laid_out/PE.png) Visualization inspired by this fantastic [blog](https://erdem.pl/2021/05/understanding-positional-encoding-in-transformers#positional-encoding-visualization)
 
 This is how it looks like for the original with n = 10,000, d_model = 10,000 and sequence length=100
 Code to generate [here](https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/)

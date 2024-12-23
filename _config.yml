@@ -34,6 +34,11 @@ plugins:
   - jekyll-seo-tag
   - jekyll-sitemap
 
+# Markdown Processing
+markdown: kramdown
+kramdown:
+  math_engine: mathjax
+  syntax_highlighter: rouge
 # Exclude from processing.
 # The following items will not be processed, by default.
 # Any item listed under the `exclude:` key here will be automatically added to
@@ -65,3 +70,20 @@ collections:
   notes:
     output: true
     permalink: /notes/:title/
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      math: true
+  - scope:
+      path: ""
+      type: "blogs"
+    values:
+      math: true
+  - scope:
+      path: ""
+      type: "notes"
+    values:
+      math: true
