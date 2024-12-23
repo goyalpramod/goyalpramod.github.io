@@ -180,9 +180,6 @@ That is the reason we do so many matrix multiplication to try and get the best k
 That is all the reason there is to it. Have a look at the different illustrations to better understand it.
 
 ## Understanding Positional Encoding
-
-{How do they work}
-
 To understand What is Positional Encoding and why we need it, let's imagine the scenario in which we do not have it.
 
 First an input sentence, for E.g
@@ -268,8 +265,29 @@ $$
 \mathbf{M}_k = \begin{bmatrix} \cos(\omega_i k) & \sin(\omega_i k) \\ -\sin(\omega_i k) & \cos(\omega_i k) \end{bmatrix}
 $$
 
-Now that we understand what is PE and why we use sine and cos. Let us understand how it works. 
+Now that we understand what is PE and why we use sine and cos. Let us understand how it works.
 
+$$PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+$$PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
+
+pos = position of the word in the sentence ("Pramod likes pizza" Pramod is at position 0, likes in 1 and so on)
+i = value for ith and (i+1)th index of the embedding, sin for even column number cos for odd column number ("Pramod" is converted into a vector of embedding. Which has different indexes)
+d_model = dimension of the model (in our case it is 512)
+10,000 (n) = this is a constant determined experimentally
+
+As you can see, using this we can calculate the PE value for each position and all the indexes for that position. 
+Here is a simple illustration showing how its done.
+
+![Image of a transformer](/assets/transformers_laid_out/PE1.png)
+
+Now expanding on the above this is how it looks like for the function
+
+![Image of a transformer](/assets/transformers_laid_out/PE.png)
+
+This is how it looks like for the original with n = 10,000, d_model = 10,000 and sequence length=100
+Code to generate [here](https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/)
+
+![Image of a transformer](/assets/transformers_laid_out/PE5.webp)
 
 ## Understanding The Encoder and Decoder Block
 
