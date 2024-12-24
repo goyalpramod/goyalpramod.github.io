@@ -86,27 +86,41 @@ Pramod
 
 # Update (24.12.24)
 
-Here are some links so you are not left wandering 
+Here are some links so you are not left wandering
 
 ## Write
--
+
+- If you are a non tech person, the best place you can start is with [Medium](https://medium.com/)
+- For more technical people there are multiple options. For quick and simple personal blog, you can use [Jekyll](https://jekyllrb.com/) (That is what I do!!) or you can create your own website.
+- Writing also goes in short form content, you can start simple writing in [X](https://x.com/home), [Reddit](https://www.reddit.com/), [LinkedIn](https://www.linkedin.com/feed/) etc.
+- If you are not comfortable sharing everything to the world, you can start with journaling. A Physical notebook is great, Otherwise if you are a digital person consider [Notion](https://www.notion.com/) or [Obsidian](https://obsidian.md/) for the hard core people.
 
 ## Read
 
 - If you are not much of a reader. Start with [The Almanack of Naval Ravikant](https://www.navalmanack.com/)
 - If you already like reading here are a few lists whose books I recommend [bookmarked](https://www.bookmarked.club/people), [Naval's reading list](https://www.navalmanack.com/navals-recommended-reading) ,and [Escaping Ordinary top 50](https://www.escapingordinary.net/top-50-books)
 - My personal favorites overlap with the books recommended above, But I will recommend picking up some fiction as well. Few of my favourites are [1984](https://www.goodreads.com/book/show/61439040-1984), [Animal Farm](https://www.goodreads.com/book/show/170448.Animal_Farm) ,and [The Little Prince](https://www.goodreads.com/book/show/157993.The_Little_Prince).
-- I will recommend reading a bit of philosophy as well, in your reading journey. My personal favorites are [Nietzsche](https://en.wikipedia.org/wiki/Friedrich_Nietzsche) and [Camus](https://en.wikipedia.org/wiki/Albert_Camus). If you are new to this, consider visiting [The School of Life](https://www.youtube.com/@theschooloflifetv)
+- I will recommend reading a bit of philosophy too, in your reading journey. My personal favorites are [Nietzsche](https://en.wikipedia.org/wiki/Friedrich_Nietzsche) and [Camus](https://en.wikipedia.org/wiki/Albert_Camus). If you are new to this, consider visiting [The School of Life](https://www.youtube.com/@theschooloflifetv)
 - Some poetry can be a nice pace of change. [Shel silverstein](https://en.wikipedia.org/wiki/Shel_Silverstein), [Silvia plath](https://en.wikipedia.org/wiki/Sylvia_Plath) ,and [Pablo neruda](https://en.wikipedia.org/wiki/Pablo_Neruda) are few I enjoy reading on a weary night.
 
 ## Move
 
 - [Calisthenics](https://en.wikipedia.org/wiki/Calisthenics) is a great form of workout for beginners if you do not wish to go to a gym at the moment. I will recommend visiting the YouTube Channel [Calisthenicmovement](https://www.youtube.com/@calimove)
 - Resistance training is vital though in my opinion and you will have to eventually do it. Start by listening to [Athlean X](https://www.youtube.com/@athleanx) if you have never worked out before. (ONLY FOR WORKOUTS, Do not buy the endorsed products)
-- If you have finally decided to improve your life with this, Having a healthier diet goes a long way. 
+- If you have finally decided to improve your life with this, Having a healthier diet goes a long way. Start by cutting down on sugar and highly processed food.
 
 ## Dream
 
-## Build 
+- The story of [Muhammad Ali](https://en.wikipedia.org/wiki/Muhammad_Ali) has always inspired me. Also meeting new people and listening to their journey inspires me to learn from a wake of life I never knew about.
+- [The Pursuit of Happyness](https://www.imdb.com/title/tt0454921/) & [The Shawshank Redemption](https://en.wikipedia.org/wiki/The_Shawshank_Redemption) are two movies that have had a huge impact on me. A man's obsession to escape his current circumstances. And to be able to dream of a better life.
+- [Zero to One](https://www.goodreads.com/book/show/18050143-zero-to-one) This is not a motivational book by any means, but reading this fills me with so much hope and dreams that I cannot help but put it here.
 
-## Question 
+## Build
+
+- If you wish to move into software, learn, build, share. [roadmap.sh](https://roadmap.sh/) is a nice site to know about the specifics for the things you are interested in. But I will still recommend to learn each specific topic from different places. For my roadmap to Software Development [read this]().
+- Content Creation is building as well, Learn some Adobe tools like Premiere, Photoshop, lightroom etc. And start creating on platforms like [YouTube](https://www.youtube.com/), [Instagram](https://www.instagram.com/), [TikTok](https://en.wikipedia.org/wiki/TikTok) etc
+- Do not limit yourself to the digital media, Creating Art, Music, Sculptures all come under "Building" in my opinion. There are specific places for specific things, To read what I have learnt over the years and from where [read this]()
+
+## Question
+
+- I have created a personal group in WhatsApp for myself where I write down my quick thoughts and question. Which I refer back to ponder later. I will recommend you find something suitable to you and stick to that.
