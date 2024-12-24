@@ -127,3 +127,28 @@ body {
 //     margin-top: 20px;
 //   }
 // }
+
+// Featured image styles
+.featured-image-container {
+  width: 100vw;
+  height: 60vh;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+  margin-bottom: 2rem;
+  overflow: hidden;
+}
+
+.featured-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+// Adjust article padding to account for the image
+.note {
+  padding-top: 1rem;
+}

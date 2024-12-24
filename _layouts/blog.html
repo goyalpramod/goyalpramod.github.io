@@ -1,6 +1,12 @@
 ---
 layout: default
 ---
+{% if page.image %}
+<div class="featured-image-container">
+  <img src="{{ page.image | relative_url }}" alt="{{ page.title }}" class="featured-image">
+</div>
+{% endif %}
+
 <article class="blog-post">
   <h1>{{ page.title }}</h1>
   <p class="meta">{{ page.date | date: "%B %-d, %Y" }}</p>
