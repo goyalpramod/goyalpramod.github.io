@@ -83,3 +83,30 @@ Everything begins with a question (Ironically that is where we end)
 
 Cheers,
 Pramod
+
+# Update (24.12.24)
+
+Here are some links so you are not left wandering 
+
+## Write
+-
+
+## Read
+
+- If you are not much of a reader. Start with [The Almanack of Naval Ravikant](https://www.navalmanack.com/)
+- If you already like reading here are a few lists whose books I recommend [bookmarked](https://www.bookmarked.club/people), [Naval's reading list](https://www.navalmanack.com/navals-recommended-reading) ,and [Escaping Ordinary top 50](https://www.escapingordinary.net/top-50-books)
+- My personal favorites overlap with the books recommended above, But I will recommend picking up some fiction as well. Few of my favourites are [1984](https://www.goodreads.com/book/show/61439040-1984), [Animal Farm](https://www.goodreads.com/book/show/170448.Animal_Farm) ,and [The Little Prince](https://www.goodreads.com/book/show/157993.The_Little_Prince).
+- I will recommend reading a bit of philosophy as well, in your reading journey. My personal favorites are [Nietzsche](https://en.wikipedia.org/wiki/Friedrich_Nietzsche) and [Camus](https://en.wikipedia.org/wiki/Albert_Camus). If you are new to this, consider visiting [The School of Life](https://www.youtube.com/@theschooloflifetv)
+- Some poetry can be a nice pace of change. [Shel silverstein](https://en.wikipedia.org/wiki/Shel_Silverstein), [Silvia plath](https://en.wikipedia.org/wiki/Sylvia_Plath) ,and [Pablo neruda](https://en.wikipedia.org/wiki/Pablo_Neruda) are few I enjoy reading on a weary night.
+
+## Move
+
+- [Calisthenics](https://en.wikipedia.org/wiki/Calisthenics) is a great form of workout for beginners if you do not wish to go to a gym at the moment. I will recommend visiting the YouTube Channel [Calisthenicmovement](https://www.youtube.com/@calimove)
+- Resistance training is vital though in my opinion and you will have to eventually do it. Start by listening to [Athlean X](https://www.youtube.com/@athleanx) if you have never worked out before. (ONLY FOR WORKOUTS, Do not buy the endorsed products)
+- If you have finally decided to improve your life with this, Having a healthier diet goes a long way. 
+
+## Dream
+
+## Build 
+
+## Question 
