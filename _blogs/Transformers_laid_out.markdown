@@ -302,11 +302,27 @@ Our input sentence is first converted into tokens
 
 Then it is embedded through the embeddings matrix, then the positional encoding is added.
 
+{add info about residual connections as well}
+
 Now all the tokens are processed in parallel, they go through the first encoder block, then the second till the nth(n here being any arbitrary number of blocks defined by you) block
+
+We have already seen what each encoder block consists of
 
 What this tries to do is capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
 
-Then this final output is given to all the decoder blocks as they process the data, the decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input
+Then this final output
+
+is converted into keys and values which is fed to the decoder.
+
+ is given to all the decoder blocks as they process the data, the decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input
+
+"
+The self attention layers in the decoder operate in a slightly different way than the one in the encoder:
+
+In the decoder, the self-attention layer is only allowed to attend to earlier positions in the output sequence. This is done by masking future positions (setting them to -inf) before the softmax step in the self-attention calculation.
+
+The “Encoder-Decoder Attention” layer works just like multiheaded self-attention, except it creates its Queries matrix from the layer below it, and takes the Keys and Values matrix from the output of the encoder stack.
+"
 
 That is all the high level understanding you need to have, to be able to write a transformer of your own. Now let us look at the paper as well as the code
 
