@@ -5,6 +5,7 @@ date: 2024-03-15 12:00:00 +0530
 categories: [personal, technology]
 image: /assets/transformers_laid_out/meme.png
 ---
+
 I have encountered that there are mainly three types of blogs/videos/tutorials talking about transformers
 
 - Explaining how a transformer works (One of the best is [Jay Alammar's blog](https://jalammar.github.io/illustrated-transformer/))
@@ -95,7 +96,7 @@ The decoder understands Y and the language you are trying to translate X to, let
 
 So Y acts as the common language that both the encoder and decoder speak to produce the final output.
 
-*We are using words for easier understanding, most modern LLMs do not work with words. But rather "Tokens"
+\*We are using words for easier understanding, most modern LLMs do not work with words. But rather "Tokens"
 
 ## Understanding Self-attention
 
@@ -173,9 +174,26 @@ Hence a single matrix multiplication does not get you the best representation of
 Multiple queries can be made, multiple keys can be done for each of these query\
 That is the reason we do so many matrix multiplication to try and get the best key for a query that is relevant to the question asked by the user
 
-That is all the reason there is to it. Have a look at the different illustrations to better understand it.
+![Image of a transformer](/assets/transformers_laid_out/SA.png)
+
+To visualize how Self-Attention creates different representation. Let's have a look at the three different representation of different words "apple","market" & "cellphone"
+
+Which of these representation is best to answer the following question
+
+- What does the company apple make?
+
+Representation 2 will be best to choose for this question, and it gives us the answer "cellphone" as that is the one closest to it
+
+What about the next question
+
+- Where can I get a new iphone?
+
+In this case Representation 3 will be the best option, and we will get the answer "market"
+
+(These are linear transformation and can be applied to any matrix, the 3rd one is called a [shear operation](https://en.wikipedia.org/wiki/Shear_mapping))
 
 ## Understanding Positional Encoding
+
 To understand What is Positional Encoding and why we need it, let's imagine the scenario in which we do not have it.
 
 First an input sentence, for E.g
@@ -202,13 +220,13 @@ Now, what will be the preferred characteristics of such a PE:
 Integer Encoding:
 
 Reading the above conditions the first thought that will come to anyone's mind will be. "Why not just add the position of the word"
-This naive solution will work for small sentences. But for longer sentences like lets say for some essay with 2000 words, adding position 2000 can lead to exploding or vanishing gradients. 
+This naive solution will work for small sentences. But for longer sentences like lets say for some essay with 2000 words, adding position 2000 can lead to exploding or vanishing gradients.
 
 There are other alternatives as well, Normalizing the integer encoding, binary encoding. But each has its own problems. To read more on detail go [here](https://huggingface.co/blog/designing-positional-encoding).
 
-One of the encoding method that satisfies all our conditions is using sinusodial functions. As done in the paper. 
+One of the encoding method that satisfies all our conditions is using sinusodial functions. As done in the paper.
 
-But why use cos if sin satisfies all the conditions? 
+But why use cos if sin satisfies all the conditions?
 
 Well sin does not satisfy all, but most conditions. Our need for a linear relation is not satisfied by sin and hence we need cos for it as well. Here let me present a simple proof. About which you can read more [here](https://blog.timodenk.com/linear-relationships-in-the-transformers-positional-encoding/)
 
@@ -242,6 +260,7 @@ This expansion gives us a system of two equations by matching coefficients:
 $$
 u_1\sin(\omega_i p) + v_1\cos(\omega_i p) = \cos(\omega_i k)\sin(\omega_i p) + \sin(\omega_i k)\cos(\omega_i p)
 $$
+
 $$
 u_2\sin(\omega_i p) + v_2\cos(\omega_i p) = -\sin(\omega_i k)\sin(\omega_i p) + \cos(\omega_i k)\cos(\omega_i p)
 $$
@@ -271,7 +290,7 @@ i = value for ith and (i+1)th index of the embedding, sin for even column number
 d_model = dimension of the model (in our case it is 512)
 10,000 (n) = this is a constant determined experimentally
 
-As you can see, using this we can calculate the PE value for each position and all the indexes for that position. 
+As you can see, using this we can calculate the PE value for each position and all the indexes for that position.
 Here is a simple illustration showing how its done.
 
 ![Image of a transformer](/assets/transformers_laid_out/PE1.png)
@@ -294,26 +313,27 @@ A single tranformer can have multiple encoder, as well as decoder blocks.
 Let's start with the encoder part first.
 
 it consists for multiple encoders, and each encoder block consists of the following parts:
-- Multi-head Attention 
+
+- Multi-head Attention
 - Residual connection
-- Layer Normalization 
-- Feed Forward network 
+- Layer Normalization
+- Feed Forward network
 
 We have already talked about Multi-head attention is great detail so let's talk about the remaining three.
- 
-Residual connection or also known as skip connections, they work as the name applies. They take the input and skip it over a block and take it to the next block. 
 
-Layer normalization was a development after batch normalization. Before we talk about either of these, we have to understand what normalization is. 
+Residual connection or also known as skip connections, they work as the name applies. They take the input and skip it over a block and take it to the next block.
+
+Layer normalization was a development after batch normalization. Before we talk about either of these, we have to understand what normalization is.
 
 Normalization is a method to bring different features in the same scale, This is done to stabalize training. Because when models try to learn from features with drastically diffenent scales, it can slow down training as well as cause exploding gradients.
 
-Batch normalization is the method where the mean and standard deviation of an enitre batch is subtracted from the future layer 
+Batch normalization is the method where the mean and standard deviation of an enitre batch is subtracted from the future layer
 
 In Layer normalization instead of focusing on the entire batch, all the features of a single instance is focused on.
 
 {elaborate each and add visualizations}
 
-As for the feed forward network, 
+As for the feed forward network,
 
 "
 Non-linearity and Complexity: While the attention mechanism is great at capturing relationships between different positions in the sequence, it's inherently a linear operation. The FFN adds non-linearity through its activation functions (typically ReLU), allowing the model to learn more complex patterns and transformations that pure attention alone cannot capture.
@@ -326,11 +346,10 @@ Keep in mind all the tokens are being processed in parallel, they go through the
 
 This is done to capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
 
-After which the output from the encoder block is converted into keys and values which is fed to the decoder. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input. 
+After which the output from the encoder block is converted into keys and values which is fed to the decoder. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input.
 The decoder block takes the Keys and Values from the encoder and creates it own queries from the previous output.
 
-There is also a slight variation in the decoder block, As in it we apply a mask to let the self-attention mechanism only attend to earlier positions in the output sequence. 
-
+There is also a slight variation in the decoder block, As in it we apply a mask to let the self-attention mechanism only attend to earlier positions in the output sequence.
 
 That is all the high level understanding you need to have, to be able to write a transformer of your own. Now let us look at the paper as well as the code
 
@@ -416,6 +435,7 @@ def scaled_dot_product_attention(query, key, value, mask=None):
       #YOUR CODE HERE
 
 ```
+
 - [Tensor size](https://pytorch.org/docs/stable/generated/torch.Tensor.size.html)
 - [Matrix multiplication](https://pytorch.org/docs/stable/generated/torch.matmul.html)
 - [Masked fill](https://pytorch.org/docs/stable/generated/torch.Tensor.masked_fill_.html#torch.Tensor.masked_fill_)
@@ -1856,9 +1876,7 @@ losses = train_transformer(
 )
 ```
 
-### Remaining Section of the paper 
-
-
+### Remaining Section of the paper
 
 ## Misc
 
