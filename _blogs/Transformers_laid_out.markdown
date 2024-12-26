@@ -320,6 +320,13 @@ In Layer normalization instead of focusing on the entire batch, all the features
 
 As for the feed forward network, 
 
+"
+Non-linearity and Complexity: While the attention mechanism is great at capturing relationships between different positions in the sequence, it's inherently a linear operation. The FFN adds non-linearity through its activation functions (typically ReLU), allowing the model to learn more complex patterns and transformations that pure attention alone cannot capture.
+
+Think of it this way: if the attention mechanism is like having a conversation where everyone can talk to everyone else (global interaction), the FFN is like giving each person time to think deeply about what they've heard and process it independently (local processing). Both are necessary for effective understanding and transformation of the input.
+Without the FFN, transformers would be severely limited in their ability to learn complex functions and would essentially be restricted to weighted averaging operations through attention mechanisms alone.
+"
+
 Keep in mind all the tokens are being processed in parallel, they go through the first encoder block, then the second till the nth(n here being any arbitrary number of blocks defined by you) block.
 
 This is done to capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
