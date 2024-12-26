@@ -3,33 +3,23 @@ layout: blog
 title: "Transformers Laid Out"
 date: 2024-03-15 12:00:00 +0530
 categories: [personal, technology]
-image: /assets/transformers_laid_out/1.png
+image: /assets/transformers_laid_out/meme.png
 ---
-
-[STILL A WORK IN PROGRESS]
-
 I have encountered that there are mainly three types of blogs/videos/tutorials talking about transformers
 
 - Explaining how a transformer works (One of the best is [Jay Alammar's blog](https://jalammar.github.io/illustrated-transformer/))
 - Explaining the "Attention is all you need" paper ([The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/))
 - Coding tranformers in PyTorch ([Coding a ChatGPT Like Transformer From Scratch in PyTorch](https://www.youtube.com/watch?v=C9QSpl5nmrY))
 
-Each follows an amazing pedigogy, Helping one understand a singular concept from multiple point of views (This blog has been highly influenced by the above works)
+Each follows an amazing pedagogy, Helping one understand a singular concept from multiple point of views (This blog has been highly influenced by the above works)
 
 Here I aim to:
-
-<!-- add redirects to each section  -->
 
 - Give an intuition of how transformers work
 - Explain what each section of the paper means and how you can understand and implement it
 - Code it down using PyTorch from a beginners perspective
 
 All in one place.
-
-![Meme](https://imgs.xkcd.com/comics/standards_2x.png)
-{add this as a foot note} meme taken from [xkcd](https://xkcd.com/)
-
-<!-- {change this to make there are 14 transformers tutorial} -->
 
 ## How to use this blog
 
@@ -59,13 +49,11 @@ class TransformerLRScheduler:
 
 ```
 
-[documentation & helpful links would be here]
+(I will add helpful links after the code block, but I will recommend you do your own research first. That is the first steps to becoming a [cracked engineer](https://news.ycombinator.com/item?id=41848448))
 
 I recommend you copy these code blocks and try to implement them by yourself.
 
 To make it easier, before we start coding I will explain each part in detail. If you are still unable to solve it, come back and see my implementation.
-
-Subsequently after each completed code block I will keep a FAQ section where I will write down my own questions that I had while writing the transformer as well as some questions that I believe are important to understand the concepts.
 
 ## Understanding the Transformer
 
@@ -74,30 +62,30 @@ We will try to translate "I like Pizza" from English to Hindi.
 
 ![Image of a transformer](/assets/transformers_laid_out/1.png)
 
-But before that, Let's have a brief look into the blackbox that is our Transformer. we can see that it consists of [Encoders](#understanding-the-encoder-and-decoder-block) and [Decoders](#understanding-the-encoder-and-decoder-block)
+But before that, Let's have a brief look into the blackbox that is our Transformer. We can see that it consists of [Encoders](#understanding-the-encoder-and-decoder-block) and [Decoders](#understanding-the-encoder-and-decoder-block)
 
 ![Image of Encoders and Decoders](/assets/transformers_laid_out/2.png)
 
-Now, "I like Pizza", first the sentence is broken down into it's respective words\* and each word is embedded using an embeddings matrix that is trained along with the transformer.
+Before being passed to the Encoder, The sentence "I like Pizza" is broken down into it's respective words\* and each word is embedded using an embeddings matrix. (which is trained along with the transformer)
 
 ![Image of a transformer](/assets/transformers_laid_out/random.png)
 
-To these embeddings [positional information](#understanding-positional-embedding) is added.
+To these embeddings [positional information](#understanding-positional-encoding) is added.
 ![Image of a transformer](/assets/transformers_laid_out/15.png)
 
 The reason we need to do this is because Transformers take all the information in parallel i.e. at once, so they lose the positional
-information which [RNN]({add_info_here}) or [LSTM]({add_info_here}) capture.
+information which [RNN]({https://en.wikipedia.org/wiki/Recurrent_neural_network}) or [LSTM]({https://colah.github.io/posts/2015-08-Understanding-LSTMs/}) capture.
 
 And positional information is important because "I like Pizza" =/= "Pizza like I" (It just gets weirder with longer sentences)
 
-Now these embeddings are passed to an "encoder" block which essentially does two things
+After that these embeddings are passed to the [encoder](#understanding-the-encoder-and-decoder-block) block which essentially does two things
 
-- Applies [self-attention](#understanding-self-attention) to understand the relationship of individual words with respect to the other words present
+- Applies [self-attention](#understanding-self-attention) to understand the relationship of individual words with respect to the other word present
 - Output self-attention scores to a feed forward network
 
 ![Image of a transformer](/assets/transformers_laid_out/4.png)
 
-The decoder block takes the output from the encoder, runs it through it self. Produces an output and sends it back to itself to create the next word
+The [decoder](#understanding-the-encoder-and-decoder-block) block takes the output from the encoder, runs it through it self, produces an output ,and sends it back to itself to create the next word
 
 ![Image of a transformer](/assets/transformers_laid_out/5.png)
 
@@ -114,20 +102,20 @@ So Y acts as the common language that both the encoder and decoder speak to prod
 We have all heard of the famous trio, "Query, Key and Values". I absolutely lost my head trying to understand how the terms came up behind this idea
 Was Q,K,Y related to dictionaries? (or maps in traditional CS) Was it inspired by a previous paper? if so how did they come up with?
 
-Let us first build an intuition behind the convention (then get rid of this convention to make more sense of it)
+Let us first build an intuition behind the idea. \
 Sentence (S): "Pramod loves pizza"
 
-Questions:
+Question:
 
-1. Who loves pizza?
+- Who loves pizza?
 
 You can come up with as many Questions (the queries) for the sentence as you want.
 Now for each query, you will have one specific piece of information (the key) that will give you the desired answer (the value)
 
 Query:
 
-1. Q ->Who loves pizza?
-   K -> pizza, Pramod, loves (it will actually have all the words with different degree of importance)
+- Q ->Who loves pizza?\
+   K -> pizza, Pramod, loves (it will actually have all the words with different degree of importance)\
    V -> pizza (The value is not directly the answer, but a representation as a matrix of something similar to the answer)
 
 This is an over simplification really, but it helps understand that the queries, keys and values all can be created only using the sentences.
@@ -135,7 +123,7 @@ This is an over simplification really, but it helps understand that the queries,
 Let us first understand how Self-attention is applied and subsequently understand why is it even done.
 Also, for the rest of the explanation treat Q,K,V purely as matrices and nothing else.
 
-First, The word "Delicious Pizza" is converted into embeddings. Then it is multiplied with the weights W_Q, W_K,W_V to produce Q,K,V vectors.
+First, The word "Delicious Pizza" is converted into embeddings. Then it is multiplied with the weights W_Q, W_K, W_V to produce Q,K,V vectors.
 
 These weights W_Q, W_K, W_V are trained alongside with the transformer. Notice how vector Q,K,V are smaller than the size of x1,x2. Namely, x1,x2 are vectors of size 512. Whereas Q,K,V are of size 64.
 This is an architectural choice to make the computation smaller and faster.
@@ -144,15 +132,19 @@ This is an architectural choice to make the computation smaller and faster.
 Now using these Q,K,V vectors the attention score is calculated.
 
 Calculating the attention score for the first word "Delicious" we take the query (q1) and key (k1) of the word and take a dot product of them. (Dot products are great to find similarity between things).
-Then we divide that by Square root of the dimension of key vector. This is done to stabalize training.
-The same process id done with the query of word one (q1) and all the keys of the different words in this case k1 & k2.
+
+Then we divide that by Square root of the dimension of key vector. This is done to stabilize training.
+
+The same process is done with the query of word one (q1) and all the keys of the different words in this case k1 & k2.
+
 Finally using all the values, we take a softmax of each out.
-Then these are multiplied with the value of each word (v1,v2). Intuitvely to get the importance of each word with respect to the selected words. Less important words are drowned out by lets say multipling with 0.001
+
+Then these are multiplied with the value of each word (v1,v2). Intuitvely to get the importance of each word with respect to the selected words. Less important words are drowned out by lets say multipling with 0.001.\
 And finally everything is summed up to get the Z vector
 
 ![Image of a transformer](/assets/transformers_laid_out/8.png)
 
-The thing that made transformers was that computation could be parallazined, So we do not deal with vectors. But rather matrices.
+The thing that made transformers was that computation could be parallelized, So we do not deal with vectors. But rather matrices.
 
 The implementation remains the same.
 
@@ -169,13 +161,16 @@ Finally Join the outputs from all the attention head and multiply it with a matr
 Here is a summary of everything that is going on
 ![Image of a transformer](/assets/transformers_laid_out/14.png)
 
-{create illustrations and add here}
-Now forget multi-head attention, attention blocks and all the HUGE BIG JARGON.
-Lets say you are in point A and want to go to B in a huge city
-Do you think there is only one path to go their? of course not, there are thousands of way to reach that point
+Let us now understand why this even works:\
+Forget about multi-head attention, attention blocks and all the JARGON.
 
-so a single matrix multiplication will obviously not get you the best representation of query and key
-Multiple queries can be made, multiple keys can be done for each of these query
+Imagine you are in point A and want to go to B in a huge city.\
+Do you think there is only one path to go their? of course not, there are thousands of way to reach that point.
+
+But you will never know the best path, till you have tried a lot of them. More the better.
+
+Hence a single matrix multiplication does not get you the best representation of query and key\
+Multiple queries can be made, multiple keys can be done for each of these query\
 That is the reason we do so many matrix multiplication to try and get the best key for a query that is relevant to the question asked by the user
 
 That is all the reason there is to it. Have a look at the different illustrations to better understand it.
@@ -421,9 +416,6 @@ def scaled_dot_product_attention(query, key, value, mask=None):
       #YOUR CODE HERE
 
 ```
-
-Some helpful documentation (I will add these after the code block that you are supposed to write, but I will recommend you do your own research first. That is the first steps to becoming a [cracked engineer](https://news.ycombinator.com/item?id=41848448))
-
 - [Tensor size](https://pytorch.org/docs/stable/generated/torch.Tensor.size.html)
 - [Matrix multiplication](https://pytorch.org/docs/stable/generated/torch.matmul.html)
 - [Masked fill](https://pytorch.org/docs/stable/generated/torch.Tensor.masked_fill_.html#torch.Tensor.masked_fill_)
@@ -1881,3 +1873,5 @@ Cheers,
 Pramod
 
 P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
+
+Meme at taken from [xkcd](https://xkcd.com/)
