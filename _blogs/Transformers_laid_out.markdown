@@ -97,7 +97,7 @@ Now these embeddings are passed to an "encoder" block which essentially does two
 
 ![Image of a transformer](/assets/transformers_laid_out/4.png)
 
-The decoder block takes the output from the encoder, runs it through it self. Produces an ouput and sends it back to itself to create the next word
+The decoder block takes the output from the encoder, runs it through it self. Produces an output and sends it back to itself to create the next word
 
 ![Image of a transformer](/assets/transformers_laid_out/5.png)
 
@@ -107,7 +107,7 @@ The decoder understands Y and the language you are trying to translate X to, let
 
 So Y acts as the common language that both the encoder and decoder speak to produce the final output.
 
-\*We are using words for easier understanding, most modern LLMs do not work with words. But rather "Tokens"
+*We are using words for easier understanding, most modern LLMs do not work with words. But rather "Tokens"
 
 ## Understanding Self-attention
 
@@ -298,31 +298,37 @@ A single tranformer can have multiple encoder, as well as decoder blocks.
 
 Let's start with the encoder part first.
 
-Our input sentence is first converted into tokens
+it consists for multiple encoders, and each encoder block consists of the following parts:
+- Multi-head Attention 
+- Residual connection
+- Layer Normalization 
+- Feed Forward network 
 
-Then it is embedded through the embeddings matrix, then the positional encoding is added.
+We have already talked about Multi-head attention is great detail so let's talk about the remaining three.
+ 
+Residual connection or also known as skip connections, they work as the name applies. They take the input and skip it over a block and take it to the next block. 
 
-{add info about residual connections as well}
+Layer normalization was a development after batch normalization. Before we talk about either of these, we have to understand what normalization is. 
 
-Now all the tokens are processed in parallel, they go through the first encoder block, then the second till the nth(n here being any arbitrary number of blocks defined by you) block
+Normalization is a method to bring different features in the same scale, This is done to stabalize training. Because when models try to learn from features with drastically diffenent scales, it can slow down training as well as cause exploding gradients.
 
-We have already seen what each encoder block consists of
+Batch normalization is the method where the mean and standard deviation of an enitre batch is subtracted from the future layer 
 
-What this tries to do is capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
+In Layer normalization instead of focusing on the entire batch, all the features of a single instance is focused on.
 
-Then this final output
+{elaborate each and add visualizations}
 
-is converted into keys and values which is fed to the decoder.
+As for the feed forward network, 
 
- is given to all the decoder blocks as they process the data, the decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input
+Keep in mind all the tokens are being processed in parallel, they go through the first encoder block, then the second till the nth(n here being any arbitrary number of blocks defined by you) block.
 
-"
-The self attention layers in the decoder operate in a slightly different way than the one in the encoder:
+This is done to capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
 
-In the decoder, the self-attention layer is only allowed to attend to earlier positions in the output sequence. This is done by masking future positions (setting them to -inf) before the softmax step in the self-attention calculation.
+After which the output from the encoder block is converted into keys and values which is fed to the decoder. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input. 
+The decoder block takes the Keys and Values from the encoder and creates it own queries from the previous output.
 
-The “Encoder-Decoder Attention” layer works just like multiheaded self-attention, except it creates its Queries matrix from the layer below it, and takes the Keys and Values matrix from the output of the encoder stack.
-"
+There is also a slight variation in the decoder block, As in it we apply a mask to let the self-attention mechanism only attend to earlier positions in the output sequence. 
+
 
 That is all the high level understanding you need to have, to be able to write a transformer of your own. Now let us look at the paper as well as the code
 
