@@ -228,9 +228,9 @@ One of the encoding method that satisfies all our conditions is using sinusodial
 
 But why use cos if sin satisfies all the conditions?
 
-Well sin does not satisfy all, but most conditions. Our need for a linear relation is not satisfied by sin and hence we need cos for it as well. Here let me present a simple proof. About which you can read more [here](https://blog.timodenk.com/linear-relationships-in-the-transformers-positional-encoding/)
+Well sine does not satisfy all, but most conditions. Our need for a linear relation is not satisfied by sine and hence we need cosine for it as well. Here let me present a simple proof which has been taken from [here](https://blog.timodenk.com/linear-relationships-in-the-transformers-positional-encoding/)
 
-{This is plag, change this}
+
 Consider a sequence of sine and cosine pairs, each associated with a frequency $\omega_i$. Our goal is to find a linear transformation matrix $\mathbf{M}$ that can shift these sinusoidal functions by a fixed offset $k$:
 
 $$
@@ -285,8 +285,8 @@ Now that we understand what is PE and why we use sine and cos. Let us understand
 $$PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
 $$PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
 
-pos = position of the word in the sentence ("Pramod likes pizza" Pramod is at position 0, likes in 1 and so on)
-i = value for ith and (i+1)th index of the embedding, sin for even column number cos for odd column number ("Pramod" is converted into a vector of embedding. Which has different indexes)
+pos = position of the word in the sentence ("Pramod likes pizza" Pramod is at position 0, likes in 1 and so on)\
+i = value for ith and (i+1)th index of the embedding, sine for even column number cosine for odd column number ("Pramod" is converted into a vector of embedding. Which has different indexes)\
 d_model = dimension of the model (in our case it is 512)
 10,000 (n) = this is a constant determined experimentally
 
@@ -304,12 +304,15 @@ Code to generate [here](https://machinelearningmastery.com/a-gentle-introduction
 
 ![Image of a transformer](/assets/transformers_laid_out/PE5.webp)
 
+Imagine it as such, each index on the y axis represents a word, and everything corresponding on the x axis to that index. Is it's positional encoding.
+
 ## Understanding The Encoder and Decoder Block
 
 If everything so far has made sense, this is going to be a cake walk for you. Because this is where we put everything together.
 
 A single tranformer can have multiple encoder, as well as decoder blocks.
 
+![Image of a transformer](/assets/transformers_laid_out/3.png)
 Let's start with the encoder part first.
 
 it consists for multiple encoders, and each encoder block consists of the following parts:
@@ -319,19 +322,28 @@ it consists for multiple encoders, and each encoder block consists of the follow
 - Layer Normalization
 - Feed Forward network
 
+![Image of a transformer](/assets/transformers_laid_out/encoder.png)
+
 We have already talked about Multi-head attention is great detail so let's talk about the remaining three.
 
 Residual connection or also known as skip connections, they work as the name applies. They take the input and skip it over a block and take it to the next block.
 
+![Image of a transformer](/assets/transformers_laid_out/19.png)
+
 Layer normalization was a development after batch normalization. Before we talk about either of these, we have to understand what normalization is.
 
-Normalization is a method to bring different features in the same scale, This is done to stabalize training. Because when models try to learn from features with drastically diffenent scales, it can slow down training as well as cause exploding gradients.
+Normalization is a method to bring different features in the same scale, This is done to stabilize training. Because when models try to learn from features with drastically different scales, it can slow down training as well as cause exploding gradients. (Read more [here](https://towardsdatascience.com/batch-norm-explained-visually-how-it-works-and-why-neural-networks-need-it-b18919692739))
+
+![Image of a transformer](/assets/transformers_laid_out/Norm.png)
 
 Batch normalization is the method where the mean and standard deviation of an enitre batch is subtracted from the future layer
 
+![Image of a transformer](/assets/transformers_laid_out/Layer_norm.png)
+(image taken from this [stackexchange](https://stats.stackexchange.com/questions/474440/why-do-transformers-use-layer-norm-instead-of-batch-norm))
+
 In Layer normalization instead of focusing on the entire batch, all the features of a single instance is focused on.
 
-{elaborate each and add visualizations}
+To get a better grasp, consider reading this [blog](https://www.pinecone.io/learn/batch-layer-normalization/)
 
 As for the feed forward network,
 
@@ -347,7 +359,10 @@ Keep in mind all the tokens are being processed in parallel, they go through the
 This is done to capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
 
 After which the output from the encoder block is converted into keys and values which is fed to the decoder. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input.
+![Image of a transformer](/assets/transformers_laid_out/16.png)
 The decoder block takes the Keys and Values from the encoder and creates it own queries from the previous output.
+
+![Image of a transformer](/assets/transformers_laid_out/17.png)
 
 There is also a slight variation in the decoder block, As in it we apply a mask to let the self-attention mechanism only attend to earlier positions in the output sequence.
 
