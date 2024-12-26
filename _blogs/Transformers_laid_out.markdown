@@ -366,6 +366,7 @@ Solutions like RNNs and LSTMs lose the contextual meaning as the sentence gets l
 ### Model Architecture
 
 The section all of us had been waiting for. I will divert a bit from the paper here. Because I find it easier to follow the data.
+Also if you read the paper, each word of it should make sense to you.
 
 {here make the names clickable to the section}
 We will first start with the Multi-Head Attention, then the feed forward network, followed by the positional encoding, Using these we will finish the Encoder Layer, subsequently we will move to the Decoder Layer, After which we will write the Encoder & Decoder block, and finally end it with writing the training loop for an entire Transformer on real world data.
@@ -501,6 +502,7 @@ class MultiHeadAttention(nn.Module):
 - I had a hard time understanding the difference between view and transpose. These 2 links should help you out, [When to use view,transpose & permute](https://www.reddit.com/r/learnmachinelearning/comments/17irzkc/why_do_we_use_view_and_then_transpose_when/) and [Difference between view & transpose](https://discuss.pytorch.org/t/different-between-permute-transpose-view-which-should-i-use/32916)
 - Contiguous and view, still eluded me. Till I read these, [Pytorch Internals](https://blog.ezyang.com/2019/05/pytorch-internals/) and [Contiguous & Non-Contiguous Tensor](https://medium.com/analytics-vidhya/pytorch-contiguous-vs-non-contiguous-tensor-view-understanding-view-reshape-73e10cdfa0dd)
 - [Linear](https://pytorch.org/docs/stable/generated/torch.nn.Linear.html)
+- I also have a post talking about how the internal memory management of tensors work, [read this](https://www.linkedin.com/posts/goyalpramod_memory-allocation-in-python-activity-7273940017410928640-FZji?utm_source=share&utm_medium=member_desktop) if you are interested.
 
 ```python
 #my implementation
@@ -570,6 +572,11 @@ class MultiHeadAttention(nn.Module):
 ```
 
 ### Feed Forward Network
+
+{explain "Another way of describing this is as two convolutions with kernel size 1.
+The dimensionality of input and output is dmodel = 512, and the inner-layer has dimensionality
+df f = 2048.
+"}
 
 Section 3.3
 
@@ -1856,6 +1863,10 @@ losses = train_transformer(
     num_epochs=10
 )
 ```
+
+### Remaining Section of the paper 
+
+
 
 ## Misc
 
