@@ -1922,7 +1922,7 @@ losses = train_transformer(
 
 ### Remaining Section of the paper
 
-## Misc
+## Misc & Further Reading
 
 Here are some resources and more information that can help you out in your journey which I could not decide where to put
 
@@ -1937,4 +1937,4 @@ Pramod
 
 P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
 
-Meme at taken from [xkcd](https://xkcd.com/)
+Meme at top taken from [xkcd](https://xkcd.com/)
