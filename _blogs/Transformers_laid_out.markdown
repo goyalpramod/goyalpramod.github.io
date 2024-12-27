@@ -393,6 +393,7 @@ That is all the high level understanding you need to have, to be able to write a
 ### Final linear & Softmax layer
 
 {add content}
+![Image of the linear output](/assets/transformers_laid_out/linear_output.png)
 
 ### Understanding Training of a transformer
 
