@@ -204,7 +204,8 @@ In this case Representation 3 will be the best option, and we will get the answe
 (These are linear transformation and can be applied to any matrix, the 3rd one is called a [shear operation](https://en.wikipedia.org/wiki/Shear_mapping))
 
 ## Understanding Positional Encoding
-<!-- {maybe shorten this, or remove it from the into} -->
+
+{maybe shorten this, or remove it from the into, also fix this part of the blog}
 To understand What is Positional Encoding and why we need it, let's imagine the scenario in which we do not have it.
 
 First an input sentence, for E.g
@@ -240,7 +241,6 @@ One of the encoding method that satisfies all our conditions is using sinusodial
 But why use cos if sin satisfies all the conditions?
 
 Well sine does not satisfy all, but most conditions. Our need for a linear relation is not satisfied by sine and hence we need cosine for it as well. Here let me present a simple proof which has been taken from [here](https://blog.timodenk.com/linear-relationships-in-the-transformers-positional-encoding/)
-
 
 Consider a sequence of sine and cosine pairs, each associated with a frequency $\omega_i$. Our goal is to find a linear transformation matrix $\mathbf{M}$ that can shift these sinusoidal functions by a fixed offset $k$:
 
@@ -349,7 +349,7 @@ Normalization is a method to bring different features in the same scale, This is
 
 Batch normalization is the method where the mean and standard deviation of an enitre batch is subtracted from the future layer
 
-![Image of a transformer](/assets/transformers_laid_out/Layer_norm.png)
+![Image of layer normalization](/assets/transformers_laid_out/Layer_norm.png)
 (image taken from this [stackexchange](https://stats.stackexchange.com/questions/474440/why-do-transformers-use-layer-norm-instead-of-batch-norm))
 
 In Layer normalization instead of focusing on the entire batch, all the features of a single instance is focused on.
@@ -408,8 +408,7 @@ Solutions like RNNs and LSTMs lose the contextual meaning as the sentence gets l
 The section all of us had been waiting for. I will divert a bit from the paper here. Because I find it easier to follow the data.
 Also if you read the paper, each word of it should make sense to you.
 
-{here make the names clickable to the section}
-We will first start with the Multi-Head Attention, then the feed forward network, followed by the positional encoding, Using these we will finish the Encoder Layer, subsequently we will move to the Decoder Layer, After which we will write the Encoder & Decoder block, and finally end it with writing the training loop for an entire Transformer on real world data.
+We will first start with the [Multi-Head Attention](#multi-head-attention), then the [feed forward network](#feed-forward-network), followed by the [positional encoding](#positional-encoding), Using these we will finish the [Encoder](#encoder-layer) Layer, subsequently we will move to the [Decoder](#decoder-layer) Layer, After which we will write the [Encoder](#encoder) & [Decoder](#decoder) block, and finally end it with writing the [training](#training-transformers) loop for an entire Transformer on real world data.
 
 The full notebook can be found [here](https://github.com/goyalpramod/transformer_from_scratch/blob/main/transformers.ipynb)
 
@@ -1908,7 +1907,8 @@ losses = train_transformer(
 
 Here are some resources and more information that can help you out in your journey which I could not decide where to put
 
-[What is torch.nn really?](https://pytorch.org/tutorials/beginner/nn_tutorial.html)
+[What is torch.nn really?](https://pytorch.org/tutorials/beginner/nn_tutorial.html)\
+[Neural networks by 3Blue1Brown](https://www.3blue1brown.com/topics/neural-networks)
 
 Congratulations for completing this tutorial/lesson/blog however you see it. It is by nature of human curosity that you must have a few questions now.
 Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here in an FAQ section.
