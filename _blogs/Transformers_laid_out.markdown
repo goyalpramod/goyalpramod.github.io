@@ -12,7 +12,7 @@ I have encountered that there are mainly three types of blogs/videos/tutorials t
 - Explaining the "Attention is all you need" paper ([The Annotated Transformer](https://nlp.seas.harvard.edu/annotated-transformer/))
 - Coding tranformers in PyTorch ([Coding a ChatGPT Like Transformer From Scratch in PyTorch](https://www.youtube.com/watch?v=C9QSpl5nmrY))
 
-Each follows an amazing pedagogy, Helping one understand a singular concept from multiple point of views (This blog has been highly influenced by the above works)
+Each follows an amazing pedagogy, Helping one understand a singular concept from multiple point of views. (This blog has been highly influenced by the above works)
 
 Here I aim to:
 
@@ -39,18 +39,18 @@ class TransformerLRScheduler:
             d_model: Model dimensionality
             warmup_steps: Number of warmup steps
         """
-        # Your code here
-        # lrate = d_model^(-0.5) * min(step_num^(-0.5), step_num * warmup_steps^(-1.5))
+        #YOUR CODE HERE
 
     def step(self, step_num):
         """
         Update learning rate based on step number
         """
-        # Your code here - implement the formula
+        # lrate = d_model^(-0.5) * min(step_num^(-0.5), step_num * warmup_steps^(-1.5))
+        #YOUR CODE HERE - implement the formula
 
 ```
 
-(I will add helpful links after the code block, but I will recommend you do your own research first. That is the first steps to becoming a [cracked engineer](https://news.ycombinator.com/item?id=41848448))
+I will add helpful links after the code block, but I will recommend you do your own research first. That is the first steps to becoming a [cracked engineer](https://news.ycombinator.com/item?id=41848448)
 
 I recommend you copy these code blocks and try to implement them by yourself.
 
@@ -72,12 +72,8 @@ Before being passed to the Encoder, The sentence "I like Pizza" is broken down i
 ![Image of a embedding of words](/assets/transformers_laid_out/random.png)
 
 To these embeddings [positional information](#understanding-positional-encoding) is added.
+
 ![Image of a transformer](/assets/transformers_laid_out/15.png)
-
-The reason we need to do this is because Transformers take all the information in parallel i.e. at once, so they lose the positional
-information which [RNN]({https://en.wikipedia.org/wiki/Recurrent_neural_network}) or [LSTM]({https://colah.github.io/posts/2015-08-Understanding-LSTMs/}) capture.
-
-And positional information is important because "I like Pizza" =/= "Pizza like I" (It just gets weirder with longer sentences)
 
 After that these embeddings are passed to the [encoder](#understanding-the-encoder-and-decoder-block) block which essentially does two things
 
@@ -128,6 +124,7 @@ First, The word "Delicious Pizza" is converted into embeddings. Then it is multi
 
 These weights W_Q, W_K, W_V are trained alongside with the transformer. Notice how vector Q,K,V are smaller than the size of x1,x2. Namely, x1,x2 are vectors of size 512. Whereas Q,K,V are of size 64.
 This is an architectural choice to make the computation smaller and faster.
+
 ![Image of creating Q,K,V vectors](/assets/transformers_laid_out/7.png)
 
 Now using these Q,K,V vectors the attention score is calculated.
@@ -157,7 +154,7 @@ Second calulate the attention scores
 
 ![Image of calculating attention scores using matrix](/assets/transformers_laid_out/10.png)
 
-Third Repeat the steps for each attention head
+Third repeat the steps for each attention head
 
 ![Image of calculating attention scores for different heads](/assets/transformers_laid_out/11.png)
 
@@ -165,7 +162,7 @@ This is the how the output from each attention head will look like
 
 ![Image of output of different attention heads](/assets/transformers_laid_out/12.png)
 
-Finally Join the outputs from all the attention head and multiply it with a matrix WO (which is trained along with the model) To get the final attention score
+Finally join the outputs from all the attention head and multiply it with a matrix WO (which is trained along with the model) To get the final attention score
 
 ![Image of joining attention scores](/assets/transformers_laid_out/13.png)
 
@@ -193,19 +190,18 @@ Which of these representation is best to answer the following question
 
 - What does the company apple make?
 
-Representation 2 will be best to choose for this question, and it gives us the answer "cellphone" as that is the one closest to it
+Representation 2 will be best to choose for this question, and it gives us the answer "cellphone" as that is the one closest to it.
 
 What about the next question
 
 - Where can I get a new iphone?
 
-In this case Representation 3 will be the best option, and we will get the answer "market"
+In this case Representation 3 will be the best option, and we will get the answer "market".
 
 (These are linear transformation and can be applied to any matrix, the 3rd one is called a [shear operation](https://en.wikipedia.org/wiki/Shear_mapping))
 
 ## Understanding Positional Encoding
 
-{maybe shorten this, or remove it from the into, also fix this part of the blog}
 To understand What is Positional Encoding and why we need it, let's imagine the scenario in which we do not have it.
 
 First an input sentence, for E.g
@@ -223,22 +219,26 @@ Hence, the reason we need PE (Positional Encoding) is to tell the model about th
 
 Now, what will be the preferred characteristics of such a PE:
 
-- Unique encoding for each position: Because otherwise it will keep changing for different length of sentences. Position 2 for a 10 word sentence will be different than for a 100 word sentence. This will hamper training as there is no predictable pattern that can be followed.
-- Linear relation between two encoded positions: If I know the position p of one word, it should be easy to calculate the position p+k of another word. This will make it easier for the model to learn the patter.
-- Generalizes to longer sequences than those encountered in training: If the model is limited by the length of the sentences used in training, it will never work in the real world.
-- Generated by a deterministic process the model can learn: It should be a simple formula, or easily calculable algorithm. To help our model generalize better.
-- Extensible to multiple dimensions: Different scenarios can have different dimensions, we want it to work in all cases.
+- **Unique encoding for each position**: Because otherwise it will keep changing for different length of sentences. Position 2 for a 10 word sentence will be different than for a 100 word sentence. This will hamper training as there is no predictable pattern that can be followed.
+- **Linear relation between two encoded positions**: If I know the position p of one word, it should be easy to calculate the position p+k of another word. This will make it easier for the model to learn the patter.
+- **Generalizes to longer sequences than those encountered in training**: If the model is limited by the length of the sentences used in training, it will never work in the real world.
+- **Generated by a deterministic process the model can learn**: It should be a simple formula, or easily calculable algorithm. To help our model generalize better.
+- **Extensible to multiple dimensions**: Different scenarios can have different dimensions, we want it to work in all cases.
 
-Integer Encoding:
+### Integer Encoding
+
+![Image of different representation for different words](/assets/transformers_laid_out/IE.png)
 
 Reading the above conditions the first thought that will come to anyone's mind will be. "Why not just add the position of the word"
-This naive solution will work for small sentences. But for longer sentences like lets say for some essay with 2000 words, adding position 2000 can lead to exploding or vanishing gradients.
+This naive solution will work for small sentences. But for longer sentences like lets say for some essay with 2000 words, adding position 2000 can lead to [exploding or vanishing gradients](https://en.wikipedia.org/wiki/Vanishing_gradient_problem).
 
 There are other alternatives as well, Normalizing the integer encoding, binary encoding. But each has its own problems. To read more on detail go [here](https://huggingface.co/blog/designing-positional-encoding).
 
-One of the encoding method that satisfies all our conditions is using sinusodial functions. As done in the paper.
+### Sinusoidal Encoding
 
-But why use cos if sin satisfies all the conditions?
+One of the encoding method that satisfies all our conditions is using **sinusoidal functions**. As done in the paper.
+
+But why use cosine alternatively if sine satisfies all the conditions?
 
 Well sine does not satisfy all, but most conditions. Our need for a linear relation is not satisfied by sine and hence we need cosine for it as well. Here let me present a simple proof which has been taken from [here](https://blog.timodenk.com/linear-relationships-in-the-transformers-positional-encoding/)
 
@@ -296,10 +296,10 @@ Now that we understand what is PE and why we use sine and cos. Let us understand
 $$PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
 $$PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
 
-pos = position of the word in the sentence ("Pramod likes pizza" Pramod is at position 0, likes in 1 and so on)\
-i = value for ith and (i+1)th index of the embedding, sine for even column number cosine for odd column number ("Pramod" is converted into a vector of embedding. Which has different indexes)\
-d_model = dimension of the model (in our case it is 512)
-10,000 (n) = this is a constant determined experimentally
+*pos* = position of the word in the sentence ("Pramod likes pizza" Pramod is at position 0, likes in 1 and so on)\
+*i* = value for ith and (i+1)th index of the embedding, sine for even column number cosine for odd column number ("Pramod" is converted into a vector of embedding. Which has different indexes)\
+*d_model* = dimension of the model (in our case it is 512)\
+*10,000 (n)* = this is a constant determined experimentally
 
 As you can see, using this we can calculate the PE value for each position and all the indexes for that position.
 Here is a simple illustration showing how its done.
@@ -324,6 +324,8 @@ If everything so far has made sense, this is going to be a cake walk for you. Be
 A single transformer can have multiple encoder, as well as decoder blocks.
 
 ![Image of encoders and decoders](/assets/transformers_laid_out/3.png)
+
+### Encoder
 Let's start with the encoder part first.
 
 it consists for multiple encoders, and each encoder block consists of the following parts:
@@ -335,11 +337,15 @@ it consists for multiple encoders, and each encoder block consists of the follow
 
 ![Image of an encoder](/assets/transformers_laid_out/encoder.png)
 
-We have already talked about Multi-head attention is great detail so let's talk about the remaining three.
+### Residual connection
+
+We have already talked about Multi-head attention in great detail so let's talk about the remaining three.
 
 Residual connection or also known as skip connections, they work as the name applies. They take the input and skip it over a block and take it to the next block.
 
 ![Image of an encoder broken down](/assets/transformers_laid_out/19.png)
+
+### Layer Normalization
 
 Layer normalization was a development after batch normalization. Before we talk about either of these, we have to understand what normalization is.
 
@@ -347,16 +353,18 @@ Normalization is a method to bring different features in the same scale, This is
 
 ![Image of normalization](/assets/transformers_laid_out/Norm.png)
 
-Batch normalization is the method where the mean and standard deviation of an enitre batch is subtracted from the future layer
+Batch normalization is the method where the mean and standard deviation of an entire batch is subtracted from the future layer.
 
 ![Image of layer normalization](/assets/transformers_laid_out/Layer_norm.png)
 (image taken from this [stackexchange](https://stats.stackexchange.com/questions/474440/why-do-transformers-use-layer-norm-instead-of-batch-norm))
 
 In Layer normalization instead of focusing on the entire batch, all the features of a single instance is focused on.
 
+Think of it like this, we take each word from a sentence, and normalize that word.
+
 To get a better grasp, consider reading this [blog](https://www.pinecone.io/learn/batch-layer-normalization/)
 
-As for the feed forward network,
+### Feed Forward network
 
 "
 Non-linearity and Complexity: While the attention mechanism is great at capturing relationships between different positions in the sequence, it's inherently a linear operation. The FFN adds non-linearity through its activation functions (typically ReLU), allowing the model to learn more complex patterns and transformations that pure attention alone cannot capture.
@@ -369,8 +377,12 @@ Keep in mind all the tokens are being processed in parallel, they go through the
 
 This is done to capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
 
+### Decoder Block
+
 After which the output from the encoder block is converted into keys and values which is fed to the decoder. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input.
+
 ![Image of a transformer](/assets/transformers_laid_out/16.png)
+
 The decoder block takes the Keys and Values from the encoder and creates it own queries from the previous output.
 
 ![Image of a transformer](/assets/transformers_laid_out/17.png)
