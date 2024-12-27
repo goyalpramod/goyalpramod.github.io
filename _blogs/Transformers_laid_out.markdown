@@ -366,24 +366,23 @@ To get a better grasp, consider reading this [blog](https://www.pinecone.io/lear
 
 ### Feed Forward network
 
-"
-Non-linearity and Complexity: While the attention mechanism is great at capturing relationships between different positions in the sequence, it's inherently a linear operation. The FFN adds non-linearity through its activation functions (typically ReLU), allowing the model to learn more complex patterns and transformations that pure attention alone cannot capture.
+The Feed Forward network (FFN) is added to introduce non-linearity and complexity to the model. While the attention mechanism is great at capturing relationships between different positions in  the sequence, It is inherently still a linear operation (as mentioned earlier).\
+The FFN adds non-linearity through its activation functions (typically ReLU), allowing the model to learn more complex patterns and transformations that pure attention alone cannot capture.
 
-Think of it this way: if the attention mechanism is like having a conversation where everyone can talk to everyone else (global interaction), the FFN is like giving each person time to think deeply about what they've heard and process it independently (local processing). Both are necessary for effective understanding and transformation of the input.
+
+Imagine it this way: if the attention mechanism is like having a conversation where everyone can talk to everyone else (global interaction), the FFN is like giving each person time to think deeply about what they've heard and process it independently (local processing). Both are necessary for effective understanding and transformation of the input.
 Without the FFN, transformers would be severely limited in their ability to learn complex functions and would essentially be restricted to weighted averaging operations through attention mechanisms alone.
-"
-
-Keep in mind all the tokens are being processed in parallel, they go through the first encoder block, then the second till the nth(n here being any arbitrary number of blocks defined by you) block.
-
-This is done to capture all the semantic meaning between the words, the richness of the sentence, the grammar (originally transformers were created for machine translation. So that can help you understand better)
 
 ### Decoder Block
 
-After which the output from the encoder block is converted into keys and values which is fed to the decoder. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input.
+The output of the encoder is fed each decoder block as the data processes as Key and Value matrix. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input.
 
 ![Image of a transformer](/assets/transformers_laid_out/16.png)
 
-The decoder block takes the Keys and Values from the encoder and creates it own queries from the previous output.
+1. The decoder block takes the Keys and Values from the encoder and creates it own queries from the previous output.
+2. Using the output of one, it moves to step 2, where the output from the previous decoder block is taken as the query and key, value is taken from the encoder.
+3. This repeats till we get an output from the decoder, which it takes as the input for creating the next token 
+4. This repeats till we reach <end_of_sentence> token
 
 ![Image of a transformer](/assets/transformers_laid_out/17.png)
 
