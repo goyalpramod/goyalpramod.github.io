@@ -69,7 +69,7 @@ But before that, Let's have a brief look into the blackbox that is our Transform
 
 Before being passed to the Encoder, The sentence "I like Pizza" is broken down into it's respective words\* and each word is embedded using an embeddings matrix. (which is trained along with the transformer)
 
-![Image of a transformer](/assets/transformers_laid_out/random.png)
+![Image of a embedding of words](/assets/transformers_laid_out/random.png)
 
 To these embeddings [positional information](#understanding-positional-encoding) is added.
 ![Image of a transformer](/assets/transformers_laid_out/15.png)
@@ -84,11 +84,11 @@ After that these embeddings are passed to the [encoder](#understanding-the-encod
 - Applies [self-attention](#understanding-self-attention) to understand the relationship of individual words with respect to the other word present
 - Output self-attention scores to a feed forward network
 
-![Image of a transformer](/assets/transformers_laid_out/4.png)
+![Image of an encoder](/assets/transformers_laid_out/4.png)
 
 The [decoder](#understanding-the-encoder-and-decoder-block) block takes the output from the encoder, runs it through it self, produces an output ,and sends it back to itself to create the next word
 
-![Image of a transformer](/assets/transformers_laid_out/5.png)
+![Image of a decoder](/assets/transformers_laid_out/5.png)
 
 Think of it like this.
 The encoder understands your language let's call it X and another language called Y
@@ -128,7 +128,7 @@ First, The word "Delicious Pizza" is converted into embeddings. Then it is multi
 
 These weights W_Q, W_K, W_V are trained alongside with the transformer. Notice how vector Q,K,V are smaller than the size of x1,x2. Namely, x1,x2 are vectors of size 512. Whereas Q,K,V are of size 64.
 This is an architectural choice to make the computation smaller and faster.
-![Image of a transformer](/assets/transformers_laid_out/7.png)
+![Image of creating Q,K,V vectors](/assets/transformers_laid_out/7.png)
 
 Now using these Q,K,V vectors the attention score is calculated.
 
@@ -143,24 +143,35 @@ Finally using all the values, we take a softmax of each out.
 Then these are multiplied with the value of each word (v1,v2). Intuitvely to get the importance of each word with respect to the selected words. Less important words are drowned out by lets say multipling with 0.001.\
 And finally everything is summed up to get the Z vector
 
-![Image of a transformer](/assets/transformers_laid_out/8.png)
+![Image of a self-attention mechanism in the form of vectors](/assets/transformers_laid_out/8.png)
 
 The thing that made transformers was that computation could be parallelized, So we do not deal with vectors. But rather matrices.
 
 The implementation remains the same.
 
 First calulate Q,K,V Matrix
-![Image of a transformer](/assets/transformers_laid_out/9.png)
+
+![Image of calculating Q,K,V matrix](/assets/transformers_laid_out/9.png)
+
 Second calulate the attention scores
-![Image of a transformer](/assets/transformers_laid_out/10.png)
+
+![Image of calculating attention scores using matrix](/assets/transformers_laid_out/10.png)
+
 Third Repeat the steps for each attention head
-![Image of a transformer](/assets/transformers_laid_out/11.png)
+
+![Image of calculating attention scores for different heads](/assets/transformers_laid_out/11.png)
+
 This is the how the output from each attention head will look like
-![Image of a transformer](/assets/transformers_laid_out/12.png)
+
+![Image of output of different attention heads](/assets/transformers_laid_out/12.png)
+
 Finally Join the outputs from all the attention head and multiply it with a matrix WO (which is trained along with the model) To get the final attention score
-![Image of a transformer](/assets/transformers_laid_out/13.png)
+
+![Image of joining attention scores](/assets/transformers_laid_out/13.png)
+
 Here is a summary of everything that is going on
-![Image of a transformer](/assets/transformers_laid_out/14.png)
+
+![Image of summary of attention calculation](/assets/transformers_laid_out/14.png)
 
 Let us now understand why this even works:\
 Forget about multi-head attention, attention blocks and all the JARGON.
@@ -174,7 +185,7 @@ Hence a single matrix multiplication does not get you the best representation of
 Multiple queries can be made, multiple keys can be done for each of these query\
 That is the reason we do so many matrix multiplication to try and get the best key for a query that is relevant to the question asked by the user
 
-![Image of a transformer](/assets/transformers_laid_out/SA.png)
+![Image of different representation for different words](/assets/transformers_laid_out/SA.png)
 
 To visualize how Self-Attention creates different representation. Let's have a look at the three different representation of different words "apple","market" & "cellphone"
 
@@ -193,7 +204,7 @@ In this case Representation 3 will be the best option, and we will get the answe
 (These are linear transformation and can be applied to any matrix, the 3rd one is called a [shear operation](https://en.wikipedia.org/wiki/Shear_mapping))
 
 ## Understanding Positional Encoding
-
+<!-- {maybe shorten this, or remove it from the into} -->
 To understand What is Positional Encoding and why we need it, let's imagine the scenario in which we do not have it.
 
 First an input sentence, for E.g
@@ -211,7 +222,7 @@ Hence, the reason we need PE (Positional Encoding) is to tell the model about th
 
 Now, what will be the preferred characteristics of such a PE:
 
-- Unique encoding for each position: Because otherwise it will keep changing for different length of sentences. Position 2 for a 10 word sentence will be different than for a 100 word sentence. This will hamper training as there is no predicatable pattern that can be followed.
+- Unique encoding for each position: Because otherwise it will keep changing for different length of sentences. Position 2 for a 10 word sentence will be different than for a 100 word sentence. This will hamper training as there is no predictable pattern that can be followed.
 - Linear relation between two encoded positions: If I know the position p of one word, it should be easy to calculate the position p+k of another word. This will make it easier for the model to learn the patter.
 - Generalizes to longer sequences than those encountered in training: If the model is limited by the length of the sentences used in training, it will never work in the real world.
 - Generated by a deterministic process the model can learn: It should be a simple formula, or easily calculable algorithm. To help our model generalize better.
@@ -293,16 +304,16 @@ d_model = dimension of the model (in our case it is 512)
 As you can see, using this we can calculate the PE value for each position and all the indexes for that position.
 Here is a simple illustration showing how its done.
 
-![Image of a transformer](/assets/transformers_laid_out/PE1.png)
+![Image of positional encoding](/assets/transformers_laid_out/PE1.png)
 
 Now expanding on the above this is how it looks like for the function
 
-![Image of a transformer](/assets/transformers_laid_out/PE.png) Visualization inspired by this fantastic [blog](https://erdem.pl/2021/05/understanding-positional-encoding-in-transformers#positional-encoding-visualization)
+![Image of positional encoding as graphs](/assets/transformers_laid_out/PE.png) Visualization inspired by this fantastic [blog](https://erdem.pl/2021/05/understanding-positional-encoding-in-transformers#positional-encoding-visualization)
 
 This is how it looks like for the original with n = 10,000, d_model = 10,000 and sequence length=100
 Code to generate [here](https://machinelearningmastery.com/a-gentle-introduction-to-positional-encoding-in-transformer-models-part-1/)
 
-![Image of a transformer](/assets/transformers_laid_out/PE5.webp)
+![Image of positional encoding for 512 dimension and n = 10000](/assets/transformers_laid_out/PE5.webp)
 
 Imagine it as such, each index on the y axis represents a word, and everything corresponding on the x axis to that index. Is it's positional encoding.
 
@@ -310,9 +321,9 @@ Imagine it as such, each index on the y axis represents a word, and everything c
 
 If everything so far has made sense, this is going to be a cake walk for you. Because this is where we put everything together.
 
-A single tranformer can have multiple encoder, as well as decoder blocks.
+A single transformer can have multiple encoder, as well as decoder blocks.
 
-![Image of a transformer](/assets/transformers_laid_out/3.png)
+![Image of encoders and decoders](/assets/transformers_laid_out/3.png)
 Let's start with the encoder part first.
 
 it consists for multiple encoders, and each encoder block consists of the following parts:
@@ -322,19 +333,19 @@ it consists for multiple encoders, and each encoder block consists of the follow
 - Layer Normalization
 - Feed Forward network
 
-![Image of a transformer](/assets/transformers_laid_out/encoder.png)
+![Image of an encoder](/assets/transformers_laid_out/encoder.png)
 
 We have already talked about Multi-head attention is great detail so let's talk about the remaining three.
 
 Residual connection or also known as skip connections, they work as the name applies. They take the input and skip it over a block and take it to the next block.
 
-![Image of a transformer](/assets/transformers_laid_out/19.png)
+![Image of an encoder broken down](/assets/transformers_laid_out/19.png)
 
 Layer normalization was a development after batch normalization. Before we talk about either of these, we have to understand what normalization is.
 
 Normalization is a method to bring different features in the same scale, This is done to stabilize training. Because when models try to learn from features with drastically different scales, it can slow down training as well as cause exploding gradients. (Read more [here](https://towardsdatascience.com/batch-norm-explained-visually-how-it-works-and-why-neural-networks-need-it-b18919692739))
 
-![Image of a transformer](/assets/transformers_laid_out/Norm.png)
+![Image of normalization](/assets/transformers_laid_out/Norm.png)
 
 Batch normalization is the method where the mean and standard deviation of an enitre batch is subtracted from the future layer
 
