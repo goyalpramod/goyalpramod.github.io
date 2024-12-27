@@ -390,6 +390,14 @@ There is also a slight variation in the decoder block, As in it we apply a mask 
 
 That is all the high level understanding you need to have, to be able to write a transformer of your own. Now let us look at the paper as well as the code
 
+### Final linear & Softmax layer
+
+{add content}
+
+### Understanding Training of a transformer
+
+{add content}
+
 ## Coding the transformer
 
 For the following section I will recommend you have 3 tabs open. This blog, a jupyter notebook
