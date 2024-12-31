@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: blog
 title: "Blogs Reference Guide"
 date: 2024-03-15 12:00:00 +0530
@@ -17,4 +17,4 @@ This is mostly a list of blogs that I wish to write in the future. By penning it
 8. Python for Dummies**
 9. ML for Dummies**
 10. Python for not Dummies**
-11. ML for not Dummies**
+11. ML for not Dummies** -->

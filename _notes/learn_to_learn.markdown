@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: note
 title: "Learn to Learn"
 last_modified_at: 2024-03-15 12:00:00 +0530
@@ -24,6 +24,6 @@ It is well known that everyone has their own way of learning, but there are a fe
 
 ## Progressive overload; if it's not hard, you are not learning 
 
-## SMART; Specific Measuable Achievable, Relevant, and Time-bound
+## SMART; Specific Measurable Achievable, Relevant, and Time-bound
 
-## Enjoy; What's the point if you are not having fun
+## Enjoy; What's the point if you are not having fun -->
