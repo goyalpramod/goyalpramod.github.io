@@ -18,3 +18,6 @@ This is mostly a list of blogs that I wish to write in the future. By penning it
 9. ML for Dummies**
 10. Python for not Dummies**
 11. ML for not Dummies** -->
+<!-- 12. AI agents from first principles  -->
+<!-- 13. DL for Dummies  -->
+<!-- 14. ML maths for Dummies -->
