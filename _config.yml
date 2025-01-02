@@ -70,6 +70,9 @@ collections:
   notes:
     output: true
     permalink: /notes/:title/
+  thoughts:
+    output: true
+    permalink: /thoughts/:title/
 
 defaults:
   - scope:
@@ -86,4 +89,10 @@ defaults:
       path: ""
       type: "notes"
     values:
+      math: true
+  - scope:
+      path: ""
+      type: "thoughts"
+    values:
+      layout: thought
       math: true
