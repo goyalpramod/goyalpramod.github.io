@@ -1410,76 +1410,7 @@ def train_transformer(model, train_dataloader, criterion, optimizer, scheduler, 
         num_epochs: Number of training epochs
     """
     # 1. Setup
-    model = model.to(device)
-    model.train()
-
-    # For tracking training progress
-    total_loss = 0
-    all_losses = []
-
     # 2. Training loop
-    for epoch in range(num_epochs):
-        print(f"Epoch {epoch + 1}/{num_epochs}")
-        epoch_loss = 0
-
-        for batch_idx, batch in enumerate(train_dataloader):
-            # Get source and target batches
-            src = batch['src'].to(device)
-            tgt = batch['tgt'].to(device)
-
-            # Create masks
-            src_mask, tgt_mask = create_masks(src, tgt)
-
-            # Prepare target for input and output
-            # Remove last token from target for input
-            tgt_input = tgt[:, :-1]
-            # Remove first token from target for output
-            tgt_output = tgt[:, 1:]
-
-            # Zero gradients
-            optimizer.zero_grad()
-
-            # Forward pass
-            outputs = model(src, tgt_input, src_mask, tgt_mask)
-
-            # Reshape outputs and target for loss calculation
-            outputs = outputs.view(-1, outputs.size(-1))
-            tgt_output = tgt_output.view(-1)
-
-            # Calculate loss
-            loss = criterion(outputs, tgt_output)
-
-            # Backward pass
-            loss.backward()
-
-            # Clip gradients
-            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-
-            # Update weights
-            optimizer.step()
-            scheduler.step()
-
-            # Update loss tracking
-            epoch_loss += loss.item()
-
-            # Print progress every N batches
-            if batch_idx % 100 == 0:
-                print(f"Batch {batch_idx}, Loss: {loss.item():.4f}")
-
-        # Calculate average loss for epoch
-        avg_epoch_loss = epoch_loss / len(train_dataloader)
-        all_losses.append(avg_epoch_loss)
-        print(f"Epoch {epoch + 1} Loss: {avg_epoch_loss:.4f}")
-
-        # Save checkpoint
-        torch.save({
-            'epoch': epoch,
-            'model_state_dict': model.state_dict(),
-            'optimizer_state_dict': optimizer.state_dict(),
-            'loss': avg_epoch_loss,
-        }, f'checkpoint_epoch_{epoch+1}.pt')
-
-    return all_losses
 ```
 
 ```python
@@ -1898,30 +1829,6 @@ losses = train_transformer(
 )
 ```
 
-```python
-# Initialize your transformer with the vocabulary sizes
-model = Transformer(
-    src_vocab_size=len(vocab_src),
-    tgt_vocab_size=len(vocab_tgt),
-    d_model=512,
-    num_layers=6,
-    num_heads=8,
-    d_ff=2048,
-    dropout=0.1
-)
-criterion = LabelSmoothing(smoothing=0.1).to(device)
-
-# Now you can use your training loop
-losses = train_transformer(
-    model=model,
-    train_dataloader=train_dataloader,
-    criterion=criterion,
-    optimizer=optimizer,
-    scheduler=scheduler,
-    num_epochs=10
-)
-```
-
 ## Misc & Further Reading
 
 Here are some resources and more information that can help you out in your journey which I could not decide where to put
@@ -1936,5 +1843,7 @@ Cheers,
 Pramod
 
 P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
+
+P.S.S I know there is a bit of issue with a few code samples, I will fix them within the week. This had been a work in progress for almost 3 months now. So I thought it's better to publish something which is 95% done than to keep waiting for the perfect end product
 
 Meme at top taken from [xkcd](https://xkcd.com/)
