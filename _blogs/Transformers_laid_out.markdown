@@ -392,12 +392,13 @@ That is all the high level understanding you need to have, to be able to write a
 
 ### Final linear & Softmax layer
 
-{add content}
+The decoder gives out a vector of numbers (floating point generally), Which is sent to a linear layer.
+
+The linear layer outputs the score for each word in the vocabulary(the amount of unique words in the training dataset)
+
+Which is then sent to the softmax layer, which converts these scores into probabilities. And the word with the highest probability is given out. (This is usually the case, sometimes we can set it so that we get the 2nd most probable word, or the 3rd most and so on)
+
 ![Image of the linear output](/assets/transformers_laid_out/linear_output.png)
-
-### Understanding Training of a transformer
-
-{add content}
 
 ## Coding the transformer
 
@@ -1346,7 +1347,7 @@ class LabelSmoothing(nn.Module):
         #create the zeros [0,0,...]
         #fill with calculated value [0.000125..,0.000125...] (this is an arbitarary value for example purposes)
         #add 1 to the correct index (read more on docs of pytorch)
-        return torch.mean(torch.sum(-true_dist * torch.log_softmax(logits, dim=-1), dim=-1)) #return cross entropy loss
+        #return cross entropy loss
 ```
 
 ```python
@@ -1921,8 +1922,6 @@ losses = train_transformer(
 )
 ```
 
-### Remaining Section of the paper
-
 ## Misc & Further Reading
 
 Here are some resources and more information that can help you out in your journey which I could not decide where to put
@@ -1931,7 +1930,7 @@ Here are some resources and more information that can help you out in your journ
 [Neural networks by 3Blue1Brown](https://www.3blue1brown.com/topics/neural-networks)
 
 Congratulations for completing this tutorial/lesson/blog however you see it. It is by nature of human curosity that you must have a few questions now.
-Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here in an FAQ section.
+Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here.
 
 Cheers,
 Pramod
