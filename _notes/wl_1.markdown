@@ -37,19 +37,15 @@ Day 2
     Control your emotions, do not be affected by anything. Because when someone finds out they have hit a nerve they will strike there.
 
 - Some content from the codie sanchez podcast on diary of a CEO 
-    - U don't have a marketting problem, u have a shitty problem
+    - U don't have a marketing problem, u have a shitty problem
     - Working hard seems hardly working to the obsessed
     - Don't be talk, be a high performer. Just work
-    - I don't need to like someome to learn from them
+    - I don't need to like someone to learn from them
     - Obsessed over interest
     - Time and efficiency
-    - Go to someone who has money with a good business offer, tell them u will take care ofnrunning everything. If you put some money, can I have a part of the business
+    - Go to someone who has money with a good business offer, tell them u will take care of running everything. If you put some money, can I have a part of the business
     - Please their ego, be polite, know them better than they know
     - Provide value to the person first, Show that the single sentence advice they gave helped you out
     - Find the biggest baddest person in your network and provide value to them
-
-
-
-
 
 -->
