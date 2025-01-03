@@ -15,7 +15,7 @@ Food diet
 
 Day 2 
 - I tried making the youtube video for transformers. I will do it again tomorrow, with a script or some pointers in hand. That will be better
-- added google analytics, comments, share buttons and socials to the blog, also update my socials. (Used Cursor to do it, write a bit about that). I reorganised the blog as well. 
+- added google analytics, comments, share buttons and socials to the blog, also update my socials. (Used Cursor to do it, write a bit about that). I reorganized the blog as well. 
 - Ordered protein (write about how to pick the best one and different kinds)
 - Finished 48 laws of power, The most important laws to me 
     - Law 4 -> Always say less than necessary (this keeps things open ended, vague. People think of their on interpretations.)
