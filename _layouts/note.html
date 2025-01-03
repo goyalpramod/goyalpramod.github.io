@@ -12,4 +12,347 @@ layout: default
   <p class="meta">Last updated: {{ page.last_modified_at | date: "%B %-d, %Y" }}</p>
 
   {{ content }}
+
+  <!-- Voting section -->
+  <div class="vote-section mt-4">
+    <div class="vote-buttons">
+      <button onclick="handleVote('up')" class="vote-btn upvote">
+        <i class="fas fa-arrow-up"></i>
+        <span class="vote-count upvote-count">0</span>
+      </button>
+      <button onclick="handleVote('down')" class="vote-btn downvote">
+        <i class="fas fa-arrow-down"></i>
+        <span class="vote-count downvote-count">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="#" onclick="shareOnTwitter(this); return false;" class="share-btn" data-platform="twitter">
+        <i class="fab fa-twitter"></i> Twitter
+        <span class="share-count">0</span>
+      </a>
+      
+      <a href="#" onclick="shareOnReddit(this); return false;" class="share-btn" data-platform="reddit">
+        <i class="fab fa-reddit"></i> Reddit
+        <span class="share-count">0</span>
+      </a>
+      
+      <a href="#" onclick="shareOnLinkedIn(this); return false;" class="share-btn" data-platform="linkedin">
+        <i class="fab fa-linkedin"></i> LinkedIn
+        <span class="share-count">0</span>
+      </a>
+      
+      <a href="#" onclick="shareOnFacebook(this); return false;" class="share-btn" data-platform="facebook">
+        <i class="fab fa-facebook"></i> Facebook
+        <span class="share-count">0</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Add Disqus comments section -->
+  {% if page.comments != false %}
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  {% endif %}
 </article>
+
+<!-- Add Font Awesome for social icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+<script>
+const pageUrl = encodeURIComponent(window.location.href);
+const pageTitle = encodeURIComponent('{{ page.title }}');
+
+// Share functions
+function shareOnTwitter(element) {
+  incrementShareCount(element);
+  window.open(`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`, '_blank', 'noopener,noreferrer');
+}
+
+function shareOnReddit(element) {
+  incrementShareCount(element);
+  window.open(`https://reddit.com/submit?url=${pageUrl}&title=${pageTitle}`, '_blank', 'noopener,noreferrer');
+}
+
+function shareOnLinkedIn(element) {
+  incrementShareCount(element);
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`, '_blank', 'noopener,noreferrer');
+}
+
+function shareOnFacebook(element) {
+  incrementShareCount(element);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`, '_blank', 'noopener,noreferrer');
+}
+
+// Share count handling
+function incrementShareCount(element) {
+  const platform = element.getAttribute('data-platform');
+  const storageKey = `share_count_${platform}_${window.location.pathname}`;
+  let count = parseInt(localStorage.getItem(storageKey) || '0');
+  
+  // Increment count
+  count++;
+  
+  // Update localStorage
+  localStorage.setItem(storageKey, count.toString());
+  
+  // Update display
+  const countElement = element.querySelector('.share-count');
+  if (countElement) {
+    countElement.textContent = count;
+  }
+}
+
+// Load initial share counts
+document.addEventListener('DOMContentLoaded', function() {
+  const shareButtons = document.querySelectorAll('.share-btn');
+  shareButtons.forEach(button => {
+    const platform = button.getAttribute('data-platform');
+    const storageKey = `share_count_${platform}_${window.location.pathname}`;
+    const count = localStorage.getItem(storageKey) || '0';
+    const countElement = button.querySelector('.share-count');
+    if (countElement) {
+      countElement.textContent = count;
+    }
+  });
+});
+
+// Updated voting functionality
+function handleVote(type) {
+  const path = window.location.pathname;
+  const storageKeyPrevVote = `prev_vote_${path}`;
+  
+  // Get previous vote if any
+  const prevVote = localStorage.getItem(storageKeyPrevVote);
+  
+  // If clicking same button again, remove vote
+  if (prevVote === type) {
+    localStorage.removeItem(storageKeyPrevVote);
+    decrementVote(type, path);
+    removeVotedClass(type);
+    return;
+  }
+  
+  // If changing vote from up to down or vice versa
+  if (prevVote) {
+    decrementVote(prevVote, path);
+    removeVotedClass(prevVote);
+  }
+  
+  // Add new vote
+  incrementVote(type, path);
+  localStorage.setItem(storageKeyPrevVote, type);
+  addVotedClass(type);
+}
+
+function incrementVote(type, path) {
+  const storageKey = `votes_${type}_${path}`;
+  let count = parseInt(localStorage.getItem(storageKey) || '0');
+  count++;
+  localStorage.setItem(storageKey, count.toString());
+  updateVoteDisplay(type, count);
+}
+
+function decrementVote(type, path) {
+  const storageKey = `votes_${type}_${path}`;
+  let count = parseInt(localStorage.getItem(storageKey) || '0');
+  if (count > 0) {
+    count--;
+    localStorage.setItem(storageKey, count.toString());
+    updateVoteDisplay(type, count);
+  }
+}
+
+function updateVoteDisplay(type, count) {
+  document.querySelector(`.${type}vote-count`).textContent = count;
+}
+
+function addVotedClass(type) {
+  document.querySelector(`.${type}vote`).classList.add('voted');
+}
+
+function removeVotedClass(type) {
+  document.querySelector(`.${type}vote`).classList.remove('voted');
+}
+
+// Load initial votes
+document.addEventListener('DOMContentLoaded', function() {
+  const path = window.location.pathname;
+  const types = ['up', 'down'];
+  const prevVote = localStorage.getItem(`prev_vote_${path}`);
+  
+  types.forEach(type => {
+    const count = localStorage.getItem(`votes_${type}_${path}`) || '0';
+    updateVoteDisplay(type, count);
+    
+    if (prevVote === type) {
+      addVotedClass(type);
+    }
+  });
+});
+</script>
+
+<style>
+.share-section {
+  border-top: 1px solid #eee;
+  padding-top: 1.5rem;
+  margin-top: 2rem;
+}
+
+.share-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.share-btn {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #586069;
+  padding: 0.35rem 0.75rem;
+  border: 1px solid #e1e4e8;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.share-btn:hover {
+  background-color: #f6f8fa;
+  text-decoration: none;
+  transform: translateX(3px);
+  color: #0366d6;
+}
+
+.share-btn i {
+  margin-right: 0.5rem;
+  width: 16px;
+}
+
+.share-count {
+  margin-left: auto;
+  background: rgba(0,0,0,0.05);
+  padding: 0.1rem 0.4rem;
+  border-radius: 1rem;
+  font-size: 0.8rem;
+  color: #586069;
+}
+
+.vote-section {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+}
+
+.vote-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.vote-btn:hover:not(.disabled) {
+  background-color: #f6f8fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.upvote {
+  color: #28a745;
+}
+
+.upvote:hover:not(.disabled) {
+  background-color: #f0fff4;
+  border-color: #28a745;
+}
+
+.downvote {
+  color: #dc3545;
+}
+
+.downvote:hover:not(.disabled) {
+  background-color: #fff5f5;
+  border-color: #dc3545;
+}
+
+.vote-count {
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.voted {
+  background-color: #f6f8fa;
+  border-color: currentColor;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Make the voting section and share buttons look cohesive */
+.vote-section + .share-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.share-title {
+  margin-bottom: 1rem;
+  color: #24292e;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Add styles for comments section */
+.comments-section {
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.comments-title {
+  color: #24292e;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+</style>
