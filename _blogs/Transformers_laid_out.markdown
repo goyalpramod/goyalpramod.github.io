@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: "Transformers Laid Out"
-date: 2024-03-15 12:00:00 +0530
+date: 2025-01-3 12:00:00 +0530
 categories: [personal, technology]
 image: /assets/transformers_laid_out/meme.png
 ---
@@ -449,7 +449,6 @@ from torch.nn.functional import softmax
 
 By now you should have good grasp of how attention works, so let us first start with coding the scaled dot-product attention (as MHA is basically multiple scaled dot-product stacked together). Reference section is 3.2.1 Scaled Dot-Product Attention
 
-{add a copy button for these code blocks}
 
 ```python
 # try to finish this function on your own

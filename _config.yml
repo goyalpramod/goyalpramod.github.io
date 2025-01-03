@@ -61,6 +61,9 @@ kramdown:
 #   - vendor/gems/
 #   - vendor/ruby/
 
+# Google Analytics
+google_analytics: G-EW6BCL046P
+
 # Custom settings
 show_excerpts: true
 

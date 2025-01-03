@@ -1,4 +1,9 @@
 <header class="site-header">
+  <!-- Add Google Analytics only in production -->
+  {%- if jekyll.environment == 'production' and site.google_analytics -%}
+    {%- include google-analytics.html -%}
+  {%- endif -%}
+
   <div class="container">
     <div class="wrapper">
       <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
