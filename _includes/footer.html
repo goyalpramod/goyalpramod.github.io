@@ -1,0 +1,108 @@
+<footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        {% if site.github_username %}
+        <a href="https://github.com/{{ site.github_username }}" target="_blank">
+          <i class="fab fa-github"></i>
+        </a>
+        {% endif %}
+        
+        {% if site.twitter_username %}
+        <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank">
+          <i class="fab fa-twitter"></i>
+        </a>
+        {% endif %}
+        
+        {% if site.linkedin_username %}
+        <a href="https://linkedin.com/in/{{ site.linkedin_username }}" target="_blank">
+          <i class="fab fa-linkedin"></i>
+        </a>
+        {% endif %}
+        
+        {% if site.youtube_username %}
+        <a href="https://youtube.com/{{ site.youtube_username }}" target="_blank">
+          <i class="fab fa-youtube"></i>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; {{ site.time | date: '%Y' }} {{ site.title }}</p>
+    </div>
+  </div>
+</footer>
+
+<style>
+.site-footer {
+  border-top: 1px solid #e8e8e8;
+  padding: 1rem 0;
+  background-color: #f8f9fa;
+}
+
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.footer-description {
+  flex: 1;
+  color: #586069;
+  font-size: 0.9rem;
+}
+
+.footer-description p {
+  margin: 0;
+}
+
+.social-links {
+  display: flex;
+  gap: 1rem;
+  margin-left: 2rem;
+}
+
+.social-links a {
+  color: #586069;
+  font-size: 1.2rem;
+  transition: all 0.2s ease;
+}
+
+.social-links a:hover {
+  color: #0366d6;
+  transform: translateY(-2px);
+}
+
+.footer-copyright {
+  text-align: center;
+  color: #586069;
+  font-size: 0.8rem;
+  border-top: 1px solid #e8e8e8;
+  padding-top: 1rem;
+}
+
+.footer-copyright p {
+  margin: 0;
+}
+
+@media screen and (max-width: 600px) {
+  .footer-row {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .social-links {
+    margin-left: 0;
+    justify-content: center;
+  }
+}
+</style> 
