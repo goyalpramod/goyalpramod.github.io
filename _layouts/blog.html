@@ -13,8 +13,23 @@ layout: default
 
   {{ content }}
 
+  <!-- Voting section -->
+  <div class="vote-section mt-4">
+    <div class="vote-buttons">
+      <button onclick="handleVote('up')" class="vote-btn upvote">
+        <i class="fas fa-arrow-up"></i>
+        <span class="vote-count upvote-count">0</span>
+      </button>
+      <button onclick="handleVote('down')" class="vote-btn downvote">
+        <i class="fas fa-arrow-down"></i>
+        <span class="vote-count downvote-count">0</span>
+      </button>
+    </div>
+  </div>
+
   <!-- Social sharing section -->
   <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
     <div class="share-buttons">
       <a href="#" onclick="shareOnTwitter(); return false;" class="share-btn">
         <i class="fab fa-twitter"></i> Twitter
@@ -98,6 +113,80 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+// Updated voting functionality
+function handleVote(type) {
+  const path = window.location.pathname;
+  const storageKeyPrevVote = `prev_vote_${path}`;
+  
+  // Get previous vote if any
+  const prevVote = localStorage.getItem(storageKeyPrevVote);
+  
+  // If clicking same button again, remove vote
+  if (prevVote === type) {
+    localStorage.removeItem(storageKeyPrevVote);
+    decrementVote(type, path);
+    removeVotedClass(type);
+    return;
+  }
+  
+  // If changing vote from up to down or vice versa
+  if (prevVote) {
+    decrementVote(prevVote, path);
+    removeVotedClass(prevVote);
+  }
+  
+  // Add new vote
+  incrementVote(type, path);
+  localStorage.setItem(storageKeyPrevVote, type);
+  addVotedClass(type);
+}
+
+function incrementVote(type, path) {
+  const storageKey = `votes_${type}_${path}`;
+  let count = parseInt(localStorage.getItem(storageKey) || '0');
+  count++;
+  localStorage.setItem(storageKey, count.toString());
+  updateVoteDisplay(type, count);
+}
+
+function decrementVote(type, path) {
+  const storageKey = `votes_${type}_${path}`;
+  let count = parseInt(localStorage.getItem(storageKey) || '0');
+  if (count > 0) {
+    count--;
+    localStorage.setItem(storageKey, count.toString());
+    updateVoteDisplay(type, count);
+  }
+}
+
+function updateVoteDisplay(type, count) {
+  document.querySelector(`.${type}vote-count`).textContent = count;
+}
+
+function addVotedClass(type) {
+  document.querySelector(`.${type}vote`).classList.add('voted');
+}
+
+function removeVotedClass(type) {
+  document.querySelector(`.${type}vote`).classList.remove('voted');
+}
+
+// Load initial votes
+document.addEventListener('DOMContentLoaded', function() {
+  const path = window.location.pathname;
+  const types = ['up', 'down'];
+  const prevVote = localStorage.getItem(`prev_vote_${path}`);
+  
+  types.forEach(type => {
+    const count = localStorage.getItem(`votes_${type}_${path}`) || '0';
+    updateVoteDisplay(type, count);
+    
+    if (prevVote === type) {
+      addVotedClass(type);
+    }
+  });
+});
 </script>
 
 <style>
@@ -146,5 +235,95 @@ document.addEventListener('DOMContentLoaded', function() {
   border-radius: 1rem;
   font-size: 0.8rem;
   color: #586069;
+}
+
+.vote-section {
+  margin: 2rem 0;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.vote-buttons {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  background: #f8f9fa;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #e1e4e8;
+}
+
+.vote-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.vote-btn:hover:not(.disabled) {
+  background-color: #f6f8fa;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.upvote {
+  color: #28a745;
+}
+
+.upvote:hover:not(.disabled) {
+  background-color: #f0fff4;
+  border-color: #28a745;
+}
+
+.downvote {
+  color: #dc3545;
+}
+
+.downvote:hover:not(.disabled) {
+  background-color: #fff5f5;
+  border-color: #dc3545;
+}
+
+.vote-count {
+  font-weight: 600;
+  font-size: 0.9rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+
+.voted {
+  background-color: #f6f8fa;
+  border-color: currentColor;
+}
+
+.disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Make the voting section and share buttons look cohesive */
+.vote-section + .share-section {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #eee;
+}
+
+.share-title {
+  margin-bottom: 1rem;
+  color: #24292e;
+  font-size: 1rem;
+  font-weight: 600;
 }
 </style>
