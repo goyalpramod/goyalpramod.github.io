@@ -34,8 +34,8 @@ Use a bit of each resource, then stick to the one that sticks to you!!
 
 "...Learning is not supposed to be fun. It doesn't have to be actively not fun either, but the primary feeling should be that of effort. It should look a lot less like that "10 minute full body" workout from your local digital media creator and a lot more like a serious session at the gym. You want the mental equivalent of sweating. It's not that the quickie doesn't do anything, it's just that it is wildly suboptimal if you actually care to learn..." - Andrej Karpathy[[7]](https://x.com/karpathy/status/1756380066580455557?lang=en)
 
-I largely have the same belief, That whatever you are learning follows a curve, initially it is tough and as you get better at it, it starts seeming simple and easier.\
-This is when you have grokked[[8]](https://en.wikipedia.org/wiki/Grok) the idea completely, now if you keep doing this. You will only stagnate AKA "Tutorial Hell", So over the course of learning something. Gradually pick the harder and complex ideas, make it a bit more difficult.
+I largely have the same belief, That whatever you are learning, it follows a curve, initially it is tough and as you get better at it, it starts seeming simple and easier.\
+This is when you have grokked[[8]](https://en.wikipedia.org/wiki/Grok) the idea completely, now if you keep doing this. You will only stagnate AKA "Tutorial Hell", So over the course of learning something. Gradually pick the harder and more complex ideas, make it a bit more difficult.
 
 Not a lot at once (If you suddenly try to lift 300 KGs you will break your back!!), lest you stop learning at all.
 
@@ -61,8 +61,8 @@ Be smart, use SMART.
 
 ## Enjoy; What's the point if you are not having fun
 
-One of my favorite things to do is imagine what it would be like after I am able to what I am trying to learn at the moment.
+One of my favorite things to do is imagine what it would be like after I am able to do what I am trying to learn at the moment.
 
-The joy of that vision is greater than difficulty faced during the learning process.
+The joy of that vision is greater than any difficulty faced during the learning process.
 
 Keep an open mind, gather your tools, Gradually fight harder daemons, be smart about your method, enjoy your victory!!!
