@@ -26,6 +26,8 @@ baseurl: ""
 url: "https://goyalpramod.github.io"
 twitter_username: goyal__pramod
 github_username:  goyalpramod
+linkedin_username: goyalpramod
+youtube_username: "@goyal_pramod"
 
 # Build settings
 theme: minima
