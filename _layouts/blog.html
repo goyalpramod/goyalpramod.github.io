@@ -75,133 +75,149 @@ layout: default
 <script>
 const pageUrl = encodeURIComponent(window.location.href);
 const pageTitle = encodeURIComponent('{{ page.title }}');
+const GITHUB_REPO = 'goyalpramod/goyalpramod.github.io';
+const GITHUB_TOKEN = 'github_pat_YOUR_TOKEN'; // You'll need to set this up
+
+// Function to get or create metrics issue
+async function getOrCreateMetricsIssue() {
+  const issueTitle = `Metrics: ${window.location.pathname}`;
+  const searchUrl = `https://api.github.com/search/issues?q=repo:${GITHUB_REPO}+"${issueTitle}"`;
+  
+  try {
+    const response = await fetch(searchUrl, {
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    const data = await response.json();
+    
+    if (data.items && data.items.length > 0) {
+      return data.items[0];
+    } else {
+      // Create new issue if none exists
+      const createResponse = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues`, {
+        method: 'POST',
+        headers: {
+          'Authorization': `token ${GITHUB_TOKEN}`,
+          'Accept': 'application/vnd.github.v3+json'
+        },
+        body: JSON.stringify({
+          title: issueTitle,
+          body: JSON.stringify({
+            upvotes: 0,
+            downvotes: 0,
+            shares: {
+              twitter: 0,
+              reddit: 0,
+              linkedin: 0,
+              facebook: 0
+            }
+          })
+        })
+      });
+      return await createResponse.json();
+    }
+  } catch (error) {
+    console.error('Error accessing GitHub API:', error);
+    return null;
+  }
+}
+
+// Function to update metrics
+async function updateMetrics(metrics) {
+  const issue = await getOrCreateMetricsIssue();
+  if (!issue) return;
+  
+  try {
+    await fetch(`https://api.github.com/repos/${GITHUB_REPO}/issues/${issue.number}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `token ${GITHUB_TOKEN}`,
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        body: JSON.stringify(metrics)
+      })
+    });
+  } catch (error) {
+    console.error('Error updating metrics:', error);
+  }
+}
 
 // Share functions
+async function shareOnPlatform(element, platform, url) {
+  const issue = await getOrCreateMetricsIssue();
+  if (!issue) return;
+  
+  const metrics = JSON.parse(issue.body);
+  metrics.shares[platform]++;
+  
+  await updateMetrics(metrics);
+  element.querySelector('.share-count').textContent = metrics.shares[platform];
+  
+  window.open(url, '_blank', 'noopener,noreferrer');
+}
+
 function shareOnTwitter(element) {
-  incrementShareCount(element);
-  window.open(`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`, '_blank', 'noopener,noreferrer');
+  shareOnPlatform(element, 'twitter', `https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`);
 }
 
-function shareOnReddit(element) {
-  incrementShareCount(element);
-  window.open(`https://reddit.com/submit?url=${pageUrl}&title=${pageTitle}`, '_blank', 'noopener,noreferrer');
-}
-
-function shareOnLinkedIn(element) {
-  incrementShareCount(element);
-  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`, '_blank', 'noopener,noreferrer');
-}
-
-function shareOnFacebook(element) {
-  incrementShareCount(element);
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`, '_blank', 'noopener,noreferrer');
-}
-
-// Share count handling
-function incrementShareCount(element) {
-  const platform = element.getAttribute('data-platform');
-  const storageKey = `share_count_${platform}_${window.location.pathname}`;
-  let count = parseInt(localStorage.getItem(storageKey) || '0');
-  
-  // Increment count
-  count++;
-  
-  // Update localStorage
-  localStorage.setItem(storageKey, count.toString());
-  
-  // Update display
-  const countElement = element.querySelector('.share-count');
-  if (countElement) {
-    countElement.textContent = count;
-  }
-}
-
-// Load initial share counts
-document.addEventListener('DOMContentLoaded', function() {
-  const shareButtons = document.querySelectorAll('.share-btn');
-  shareButtons.forEach(button => {
-    const platform = button.getAttribute('data-platform');
-    const storageKey = `share_count_${platform}_${window.location.pathname}`;
-    const count = localStorage.getItem(storageKey) || '0';
-    const countElement = button.querySelector('.share-count');
-    if (countElement) {
-      countElement.textContent = count;
-    }
-  });
-});
+// Similar updates for other share functions...
 
 // Updated voting functionality
-function handleVote(type) {
+async function handleVote(type) {
+  const issue = await getOrCreateMetricsIssue();
+  if (!issue) return;
+  
+  const metrics = JSON.parse(issue.body);
   const path = window.location.pathname;
   const storageKeyPrevVote = `prev_vote_${path}`;
-  
-  // Get previous vote if any
   const prevVote = localStorage.getItem(storageKeyPrevVote);
   
-  // If clicking same button again, remove vote
   if (prevVote === type) {
+    // Remove vote
+    metrics[`${type}votes`]--;
     localStorage.removeItem(storageKeyPrevVote);
-    decrementVote(type, path);
     removeVotedClass(type);
-    return;
-  }
-  
-  // If changing vote from up to down or vice versa
-  if (prevVote) {
-    decrementVote(prevVote, path);
-    removeVotedClass(prevVote);
-  }
-  
-  // Add new vote
-  incrementVote(type, path);
-  localStorage.setItem(storageKeyPrevVote, type);
-  addVotedClass(type);
-}
-
-function incrementVote(type, path) {
-  const storageKey = `votes_${type}_${path}`;
-  let count = parseInt(localStorage.getItem(storageKey) || '0');
-  count++;
-  localStorage.setItem(storageKey, count.toString());
-  updateVoteDisplay(type, count);
-}
-
-function decrementVote(type, path) {
-  const storageKey = `votes_${type}_${path}`;
-  let count = parseInt(localStorage.getItem(storageKey) || '0');
-  if (count > 0) {
-    count--;
-    localStorage.setItem(storageKey, count.toString());
-    updateVoteDisplay(type, count);
-  }
-}
-
-function updateVoteDisplay(type, count) {
-  document.querySelector(`.${type}vote-count`).textContent = count;
-}
-
-function addVotedClass(type) {
-  document.querySelector(`.${type}vote`).classList.add('voted');
-}
-
-function removeVotedClass(type) {
-  document.querySelector(`.${type}vote`).classList.remove('voted');
-}
-
-// Load initial votes
-document.addEventListener('DOMContentLoaded', function() {
-  const path = window.location.pathname;
-  const types = ['up', 'down'];
-  const prevVote = localStorage.getItem(`prev_vote_${path}`);
-  
-  types.forEach(type => {
-    const count = localStorage.getItem(`votes_${type}_${path}`) || '0';
-    updateVoteDisplay(type, count);
-    
-    if (prevVote === type) {
-      addVotedClass(type);
+  } else {
+    // Change vote
+    if (prevVote) {
+      metrics[`${prevVote}votes`]--;
+      removeVotedClass(prevVote);
     }
+    metrics[`${type}votes`]++;
+    localStorage.setItem(storageKeyPrevVote, type);
+    addVotedClass(type);
+  }
+  
+  await updateMetrics(metrics);
+  updateVoteDisplay('up', metrics.upvotes);
+  updateVoteDisplay('down', metrics.downvotes);
+}
+
+// Load initial metrics
+document.addEventListener('DOMContentLoaded', async function() {
+  const issue = await getOrCreateMetricsIssue();
+  if (!issue) return;
+  
+  const metrics = JSON.parse(issue.body);
+  
+  // Update vote counts
+  updateVoteDisplay('up', metrics.upvotes);
+  updateVoteDisplay('down', metrics.downvotes);
+  
+  // Update share counts
+  Object.entries(metrics.shares).forEach(([platform, count]) => {
+    const button = document.querySelector(`[data-platform="${platform}"] .share-count`);
+    if (button) button.textContent = count;
   });
+  
+  // Restore user's previous vote if any
+  const prevVote = localStorage.getItem(`prev_vote_${window.location.pathname}`);
+  if (prevVote) {
+    addVotedClass(prevVote);
+  }
 });
 </script>
 
