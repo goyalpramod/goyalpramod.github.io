@@ -4,7 +4,7 @@ title: Thoughts
 permalink: /thoughts/
 ---
 
-Here's where I share my random thoughts and musings.
+Here's where I share my random thoughts, believes, philosophy etc.
 
 <ul class="list-unstyled">
   {% for thought in site.thoughts %}
