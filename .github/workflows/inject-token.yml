@@ -1,0 +1,20 @@
+name: Inject Token
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Inject token
+        run: |
+          sed -i "s/github_pat_YOUR_TOKEN/${{ secrets.METRICS_TOKEN }}/g" _site/_layouts/blog.html
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_site
