@@ -31,22 +31,22 @@ layout: default
   <div class="share-section mt-4">
     <h5 class="share-title">Share this post with your friends!!</h5>
     <div class="share-buttons">
-      <a href="#" onclick="shareOnTwitter(); return false;" class="share-btn">
+      <a href="#" onclick="shareOnTwitter(this); return false;" class="share-btn" data-platform="twitter">
         <i class="fab fa-twitter"></i> Twitter
         <span class="share-count">0</span>
       </a>
       
-      <a href="#" onclick="shareOnReddit(); return false;" class="share-btn">
+      <a href="#" onclick="shareOnReddit(this); return false;" class="share-btn" data-platform="reddit">
         <i class="fab fa-reddit"></i> Reddit
         <span class="share-count">0</span>
       </a>
       
-      <a href="#" onclick="shareOnLinkedIn(); return false;" class="share-btn">
+      <a href="#" onclick="shareOnLinkedIn(this); return false;" class="share-btn" data-platform="linkedin">
         <i class="fab fa-linkedin"></i> LinkedIn
         <span class="share-count">0</span>
       </a>
       
-      <a href="#" onclick="shareOnFacebook(); return false;" class="share-btn">
+      <a href="#" onclick="shareOnFacebook(this); return false;" class="share-btn" data-platform="facebook">
         <i class="fab fa-facebook"></i> Facebook
         <span class="share-count">0</span>
       </a>
@@ -62,29 +62,29 @@ const pageUrl = encodeURIComponent(window.location.href);
 const pageTitle = encodeURIComponent('{{ page.title }}');
 
 // Share functions
-function shareOnTwitter() {
-  incrementShareCount('twitter');
-  window.open(`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`, '_blank');
+function shareOnTwitter(element) {
+  incrementShareCount(element);
+  window.open(`https://twitter.com/intent/tweet?url=${pageUrl}&text=${pageTitle}`, '_blank', 'noopener,noreferrer');
 }
 
-function shareOnReddit() {
-  incrementShareCount('reddit');
-  window.open(`https://reddit.com/submit?url=${pageUrl}&title=${pageTitle}`, '_blank');
+function shareOnReddit(element) {
+  incrementShareCount(element);
+  window.open(`https://reddit.com/submit?url=${pageUrl}&title=${pageTitle}`, '_blank', 'noopener,noreferrer');
 }
 
-function shareOnLinkedIn() {
-  incrementShareCount('linkedin');
-  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`, '_blank');
+function shareOnLinkedIn(element) {
+  incrementShareCount(element);
+  window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`, '_blank', 'noopener,noreferrer');
 }
 
-function shareOnFacebook() {
-  incrementShareCount('facebook');
-  window.open(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`, '_blank');
+function shareOnFacebook(element) {
+  incrementShareCount(element);
+  window.open(`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`, '_blank', 'noopener,noreferrer');
 }
 
 // Share count handling
-function incrementShareCount(platform) {
-  // Get the current count from localStorage
+function incrementShareCount(element) {
+  const platform = element.getAttribute('data-platform');
   const storageKey = `share_count_${platform}_${window.location.pathname}`;
   let count = parseInt(localStorage.getItem(storageKey) || '0');
   
@@ -95,7 +95,7 @@ function incrementShareCount(platform) {
   localStorage.setItem(storageKey, count.toString());
   
   // Update display
-  const countElement = document.querySelector(`[data-platform="${platform}"] .share-count`);
+  const countElement = element.querySelector('.share-count');
   if (countElement) {
     countElement.textContent = count;
   }
@@ -103,11 +103,12 @@ function incrementShareCount(platform) {
 
 // Load initial share counts
 document.addEventListener('DOMContentLoaded', function() {
-  const platforms = ['twitter', 'linkedin', 'facebook'];
-  platforms.forEach(platform => {
+  const shareButtons = document.querySelectorAll('.share-btn');
+  shareButtons.forEach(button => {
+    const platform = button.getAttribute('data-platform');
     const storageKey = `share_count_${platform}_${window.location.pathname}`;
     const count = localStorage.getItem(storageKey) || '0';
-    const countElement = document.querySelector(`[data-platform="${platform}"] .share-count`);
+    const countElement = button.querySelector('.share-count');
     if (countElement) {
       countElement.textContent = count;
     }
