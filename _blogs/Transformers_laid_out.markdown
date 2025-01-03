@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: "Transformers Laid Out"
-date: 2024-03-15 12:00:00 +0530
+date: 2025-01-3 12:00:00 +0530
 categories: [personal, technology]
 image: /assets/transformers_laid_out/meme.png
 ---
