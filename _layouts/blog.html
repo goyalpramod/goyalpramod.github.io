@@ -52,6 +52,21 @@ layout: default
       </a>
     </div>
   </div>
+
+  <!-- Add Disqus comments section -->
+  {% if page.comments != false %}
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  {% endif %}
 </article>
 
 <!-- Add Font Awesome for social icons -->
@@ -325,6 +340,19 @@ document.addEventListener('DOMContentLoaded', function() {
   margin-bottom: 1rem;
   color: #24292e;
   font-size: 1rem;
+  font-weight: 600;
+}
+
+/* Add styles for comments section */
+.comments-section {
+  border-top: 1px solid #eee;
+  padding-top: 2rem;
+  margin-top: 2rem;
+}
+
+.comments-title {
+  color: #24292e;
+  font-size: 1.1rem;
   font-weight: 600;
 }
 </style>
