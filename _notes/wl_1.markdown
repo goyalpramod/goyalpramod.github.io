@@ -7,6 +7,8 @@ image: assets/cover_images/cover_image.webp
 --- -->
 
 <!-- 
+{This is my blog, add random images from daily life, stuff yada yada ya}
+
 Day 1 -> 
 Workout routine 
 Start driving 
@@ -50,4 +52,12 @@ Day 2
     - Find the biggest baddest person in your network and provide value to them
 - Released learning to learn blog 
 
+Day 3 
+- I started reading the E-myth revisited book 
+- Made a small project (notebook to markdown) to help with the blog 
+- Started working with Manim for a youtube video on understanding self attention 
+- Read and finished the blog, Visual Information Theory. It is absolutely beautiful and everyone should read it.
+link https://colah.github.io/posts/2015-09-Visual-Information/
+- I also started with looking into OBS studio a bit, so it has some amazing plugins that you can add. I have added masked plugin (to make my camera output border look better ) and move, to improve transitions. 
+Also a shortcut for smooth zoom. 
 -->
