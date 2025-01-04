@@ -152,3 +152,78 @@ body {
 .note {
   padding-top: 1rem;
 }
+// Code block and copy button styles
+.highlighter-rouge {
+  position: relative;
+  margin: 1.5em 0;
+  border-radius: 8px;
+  background: #f8f9fa;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+ 
+  pre.highlight {
+    padding: 1.5rem;
+    margin: 0;
+    border-radius: 8px;
+    background: #f8f9fa;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+ 
+  .copy-code-button {
+    position: absolute;
+    top: 0.75rem;
+    right: 1.25rem;
+    padding: 0.35rem 0.5rem;
+    font-size: 0.8rem;
+    color: #8b949e;
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    opacity: 0;
+    transition: all 0.2s cubic-bezier(0.3, 0, 0.2, 1);
+    font-family: 'Nunito', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(6px);
+    
+    i {
+      font-size: 0.85em;
+      transition: transform 0.15s ease;
+    }
+ 
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+      color: #0969da;
+      border-color: #0969da;
+      box-shadow: 0 1px 3px rgba(9, 105, 218, 0.1);
+      transform: translateY(-1px);
+
+      i {
+        transform: scale(1.1);
+      }
+    }
+ 
+    &:active {
+      transform: translateY(0);
+      box-shadow: 0 1px 2px rgba(9, 105, 218, 0.1);
+    }
+ 
+    &.copied {
+      color: #1a7f37;
+      border-color: #1a7f37;
+      background-color: rgba(246, 254, 249, 0.9);
+
+      i {
+        transform: scale(1.1);
+      }
+    }
+  }
+ 
+  &:hover .copy-code-button {
+    opacity: 1;
+  }
+}

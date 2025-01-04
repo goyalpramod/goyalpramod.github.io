@@ -449,7 +449,6 @@ from torch.nn.functional import softmax
 
 By now you should have good grasp of how attention works, so let us first start with coding the scaled dot-product attention (as MHA is basically multiple scaled dot-product stacked together). Reference section is 3.2.1 Scaled Dot-Product Attention
 
-
 ```python
 # try to finish this function on your own
 def scaled_dot_product_attention(query, key, value, mask=None):
