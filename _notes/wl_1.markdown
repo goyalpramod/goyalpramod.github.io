@@ -1,13 +1,16 @@
-<!-- ---
+---
 layout: note
-title: "Why are we alone"
-last_modified_at: 2024-12-19 12:00:00 +0530
+title: "Weekly Lessons #1 (1.1.25 - 5.1.25)"
+last_modified_at: 2025-01-05 12:00:00 +0530
 categories: [lifestyle, self-help, growth]
 image: assets/cover_images/cover_image.webp
---- -->
+---
 
-<!-- 
-{This is my blog, add random images from daily life, stuff yada yada ya}
+
+This is just a random collection of things I learned on a daily basis of the week, It is really unstructured. Filled with random lessons and thoughts. 
+I am mostly writing this as a memoir for my future self, and as a way to keep track of my day to day activities.
+
+I doubt it will make much sense to you, but feel free to have a look. 
 
 Day 1 -> 
 Workout routine 
@@ -60,4 +63,8 @@ Day 3
 link https://colah.github.io/posts/2015-09-Visual-Information/
 - I also started with looking into OBS studio a bit, so it has some amazing plugins that you can add. I have added masked plugin (to make my camera output border look better ) and move, to improve transitions. 
 Also a shortcut for smooth zoom. 
--->
+
+Day 4 
+- I spent most of the day using manim, trying to create a short introduction video to self-attention 
+- I spent rest of the day having with a few friends 
+- I also did start reading e-myth revistied. It is a pretty fun book so far, striaghtforward and story based. The way I like my non-fiction to be, a bit fictional haha. 
