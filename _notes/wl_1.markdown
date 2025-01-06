@@ -3,7 +3,7 @@ layout: note
 title: "Weekly Lessons #1 (1.1.25 - 5.1.25)"
 last_modified_at: 2025-01-05 12:00:00 +0530
 categories: [lifestyle, self-help, growth]
-image: assets/cover_images/cover_image.webp
+image: assets/cover_images/img3.webp
 ---
 
 
