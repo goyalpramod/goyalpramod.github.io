@@ -32,5 +32,7 @@ day 3 ->
     - Perplexity is not the competitor of google, their motto is "knowledge" It's an entirely different business model 
     - To overtake an existing product. Your product needs to be either 10x UI better, UX better or anything that is 10X (from hooked book)
     - Most of the times, doing things which are 10x just need 2x of the energy. 
-    - 
+    - Also I was reading on Charlie Munger's speach and ideas.
+        - INVERT INVERT INVERT, if you have a problem you cant figure out. Try thinking of it in other ways. 
+        - Just sit down and do not get up till its done. 
 -->
