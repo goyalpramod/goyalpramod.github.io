@@ -35,4 +35,5 @@ day 3 ->
     - Also I was reading on Charlie Munger's speach and ideas.
         - INVERT INVERT INVERT, if you have a problem you cant figure out. Try thinking of it in other ways. 
         - Just sit down and do not get up till its done. 
+    - Some thoughts from paul's blogs have also stuck with me. THe most profound one being. Inconvience, founders just have a keen eye for the most weirdly inconvinient things that people have just accepted to live with. They are so used to it being the way it is, noone ever thinks of chaning or improving it. 
 -->
