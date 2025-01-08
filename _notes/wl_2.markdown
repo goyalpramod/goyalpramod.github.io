@@ -36,7 +36,9 @@ day 3 ->
         - INVERT INVERT INVERT, if you have a problem you cant figure out. Try thinking of it in other ways. 
         - Just sit down and do not get up till its done. 
     - Some thoughts from paul's blogs have also stuck with me. THe most profound one being. Inconvience, founders just have a keen eye for the most weirdly inconvinient things that people have just accepted to live with. They are so used to it being the way it is, noone ever thinks of chaning or improving it. 
-
+- Some more sayings that I like 
+    - The way one does one thing, he does everything. 
+    - If you do it once, you will do it again. 
 - I also learned that these three line are live savers 
 ```
 git checkout main
