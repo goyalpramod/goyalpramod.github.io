@@ -17,4 +17,20 @@ Day 2 ->
 - I worked on manim, I made 4 minutes of my transformers video. But I want it to be just perfect 
 - I read the boo
 - I started working on the SD blog, damn is it challenging. But completely worth it IMO.
+
+day 3 -> 
+- Something that has stuck with me for a long time are the two things I read on "The millionaire fastlane"
+    - First being "impact millions' That is the autour saying. "If I had to sum the entire book in 2 words"
+    - Second, The CENTS formula. It goes lik 
+        - C -> Control, You should have entire control of your business, you cannot delegate this. 
+        - E -> Entry, THe entry barrier should be relatively high. Otherwise everyone will be doing it. 
+        - N -> Need, Their should be a cutomer base who you can provide value to, if your business does not solve a need. It wont succeed. 
+        - T -> Time, You are not your business, you should be able to detach your time from the business. Otherwise you will have a job not a business. The end goal should be you spending as less time as possible in your own business 
+        - S -> Scale, Your business should be scalable. You can be the best nurse in the world. But you can only cater to a handful of people in your entire life 
+- Also, let us speak a bit about the other books and podcasts that have stuck with me. 
+    - The almanack of naval ravikant, "You need 7 years of dedication that's all" Pick something. DO it to the entireity for 7 years. THat is all you need. 
+    - Perplexity is not the competitor of google, their motto is "knowledge" It's an entirely different business model 
+    - To overtake an existing product. Your product needs to be either 10x UI better, UX better or anything that is 10X (from hooked book)
+    - Most of the times, doing things which are 10x just need 2x of the energy. 
+    - 
 -->
