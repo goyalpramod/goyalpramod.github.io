@@ -431,7 +431,7 @@ Also if you read the paper, each word of it should make sense to you.
 
 We will first start with the [Multi-Head Attention](#multi-head-attention), then the [feed forward network](#feed-forward-network), followed by the [positional encoding](#positional-encoding), Using these we will finish the [Encoder](#encoder-layer) Layer, subsequently we will move to the [Decoder](#decoder-layer) Layer, After which we will write the [Encoder](#encoder) & [Decoder](#decoder) block, and finally end it with writing the [training](#training-transformers) loop for an entire Transformer on real world data.
 
-The full notebook can be found [here](https://github.com/goyalpramod/transformer_from_scratch/blob/main/transformers.ipynb)
+The full notebook can be found [here](https://github.com/goyalpramod/paper_implementations/blob/main/transformers.ipynb)
 
 ![Image of a transformer](/assets/transformers_laid_out/transformers.svg)
 
@@ -1834,11 +1834,17 @@ Here are some resources and more information that can help you out in your journ
 [What is torch.nn really?](https://pytorch.org/tutorials/beginner/nn_tutorial.html)\
 [Neural networks by 3Blue1Brown](https://www.3blue1brown.com/topics/neural-networks)
 
-Congratulations for completing this tutorial/lesson/blog however you see it. It is by nature of human curosity that you must have a few questions now.
+Congratulations on completing this tutorial/lesson/blog, however, you see it. By nature of human curiosity, you must have a few questions now.
 Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here.
 
 Cheers,
 Pramod
+
+## Ways to help out 
+
+I have spent a considerable time trying to make this blog as close to my vision as possible, but to err is to be human. Feel free to raise a [PR](https://github.com/goyalpramod/goyalpramod.github.io/pulls) 
+if you do find any errors. I will be more than happy to accept them into the blog.\
+Also, I am always open to suggestions to improve the blog. Feel free to drop your thoughts in the [issues](https://github.com/goyalpramod/goyalpramod.github.io/issues)
 
 P.S All the code as well as assets can be accessed from my github and are free to use and distribute, Consider citing this work though :)
 
