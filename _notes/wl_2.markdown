@@ -45,4 +45,10 @@ git checkout main
 git fetch origin
 git reset --hard origin/main
 ```
+
+day 4:
+- I was mostly busy with work today 
+- The time I did get I spent learning about GANs, from the following [paper](https://arxiv.org/pdf/1406.2661) and [blog](https://lilianweng.github.io/posts/2017-08-20-gan/)
+I also found an interesting youtube channel, that had a great video on markov chains. It was called normalized nerds hahaha. 
+- I read some interesting things from e-myth revisited which I would like to write about in one go. 
 -->
