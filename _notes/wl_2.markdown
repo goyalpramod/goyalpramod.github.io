@@ -51,4 +51,5 @@ day 4:
 - The time I did get I spent learning about GANs, from the following [paper](https://arxiv.org/pdf/1406.2661) and [blog](https://lilianweng.github.io/posts/2017-08-20-gan/)
 I also found an interesting youtube channel, that had a great video on markov chains. It was called normalized nerds hahaha. 
 - I read some interesting things from e-myth revisited which I would like to write about in one go. 
+- It's late.... I really want to sleep. But I must learn.. I want to know more. I am reading these [blogs](https://www.countbayesie.com/blog/2015/3/19/expectation-and-variance-from-high-school-to-grad-school) atm, really got inspired by Taehoon Kim's [story](https://carpedm30.notion.site/me)
 -->
