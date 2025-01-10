@@ -57,5 +57,14 @@ day 5:
 - One of these days I updated my github and medium profile and forgot to write down about it. I believe it is very important to follow a style
 in your writing and the work you present. That becomes your brand image, I like simplicity, minimalism, A bit of naivety or childishness too, To add a bit of fun in your writing,
 in your diagrams, in one's way of life. Because when people go through my work, ACTUAL work that I have put hours behind. 
-I want them to realize, that most things in life really are simple, that most things can be fun if you have fun while doing them. 
+I want them to realize, that most things in life really are simple, that most things can be fun if you have fun while doing them.
+- There is one thing in my belief system that I am way too fond of, "Exponential growth", it is very tough to grow exponentially, but 
+if you can do this. You will achieve in 1 year what most take 10 years. 
+The idea is simple, instead of trying to improve 1% a day, try to improve by 10%. It is very tough, but it is worth it. 
+To do this, on a single day I try to write, code, practice a real life skill (cooking, driving, explosive training etc), reading (fast, and comprehending it)
+When you do multiple things (not all at once, but designating specific time for each) You get better at each, but it has some profound effect on you. 
+And you actually start to get better at other things. Like the idea of asynchronous programming improved my cooking. 
+- I have been mostly reading count bayesian blogs on random variables, expectation, variance, covvariance etc. I will make some content on these later on. 
+Either short form or include all of it in a single blog. 
+
 -->
