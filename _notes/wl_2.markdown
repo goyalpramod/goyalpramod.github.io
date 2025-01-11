@@ -67,4 +67,12 @@ And you actually start to get better at other things. Like the idea of asynchron
 - I have been mostly reading count bayesian blogs on random variables, expectation, variance, covvariance etc. I will make some content on these later on. 
 Either short form or include all of it in a single blog. 
 
+day 6:
+- I spent much of the morning working on the youtube video, even after everything is done. I change quite a lot of stuff because I want it to be absolutely perfect, or atleast get it to a stage I can happy with it, like I want it to be something that I would honestly revisit in the future, Like the blogs I write, content I put out in twitter, linkedin etc. Are stuff that I actually like to go through again, because I see them as really helpful and essential knowledge
+- Afternoon was spent taking care of chores 
+- In the evening I tried to learn more on GANs, I left it for training (I still need to completely grok it, most of the stuff I left to AI to code, or teach me. I still feel like there is a lot that I need to understand), After which I proceeded to learn about VAEs 
+- I was listening to the DOAC podcast and a story by alex hormonzi stuck with me. "A dad gifts his son an old car for his birthday, 
+Then asks him would you rather have the money? The son says yes, then his father advices him to go to the local delership and see what they offer him, He comes back and says "The dealership said that the car looks old, and it will be a lot of money trying to fix it up, best they can offer is a grand." Then his father adviced him to go to the scrapyard and see what they offer him. He does that, comes back and tells his father "They said that they will have to spend a lot of time scraping the good and bad metal. Best they can do is 500 Dollars". His father then says, "Why dont you go to the local antique store and see what they have to say". He does that, after a while he comes back running, with a huge smile on his face. All excitedly he tells his father "DAD DAD DAD, the antique store said that the car is an antique. One of only 100 made in the world. It will easily sell for more than 100k". The lesson in this story is that you aren't valued the same in all places.
+- The greatest price you pay in life, is the price of ignorance.  
+
 -->
