@@ -97,7 +97,16 @@ So Y acts as the common language that both the encoder and decoder speak to prod
 ## Understanding Self-attention
 
 <div class="video-wrapper">
-  <iframe width="560" height="315" src="https://www.youtube.com/watch?v=vW-uktXeq2E" title="Understanding self attention" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  <iframe 
+    width="560" 
+    height="315" 
+    src="https://www.youtube-nocookie.com/embed/vW-uktXeq2E" 
+    title="Understanding self attention" 
+    frameborder="0" 
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen>
+  </iframe>
 </div>
 
 *I created a video with a better visualization of what is going on, consider checking it out*
