@@ -59,11 +59,11 @@ Someone is being sneaky, Feel free to read it. But I have mostly written it for 
 
 ## January Goals
 
-- Finish Transformers blog
-- Finish transformers video
-- Make SD blog
+- Finish Transformers blog [Done]
+- Finish transformers video [work in progress]
+- Make SD blog [work in progress]
 - Finish SD video
-- Finish 48 laws of power
+- Finish 48 laws of power [done]
 - Repurpose content
 - Start with buddy
 
@@ -129,4 +129,7 @@ Founder
 12. AI agents from first principles
 13. DL for Dummies
 14. ML maths for Dummies
+16. NLP from zero to one 
+17. CV from zero to one 
+18. RL from zero to one
 15. finish tech reports of qwen, deepseek, llama etc -->
