@@ -96,6 +96,21 @@ So Y acts as the common language that both the encoder and decoder speak to prod
 
 ## Understanding Self-attention
 
+<div class="video-wrapper">
+  <iframe 
+    width="560" 
+    height="315" 
+    src="https://www.youtube-nocookie.com/embed/vW-uktXeq2E" 
+    title="Understanding self attention" 
+    frameborder="0" 
+    loading="lazy"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+    allowfullscreen>
+  </iframe>
+</div>
+
+*I created a video with a better visualization of what is going on, consider checking it out*
+
 We have all heard of the famous trio, "Query, Key and Values". I absolutely lost my head trying to understand how the terms came up behind this idea
 Was Q,K,Y related to dictionaries? (or maps in traditional CS) Was it inspired by a previous paper? if so how did they come up with?
 

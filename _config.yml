@@ -101,3 +101,8 @@ defaults:
     values:
       layout: thought
       math: true
+
+# Security settings for iframes and external content
+webrick:
+  headers:
+    Content-Security-Policy: "frame-src https://www.youtube-nocookie.com https://www.youtube.com"

@@ -4,6 +4,11 @@
     {%- include google-analytics.html -%}
   {%- endif -%}
 
+  <!-- Add these two meta tags here -->
+  <meta http-equiv="Content-Security-Policy" content="frame-src https://www.youtube-nocookie.com https://www.youtube.com">
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+ 
+
   <div class="container">
     <div class="wrapper">
       <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
