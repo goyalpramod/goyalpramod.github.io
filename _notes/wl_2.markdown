@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: note
 title: "Weekly Lessons #2 (6.1.25 - 12.1.25)"
 last_modified_at: 2025-01-05 12:00:00 +0530
@@ -6,7 +6,7 @@ categories: [lifestyle, self-help, growth]
 image: assets/cover_images/img4.webp
 ---
 
-
+Notes on first youtube video, work on second blog on SD, weekly small things learned here and there. Also some thoughts on podcasts, books and quotes that have stuck with me. 
 
 Day 1 -> 
 - Most of the day was spent working for the company, I had a look at onyx. It is an interesting project and highly relevant to what I am working on 
@@ -75,4 +75,7 @@ day 6:
 Then asks him would you rather have the money? The son says yes, then his father advices him to go to the local delership and see what they offer him, He comes back and says "The dealership said that the car looks old, and it will be a lot of money trying to fix it up, best they can offer is a grand." Then his father adviced him to go to the scrapyard and see what they offer him. He does that, comes back and tells his father "They said that they will have to spend a lot of time scraping the good and bad metal. Best they can do is 500 Dollars". His father then says, "Why dont you go to the local antique store and see what they have to say". He does that, after a while he comes back running, with a huge smile on his face. All excitedly he tells his father "DAD DAD DAD, the antique store said that the car is an antique. One of only 100 made in the world. It will easily sell for more than 100k". The lesson in this story is that you aren't valued the same in all places.
 - The greatest price you pay in life, is the price of ignorance.  
 
--->
+day 7 :
+- I spent most of yesterday creating the youtube video in the morning (which I released yehhhhhh, It didnt explode unfortunately tho. But its ok, these are mostly wealth assets which build on time)
+- After that I spent the afternoon resting and watching anime 
+- At night I was reading about VAEs
