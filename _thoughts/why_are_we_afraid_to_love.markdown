@@ -24,5 +24,9 @@ This romantic love can end in two ways in my opinion
 * the person reciprocates your feelings 
 * the person does not reciprocate your feelings 
 
+Lets talk about both
 
+# The inevitable future 
+
+# The first heartbreak
 -->
