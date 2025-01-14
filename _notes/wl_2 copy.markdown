@@ -12,4 +12,9 @@ Day 1 ->
 - Was doing company work most of the day
 - Watched a good movie "The invisible guest"
 
+Day 2 ->
+- Spent time doing company work 
+- Had a meeting about how to run our business with friends 
+- Still studying about VAEs 
+- Started with the video on positional encoding
 -->
