@@ -17,4 +17,10 @@ Day 2 ->
 - Had a meeting about how to run our business with friends 
 - Still studying about VAEs 
 - Started with the video on positional encoding
+
+Day 3 -> 
+- I find it funny, I started this as a way to track everything that I am learning day to day. But surprisingly, its only a few hours of the day when I learn something new, sometimes miniscule minutes. Only few days of the week when I learn something new. 
+Learning follows a bell curve, the tails being not learning anything at all and learning a lot in a short time (this will be a test imo haha) and most of the times, its just general learning (or I will call experience, doing the same thing everyday, you do improve at it. Even if by a small amount)
+- Today I spent most of the day working 
+- Then reading the E myth book, some papers, some code for positional encoding
 -->
