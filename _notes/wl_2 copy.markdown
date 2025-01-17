@@ -28,4 +28,8 @@ Day 4 ->
 - I came to my old home for my brother's engagement, most of my day was spent on that.  I'm a Marwadi and we have one of craziest weddings in the world. Majority of money we make, is spent on weddings and education. millions in fact. It's nice, it's crazy. 
 I believe I have different views to marriage than the people in my community, I believe in love before marriage rather than the other way around. 
 Even when the world and experiences tell me otherwise, I believe true love is real.
+
+Day 5 -> 
+- I was back home, spent most of the day working. 
+- I noticed my grandma's hands shaking when serving me food today. My heart sank. 
 -->
