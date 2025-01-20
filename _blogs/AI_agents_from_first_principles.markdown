@@ -311,9 +311,109 @@ Now we have a single function that can take in instructions as well as the tools
 Now that we can get the tool names and arguments, its time to create another utility function that can take these info and actually execute them.
 
 ```python
+tools_map = {tool.__name__: tool for tool in tools}
 
+def execute_tool_call(tool_call, tools_map):
+    name = tool_call.function.name
+    args = json.loads(tool_call.function.arguments)
 
+    print(f"Assistant: {name}({args})")
 
+    # call corresponding function with provided arguments
+    return tools_map[name](**args)
+
+for tool_call in message.tool_calls:
+            result = execute_tool_call(tool_call, tools_map)
+
+            # add result back to conversation 
+            result_message = {
+                "role": "tool",
+                "tool_call_id": tool_call.id,
+                "content": result,
+            }
+            messages.append(result_message)
+
+# {add the output here}
 ```
 
-## References -->
+Now we would like our llms to take this response and send an output to the user. Let's do that. 
+
+```python
+tools = [execute_refund, look_up_item]
+
+
+def run_full_turn(system_message, tools, messages):
+
+    num_init_messages = len(messages)
+    messages = messages.copy()
+
+    while True:
+
+        # turn python functions into tools and save a reverse map
+        tool_schemas = [function_to_schema(tool) for tool in tools]
+        tools_map = {tool.__name__: tool for tool in tools}
+
+        # === 1. get openai completion ===
+        response = client.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[{"role": "system", "content": system_message}] + messages,
+            tools=tool_schemas or None,
+        )
+        message = response.choices[0].message
+        messages.append(message)
+
+        if message.content:  # print assistant response
+            print("Assistant:", message.content)
+
+        if not message.tool_calls:  # if finished handling tool calls, break
+            break
+
+        # === 2. handle tool calls ===
+
+        for tool_call in message.tool_calls:
+            result = execute_tool_call(tool_call, tools_map)
+
+            result_message = {
+                "role": "tool",
+                "tool_call_id": tool_call.id,
+                "content": result,
+            }
+            messages.append(result_message)
+
+    # ==== 3. return new messages =====
+    return messages[num_init_messages:]
+
+
+def execute_tool_call(tool_call, tools_map):
+    name = tool_call.function.name
+    args = json.loads(tool_call.function.arguments)
+
+    print(f"Assistant: {name}({args})")
+
+    # call corresponding function with provided arguments
+    return tools_map[name](**args)
+
+
+messages = []
+while True:
+    user = input("User: ")
+    messages.append({"role": "user", "content": user})
+
+    new_messages = run_full_turn(system_message, tools, messages)
+    messages.extend(new_messages)
+```
+
+
+
+
+
+
+
+
+Here smolagents argue that using code rather than JSON is better, so let's try that out as well, so we come full circle. 
+
+
+
+## References
+
+ -->
