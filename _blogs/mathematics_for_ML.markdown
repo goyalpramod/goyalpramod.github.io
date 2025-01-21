@@ -8,6 +8,11 @@ image: /assets/maths_for_ml/meme.webp
 
 {in videos teach the maths, then build something in ML using them}
 
+References:
+
+[MML Book](https://mml-book.github.io/book/mml-book.pdf)
+[3Blue1Brown](https://www.youtube.com/@3blue1brown/playlists)
+
 ## Linear Algebra 
 
 ### Vectors
@@ -43,7 +48,13 @@ Associativity, Distributivity, Multiplication with the identity matrix (types of
 
 ## Statistics 
 
-## Geometry 
+## Geometry
+
+### Norm 
+
+### Inner products
+
+#### Dot product
 
 ## Matrix 
 
