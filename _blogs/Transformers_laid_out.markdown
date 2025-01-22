@@ -22,6 +22,42 @@ Here I aim to:
 
 All in one place.
 
+## Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [How to use this blog](#how-to-use-this-blog)
+- [Understanding the Transformer](#understanding-the-transformer)
+- [Understanding Self-attention](#understanding-self-attention)
+- [Understanding Positional Encoding](#understanding-positional-encoding)
+  - [Integer Encoding](#integer-encoding)
+  - [Sinusoidal Encoding](#sinusoidal-encoding)
+- [Understanding The Encoder and Decoder Block](#understanding-the-encoder-and-decoder-block)
+  - [Encoder](#encoder)
+  - [Residual connection](#residual-connection)
+  - [Layer Normalization](#layer-normalization)
+  - [Feed Forward network](#feed-forward-network)
+  - [Decoder Block](#decoder-block)
+  - [Final linear \& Softmax layer](#final-linear--softmax-layer)
+- [Coding the transformer](#coding-the-transformer)
+  - [Abstract \& Introduction](#abstract--introduction)
+  - [Background](#background)
+  - [Model Architecture](#model-architecture)
+  - [Multi-Head Attention](#multi-head-attention)
+  - [Feed Forward Network](#feed-forward-network-1)
+  - [Positional Encoding](#positional-encoding)
+  - [Encoder Layer](#encoder-layer)
+  - [Decoder Layer](#decoder-layer)
+  - [Encoder](#encoder-1)
+  - [Decoder](#decoder)
+  - [Utility Code](#utility-code)
+  - [Transformer](#transformer)
+  - [Utility code for Transformer](#utility-code-for-transformer)
+  - [Training transformers](#training-transformers)
+  - [Setting up the Dataset and DataLoader](#setting-up-the-dataset-and-dataloader)
+  - [Starting the training loop and Some Analysis (with tips for good convergence)](#starting-the-training-loop-and-some-analysis-with-tips-for-good-convergence)
+- [Misc \& Further Reading](#misc--further-reading)
+- [Ways to help out](#ways-to-help-out)
+
 ## How to use this blog
 
 I will first give you a quick overview of how the transformer works and why it was developed in the first place.
