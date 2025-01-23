@@ -22,4 +22,9 @@ Day 3 ->
 - Morning went as usual, work & meetings. 
 - Today I got done with my driving classes which is nice
 - In the evening I created some visualizations for my diffusion model blog
+
+Day 4 -> 
+- copy paste above morning routine 
+- In the evening I added more content for the diffusion blog
+- I woke up at 4 to start writing a guide on ml maths. That was nice. 
 - -->
