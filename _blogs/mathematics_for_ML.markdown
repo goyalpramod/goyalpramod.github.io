@@ -5,7 +5,7 @@ date: 2025-01-3 12:00:00 +0530
 categories: [personal, technology]
 image: /assets/maths_for_ml/meme.webp #Maybe add an image of a fractal or something 
 ---
-
+{https://explained.ai/matrix-calculus/}
 {in videos teach the maths, then build something in ML using them}
 
 {add a table of content section}
