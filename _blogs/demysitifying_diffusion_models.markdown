@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: blog
 title: "Demystifying Diffusion Models"
 date: 2025-01-3 12:00:00 +0530
@@ -172,6 +172,18 @@ Updates the sample itself to look more like real data
 This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
 
 """
+
+TRAINING THE MODEL
+
+Since we can't have x₀ during generation, we train a model pθ(xₜ₋₁|xₜ) to approximate q(xₜ₋₁|xₜ,x₀). This model learns to predict the denoising step without needing the original image.
+The training process works like this:
+
+Take a clean image x₀
+Sample a random timestep t
+Add noise to get xₜ using our "nice property" formula
+Train the model to predict the noise that was added
+The model learns to do this by minimizing the difference between its prediction and the actual noise
+
 # Maths of Reverse diffusion process
 
 If we can reverse the above process and sample from $q(x_{t-1}|x_t)$, we will be able to recreate the true sample from a Gaussian noise input, $x_T \sim \mathcal{N}(0,\mathbf{I})$. Note that if $\beta_t$ is small enough, $q(x_{t-1}|x_t)$ will also be Gaussian. Unfortunately, we cannot easily estimate $q(x_{t-1}|x_t)$ because it needs to use the entire dataset and therefore we need to learn a model $p_\theta$ to approximate these conditional probabilities in order to run the *reverse diffusion process*.
@@ -275,9 +287,33 @@ $$
 Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian distributions and therefore they can be computed in closed form. $L_T$ is constant and can be ignored during training because $q$ has no learnable parameters and $x_T$ is a Gaussian noise. Ho et al. 2020 models $L_0$ using a separate discrete decoder derived from $\mathcal{N}(x_0; \mu_\theta(x_1,1), \Sigma_\theta(x_1,1))$.
 """
 
+### DDPM
+
+
+
+
 ### Unet 
 
 You will be surprised to know that the idea of Unets comes from a [medical paper](https://arxiv.org/pdf/1505.04597)
+
+
+As is the nature of things, I am going with the assumption you understand what CNNs are 
+and the different kinds of task in image classification. Below I have created a simple visualization for the different tasks. 
+
+But if you do not know CNNs Let me give a quick overview below otherwise, consider reading my CV blog(If the link doesn't take you anywhere, it's still under development) or read this.
+
+Helpful docs 
+
+[Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
+[BatchNorm2d](https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html1)\
+[MaxPool2d](https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html)\
+[Sequential](https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html)\
+[torch.cat](https://pytorch.org/docs/main/generated/torch.cat.html)\
+[ConvTranspose2d](https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html)\
+[Upsample](https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html)
+
+
+
 
 ### VAE 
 
@@ -301,4 +337,4 @@ You will be surprised to know that the idea of Unets comes from a [medical paper
 
 ### KL Divergence
 
-### Bayes' rule
+### Bayes' rule -->
