@@ -27,4 +27,8 @@ Day 4 ->
 - copy paste above morning routine 
 - In the evening I added more content for the diffusion blog
 - I woke up at 4 to start writing a guide on ml maths. That was nice. 
+
+Day 5 ->
+- I got done with UNETs which is pretty nice
+- It's ;ate at night and I am watching a movie (3 billboards outside ebbing,misouri)
 - -->
