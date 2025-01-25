@@ -185,15 +185,20 @@ Train the model to predict the noise that was added
 The model learns to do this by minimizing the difference between its prediction and the actual noise
 
 # Maths of Reverse diffusion process
+Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process. 
 
-If we can reverse the above process and sample from $q(x_{t-1}|x_t)$, we will be able to recreate the true sample from a Gaussian noise input, $x_T \sim \mathcal{N}(0,\mathbf{I})$. Note that if $\beta_t$ is small enough, $q(x_{t-1}|x_t)$ will also be Gaussian. Unfortunately, we cannot easily estimate $q(x_{t-1}|x_t)$ because it needs to use the entire dataset and therefore we need to learn a model $p_\theta$ to approximate these conditional probabilities in order to run the *reverse diffusion process*.
+Essentially we want to sample from $q(x_{t-1}|x_t)$, Which is quite tough as there can be millions of noisy images for actual images. To combat this we create an approximation (why do they work and how do they work in a minute) $p_\theta$ to approximate these conditional probabilities in order to run the *reverse diffusion process*.
 
+Which can be represented as 
 $$p_\theta(x_{0:T}) = p(x_T)\prod_{t=1}^T p_\theta(x_{t-1}|x_t)$$
 $$p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(x_t,t))$$
 
-It is noteworthy that the reverse conditional probability is tractable when conditioned on $x_0$:
+Unfortunately it is tough to even sample from this approximate model because it is the same as our previous model, so we modify it by adding the original image $x_0$ to it as such. 
 
 $$q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; \tilde{\mu}(x_t,x_0), \tilde{\beta}_t\mathbf{I})$$
+
+Now this is tractable (Exaplain what this word means), let us first understand the proof for how it is tractable. Later moving on to understand how they thought of this idea in the first place 
+
 
 Using Bayes' rule, we have:
 
@@ -228,8 +233,10 @@ Thanks to the nice property, we can represent $x_0=\frac{1}{\sqrt{\bar{\alpha}_t
 
 $$\tilde{\mu}_t = \frac{1}{\alpha_t}(x_{t-1}-\frac{\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_t)$$
 
-[Continued in next message due to length...]
+{add color coding for the above to make it easier to understand}
 
+
+"""
 As demonstrated in Fig. 2., such a setup is very similar to VAE and thus we can use the variational lower bound to optimize the negative log-likelihood.
 
 $$
@@ -287,9 +294,6 @@ $$
 Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian distributions and therefore they can be computed in closed form. $L_T$ is constant and can be ignored during training because $q$ has no learnable parameters and $x_T$ is a Gaussian noise. Ho et al. 2020 models $L_0$ using a separate discrete decoder derived from $\mathcal{N}(x_0; \mu_\theta(x_1,1), \Sigma_\theta(x_1,1))$.
 """
 
-### DDPM
-
-
 
 
 ### Unet 
@@ -322,10 +326,17 @@ Helpful docs
 
 ### DDPM 
 
+
+
 ### DDIM
 
 ## The code 
 
+## Understanding the metrics 
+
+This is interesting as well because... how do you tell a computer which is a good image and which is a bad image without actually doing a vibe check.
+
+This really makes you appreaciate how the loss function was created doesnt it now!!
 
 ## Things to talk about from the fast ai notebooks:
 * [Stable diffsion components](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) Build SD from taking components from HF
