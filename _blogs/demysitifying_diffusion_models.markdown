@@ -238,15 +238,81 @@ A quick note to the reader, This part is mostly pure mathematics. I have describ
 This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful. 
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/6.webp) 
+> Taken from the {add paper}
 
 
+The above image looks quite complex, But it is really simple if you understand what is going on. 
 
-- Forward diffusion process
-- Variance scheduling
-- Sampling strategies (DDPM/DDIM)
-- Beta schedule selection
+We start with an image and call it $X_0$ we then keep adding noise to it till we have pure stochatic Gausian Noise $X_T$
+
+"$q(X_t|X(t-1))$ {fix this} is the conditional probability over the Probability Density Function"
+
+Well wasn't that a mouthful, dont worry. I won't throw such a big sentence at you without explaining what it means. 
+
+Let's again stary with our original image $X_0$ and then we add a bit of noise to it, this is now $X_1$, then we add noise to this image that becomes $X_2$ and so on.
+
+[INSERT_IMAGE]
+
+That scary looking equation basically says if we have the image on the right $X_(t-1)$ we can add noise to it and get image at the next timestep and represent that as $X_t$
+(This is a slight oversimplification and we dive into greater detail about it in the math section)
+
+So now we have a single image, and we are able to add noise to it.
+
+What we want to do is, the reverse process. Take noise and get an image out of it. 
+
+You may ask why do we not simply do what we did earlier but the otherway around so something like 
+
+$$q(X_(t-1)|X_t)$$
+
+Well the above is simply not computationally possible because we will need to learn how the noise of all the images in the world looks like (remember how in the [idea]() section Dali said his brothers tried to do this and failed)
+
+So we need to learn to approximate it, learn how the images might look like given the noise. 
+
+and that is given by the other equation $p(theta)$ [ADD_EQUATION]
+
+Now above I mentioned that we add noise, but never described how. 
+
+That is done by this equation 
+
+$$q = N(mean, variance) $$
+
+We already know what the left hand side means, lets understand the right hand side. 
+
+The RHS represents a Normal distribution $N$ with mean $43234$ and Variance $4234$, we pick out noise at time t from this distribution to add to our image. 
+
+There is one slight problem though, gradually adding so many different noise at different values of t is very computationally expensive.
+
+Using the "nice property" we can make another equation 
+
+$$write euqation here$$
+
+This basically means, now we can add noise at any time t just using the original image. This is amazing, why? well you will understand in a while.
+
+You need to understand a few more things the $beta$ term in the above equation is a *variance shedule* it basically controlls the curve the noise is added in 
+
+[ADD_IMAGE_OF_CURVE]
+[ADD_IMAGE_OF_HOW_NOISE_CHANGES]
+
+Now that we understand how we can add noise to the images, how we can control the different kinds of noise, we need an objective or loss function to train over
+
+That is given by 
+
+$\|\epsilon - \epsilon_\theta(x_t,t)\|_2 = \|\epsilon - \epsilon_\theta(\bar{\alpha}_t x_0 + (1-\bar{\alpha}_t)\epsilon,t)\|_2$
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/5.webp)
+> Image Taken from {add paper}
+
+This greatly simplifies are training, which can be written as the above image.
+
+"""
+In other words:
+* we take a random sample $\mathbf{x}_0$ from the real unknown and possibly complex data distribution $q(\mathbf{x}_0)$
+* we sample a noise level $t$ uniformly between $1$ and $T$ (i.e., a random time step)
+* we sample some noise from a Gaussian distribution and corrupt the input by this noise at level $t$ (using the nice property defined above)
+* the neural network is trained to predict this noise based on the corrupted image $\mathbf{x}_t$ (i.e. noise applied on $\mathbf{x}_0$ based on known schedule $\beta_t$)
+
+In reality, all of this is done on batches of data, as one uses stochastic gradient descent to optimize neural networks.
+"""
 
 ### Instructions, because everyone needs guidance (Conditioning)
 
