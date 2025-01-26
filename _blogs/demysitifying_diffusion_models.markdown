@@ -5,6 +5,17 @@ date: 2025-01-3 12:00:00 +0530
 categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
+Things left to do: 
+-> Adding code for SD components 
+-> explaining code 
+-> Unifying the maths and explaining for reverse process
+-> Maths for score based modeling 
+-> Maths for VAE 
+-> Appendix 
+-> Explining The VAE 
+-> Explaining CLIP/T5 text encoders 
+-> Explaining Conditioning like CFG etc
+
 
 {The order of things,
 
