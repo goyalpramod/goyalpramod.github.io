@@ -73,7 +73,6 @@ Additionally, The below work takes heavy inspiration from the following works
 - [The annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)
 - [Fast ai course by Jeremy Howard](https://course.fast.ai/Lessons/part2.html)
 
-
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/9.webp) [REPLACE_THIS_WITH_THE_EXPLAINING_PARTS_IMAGE]
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/10.webp)
 
@@ -87,26 +86,27 @@ Additionally, The below work takes heavy inspiration from the following works
 
 You will be surprised to know UNETs were actually introduced in a [medical paper](https://arxiv.org/pdf/1505.04597) back in 2015. Primarily for the task of image segmentation.
 
-
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/14.webp)
+
 > Image Taken from the "U-Net: Convolutional Networks for Biomedical
 > Image Segmentation" paper
 
-The idea behind segmentation is, given an image "a". Create a map around the objects which need to be classified in the image. 
+The idea behind segmentation is, given an image "a". Create a map around the objects which need to be classified in the image.
 
 And the Reason they are called U-Net is because, well the architecture looks like a "U".
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/12.webp)
+
 > Image Taken from the "U-Net: Convolutional Networks for Biomedical
 > Image Segmentation" paper
 
 This looks quite complicated so let's break it down with a simpler image
 
-Also, I will proceed with the believe you have an understanding of CNNs and how they work. If not, check the appendix for a quick overview and a guide to where you can learn more on the topic. 
+Also, I will proceed with the believe you have an understanding of CNNs and how they work. If not, check the appendix for a quick overview and a guide to where you can learn more on the topic.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/11.webp)
 
-The encoder side does [convolutions]() to extract features from images, then compresses them to only focus on the relevant parts. 
+The encoder side does [convolutions]() to extract features from images, then compresses them to only focus on the relevant parts.
 
 The decoder then does [Transpose Convolutions]() to decode these extracted parts back into the original image size.
 
@@ -120,8 +120,7 @@ Another thing present inside Diffusion Model U-Nets is a cross attention layer, 
 
 They are easier to understand when we write them down in code. So let us do that. (We start with coding the original U-Net out first, then add the complexities of the one used in Stable Diffusion)
 
-
-```python 
+```python
 class DoubleConv(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
@@ -137,9 +136,10 @@ class DoubleConv(nn.Module):
     def forward(self, x):
         return self.double_conv(x)
 ```
-This is a simple convolution, This is done to extract relevant features from the image. 
 
-```python 
+This is a simple convolution, This is done to extract relevant features from the image.
+
+```python
 class Down(nn.Module):
     def __init__(self, in_channels, out_channels):
         super().__init__()
@@ -152,7 +152,7 @@ class Down(nn.Module):
         return self.maxpool_conv(x)
 ```
 
-A simple Down block, that compresses the size of the image. This makes sure we only focus on the relevant part. Imagine it like this Given most images, like pictures of dogs, person in a beach, Photo of the moon etc. The most interesting part (the dog,person,moon) usually take up a small or half the photo 
+A simple Down block, that compresses the size of the image. This makes sure we only focus on the relevant part. Imagine it like this Given most images, like pictures of dogs, person in a beach, Photo of the moon etc. The most interesting part (the dog,person,moon) usually take up a small or half the photo
 
 ```python
 class Up(nn.Module):
@@ -233,21 +233,21 @@ Now let us code out the U-Net used in Stable Diffusion
 
 ### Dali's mistake fixing wand (Scheduler)
 
-A quick note to the reader, This part is mostly pure mathematics. I have described each part in greater detail and simplification in the [maths section]() of the blog. 
+A quick note to the reader, This part is mostly pure mathematics. I have described each part in greater detail and simplification in the [maths section]() of the blog.
 
-This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful. 
+This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful.
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/6.webp) 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/6.webp)
+
 > Taken from the {add paper}
 
-
-The above image looks quite complex, But it is really simple if you understand what is going on. 
+The above image looks quite complex, But it is really simple if you understand what is going on.
 
 We start with an image and call it $X_0$ we then keep adding noise to it till we have pure stochatic Gausian Noise $X_T$
 
 "$q(X_t|X(t-1))$ {fix this} is the conditional probability over the Probability Density Function"
 
-Well wasn't that a mouthful, dont worry. I won't throw such a big sentence at you without explaining what it means. 
+Well wasn't that a mouthful, dont worry. I won't throw such a big sentence at you without explaining what it means.
 
 Let's again stary with our original image $X_0$ and then we add a bit of noise to it, this is now $X_1$, then we add noise to this image that becomes $X_2$ and so on.
 
@@ -258,58 +258,60 @@ That scary looking equation basically says if we have the image on the right $X_
 
 So now we have a single image, and we are able to add noise to it.
 
-What we want to do is, the reverse process. Take noise and get an image out of it. 
+What we want to do is, the reverse process. Take noise and get an image out of it.
 
-You may ask why do we not simply do what we did earlier but the otherway around so something like 
+You may ask why do we not simply do what we did earlier but the otherway around so something like
 
 $$q(X_(t-1)|X_t)$$
 
 Well the above is simply not computationally possible because we will need to learn how the noise of all the images in the world looks like (remember how in the [idea]() section Dali said his brothers tried to do this and failed)
 
-So we need to learn to approximate it, learn how the images might look like given the noise. 
+So we need to learn to approximate it, learn how the images might look like given the noise.
 
 and that is given by the other equation $p(theta)$ [ADD_EQUATION]
 
-Now above I mentioned that we add noise, but never described how. 
+Now above I mentioned that we add noise, but never described how.
 
-That is done by this equation 
+That is done by this equation
 
 $$q = N(mean, variance) $$
 
-We already know what the left hand side means, lets understand the right hand side. 
+We already know what the left hand side means, lets understand the right hand side.
 
-The RHS represents a Normal distribution $N$ with mean $43234$ and Variance $4234$, we pick out noise at time t from this distribution to add to our image. 
+The RHS represents a Normal distribution $N$ with mean $43234$ and Variance $4234$, we pick out noise at time t from this distribution to add to our image.
 
 There is one slight problem though, gradually adding so many different noise at different values of t is very computationally expensive.
 
-Using the "nice property" we can make another equation 
+Using the "nice property" we can make another equation
 
 $$write euqation here$$
 
 This basically means, now we can add noise at any time t just using the original image. This is amazing, why? well you will understand in a while.
 
-You need to understand a few more things the $beta$ term in the above equation is a *variance shedule* it basically controlls the curve the noise is added in 
+You need to understand a few more things the $beta$ term in the above equation is a _variance shedule_ it basically controlls the curve the noise is added in
 
 [ADD_IMAGE_OF_CURVE]
 [ADD_IMAGE_OF_HOW_NOISE_CHANGES]
 
 Now that we understand how we can add noise to the images, how we can control the different kinds of noise, we need an objective or loss function to train over
 
-That is given by 
+That is given by
 
 $\|\epsilon - \epsilon_\theta(x_t,t)\|_2 = \|\epsilon - \epsilon_\theta(\bar{\alpha}_t x_0 + (1-\bar{\alpha}_t)\epsilon,t)\|_2$
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/5.webp)
+
 > Image Taken from {add paper}
 
 This greatly simplifies are training, which can be written as the above image.
 
 """
 In other words:
-* we take a random sample $\mathbf{x}_0$ from the real unknown and possibly complex data distribution $q(\mathbf{x}_0)$
-* we sample a noise level $t$ uniformly between $1$ and $T$ (i.e., a random time step)
-* we sample some noise from a Gaussian distribution and corrupt the input by this noise at level $t$ (using the nice property defined above)
-* the neural network is trained to predict this noise based on the corrupted image $\mathbf{x}_t$ (i.e. noise applied on $\mathbf{x}_0$ based on known schedule $\beta_t$)
+
+- we take a random sample $\mathbf{x}_0$ from the real unknown and possibly complex data distribution $q(\mathbf{x}_0)$
+- we sample a noise level $t$ uniformly between $1$ and $T$ (i.e., a random time step)
+- we sample some noise from a Gaussian distribution and corrupt the input by this noise at level $t$ (using the nice property defined above)
+- the neural network is trained to predict this noise based on the corrupted image $\mathbf{x}_t$ (i.e. noise applied on $\mathbf{x}_0$ based on known schedule $\beta_t$)
 
 In reality, all of this is done on batches of data, as one uses stochastic gradient descent to optimize neural networks.
 """
@@ -340,14 +342,11 @@ Inspired by Imagen, Stable Diffusion does not train the text-encoder during trai
 
 ### The Magical Wand (Variational Auto-Encoder)
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/13.webp)
-
-- Encoder-decoder architecture
-- KL divergence
-- Latent space properties
-- Training considerations
-
 This [video](https://www.youtube.com/watch?v=qJeaCHQ1k2w&t=1s) helped me immensely while writing this part.
+
+Unfortunately for the both of us, This part too is very maths heavy. So again I will leave the intuition and derivation for the [maths section]() of the blog and just talk about the idea, show the equations and write out the code.
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/13.webp)
 
 """
 The VAE model has two parts, an encoder and a decoder. The encoder is used to convert the image into a low dimensional latent representation, which will serve as the input to the U-Net model. The decoder, conversely, transforms the latent representation back into an image.
@@ -367,34 +366,34 @@ During latent diffusion training, the encoder is used to get the latent represen
 """
 Before we get hands on with the code, let’s refresh how inference works for a diffuser.
 
-* We input a prompt to the diffuser.
+- We input a prompt to the diffuser.
 
-* This prompt is given a mathematical representation (an embedding) through the text encoder.
+- This prompt is given a mathematical representation (an embedding) through the text encoder.
 
-* A latent comprised of noise is produced.
-The U-Net predicts the noise in the latent in conjunction with the prompt.
-* The predicted noise is subtracted from the latent in conjunction with the scheduler.
-*  After many iterations, the denoised latent is decompressed to produce our final generated image.
+- A latent comprised of noise is produced.
+  The U-Net predicts the noise in the latent in conjunction with the prompt.
+- The predicted noise is subtracted from the latent in conjunction with the scheduler.
+- After many iterations, the denoised latent is decompressed to produce our final generated image.
 
 The main components in use are:
 
-* a text encoder,
-* a U-Net,
-* and a VAE decoder.
-"""
+- a text encoder,
+- a U-Net,
+- and a VAE decoder.
+  """
+
 ## The Dreaded Mathematics
 
-This part was heavily influenced by the following works 
+This part was heavily influenced by the following works
 
-* [Lil'Log blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
-* [yang song](https://yang-song.net/blog/2021/score/)
+- [Lil'Log blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
+- [yang song](https://yang-song.net/blog/2021/score/)
 
-As the above works were way too hard to understand. The following 3 videos really helped me out understand them 
+As the above works were way too hard to understand. The following 3 videos really helped me out understand them
 
-* [Diffusion Models From Scratch | Score-Based Generative Models Explained | Math Explained](https://www.youtube.com/watch?v=B4oHJpEJBAA)
-* [Diffusion Models | Paper Explanation | Math Explained](https://www.youtube.com/watch?v=HoKDTa5jHvg)
-* [Denoising Diffusion Probabilistic Models | DDPM Explained](https://www.youtube.com/watch?v=H45lF4sUgiE&t=1583s)
-
+- [Diffusion Models From Scratch | Score-Based Generative Models Explained | Math Explained](https://www.youtube.com/watch?v=B4oHJpEJBAA)
+- [Diffusion Models | Paper Explanation | Math Explained](https://www.youtube.com/watch?v=HoKDTa5jHvg)
+- [Denoising Diffusion Probabilistic Models | DDPM Explained](https://www.youtube.com/watch?v=H45lF4sUgiE&t=1583s)
 
 As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an appendix at the bottom where I explain each mathematical ideas as simply as possible.
 
@@ -557,7 +556,7 @@ Add noise to get xₜ using our "nice property" formula
 Train the model to predict the noise that was added
 The model learns to do this by minimizing the difference between its prediction and the actual noise
 
-# Maths of Reverse diffusion process
+## Maths of Reverse diffusion process
 
 Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process.
 
@@ -666,6 +665,8 @@ $$
 
 Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian distributions and therefore they can be computed in closed form. $L_T$ is constant and can be ignored during training because $q$ has no learnable parameters and $x_T$ is a Gaussian noise. Ho et al. 2020 models $L_0$ using a separate discrete decoder derived from $\mathcal{N}(x_0; \mu_\theta(x_1,1), \Sigma_\theta(x_1,1))$.
 """
+
+## Maths of VAE
 
 ### Unet
 
