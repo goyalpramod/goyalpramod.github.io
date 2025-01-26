@@ -22,26 +22,26 @@ There is a missing bridge between the beautiful simplification and more low leve
 
 ## The Genius Artist
 
-[INSERT_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/1.webp)
 Imagine you have a super special artist, whom you tell your ideas and he instantly generates amazing images out of it. Let's name him Dali
 
-[INSERT_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/2.webp)
 The way Dali starts his work is, that he first has a canvas, he listens to your instructions then creates an artwork.
 
-[INSERT_IMAGE]
 But Dali has a big problem, that he cannot make big images, he tells you that he will only create images the size of your hand. This is obviously not desirable. As for practical purposes you may want images the size of a wall, or a poster etc.
 
-[INSERT_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/8.webp)
 That is when a magic wand falls from the sky, and it has two modes Encoder(Compress size) and Decoder(Enlarge size). That gives you a great idea. You will start with the size of the canvas that you like, Encode it. Give the encoded canvas to Dali, he will make his art, And then you can decode the created art to get it back to the original shape you want.
 
 This works and you are really happy.
 
 But you are curious about how Dali works, so you ask him. "Dali why do you always start with this noisy canvas instead of pure white canvas? and how did you learn to generate so many amazing images?"
 
-[INSERT_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/4.webp)
 Dali is a kind nice guy, so he tells you about how he started out. When he was just a newbie artist. The world was filled with great art. Art so complex that I could not reproduce it, nobody could.
 
 That is when I found a special wand as well, which let me add and fix mistakes in a painting.
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/7.webp)
 
 I would start with an image, add a bunch of mistakes to it, and using my wand I would reverse them.
 
@@ -66,13 +66,16 @@ The man curious for what use anyone would have for his magic wand sees around Da
 
 Now that you have a general idea of how these image generation models work, lets build each specific component out.
 
-Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, Go to this [repo]()
+Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, Go to this [repo]().
 
 Additionally, The below work takes heavy inspiration from the following works
 
 - [The annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)
 - [Fast ai course by Jeremy Howard](https://course.fast.ai/Lessons/part2.html)
 
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/9.webp) [REPLACE_THIS_WITH_THE_EXPLAINING_PARTS_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/10.webp)
 ### Dali The Genius Artist (UNET)
 
 - Architecture details
@@ -81,6 +84,10 @@ Additionally, The below work takes heavy inspiration from the following works
 - Time embeddings
 - Training objective
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/12.webp)
+
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/11.webp)
 """
 The U-Net
 
@@ -93,10 +100,14 @@ Remember the UNETs were originally made for segmentation
 
 ### Dali's mistake fixing wand (Scheduler)
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/6.webp)
+
 - Forward diffusion process
 - Variance scheduling
 - Sampling strategies (DDPM/DDIM)
 - Beta schedule selection
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/5.webp)
 
 ### Instructions, because everyone needs guidance (Conditioning)
 
@@ -129,6 +140,8 @@ Inspired by Imagen, Stable Diffusion does not train the text-encoder during trai
 - Latent space properties
 - Training considerations
 
+This [video](https://www.youtube.com/watch?v=qJeaCHQ1k2w&t=1s) helped me immensely while writing this part.
+
 """
 The VAE model has two parts, an encoder and a decoder. The encoder is used to convert the image into a low dimensional latent representation, which will serve as the input to the U-Net model. The decoder, conversely, transforms the latent representation back into an image.
 
@@ -142,17 +155,39 @@ During latent diffusion training, the encoder is used to get the latent represen
 - Inference workflow
 - Optimization strategies
 
+**A quicky Summary**
+
+"""
+Before we get hands on with the code, let’s refresh how inference works for a diffuser.
+
+* We input a prompt to the diffuser.
+
+* This prompt is given a mathematical representation (an embedding) through the text encoder.
+
+* A latent comprised of noise is produced.
+The U-Net predicts the noise in the latent in conjunction with the prompt.
+* The predicted noise is subtracted from the latent in conjunction with the scheduler.
+*  After many iterations, the denoised latent is decompressed to produce our final generated image.
+
+The main components in use are:
+
+* a text encoder,
+* a U-Net,
+* and a VAE decoder.
+"""
 ## The Dreaded Mathematics
 
-References:
+This part was heavily influenced by the following works 
 
-[Lil'Log blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
-[HF article](https://huggingface.co/blog/annotated-diffusion) (code + notes)
-[yang song](https://yang-song.net/blog/2021/score/)
+* [Lil'Log blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
+* [yang song](https://yang-song.net/blog/2021/score/)
 
-https://huggingface.co/blog/stable_diffusion
+As the above works were way too hard to understand. The following 3 videos really helped me out understand them 
 
-## The Idea behind Stable Diffusion
+* [Diffusion Models From Scratch | Score-Based Generative Models Explained | Math Explained](https://www.youtube.com/watch?v=B4oHJpEJBAA)
+* [Diffusion Models | Paper Explanation | Math Explained](https://www.youtube.com/watch?v=HoKDTa5jHvg)
+* [Denoising Diffusion Probabilistic Models | DDPM Explained](https://www.youtube.com/watch?v=H45lF4sUgiE&t=1583s)
+
 
 ## Components of SD
 
