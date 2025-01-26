@@ -45,3 +45,9 @@ Day 6 ->
 - In the evening I worked on the blog. I didnt get much done here, but I did sure understand a lot of things clearer.
 - I really want to get a majority portion of the blog done tomorrow. I think if I have each section written down first. Then I can work on the visuals, after which I can work on the code. If I finish the writing of sections tomorrow. I can hopefully wrap everything up this month.
 - I also learnt about the 12 rules of animation, and started reading the book on shadders. They pretty dope. 
+
+Day 7-> 
+
+- I litreally spent the whole day working on the SD blog, goddamn is it tough stuff. I never knew maths could be so complex haha. But it's fun I do enjoy it. 
+- Today I was wondering why I go so far to make sure everything is just right, that is when it hit me. The words Pramit (my mentor in my 2nd intership) told me "Everything is art if you see it that way, I see the code that I write as art" and that changed everything for me. I do not see these blogs as mere writings, but my thoughts, my time, my work, a part of me itself as art. And when you create art, You do not create how long it takes. You have a vision that you want to bring to life. And that is exactly what I am trying to do now. 
+- Hopefully in the future I am able to write the books I have in my head at the moment, I am able to create the library that is in my head. It will all be so much fun. 
