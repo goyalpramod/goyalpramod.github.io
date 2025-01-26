@@ -15,6 +15,7 @@ Things left to do:
 -> Explining The VAE 
 -> Explaining CLIP/T5 text encoders 
 -> Explaining Conditioning like CFG etc
+-> Re-reading and fixing any mistakes I spot, and adding images where I see fit
 
 
 {The order of things,
