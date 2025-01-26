@@ -5,28 +5,165 @@ date: 2025-01-3 12:00:00 +0530
 categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
+
+{The order of things,
+
+- Build the idea first, general stuff of what is going on.
+- Build and code each component out
+- Talk about the maths behind the whole idea, starting with score models, then moving to ddpm etc}
+
+Diffusion models like Stable Diffusion, Flux, Dall-e etc were an enigma built upon multiple ideas and mathematical breakthroughs. So is the nature of it that most tutorials on the topic are extremely complicated or even when simplied talk a lot about it from a high level perspective.
+
+There is a missing bridge between the beautiful simplification and more low level complex idea. That is the gap I have tried to fix in this blog.
+
+- Starting with the simple **idea** behind diffusion models
+- Understanding each component and **coding** it out
+- And finally a full section dedicated to the **maths** for the curious minds
+
+## The Genius Artist
+
+[INSERT_IMAGE]
+Imagine you have a super special artist, whom you tell your ideas and he instantly generates amazing images out of it. Let's name him Dali
+
+[INSERT_IMAGE]
+The way Dali starts his work is, that he first has a canvas, he listens to your instructions then creates an artwork.
+
+[INSERT_IMAGE]
+But Dali has a big problem, that he cannot make big images, he tells you that he will only create images the size of your hand. This is obviously not desirable. As for practical purposes you may want images the size of a wall, or a poster etc.
+
+[INSERT_IMAGE]
+That is when a magic wand falls from the sky, and it has two modes Encoder(Compress size) and Decoder(Enlarge size). That gives you a great idea. You will start with the size of the canvas that you like, Encode it. Give the encoded canvas to Dali, he will make his art, And then you can decode the created art to get it back to the original shape you want.
+
+This works and you are really happy.
+
+But you are curious about how Dali works, so you ask him. "Dali why do you always start with this noisy canvas instead of pure white canvas? and how did you learn to generate so many amazing images?"
+
+[INSERT_IMAGE]
+Dali is a kind nice guy, so he tells you about how he started out. When he was just a newbie artist. The world was filled with great art. Art so complex that I could not reproduce it, nobody could.
+
+That is when I found a special wand as well, which let me add and fix mistakes in a painting.
+
+I would start with an image, add a bunch of mistakes to it, and using my wand I would reverse them.
+
+After a while, I added so many mistakes to the original image, that they looked like pure noise. The way my canvas do, and using my special wand. I just gradually found mistakes and removed them. Till I got back the original image.
+
+This idea sounds fascinating, but you being you have quite a question "that sounds amazing, so did you learn what the full of mistakes image will look like for all the images in the world? Otherwise how do you know what will be the final image be from a noisy image?"
+
+[INSERT_IMAGE]
+"Great question!!!" Dali responds. "That is what my brothers used to do, They tried to learn the representation of all the images in the world and failed. What I did differently was, instead of learning all the images. I learnt the general idea of different images. For example, instead of learning all the faces. I learnt how do human faces look in general"
+
+Satisfied with his answers you were about to leave, when Dali stops you and asks, "Say friend, that wand of yours truly is magical. It can make my art popular worldwide because everyone can create something of value using it. Will you be kind enough to explain how it works so I can make one for myself."
+
+You really want to help Dali out, but unfortunately even you do not know how the wand works, as you are about to break the news to him. You are interrupted by a noise, "Gentlemen you wouldn't happen to have seen a magic wand around now would you? It is an artifact created with great toil and time"
+
+[INSERT_IMAGE]
+You being the kind soul you are, Tell the man that you found it on the street and wish to return it.
+The man Greatly happy with your generosity, wishes to pay you back. You just say "Thank you, but I do not seek money. But it would really help my friend Dali out if you could explain how your magic wand works."
+
+The man curious for what use anyone would have for his magic wand sees around Dali's studio, and understands that he is a great artist. Happy to help him he says. "My name is Auto, and I shall tell you about my magic wand."
+
+## Understanding the diffferent components
+
+Now that you have a general idea of how these image generation models work, lets build each specific component out.
+
+Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, Go to this [repo]()
+
+Additionally, The below work takes heavy inspiration from the following works
+
+- [The annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)
+- [Fast ai course by Jeremy Howard](https://course.fast.ai/Lessons/part2.html)
+
+### Dali The Genius Artist (UNET)
+
+- Architecture details
+- Residual connections
+- Attention mechanisms
+- Time embeddings
+- Training objective
+
+"""
+The U-Net
+
+The U-Net has an encoder part and a decoder part both comprised of ResNet blocks. The encoder compresses an image representation into a lower resolution image representation and the decoder decodes the lower resolution image representation back to the original higher resolution image representation that is supposedly less noisy. More specifically, the U-Net output predicts the noise residual which can be used to compute the predicted denoised image representation.
+
+To prevent the U-Net from losing important information while downsampling, short-cut connections are usually added between the downsampling ResNets of the encoder to the upsampling ResNets of the decoder. Additionally, the stable diffusion U-Net is able to condition its output on text-embeddings via cross-attention layers. The cross-attention layers are added to both the encoder and decoder part of the U-Net usually between ResNet blocks.
+"""
+
+Remember the UNETs were originally made for segmentation
+
+### Dali's mistake fixing wand (Scheduler)
+
+- Forward diffusion process
+- Variance scheduling
+- Sampling strategies (DDPM/DDIM)
+- Beta schedule selection
+
+### Instructions, because everyone needs guidance (Conditioning)
+
+#### Text Encoder
+
+- CLIP/T5 architecture
+- Token embedding
+- Text preprocessing
+- Integration with conditioning
+
+#### Different Conditioning
+
+- Cross-attention mechanics
+- Embedding integration
+- Multi-modal conditioning
+- Classification guidance
+
+"""
+The Text-encoder
+
+The text-encoder is responsible for transforming the input prompt, e.g. "An astronaut riding a horse" into an embedding space that can be understood by the U-Net. It is usually a simple transformer-based encoder that maps a sequence of input tokens to a sequence of latent text-embeddings.
+
+Inspired by Imagen, Stable Diffusion does not train the text-encoder during training and simply uses an CLIP's already trained text encoder, CLIPTextModel.
+"""
+
+### The Magical Wand (Variational Auto-Encoder)
+
+- Encoder-decoder architecture
+- KL divergence
+- Latent space properties
+- Training considerations
+
+"""
+The VAE model has two parts, an encoder and a decoder. The encoder is used to convert the image into a low dimensional latent representation, which will serve as the input to the U-Net model. The decoder, conversely, transforms the latent representation back into an image.
+
+During latent diffusion training, the encoder is used to get the latent representations (latents) of the images for the forward diffusion process, which applies more and more noise at each step. During inference, the denoised latents generated by the reverse diffusion process are converted back into images using the VAE decoder. As we will see during inference we only need the VAE decoder.
+"""
+
+### Putting it all together
+
+- Component interaction
+- Training workflow
+- Inference workflow
+- Optimization strategies
+
+## The Dreaded Mathematics
+
 References:
 
 [Lil'Log blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
 [HF article](https://huggingface.co/blog/annotated-diffusion) (code + notes)
 [yang song](https://yang-song.net/blog/2021/score/)
-[Fast ai course](https://course.fast.ai/Lessons/part2.html)
 
 https://huggingface.co/blog/stable_diffusion
 
-## The Idea behind Stable Diffusion 
-
+## The Idea behind Stable Diffusion
 
 ## Components of SD
 
-As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an appendix at the bottom where I explain each mathematical ideas as simply as possible. 
+As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an appendix at the bottom where I explain each mathematical ideas as simply as possible.
 
-It will take too much time and distract us from the understanding of the topic being talked at hand if I describe the mathematical ideas as well as the idea of the process in the same space. 
+It will take too much time and distract us from the understanding of the topic being talked at hand if I describe the mathematical ideas as well as the idea of the process in the same space.
 
-## Maths of the Forward Diffusion process 
+## Maths of the Forward Diffusion process
 
 Imagine you have a large dataset of images, we will represent this real data distribution as $q(x)$ and we take an image from it (data point) $x_0$.
-(Which is mathematically represented as  $x_0 \sim q(x)$).
+(Which is mathematically represented as $x_0 \sim q(x)$).
 
 In the forward diffusion process we add small amounts of Gaussian noise to the image ($x_0$) in $T$ steps. Which produces a bunch of noisy images as each step which we can label as $x_1,\ldots,x_T$. These steps are controlled by a variance schedule given by $\beta_t$. The value of $\beta_t$ ranges from 0 to 1 (i.e it can take values like 0.002, 0.5,0.283 etc) for $t, \ldots, T$. (Mathematically represented as ${\beta_t \in (0,1)}_{t=1}^T$)
 
@@ -37,25 +174,23 @@ Now let us look at the big scary forward diffusion equation and understand what 
 $$q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I}) \tag{1}$$
 $$q(x_{1:T}|x_0) = \prod_{t=1}^T q(x_t|x_{t-1}) \tag{2}$$
 
-
-$q(x_t|x_{t-1})$ means that given that I know $q(x_{t-1})$ what is the probability of $q(x_t)$ This is also knows as [bayes theorem](). 
+$q(x_t|x_{t-1})$ means that given that I know $q(x_{t-1})$ what is the probability of $q(x_t)$ This is also knows as [bayes theorem]().
 
 To simplify it, think of it as. given $q(x_0)$ (for value of $t$ = 1) I know the value of $q(x_1)$.
 
-The right handside of equation 1 represents a normal distribution. 
+The right handside of equation 1 represents a normal distribution.
 
 Now A question that I had was how can a probability and distribution be equal, well the Left Hand Side(LHS) of equation(eq) 1 represents a Probability Density Function ([PDF]())
 
 For the Right Hand Side(RHS) of eq 1. When we write $N(x; μ, σ²)$, we're specifying that $x$ follows a normal distribution with mean $μ$ and variance $σ²$
- 
-This can be written as 
+
+This can be written as
 
 $$p(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$
 
-As  $t$ becomes larger. And eventually when $T \to \infty$ (This means as $T$ approaches infinity, or just a really large number). The initial data sample $x_0$ loses its features and turns into an isotropic Gaussian Distribution.
+As $t$ becomes larger. And eventually when $T \to \infty$ (This means as $T$ approaches infinity, or just a really large number). The initial data sample $x_0$ loses its features and turns into an isotropic Gaussian Distribution.
 
 {explain equation 2 as well}
-
 
 Let's talk about an interesting property - we can actually sample $x_t$ at any arbitrary time step. This means we don't need to go through the diffusion process step by step to get to a specific noise level.
 
@@ -86,6 +221,7 @@ If we continue this process all the way back to our original image $x_0$, and de
 $$x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon$$
 
 This final equation is quite powerful. It allows us to directly sample $x_t$ at any timestep $t$ using just:
+
 - The original image $x_0$
 - The cumulative product of alphas up to time $t$ ($\bar{\alpha}_t$)
 - A sample from a standard normal distribution ($\epsilon$)
@@ -160,14 +296,11 @@ Goal: Minimize error
 Gradient: ∂(error)/∂(weight)
 Updates weights to make predictions more accurate
 
-
 Langevin Dynamics:
 
 Goal: Sample from a probability distribution
 Gradient: ∇log p(x)
 Updates the sample itself to look more like real data
-
-
 
 This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
 
@@ -185,20 +318,20 @@ Train the model to predict the noise that was added
 The model learns to do this by minimizing the difference between its prediction and the actual noise
 
 # Maths of Reverse diffusion process
-Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process. 
 
-Essentially we want to sample from $q(x_{t-1}|x_t)$, Which is quite tough as there can be millions of noisy images for actual images. To combat this we create an approximation (why do they work and how do they work in a minute) $p_\theta$ to approximate these conditional probabilities in order to run the *reverse diffusion process*.
+Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process.
 
-Which can be represented as 
+Essentially we want to sample from $q(x_{t-1}|x_t)$, Which is quite tough as there can be millions of noisy images for actual images. To combat this we create an approximation (why do they work and how do they work in a minute) $p_\theta$ to approximate these conditional probabilities in order to run the _reverse diffusion process_.
+
+Which can be represented as
 $$p_\theta(x_{0:T}) = p(x_T)\prod_{t=1}^T p_\theta(x_{t-1}|x_t)$$
 $$p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(x_t,t))$$
 
-Unfortunately it is tough to even sample from this approximate model because it is the same as our previous model, so we modify it by adding the original image $x_0$ to it as such. 
+Unfortunately it is tough to even sample from this approximate model because it is the same as our previous model, so we modify it by adding the original image $x_0$ to it as such.
 
 $$q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; \tilde{\mu}(x_t,x_0), \tilde{\beta}_t\mathbf{I})$$
 
-Now this is tractable (Exaplain what this word means), let us first understand the proof for how it is tractable. Later moving on to understand how they thought of this idea in the first place 
-
+Now this is tractable (Exaplain what this word means), let us first understand the proof for how it is tractable. Later moving on to understand how they thought of this idea in the first place
 
 Using Bayes' rule, we have:
 
@@ -234,7 +367,6 @@ Thanks to the nice property, we can represent $x_0=\frac{1}{\sqrt{\bar{\alpha}_t
 $$\tilde{\mu}_t = \frac{1}{\alpha_t}(x_{t-1}-\frac{\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_t)$$
 
 {add color coding for the above to make it easier to understand}
-
 
 """
 As demonstrated in Fig. 2., such a setup is very similar to VAE and thus we can use the variational lower bound to optimize the negative log-likelihood.
@@ -283,6 +415,7 @@ Let's label each component in the variational lower bound loss separately:
 $$\mathcal{L}_{VLB} = L_T + L_{T-1} + \cdots + L_0$$
 
 where:
+
 $$
 \begin{aligned}
 L_T &= D_{KL}(q(x_T|x_0)\|p_\theta(x_T)) \\
@@ -294,19 +427,16 @@ $$
 Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian distributions and therefore they can be computed in closed form. $L_T$ is constant and can be ignored during training because $q$ has no learnable parameters and $x_T$ is a Gaussian noise. Ho et al. 2020 models $L_0$ using a separate discrete decoder derived from $\mathcal{N}(x_0; \mu_\theta(x_1,1), \Sigma_\theta(x_1,1))$.
 """
 
-
-
-### Unet 
+### Unet
 
 You will be surprised to know that the idea of Unets comes from a [medical paper](https://arxiv.org/pdf/1505.04597)
 
-
-As is the nature of things, I am going with the assumption you understand what CNNs are 
-and the different kinds of task in image classification. Below I have created a simple visualization for the different tasks. 
+As is the nature of things, I am going with the assumption you understand what CNNs are
+and the different kinds of task in image classification. Below I have created a simple visualization for the different tasks.
 
 But if you do not know CNNs Let me give a quick overview below otherwise, consider reading my CV blog(If the link doesn't take you anywhere, it's still under development) or read this.
 
-Helpful docs 
+Helpful docs
 
 [Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
 [BatchNorm2d](https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html1)\
@@ -316,35 +446,30 @@ Helpful docs
 [ConvTranspose2d](https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html)\
 [Upsample](https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html)
 
-
-
-
-### VAE 
-
+### VAE
 
 ### CLIP
 
-### DDPM 
-
-
+### DDPM
 
 ### DDIM
 
-## The code 
+## The code
 
-## Understanding the metrics 
+## Understanding the metrics
 
 This is interesting as well because... how do you tell a computer which is a good image and which is a bad image without actually doing a vibe check.
 
 This really makes you appreaciate how the loss function was created doesnt it now!!
 
 ## Things to talk about from the fast ai notebooks:
-* [Stable diffsion components](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) Build SD from taking components from HF
-* 
+
+- [Stable diffsion components](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) Build SD from taking components from HF
+-
 
 ## Appendix
 
-### PDF 
+### PDF
 
 ### KL Divergence
 
