@@ -76,6 +76,7 @@ Additionally, The below work takes heavy inspiration from the following works
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/9.webp) [REPLACE_THIS_WITH_THE_EXPLAINING_PARTS_IMAGE]
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/10.webp)
+
 ### Dali The Genius Artist (UNET)
 
 - Architecture details
@@ -84,23 +85,161 @@ Additionally, The below work takes heavy inspiration from the following works
 - Time embeddings
 - Training objective
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/12.webp)
+You will be surprised to know UNETs were actually introduced in a [medical paper](https://arxiv.org/pdf/1505.04597) back in 2015. Primarily for the task of image segmentation.
 
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/14.webp)
+> Image Taken from the "U-Net: Convolutional Networks for Biomedical
+> Image Segmentation" paper
+
+The idea behind segmentation is, given an image "a". Create a map around the objects which need to be classified in the image. 
+
+And the Reason they are called U-Net is because, well the architecture looks like a "U".
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/12.webp)
+> Image Taken from the "U-Net: Convolutional Networks for Biomedical
+> Image Segmentation" paper
+
+This looks quite complicated so let's break it down with a simpler image
+
+Also, I will proceed with the believe you have an understanding of CNNs and how they work. If not, check the appendix for a quick overview and a guide to where you can learn more on the topic. 
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/11.webp)
-"""
-The U-Net
 
-The U-Net has an encoder part and a decoder part both comprised of ResNet blocks. The encoder compresses an image representation into a lower resolution image representation and the decoder decodes the lower resolution image representation back to the original higher resolution image representation that is supposedly less noisy. More specifically, the U-Net output predicts the noise residual which can be used to compute the predicted denoised image representation.
+The encoder side does [convolutions]() to extract features from images, then compresses them to only focus on the relevant parts. 
 
-To prevent the U-Net from losing important information while downsampling, short-cut connections are usually added between the downsampling ResNets of the encoder to the upsampling ResNets of the decoder. Additionally, the stable diffusion U-Net is able to condition its output on text-embeddings via cross-attention layers. The cross-attention layers are added to both the encoder and decoder part of the U-Net usually between ResNet blocks.
-"""
+The decoder then does [Transpose Convolutions]() to decode these extracted parts back into the original image size.
 
-Remember the UNETs were originally made for segmentation
+To understand it in our context, think instead of segmenting objects, we are segmenting the noise. Trying to find out the particular places where noise is present.
+
+To prevent the U-net from losing important information while downsampling, skip connections are added. This sends back the compressed encoded image back to the decoder so they have context from their as well.
+
+Another thing present inside Diffusion Model U-Nets is a cross attention layer, which focuses on the important parts {explain this in greater detail}
+
+#### Coding the original U-Net
+
+They are easier to understand when we write them down in code. So let us do that. (We start with coding the original U-Net out first, then add the complexities of the one used in Stable Diffusion)
+
+
+```python 
+class DoubleConv(nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+        self.double_conv = nn.Sequential(
+            nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(out_channels, out_channels, kernel_size=3, padding=1),
+            nn.BatchNorm2d(out_channels),
+            nn.ReLU(inplace=True)
+        )
+
+    def forward(self, x):
+        return self.double_conv(x)
+```
+This is a simple convolution, This is done to extract relevant features from the image. 
+
+```python 
+class Down(nn.Module):
+    def __init__(self, in_channels, out_channels):
+        super().__init__()
+        self.maxpool_conv = nn.Sequential(
+            nn.MaxPool2d(2),
+            DoubleConv(in_channels, out_channels)
+        )
+
+    def forward(self, x):
+        return self.maxpool_conv(x)
+```
+
+A simple Down block, that compresses the size of the image. This makes sure we only focus on the relevant part. Imagine it like this Given most images, like pictures of dogs, person in a beach, Photo of the moon etc. The most interesting part (the dog,person,moon) usually take up a small or half the photo 
+
+```python
+class Up(nn.Module):
+    def __init__(self, in_channels, out_channels, bilinear=True):
+        super().__init__()
+        if bilinear:
+            self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
+        else:
+            self.up = nn.ConvTranspose2d(in_channels, in_channels // 2, kernel_size=2, stride=2)
+
+        self.conv = DoubleConv(in_channels, out_channels)
+
+    def forward(self, x1, x2):
+        x1 = self.up(x1)
+
+        # Handle size differences
+        diff_y = x2.size()[2] - x1.size()[2]
+        diff_x = x2.size()[3] - x1.size()[3]
+
+        x1 = F.pad(x1, [diff_x // 2, diff_x - diff_x // 2,
+                       diff_y // 2, diff_y - diff_y // 2])
+
+        x = torch.cat([x2, x1], dim=1)
+        return self.conv(x)
+```
+
+{add explanation}
+
+```python
+lass UNet(nn.Module):
+    def __init__(self, num_classes):
+        super().__init__()
+
+        # Correct channel progression:
+        self.inc = DoubleConv(3, 64)  # Initial convolution
+
+        # Encoder path (feature maps halve, channels double)
+        self.down1 = Down(64, 128)    # Output: 128 channels
+        self.down2 = Down(128, 256)   # Output: 256 channels
+        self.down3 = Down(256, 512)   # Output: 512 channels
+        self.down4 = Down(512, 1024)  # Output: 1024 channels
+
+        # Decoder path (feature maps double, channels halve)
+        self.up1 = Up(1024, 512)      # Input: 1024 + 512 = 1536 channels
+        self.up2 = Up(512, 256)       # Input: 512 + 256 = 768 channels
+        self.up3 = Up(256, 128)       # Input: 256 + 128 = 384 channels
+        self.up4 = Up(128, 64)        # Input: 128 + 64 = 192 channels
+
+        # Final convolution
+        self.outc = nn.Conv2d(64, num_classes, kernel_size=1)
+
+    def forward(self, x):
+        # Store encoder outputs for skip connections
+        x1 = self.inc(x)         # [B, 64, H, W]
+        x2 = self.down1(x1)      # [B, 128, H/2, W/2]
+        x3 = self.down2(x2)      # [B, 256, H/4, W/4]
+        x4 = self.down3(x3)      # [B, 512, H/8, W/8]
+        x5 = self.down4(x4)      # [B, 1024, H/16, W/16]
+
+        # Decoder path with skip connections
+        x = self.up1(x5, x4)     # Use skip connection from x4
+        x = self.up2(x, x3)      # Use skip connection from x3
+        x = self.up3(x, x2)      # Use skip connection from x2
+        x = self.up4(x, x1)      # Use skip connection from x1
+
+        # Final 1x1 convolution
+        logits = self.outc(x)    # [B, num_classes, H, W]
+
+        return logits
+
+```
+
+{add explanation}
+
+#### Stable Diffusion U-Net
+
+Now let us code out the U-Net used in Stable Diffusion
 
 ### Dali's mistake fixing wand (Scheduler)
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/6.webp)
+A quick note to the reader, This part is mostly pure mathematics. I have described each part in greater detail and simplification in the [maths section]() of the blog. 
+
+This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful. 
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/6.webp) 
+
+
 
 - Forward diffusion process
 - Variance scheduling
@@ -134,6 +273,8 @@ Inspired by Imagen, Stable Diffusion does not train the text-encoder during trai
 """
 
 ### The Magical Wand (Variational Auto-Encoder)
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/13.webp)
 
 - Encoder-decoder architecture
 - KL divergence
@@ -188,8 +329,6 @@ As the above works were way too hard to understand. The following 3 videos reall
 * [Diffusion Models | Paper Explanation | Math Explained](https://www.youtube.com/watch?v=HoKDTa5jHvg)
 * [Denoising Diffusion Probabilistic Models | DDPM Explained](https://www.youtube.com/watch?v=H45lF4sUgiE&t=1583s)
 
-
-## Components of SD
 
 As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an appendix at the bottom where I explain each mathematical ideas as simply as possible.
 
