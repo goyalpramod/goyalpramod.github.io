@@ -359,6 +359,14 @@ This [video](https://www.youtube.com/watch?v=qJeaCHQ1k2w&t=1s) helped me immense
 Unfortunately for the both of us, This part too is very maths heavy. So again I will leave the intuition and derivation for the [maths section]() of the blog and just talk about the idea, show the equations and write out the code.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/13.webp)
+The above image is actually what happens inside of an Auto-Encoder but if you are anything like me. It probably doesn't make any sense.
+
+So let's look at a simpler representation and come back to this when it makes more sense.
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/15.webp)
+
+
+{add difference between VAE and AE}
 
 """
 The VAE model has two parts, an encoder and a decoder. The encoder is used to convert the image into a low dimensional latent representation, which will serve as the input to the U-Net model. The decoder, conversely, transforms the latent representation back into an image.
