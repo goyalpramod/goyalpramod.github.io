@@ -5,24 +5,18 @@ date: 2025-01-3 12:00:00 +0530
 categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
-Things left to do: 
--> Adding code for SD components 
--> explaining code 
+
+Things left to do:
+-> Adding code for SD components
+-> explaining code
 -> Unifying the maths and explaining for reverse process
--> Maths for score based modeling 
--> Maths for VAE 
--> Appendix 
--> Explining The VAE 
--> Explaining CLIP/T5 text encoders 
+-> Maths for score based modeling
+-> Maths for VAE
+-> Appendix
+-> Explining The VAE
+-> Explaining CLIP/T5 text encoders
 -> Explaining Conditioning like CFG etc
 -> Re-reading and fixing any mistakes I spot, and adding images where I see fit
-
-
-{The order of things,
-
-- Build the idea first, general stuff of what is going on.
-- Build and code each component out
-- Talk about the maths behind the whole idea, starting with score models, then moving to ddpm etc}
 
 Diffusion models like Stable Diffusion, Flux, Dall-e etc were an enigma built upon multiple ideas and mathematical breakthroughs. So is the nature of it that most tutorials on the topic are extremely complicated or even when simplied talk a lot about it from a high level perspective.
 
@@ -239,7 +233,11 @@ lass UNet(nn.Module):
 
 {add explanation}
 
+{add explanation of the attention and stuff for UNET}
+
 #### Stable Diffusion U-Net
+
+
 
 Now let us code out the U-Net used in Stable Diffusion
 
@@ -330,26 +328,70 @@ In reality, all of this is done on batches of data, as one uses stochastic gradi
 
 ### Instructions, because everyone needs guidance (Conditioning)
 
+Over the years the field of image gen has substantially improved and now we are not only limited to texts as a means of helping us generate images.
+
+We can use image sources as guidance, a drawing of a rough idea, structure of an image etc. Some examples are shown below.
+
+[ADD_IMAGE_OF_CONTROLNET_TEXT_IMG2IMG_ETC]
+
+As Text based conditioning was the first that gained public popularity. Let's understand more on that.
+
 #### Text Encoder
 
-- CLIP/T5 architecture
-- Token embedding
-- Text preprocessing
-- Integration with conditioning
+The idea is relatively simple, we take texts, convert them into embeddings and send them to the U-Net layer for conditioning.
 
-#### Different Conditioning
+The how is more interesting if you think about it in my opinion. Throughout our discussion of diffusion models, we never talked about image description or any means to teach a model about an image.
 
-- Cross-attention mechanics
-- Embedding integration
-- Multi-modal conditioning
-- Classification guidance
+All the diffusion model understands is how a image looks like, without any idea about what an image is and what it contains. It's just really good at creating images which well... look like images.
+
+Then how can we guide it using texts about what we want it to do.
+
+That is where CLIP comes in, first let's understand what it does, then moving on to understand how it does it.
+
+As I described initially, CLIP simply takes the text and converts it into embeddings.
+
+These embeddings do not actually represent semantic meaning of text as they usually do in NLP, here they represent image structure, depth, and overall idea of an image.
+
+These details are fed into the U-Net while the model tries to denoise the input image. With guidance from clip.
+
+So the magic is introduced by CLIP, let us understand how CLIP was made.
+
+##### CLIP (Contrastive Language–Image Pre-training)
+
+It was originally created as a image classification tool, Given an image, Describe what it is talking about 
+
+[ADD_IMAGE] {Photo of dog, CLIP, Photo of a dog}
+
 
 """
-The Text-encoder
+CLIP pre-trains an image encoder and a text encoder to predict which images were paired with which texts in our dataset. We then use this behavior to turn CLIP into a zero-shot classifier. We convert all of a dataset’s classes into captions such as “a photo of a dog” and predict the class of the caption CLIP estimates best pairs with a given image.
+"""
 
-The text-encoder is responsible for transforming the input prompt, e.g. "An astronaut riding a horse" into an embedding space that can be understood by the U-Net. It is usually a simple transformer-based encoder that maps a sequence of input tokens to a sequence of latent text-embeddings.
+"""
+We report two algorithmic choices that led to significant compute savings. The first choice is the adoption of a contrastive objective for connecting text with images.31, 17, 35 We originally explored an image-to-text approach, similar to VirTex,33 but encountered difficulties scaling this to achieve state-of-the-art performance. In small to medium scale experiments, we found that the contrastive objective used by CLIP is 4x to 10x more efficient at zero-shot ImageNet classification. The second choice was the adoption of the Vision Transformer,36 which gave us a further 3x gain in compute efficiency over a standard ResNet. In the end, our best performing CLIP model trains on 256 GPUs for 2 weeks which is similar to existing large scale image models"""
 
-Inspired by Imagen, Stable Diffusion does not train the text-encoder during training and simply uses an CLIP's already trained text encoder, CLIPTextModel.
+Now above we primarily talked about CLIP, there is another text encoder that is used called T5 created by Google. The idea is more or less similar the only difference is
+
+{add how T5 is different}
+
+To read more about CLIP and T5 consider reading the original https://openai.com/index/clip/
+
+#### Image to Image
+
+#### CFG
+
+#### Control-Net
+[ADD_IMAGE] {What controlnet does}
+https://huggingface.co/blog/controlnet
+
+
+
+"""
+Training ControlNet is comprised of the following steps:
+
+Cloning the pre-trained parameters of a Diffusion model, such as Stable Diffusion's latent UNet, (referred to as “trainable copy”) while also maintaining the pre-trained parameters separately (”locked copy”). It is done so that the locked parameter copy can preserve the vast knowledge learned from a large dataset, whereas the trainable copy is employed to learn task-specific aspects.
+
+The trainable and locked copies of the parameters are connected via “zero convolution” layers (see here for more information) which are optimized as a part of the ControlNet framework. This is a training trick to preserve the semantics already learned by frozen model as the new conditions are trained.
 """
 
 ### The Magical Wand (Variational Auto-Encoder)
@@ -359,20 +401,31 @@ This [video](https://www.youtube.com/watch?v=qJeaCHQ1k2w&t=1s) helped me immense
 Unfortunately for the both of us, This part too is very maths heavy. So again I will leave the intuition and derivation for the [maths section]() of the blog and just talk about the idea, show the equations and write out the code.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/13.webp)
-The above image is actually what happens inside of an Auto-Encoder but if you are anything like me. It probably doesn't make any sense.
+The above image is actually what happens inside of an Variational Auto-Encoder but if you are anything like me. It probably doesn't make any sense.
 
 So let's look at a simpler representation and come back to this when it makes more sense.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/15.webp)
 
+On the left side we have something called the pixel space, these are images that humans understand.
 
-{add difference between VAE and AE}
+The reason it is called pixel space is pretty self-explanatory. In a computer images are made up of pixels.
 
-"""
-The VAE model has two parts, an encoder and a decoder. The encoder is used to convert the image into a low dimensional latent representation, which will serve as the input to the U-Net model. The decoder, conversely, transforms the latent representation back into an image.
+The encoder takes these pixels, Yes pixels. Not the images directly. Because if we take all the pixels of an image we can form a distribution. This is how such a distribution may look like only using red, green and blue.
 
-During latent diffusion training, the encoder is used to get the latent representations (latents) of the images for the forward diffusion process, which applies more and more noise at each step. During inference, the denoised latents generated by the reverse diffusion process are converted back into images using the VAE decoder. As we will see during inference we only need the VAE decoder.
-"""
+[ADD_IMAGE]
+
+Now we take this distribution, pass it to the encoder which converts this into a latent space which has it's own distribution.
+
+The reason we need it is quite simple.
+
+An HD image can be of the size 1080x1920, which is equal to {calculate} pixels. But in the latent space a representation of the same image (a representation, or in simpler terms a replica. Not the original) can be in 128X128 pixels a reduction by a factor of {}X
+
+Then the decoder returns this representation back to pixel image so we can see a picture. Which is more or less like the original one we started with.
+
+The reason we do this is, This makes computation substantially easier, and it also lets Dali, Or The U-Net to have to do less computation to calculate the noise.
+
+There is a difference between Auto-Encoders and Variational Auto-encoders. Which is explained in greater detail in the Maths section.
 
 ### Putting it all together
 
@@ -575,6 +628,8 @@ Sample a random timestep t
 Add noise to get xₜ using our "nice property" formula
 Train the model to predict the noise that was added
 The model learns to do this by minimizing the difference between its prediction and the actual noise
+"""
+
 
 ## Maths of Reverse diffusion process
 
@@ -688,15 +743,6 @@ Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian di
 
 ## Maths of VAE
 
-### Unet
-
-You will be surprised to know that the idea of Unets comes from a [medical paper](https://arxiv.org/pdf/1505.04597)
-
-As is the nature of things, I am going with the assumption you understand what CNNs are
-and the different kinds of task in image classification. Below I have created a simple visualization for the different tasks.
-
-But if you do not know CNNs Let me give a quick overview below otherwise, consider reading my CV blog(If the link doesn't take you anywhere, it's still under development) or read this.
-
 Helpful docs
 
 [Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
@@ -727,6 +773,19 @@ This really makes you appreaciate how the loss function was created doesnt it no
 
 - [Stable diffsion components](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) Build SD from taking components from HF
 -
+
+## How to help out
+
+- share 
+- translate 
+- drop feedback
+
+
+## Misc 
+
+- civitai 
+- comfyui
+
 
 ## Appendix
 
