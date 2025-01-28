@@ -13,8 +13,6 @@ Things left to do:
 -> Maths for score based modeling
 -> Maths for VAE
 -> Appendix
--> Explining The VAE
--> Explaining CLIP/T5 text encoders
 -> Explaining Conditioning like CFG etc
 -> Re-reading and fixing any mistakes I spot, and adding images where I see fit
 
@@ -237,8 +235,6 @@ lass UNet(nn.Module):
 
 #### Stable Diffusion U-Net
 
-
-
 Now let us code out the U-Net used in Stable Diffusion
 
 ### Dali's mistake fixing wand (Scheduler)
@@ -326,6 +322,8 @@ In other words:
 In reality, all of this is done on batches of data, as one uses stochastic gradient descent to optimize neural networks.
 """
 
+https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers
+
 ### Instructions, because everyone needs guidance (Conditioning)
 
 Over the years the field of image gen has substantially improved and now we are not only limited to texts as a means of helping us generate images.
@@ -358,17 +356,18 @@ So the magic is introduced by CLIP, let us understand how CLIP was made.
 
 ##### CLIP (Contrastive Language–Image Pre-training)
 
-It was originally created as a image classification tool, Given an image, Describe what it is talking about 
+It was originally created as a image classification tool, Given an image, Describe what it is talking about
 
 [ADD_IMAGE] {Photo of dog, CLIP, Photo of a dog}
 
-
+```
 """
 CLIP pre-trains an image encoder and a text encoder to predict which images were paired with which texts in our dataset. We then use this behavior to turn CLIP into a zero-shot classifier. We convert all of a dataset’s classes into captions such as “a photo of a dog” and predict the class of the caption CLIP estimates best pairs with a given image.
 """
 
 """
 We report two algorithmic choices that led to significant compute savings. The first choice is the adoption of a contrastive objective for connecting text with images.31, 17, 35 We originally explored an image-to-text approach, similar to VirTex,33 but encountered difficulties scaling this to achieve state-of-the-art performance. In small to medium scale experiments, we found that the contrastive objective used by CLIP is 4x to 10x more efficient at zero-shot ImageNet classification. The second choice was the adoption of the Vision Transformer,36 which gave us a further 3x gain in compute efficiency over a standard ResNet. In the end, our best performing CLIP model trains on 256 GPUs for 2 weeks which is similar to existing large scale image models"""
+```
 
 Now above we primarily talked about CLIP, there is another text encoder that is used called T5 created by Google. The idea is more or less similar the only difference is
 
@@ -381,10 +380,10 @@ To read more about CLIP and T5 consider reading the original https://openai.com/
 #### CFG
 
 #### Control-Net
-[ADD_IMAGE] {What controlnet does}
-https://huggingface.co/blog/controlnet
 
+[ADD_IMAGE] {What controlnet does, like it's examples n shit}
 
+This part was inspired by this [blog](https://blog.bria.ai/exploring-controlnet-a-new-perspective)
 
 """
 Training ControlNet is comprised of the following steps:
@@ -393,6 +392,67 @@ Cloning the pre-trained parameters of a Diffusion model, such as Stable Diffusio
 
 The trainable and locked copies of the parameters are connected via “zero convolution” layers (see here for more information) which are optimized as a part of the ControlNet framework. This is a training trick to preserve the semantics already learned by frozen model as the new conditions are trained.
 """
+
+"""
+Input Component to the Foundation Text-to-Image (T2I) Model (blue) – This component passes along a noisy image and text prompt to the foundation model.
+Foundation T2I Model (orange) – This model receives the noise and text (and tensors from the control net) processes them, and generates a new image as output.
+Input Component to the Control Model (brown)– This component passes a conditioning image, such as a depth map or an edge map (like Canny), to the ControlNet model.
+Control Net Model Component (purple) – This part processes the conditioning image through internal layers (of the Transformer) and produces a tensor. This tensor is then passed through the Control-UNet layers and integrated directly into the convolution and attention layers of the Foundation T2I model.
+"""
+
+The controlnet component consists of two part, The transformers and the Control U-Net. The control U-Net is very similar to our original unet that we started with a few important changes.
+
+"""
+The Transformer component converts the visual input (the “condition”) provided to the ControlNet platform into the latent space, ensuring that what enters the UNet is already adapted to the latent space.
+"""
+
+"""
+In the Transformer, the depth map is converted into a tensor through a series of convolutional layers that perform feature extraction from the original image, transforming it into a multi-dimensional data array. This tensor is then fed into the ControlNet UNet for further processing and integration with the information from the base model.
+
+The conversion of a depth map into a tensor in ControlNet involves several stages based on Convolutional Neural Networks (CNNs). Let's break down the process in more technical detail:
+
+Process of Converting 2D Input to a Tensor in ControlNet
+
+1. Initial Convolution
+   The 2D input, such as a depth map (or any other 2D image), passes through the initial convolutional layers in the model. These layers perform convolution operations, where fixed-size filters (kernels) slide over the input and perform calculations on groups of neighboring pixels.
+
+2. Feature Extraction:
+   The convolutional filters extract features from the image, such as edges, angles, and patterns, generating multi-dimensional feature maps that represent the original information.
+
+3. Converting the Input to a Tensor:
+   The result of the feature extraction process is a tensor – a multi-dimensional data structure organized as N×H×W×C, where:
+   N represents the batch size,
+   H, W represent the height and width of the feature maps,
+   C represents the number of channels or feature maps.
+   This tensor represents the abstracted information extracted from the 2D input and is now ready for further processing in the ControlNet UNet.
+
+"""
+
+{I believe the transformer is a DiT that we should talk more about later in improvements}
+
+##### The controlnet UNET component
+
+```
+The Concept of a Hyper-Network
+
+The idea of a hyper-network, or an external model, isn’t new.
+
+https://arxiv.org/pdf/1609.09106
+
+It’s based on the premise that you have a base foundational  model that’s large, powerful, and highly intelligent, but it’s tailored to a very specific task (for example, converting text into images). Instead of retraining this large model for a new task( for example converting text + depth map into images), we create a hyper (external) network precisely adapted to the required task.
+
+This hyper network is much smaller than the foundation modeland is connected to the base model, and we only train the hyper network. The result is an efficient and effective solution that allows for precise adjustments without altering the foundation model itself.
+
+This is exactly what’s being done here in the ControlNet platform.
+```
+
+```
+ControlNet connects to this model in a clever way: it takes the visual input that will serve as a condition (like a depth map) and processes it. The output from the ControlNet-UNet is then fed into the convolutional and attention layers of the T2I model, allowing the processed information to merge with the signals in the foundation model (the merging is quite simple, it’s just an addition of the elements).
+
+This means that the ControlNet UNet introduces new information that influences the final outcome of the foundation T2I without altering the weights of the underlying T2I model, thereby maintaining its stability throughout the process.
+```
+
+For implementation of the original controlnet consider reading this [blog](https://huggingface.co/blog/controlnet), the original [repo](https://github.com/lllyasviel/ControlNet) and [paper](https://arxiv.org/pdf/2302.05543)
 
 ### The Magical Wand (Variational Auto-Encoder)
 
@@ -426,6 +486,12 @@ Then the decoder returns this representation back to pixel image so we can see a
 The reason we do this is, This makes computation substantially easier, and it also lets Dali, Or The U-Net to have to do less computation to calculate the noise.
 
 There is a difference between Auto-Encoders and Variational Auto-encoders. Which is explained in greater detail in the Maths section.
+
+```
+"""
+To expand on this idea, imagine a cluster of emojis—faces, hearts, and other familiar icons—all grouped together in the latent space because of their similar visual style. Now, let’s add a photorealistic image of a monkey. Unlike the emojis, this realistic image will be positioned far away from the cluster in the latent space, reflecting its distinct features and level of detail. But if we introduce an emoji of a monkey, it sits somewhere in between, sharing visual traits with both the emoji cluster and the photorealistic image. This demonstrates how the VAE learns to map out objects in the latent space, organizing them based on their visual or stylistic characteristics.
+"""
+```
 
 ### Putting it all together
 
@@ -630,7 +696,6 @@ Train the model to predict the noise that was added
 The model learns to do this by minimizing the difference between its prediction and the actual noise
 """
 
-
 ## Maths of Reverse diffusion process
 
 Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process.
@@ -776,16 +841,15 @@ This really makes you appreaciate how the loss function was created doesnt it no
 
 ## How to help out
 
-- share 
-- translate 
+- share
+- translate
 - drop feedback
 
+## Misc
 
-## Misc 
-
-- civitai 
+- civitai
 - comfyui
-
+- https://stable-diffusion-art.com/author/andrew/ The blogs by this guy are absolutely mind boggling, if you are really intersted in this space. Check this out.
 
 ## Appendix
 
