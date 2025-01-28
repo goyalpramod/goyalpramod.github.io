@@ -322,6 +322,7 @@ In other words:
 In reality, all of this is done on batches of data, as one uses stochastic gradient descent to optimize neural networks.
 """
 
+https://stable-diffusion-art.com/samplers/
 https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers
 
 ### Instructions, because everyone needs guidance (Conditioning)
@@ -377,7 +378,13 @@ To read more about CLIP and T5 consider reading the original https://openai.com/
 
 #### Image to Image
 
+Latents are created of an image, noise is added, then stuff is done on this.
+
 #### CFG
+
+```
+The classifier-free guidance scale (CFG scale) is a value that controls how much the text prompt steers the diffusion process. The AI image generation is unconditioned (i.e. the prompt is ignored) when the CFG scale is set to 0. A higher CFG scale steers the diffusion towards the prompt.
+```
 
 #### Control-Net
 
@@ -453,6 +460,16 @@ This means that the ControlNet UNet introduces new information that influences t
 ```
 
 For implementation of the original controlnet consider reading this [blog](https://huggingface.co/blog/controlnet), the original [repo](https://github.com/lllyasviel/ControlNet) and [paper](https://arxiv.org/pdf/2302.05543)
+
+#### LoRA
+
+```
+The cross-attention mechanism is the most important machinery of the Stable Diffusion model.
+
+Let’s use the prompt “A man with blue eyes” as an example. Stable Diffusion pairs the words “blue” and “eyes” together. It then uses this information to steer the reverse diffusion of an image region to render a pair of blue eyes. (cross-attention between the prompt and the image)
+
+A side note: Hypernetwork, a technique to fine-tune Stable Diffusion models, hijacks the cross-attention network to insert styles. LoRA models modify the weights of the cross-attention module to change styles. The fact that modifying this module alone can fine-tune a Stabe Diffusion model tells you how important this module is.
+```
 
 ### The Magical Wand (Variational Auto-Encoder)
 
