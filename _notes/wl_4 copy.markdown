@@ -10,12 +10,17 @@ image: assets/cover_images/img4.webp
 
 Day 1 ->
 
-- wokr
-- prt of blog 
-- savan
+Today was a different day to say the least I did my company work in the morning, and started working on the blog in the evening. But at 6 I got a call from a friend. Who had shifted to my town 6 months ago but never contacted me. 
+
+He needed help (most of the times people call me for help and I am more than happy to abide)
+
+After that, I went to his place. We had a lot of fun, I am glad for today. 
 
 Day 2 ->
 
-- I spent most of the day reading about AI agents in the morning, then was on a call with a colleague discussing how we can implement said agents and ideas
-- I spent the evening reading more on the complex mathematical idea behind diffusion models and really really grok it. It took time but I understand 1 equation now. The forward diffusion process. I also wrote what I understood in my blog. It is still a work in progress but I would like to get it done with within this month.
-- I then spent my night reading blogs by chip, they are really beautiful and friendly imo. [link](https://huyenchip.com/)
+More progress was made in the blog, Diffusion models are pure magic imo. The geniuses who came up with the reverse diffusion process should be revered too. 
+Well consider reading it when it's out. 
+
+Also I got a text from another friend in the morning, surpringingly she had the same problem as my previous friend who called me yesterday. 
+
+I seem to often see this pattern in people my age. Unfortunate really. 
