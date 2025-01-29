@@ -11,6 +11,8 @@ layout: default
   <h1>{{ page.title }}</h1>
   <p class="meta">{{ page.date | date: "%B %-d, %Y" }}</p>
 
+  {%- include toc.html -%}
+
   {{ content }}
 
   <!-- Social sharing section -->

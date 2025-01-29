@@ -11,6 +11,9 @@ layout: default
   <h1>{{ page.title }}</h1>
   <p class="meta">Last updated: {{ page.last_modified_at | date: "%B %-d, %Y" }}</p>
 
+  <!-- Add this right after the <article> opening tag -->
+  {%- include toc.html -%}
+
   {{ content }}
 
   <!-- Social sharing section -->
