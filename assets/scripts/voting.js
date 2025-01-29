@@ -24,20 +24,21 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Track voted state
     let hasVoted = false;
     let currentData = { upvotes: 0, downvotes: 0 };
+
+    // Ensure document exists and get current data
+    async function ensureDocument() {
+        const docSnap = await getDoc(votesRef);
+        if (!docSnap.exists()) {
+            await setDoc(votesRef, currentData);
+            return currentData;
+        }
+        return docSnap.data();
+    }
   
     // Initialize or get votes
     try {
-        const docSnap = await getDoc(votesRef);
-        if (docSnap.exists()) {
-            currentData = docSnap.data();
-        } else {
-            // Create the document if it doesn't exist
-            try {
-                await setDoc(votesRef, currentData);
-            } catch (error) {
-                console.error("Error creating vote document:", error);
-            }
-        }
+        // Get or create document
+        currentData = await ensureDocument();
         
         // Update UI
         upvoteCount.textContent = currentData.upvotes;
@@ -52,7 +53,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     } catch (error) {
         console.error("Error initializing votes:", error);
-        // Keep default values in UI
         upvoteCount.textContent = '0';
         downvoteCount.textContent = '0';
     }
@@ -62,6 +62,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (hasVoted) return;
         
         try {
+            // Ensure document exists and get latest data
+            currentData = await ensureDocument();
+            
             const newUpvotes = currentData.upvotes + 1;
             await setDoc(votesRef, {
                 ...currentData,
@@ -84,6 +87,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         if (hasVoted) return;
         
         try {
+            // Ensure document exists and get latest data
+            currentData = await ensureDocument();
+            
             const newDownvotes = currentData.downvotes + 1;
             await setDoc(votesRef, {
                 ...currentData,
