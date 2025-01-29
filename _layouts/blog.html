@@ -61,6 +61,10 @@ layout: default
     </script>
   </div>
   {% endif %}
+
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
 </article>
 
 <style>
@@ -124,5 +128,55 @@ layout: default
 .share-title {
   color: #5C4B37;  /* Matching text color */
   margin-bottom: 1rem;
+}
+
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: linear-gradient(145deg, #fff5e6, #f0e6d4);
+  color: #D35400;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 2px solid #DEB887;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(1rem);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.1);
+  z-index: 1000;
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background: linear-gradient(145deg, #fff8eb, #f5ebd9);
+  color: #E67E22;
+  border-color: #E67E22;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(211, 84, 0, 0.15);
+}
+
+.back-to-top:active {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(211, 84, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .back-to-top {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+  }
 }
 </style>
