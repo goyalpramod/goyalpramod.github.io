@@ -1,5 +1,19 @@
 import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-firestore.js";
 
+// Add this helper function
+async function handleFirebaseError(error) {
+    console.error("Firebase error:", error);
+    
+    if (error.code === 'permission-denied') {
+        // Clear local storage and reload to reset state
+        localStorage.removeItem(`voted_${postId}`);
+        location.reload();
+    }
+    
+    // Optional: Show error to user
+    alert('An error occurred. Please try again.');
+}
+
 document.addEventListener('DOMContentLoaded', async function() {
     const votingContainer = document.querySelector('.voting-buttons');
     if (!votingContainer) return;
@@ -49,7 +63,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 downvoteBtn.querySelector('.vote-icon').classList.add('voted');
             }
         } catch (error) {
-            console.error("Error initializing votes:", error);
+            await handleFirebaseError(error);
             upvoteCount.textContent = '0';
             downvoteCount.textContent = '0';
         }
@@ -108,7 +122,7 @@ document.addEventListener('DOMContentLoaded', async function() {
 
             await updateVoteCounts();
         } catch (error) {
-            console.error(`Error ${voteType}voting:`, error);
+            await handleFirebaseError(error);
         }
     }
   
