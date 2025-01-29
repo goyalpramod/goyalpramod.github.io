@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', async function() {
     try {
         const docSnap = await getDoc(votesRef);
         if (!docSnap.exists()) {
-            // Initialize with 0 votes using updateDoc instead of setDoc
-            await updateDoc(votesRef, {
+            // Initialize with 0 votes using setDoc for new documents
+            await setDoc(votesRef, {
                 upvotes: 0,
                 downvotes: 0
             });
