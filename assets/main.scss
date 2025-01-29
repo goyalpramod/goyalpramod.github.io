@@ -576,3 +576,73 @@ pre.highlight,
     border: 3px solid transparent !important;
   }
 }
+// Enhanced link styles for content areas
+.post-content, 
+.note, 
+.latest-post-card,
+.blog-post,
+.thought-post,
+article {
+  a.content-link {
+    position: relative;
+    color: #FF5E00 !important;  // Bright orange base color
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid transparent;
+    
+    &::after {
+      content: '';
+      position: absolute;
+      width: 100%;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      background-color: currentColor;
+      transform: scaleX(0);
+      transform-origin: right;
+      transition: transform 0.3s ease;
+    }
+    
+    &:hover {
+      color: #FF7F2A !important;  // Lighter orange on hover
+      
+      &::after {
+        transform: scaleX(1);
+        transform-origin: left;
+      }
+    }
+    
+    // Style for visited links
+    &:visited {
+      color: #E65400 !important;  // Slightly darker orange for visited
+      
+      &:hover {
+        color: #FF5E00 !important;  // Back to bright orange on hover
+      }
+    }
+    
+    // Style for active/clicked links
+    &:active {
+      color: #FF4500 !important;  // Different orange shade for click state
+    }
+  }
+}
+
+// Override for navigation and utility links
+.site-nav a,
+.social-links a,
+.site-title,
+.page-link,
+.read-more {
+  &,
+  &:visited,
+  &:hover,
+  &:active {
+    color: inherit !important;
+    border-bottom: none !important;
+    
+    &::after {
+      display: none !important;
+    }
+  }
+}

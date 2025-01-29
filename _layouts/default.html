@@ -47,6 +47,38 @@
     <!-- Table of Contents Script -->
     <script src="{{ '/assets/scripts/toc.js' | relative_url }}"></script>
 
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .post-content a,
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Exclude certain links that should stay in the same tab
+          const excludedClasses = ['page-link', 'read-more', 'site-title', 'social-links'];
+          const isExcluded = excludedClasses.some(className => 
+            link.classList.contains(className) || 
+            link.closest(`.${className}`)
+          );
+          
+          if (!isExcluded) {
+            // Add target="_blank" and rel attributes
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            
+            // Add a class to track visited state
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
   </body>
 
 </html>
