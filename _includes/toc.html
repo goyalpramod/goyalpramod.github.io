@@ -1,213 +1,215 @@
 <button id="toc-toggle" class="toc-toggle" aria-label="Toggle Table of Contents">
-  <i class="fas fa-list-ul"></i>
-</button>
-
-<div class="toc-wrapper">
-  <div class="toc">
-    <div class="toc-header">
-      Table of Contents
-      <button class="toc-close" aria-label="Close Table of Contents">
-        <i class="fas fa-times"></i>
-      </button>
+    <i class="fas fa-list-ul"></i>
+  </button>
+  
+  <div class="toc-wrapper">
+    <div class="toc">
+      <div class="toc-header">
+        Table of Contents
+        <button class="toc-close" aria-label="Close Table of Contents">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="toc-nav" id="toc">
+        <!-- ToC content will be dynamically inserted here by JavaScript -->
+      </nav>
     </div>
-    <nav class="toc-nav" id="toc">
-      <!-- ToC content will be dynamically inserted here by JavaScript -->
-    </nav>
   </div>
-</div>
-
-<style>
-.toc-toggle {
-  position: fixed;
-  left: 1.5rem;
-  bottom: 2rem;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 50%;
-  background: linear-gradient(145deg, #fff5e6, #f0e6d4);
-  border: 2px solid #DEB887;
-  color: #D35400;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 8px rgba(139, 115, 85, 0.1);
-  z-index: 1001;
-}
-
-.toc-toggle:hover {
-  background: linear-gradient(145deg, #fff8eb, #f5ebd9);
-  color: #E67E22;
-  border-color: #E67E22;
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(211, 84, 0, 0.15);
-}
-
-.toc-wrapper {
-  position: fixed;
-  top: 0;
-  left: -100%;
-  height: 100vh;
-  width: 300px;
-  background: linear-gradient(145deg, #fff5e6, #f0e6d4);
-  border-right: 1px solid #DEB887;
-  padding: 1rem;
-  box-shadow: 2px 0 8px rgba(139, 115, 85, 0.1);
-  z-index: 1000;
-  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-}
-
-.toc-wrapper.active {
-  left: 0;
-}
-
-.toc {
-  height: 100%;
-  overflow-y: auto;
-  padding-right: 0.5rem;
-}
-
-.toc-header {
-  color: #D35400;
-  font-weight: 600;
-  font-size: 1.1rem;
-  margin-bottom: 0.8rem;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #DEB887;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.toc-close {
-  background: transparent;
-  border: none;
-  color: #D35400;
-  cursor: pointer;
-  padding: 0.3rem;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-}
-
-.toc-close:hover {
-  color: #E67E22;
-  background-color: rgba(255, 255, 255, 0.5);
-  transform: scale(1.1);
-}
-
-.toc-nav {
-  font-size: 0.9rem;
-}
-
-.toc-nav ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.toc-nav li {
-  margin: 0.5rem 0;
-}
-
-.toc-nav a {
-  color: #5C4B37;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  display: block;
-  padding: 0.5rem 0.8rem;
-  border-radius: 6px;
-  line-height: 1.4;
-}
-
-/* Updated heading styles for better hierarchy - cleaner approach */
-.toc-nav .toc-h1 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #D35400;
-  margin: 1.2rem 0 0.6rem;
-  padding-left: 0.5rem;
-}
-
-.toc-nav .toc-h2 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #E67E22;
-  padding-left: 1.5rem;
-  margin: 0.8rem 0 0.4rem;
-}
-
-.toc-nav .toc-h3 {
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #8B7355;
-  padding-left: 2.5rem;
-  margin: 0.6rem 0 0.3rem;
-}
-
-.toc-nav a:hover {
-  color: #D35400;
-  background-color: rgba(255, 255, 255, 0.5);
-  transform: translateX(4px);
-}
-
-.toc-nav .active.toc-h1 {
-  background-color: rgba(211, 84, 0, 0.08);
-  font-weight: 700;
-}
-
-.toc-nav .active.toc-h2 {
-  background-color: rgba(230, 126, 34, 0.08);
-  font-weight: 600;
-}
-
-.toc-nav .active.toc-h3 {
-  background-color: rgba(139, 115, 85, 0.08);
-  font-weight: 500;
-}
-
-/* Improve spacing between sections */
-.toc-nav li:not(:last-child) {
-  margin-bottom: 0.2rem;
-}
-
-/* Add subtle dividers between major sections */
-.toc-nav li:has(.toc-h1) {
-  margin-top: 0.8rem;
-}
-
-/* Custom scrollbar for the ToC */
-.toc::-webkit-scrollbar {
-  width: 6px;
-}
-
-.toc::-webkit-scrollbar-track {
-  background: rgba(222, 184, 135, 0.1);
-  border-radius: 3px;
-}
-
-.toc::-webkit-scrollbar-thumb {
-  background: #DEB887;
-  border-radius: 3px;
-}
-
-.toc::-webkit-scrollbar-thumb:hover {
-  background: #D35400;
-}
-
-@media (max-width: 768px) {
+  
+  <style>
   .toc-toggle {
-    width: 2.5rem;
-    height: 2.5rem;
-    left: 1.2rem;
-    bottom: 1.5rem;
+    position: fixed;
+    left: 1.5rem;
+    bottom: 2rem;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    background: linear-gradient(145deg, #fff5e6, #f0e6d4);
+    border: 2px solid #DEB887;
+    color: #D35400;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(139, 115, 85, 0.1);
+    z-index: 1001;
+  }
+  
+  .toc-toggle:hover {
+    background: linear-gradient(145deg, #fff8eb, #f5ebd9);
+    color: #E67E22;
+    border-color: #E67E22;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(211, 84, 0, 0.15);
   }
   
   .toc-wrapper {
-    width: 260px;
+    position: fixed;
+    top: 0;
     left: -100%;
+    height: 100vh;
+    width: 300px;
+    background: linear-gradient(145deg, #fff5e6, #f0e6d4);
+    border-right: 1px solid #DEB887;
+    padding: 1rem;
+    box-shadow: 2px 0 8px rgba(139, 115, 85, 0.1);
+    z-index: 1000;
+    transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    flex-direction: column;
   }
-}
-</style> 
+  
+  .toc-wrapper.active {
+    left: 0;
+  }
+  
+  .toc {
+    height: 100%;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+  }
+  
+  .toc-header {
+    color: #D35400;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #DEB887;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .toc-close {
+    background: transparent;
+    border: none;
+    color: #D35400;
+    cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+  }
+  
+  .toc-close:hover {
+    color: #E67E22;
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: scale(1.1);
+  }
+  
+  .toc-nav {
+    font-size: 0.9rem;
+  }
+  
+  .toc-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .toc-nav li {
+    margin: 0.5rem 0;
+  }
+  
+  .toc-nav a {
+    color: #5C4B37;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    display: block;
+    padding: 0.5rem 0.8rem;
+    border-radius: 6px;
+    line-height: 1.4;
+  }
+  
+  /* Updated heading styles for better hierarchy - cleaner approach */
+  .toc-nav .toc-h1 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #D35400;
+    margin: 1.2rem 0 0.6rem;
+    padding-left: 0.5rem;
+  }
+  
+  .toc-nav .toc-h2 {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #E67E22;
+    padding-left: 1.5rem;
+    margin: 0.8rem 0 0.4rem;
+  }
+  
+  .toc-nav .toc-h3 {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #8B7355;
+    padding-left: 2.5rem;
+    margin: 0.6rem 0 0.3rem;
+  }
+  
+  .toc-nav a:hover {
+    color: #D35400;
+    background-color: rgba(255, 255, 255, 0.5);
+    transform: translateX(4px);
+  }
+  
+  .toc-nav .active.toc-h1 {
+    background-color: rgba(211, 84, 0, 0.08);
+    font-weight: 700;
+  }
+  
+  .toc-nav .active.toc-h2 {
+    background-color: rgba(230, 126, 34, 0.08);
+    font-weight: 600;
+  }
+  
+  .toc-nav .active.toc-h3 {
+    background-color: rgba(139, 115, 85, 0.08);
+    font-weight: 500;
+  }
+  
+  /* Improve spacing between sections */
+  .toc-nav li:not(:last-child) {
+    margin-bottom: 0.2rem;
+  }
+  
+  /* Add subtle dividers between major sections */
+  .toc-nav li:has(.toc-h1) {
+    margin-top: 0.8rem;
+  }
+  
+  /* Updated scrollbar to match main style but with smaller width */
+  .toc::-webkit-scrollbar {
+    width: 8px !important;
+  }
+  
+  .toc::-webkit-scrollbar-track {
+    background-color: transparent !important;
+  }
+  
+  .toc::-webkit-scrollbar-thumb {
+    background-color: rgba(211, 84, 0, 0.75) !important;
+    border-radius: 20px !important;
+    border: 2px solid transparent !important;
+    background-clip: content-box !important;
+  }
+  
+  .toc::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(230, 126, 34, 0.75) !important;
+    border: 1.5px solid transparent !important;
+  }
+  
+  @media (max-width: 768px) {
+    .toc-toggle {
+      width: 2.5rem;
+      height: 2.5rem;
+      left: 1.2rem;
+      bottom: 1.5rem;
+    }
+    
+    .toc-wrapper {
+      width: 260px;
+      left: -100%;
+    }
+  }
+  </style>
