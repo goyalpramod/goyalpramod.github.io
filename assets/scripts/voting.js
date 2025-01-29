@@ -23,20 +23,25 @@ document.addEventListener('DOMContentLoaded', async function() {
   
     // Track voted state
     let hasVoted = false;
+    let currentData = { upvotes: 0, downvotes: 0 };
   
-    // Get initial votes and check local storage
+    // Initialize or get votes
     try {
         const docSnap = await getDoc(votesRef);
-        if (!docSnap.exists()) {
-            // Initialize with 0 votes using setDoc for new documents
-            await setDoc(votesRef, {
-                upvotes: 0,
-                downvotes: 0
-            });
+        if (docSnap.exists()) {
+            currentData = docSnap.data();
+        } else {
+            // Create the document if it doesn't exist
+            try {
+                await setDoc(votesRef, currentData);
+            } catch (error) {
+                console.error("Error creating vote document:", error);
+            }
         }
-        const data = docSnap.data() || { upvotes: 0, downvotes: 0 };
-        upvoteCount.textContent = data.upvotes;
-        downvoteCount.textContent = data.downvotes;
+        
+        // Update UI
+        upvoteCount.textContent = currentData.upvotes;
+        downvoteCount.textContent = currentData.downvotes;
         
         // Check if user has voted before
         hasVoted = localStorage.getItem(`voted_${postId}`);
@@ -47,24 +52,25 @@ document.addEventListener('DOMContentLoaded', async function() {
         }
     } catch (error) {
         console.error("Error initializing votes:", error);
-        // Set default values in UI
+        // Keep default values in UI
         upvoteCount.textContent = '0';
         downvoteCount.textContent = '0';
     }
   
     // Handle upvote
     upvoteBtn.addEventListener('click', async () => {
-        if (hasVoted) return; // Prevent multiple votes
+        if (hasVoted) return;
         
         try {
-            await updateDoc(votesRef, {
-                upvotes: increment(1)
+            const newUpvotes = currentData.upvotes + 1;
+            await setDoc(votesRef, {
+                ...currentData,
+                upvotes: newUpvotes
             });
             
-            const updated = await getDoc(votesRef);
-            upvoteCount.textContent = updated.data().upvotes;
+            currentData.upvotes = newUpvotes;
+            upvoteCount.textContent = newUpvotes;
             
-            // Mark as voted
             localStorage.setItem(`voted_${postId}`, 'up');
             upvoteBtn.classList.add('voted');
             hasVoted = 'up';
@@ -75,17 +81,18 @@ document.addEventListener('DOMContentLoaded', async function() {
   
     // Handle downvote
     downvoteBtn.addEventListener('click', async () => {
-        if (hasVoted) return; // Prevent multiple votes
+        if (hasVoted) return;
         
         try {
-            await updateDoc(votesRef, {
-                downvotes: increment(1)
+            const newDownvotes = currentData.downvotes + 1;
+            await setDoc(votesRef, {
+                ...currentData,
+                downvotes: newDownvotes
             });
             
-            const updated = await getDoc(votesRef);
-            downvoteCount.textContent = updated.data().downvotes;
+            currentData.downvotes = newDownvotes;
+            downvoteCount.textContent = newDownvotes;
             
-            // Mark as voted
             localStorage.setItem(`voted_${postId}`, 'down');
             downvoteBtn.classList.add('voted');
             hasVoted = 'down';
