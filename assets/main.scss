@@ -189,16 +189,30 @@ html, body {
   left: 0;
   width: 100%;
   height: 100%;
+  border-radius: 20px;
 }
 
-// Adjust article padding
-.note {
+// Update image styles to be more comprehensive
+.note, .blog-post, .thought-post {
   padding-top: 0.8rem;
   
   img {
-    border-radius: 10px;
+    border-radius: 12px;
     max-width: 100%;
     height: auto;
+    display: block;
+    margin: 1.5rem auto;
+  }
+}
+
+// Add general image styles to catch any other content images
+.post-content, .page-content {
+  img {
+    border-radius: 22px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 1.5rem auto;
   }
 }
 
