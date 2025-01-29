@@ -651,3 +651,62 @@ article {
     }
   }
 }
+.voting-buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+  justify-content: flex-start;
+  padding: 0.75rem;
+  background: #FFF5E6;
+  border-radius: 12px;
+  border: 1px solid #DEB887;
+  max-width: fit-content;
+}
+
+.vote-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 0.75rem 1rem;
+  min-width: 60px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  
+  &:hover {
+    background-color: rgba(211, 84, 0, 0.1);
+    transform: translateY(-2px);
+    
+    .vote-icon {
+      color: #D35400;
+    }
+  }
+  
+  &:active {
+    transform: translateY(-1px);
+  }
+
+  &.voted {
+    background-color: rgba(211, 84, 0, 0.15);
+    
+    .vote-icon, .vote-count {
+      color: #D35400;
+    }
+  }
+}
+
+.vote-icon {
+  font-size: 1.25rem;
+  color: #996633;
+  transition: color 0.2s ease;
+  margin-bottom: 0.3rem;
+}
+
+.vote-count {
+  font-size: 1rem;
+  color: #5C4B37;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}

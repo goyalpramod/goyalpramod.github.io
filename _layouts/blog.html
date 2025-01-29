@@ -14,6 +14,16 @@ layout: default
   {%- include toc.html -%}
 
   {{ content }}
+  <div class="voting-buttons" data-post-id="{{ page.url | slugify }}">
+    <button class="vote-btn upvote" aria-label="Upvote">
+      <i class="vote-icon fas fa-arrow-up"></i>
+      <span class="vote-count upvote-count">0</span>
+    </button>
+    <button class="vote-btn downvote" aria-label="Downvote">
+      <i class="vote-icon fas fa-arrow-down"></i>
+      <span class="vote-count downvote-count">0</span>
+    </button>
+  </div>
 
   <!-- Social sharing section -->
   <div class="share-section mt-4">

@@ -47,6 +47,12 @@
     <!-- Table of Contents Script -->
     <script src="{{ '/assets/scripts/toc.js' | relative_url }}"></script>
 
+    <!-- Firebase -->
+    {%- include firebase.html -%}
+    
+    <!-- Add voting.js script -->
+    <script type="module" src="{{ '/assets/scripts/voting.js' | relative_url }}"></script>
+
     <script>
       document.addEventListener('DOMContentLoaded', function() {
         // More specific selector to target all links in content areas
