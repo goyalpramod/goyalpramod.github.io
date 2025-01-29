@@ -1,0 +1,514 @@
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+---
+
+// Define theme colors
+$brand-color:           #D35400;
+$background-color:      #FDF6E3;
+$text-color:           #5C4B37;
+$grey-color:           #8B7355;
+$grey-color-light:     #DEB887;
+$grey-color-dark:      #996633;
+
+// Import minima theme
+@import "minima";
+
+// Add Bootstrap CSS
+@import url("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css");
+
+// Base layout and whitespace fix
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FDF6E3 !important;
+  color: #5C4B37 !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.page-content {
+  flex: 1 0 auto;
+}
+
+.site-header {
+  background-color: $background-color !important;
+  border-top: 3px solid #996633 !important;
+  border-bottom: 1px solid #DEB887 !important;
+  min-height: 40px;
+  position: relative;
+}
+
+.site-title {
+  font-size: 24px;
+  font-weight: 300;
+  line-height: 40px;
+  letter-spacing: -0.5px;
+  margin-bottom: 0;
+  float: left;
+  text-decoration: none;
+  color: #996633 !important;
+
+  &:hover {
+    text-decoration: none;
+    color: #D35400 !important;
+  }
+}
+
+.site-nav {
+  float: right;
+  line-height: 40px;
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+
+  .nav-trigger {
+    display: none;
+  }
+
+  .menu-icon {
+    display: none;
+  }
+
+  .trigger {
+    display: flex;
+    align-items: center;
+  }
+
+  .page-link {
+    color: $text-color !important;
+    line-height: 40px;
+    text-decoration: none;
+    margin-left: 1.3rem;
+    white-space: nowrap;
+    font-size: 18px;
+
+    &:hover {
+      color: $brand-color !important;
+      text-decoration: none;
+    }
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .site-nav {
+    position: absolute;
+    top: 9px;
+    right: 15px;
+    background-color: $background-color !important;
+    border: 1px solid $grey-color-light !important;
+    border-radius: 5px;
+    text-align: right;
+
+    label[for="nav-trigger"] {
+      display: block;
+      float: right;
+      width: 32px;
+      height: 32px;
+      z-index: 2;
+      cursor: pointer;
+    }
+
+    .menu-icon {
+      display: block;
+      float: right;
+      width: 32px;
+      height: 24px;
+      line-height: 0;
+      padding-top: 8px;
+      text-align: center;
+    }
+
+    input ~ .trigger {
+      clear: both;
+      display: none;
+    }
+
+    input:checked ~ .trigger {
+      display: block;
+      padding-bottom: 5px;
+    }
+
+    .page-link {
+      display: block;
+      padding: 5px 10px;
+      margin-right: 0;
+      margin-left: 20px;
+    }
+  }
+}
+
+.wrapper {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 0 15px;
+  background: transparent !important;
+  align-items: center;
+  justify-content: space-between;
+}
+
+// Featured image styles
+.featured-image-container {
+  width: 100%;
+  height: 50vh;
+  position: relative;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  border-radius: 6px;
+}
+
+.featured-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 12px;
+}
+
+.video-wrapper {
+  position: relative;
+  padding-bottom: 56.25%;
+  height: 0;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+.video-wrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+// Adjust article padding
+.note {
+  padding-top: 0.8rem;
+  
+  img {
+    border-radius: 10px;
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+// Code block styles
+.highlighter-rouge {
+    position: relative;
+    margin: 1.8rem 0;  /* Changed from 1.2em 0 */
+    border-radius: 8px;
+    background: #FDFAF5 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;  /* Changed from overflow-x: auto */
+    border: 1px solid #DEB887;  /* Added border to match the theme */
+    
+    pre.highlight {
+        padding: 1.2rem;
+        margin: 0;
+        border-radius: 8px;
+        background: #FDFAF5 !important;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        min-width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto;
+        white-space: pre;
+        word-wrap: normal;
+        text-align: left;
+        border-bottom: none;  /* Remove any bottom border if exists */
+    }.copy-code-button {
+        position: absolute;
+        top: 0.8rem;
+        right: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        color: #996633;
+        background-color: transparent;
+        border: 1.5px solid #DEB887;
+        border-radius: 6px;
+        opacity: 0.8;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        
+        &::before {
+            content: "";
+            display: block;
+            width: 14px;
+            height: 14px;
+            background: currentColor;
+            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E");
+            mask-size: cover;
+            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E");
+            -webkit-mask-size: cover;
+        }
+    
+        &:hover {
+            opacity: 1;
+            background-color: rgba(222, 184, 135, 0.1);
+            border-color: #D35400;
+            color: #D35400;
+            transform: translateY(-1px);
+        }
+    
+        &:active {
+            transform: translateY(0);
+        }
+    
+        &.copied {
+            color: #2E7D32;
+            border-color: #2E7D32;
+            background-color: rgba(46, 125, 50, 0.1);
+            
+            &::before {
+                content: "";
+                width: 14px;
+                height: 14px;
+                background: currentColor;
+                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+                mask-size: cover;
+                -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
+                -webkit-mask-size: cover;
+            }
+        }
+    }
+ 
+  &:hover .copy-code-button {
+    opacity: 1;
+  }
+}
+
+// Syntax highlighting
+.highlight {
+    border: none;
+  background: #FDFAF5 !important;
+
+  pre {
+    background: #FDFAF5 !important;
+  }
+
+  code {
+    border: none;
+    background: #FDFAF5 !important;
+  }
+
+  .k, .kd, .kn, .kp, .kr, .kt {  // Keywords
+    color: #A44141;
+  }
+  
+  .s, .s1, .s2 {  // Strings
+    color: #2A6F3B;
+  }
+  
+  .c, .c1 {  // Comments
+    color: #8B8B8B;
+    font-style: italic;
+  }
+  
+  .n, .nb {  // Built-in names
+    color: #5C4B37;
+  }
+  
+  .o {  // Operators
+    color: #996633;
+  }
+  
+  .nf {  // Function names
+    color: #644A93;
+  }
+
+  .mi, .mf {  // Numbers
+    color: #986801;
+  }
+
+  .na {  // Names (Attributes)
+    color: #4078f2;
+  }
+
+  .nt {  // Tags
+    color: #22863a;
+  }
+}
+
+// General link styles
+a, a:visited {
+  color: $brand-color !important;
+  
+  &:hover {
+    color: lighten($brand-color, 10%) !important;
+    text-decoration: none !important;
+  }
+}
+
+// Blockquote styles
+blockquote {
+  background: #FAF0E6 !important;
+  border-left: 3px solid $grey-color !important;
+  color: $grey-color !important;
+  padding: 12px !important;
+  font-size: 0.95em;
+}
+
+// Bootstrap overrides
+.container, .container-fluid {
+  background-color: transparent !important;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+.btn-primary {
+  background-color: $brand-color !important;
+  border-color: $brand-color !important;
+  
+  &:hover {
+    background-color: lighten($brand-color, 10%) !important;
+    border-color: lighten($brand-color, 10%) !important;
+  }
+}
+
+// Background consistency
+html, body, .page-content {
+  background-color: $background-color !important;
+}
+
+.card {
+  background-color: #EFE6D1 !important;
+  border-color: $grey-color-light !important;
+}
+
+.site-footer {
+    border-top: 1px solid $grey-color-light !important;
+    padding: 1.2rem 0;
+    background-color: $background-color !important;
+    font-size: 0.9rem;
+    
+    .footer-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        gap: 2rem;
+    }
+    
+    .footer-description {
+        flex: 1;
+        color: $text-color !important;
+        font-size: 0.95rem;
+        line-height: 1.6;
+        font-style: italic;
+        
+        p {
+            margin: 0;
+        }
+    }
+    
+    .social-links {
+        display: flex;
+        gap: 1rem;
+        margin-left: 1.5rem;
+        
+        a {
+            color: $grey-color-dark !important;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #fff5e6, #f0e6d4);
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+            
+            i {
+                display: inline-block !important;
+                line-height: 1;
+            }
+            
+            &:hover {
+                color: $brand-color !important;
+                transform: translateY(-3px);
+                background: linear-gradient(145deg, #fff8eb, #f5ebd9);
+                box-shadow: 0 5px 15px rgba(211, 84, 0, 0.15);
+            }
+            
+            &:active {
+                transform: translateY(-1px);
+            }
+        }
+    }
+    
+    .footer-copyright {
+        text-align: center;
+        color: $grey-color !important;
+        font-size: 0.8rem;
+        border-top: 1px solid rgba($grey-color-light, 0.5) !important;
+        padding-top: 1rem;
+        margin-top: 1rem;
+        
+        p {
+            margin: 0;
+        }
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .site-footer {
+        .footer-row {
+            flex-direction: column;
+            text-align: center;
+            gap: 1.2rem;
+        }
+        
+        .social-links {
+            margin-left: 0;
+            justify-content: center;
+        }
+        
+        .footer-description {
+            font-size: 0.9rem;
+        }
+    }
+}
+
+// Comments section styling
+.comments {
+    margin-top: 2rem;
+    padding: 1rem 0;
+    position: relative;
+    z-index: 1;  // Ensure comments are above other elements
+    background: $background-color !important;  // Match your site background
+    
+    h2 {
+        margin-bottom: 1.5rem;
+        color: $text-color !important;
+    }
+}
+
+// Utterances specific fixes
+.utterances {
+    max-width: 100% !important;  // Allow full width
+    background: transparent !important;
+    position: relative;
+    z-index: 2;  // Ensure iframe is visible
+    margin: 0 !important;  // Remove default margins
+}
+
+.utterances-frame {
+    background: transparent !important;
+    position: relative;
+    z-index: 2;
+}

@@ -63,14 +63,15 @@ layout: default
   {% endif %}
 </article>
 
-<!-- Add Font Awesome for social icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
 <style>
 .share-section {
   border-top: 1px solid #eee;
   padding-top: 1.5rem;
   margin-top: 2rem;
+  background-color: #FAF0E6;  /* Light warm background */
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #DEB887;  /* Matching border color */
 }
 
 .share-buttons {
@@ -86,18 +87,21 @@ layout: default
   text-decoration: none;
   color: #586069;
   padding: 0.35rem 0.75rem;
-  border: 1px solid #e1e4e8;
+  border: 1px solid #DEB887;  /* Matching border color */
   border-radius: 4px;
   font-size: 0.9rem;
   transition: all 0.2s ease;
   min-width: 120px;
+  background-color: white;  /* White background */
 }
 
 .share-btn:hover {
-  background-color: #f6f8fa;
+  background-color: #FFF5E6;  /* Slightly darker on hover */
   text-decoration: none;
-  transform: translateX(3px);
-  color: #0366d6;
+  transform: translateY(-2px);  /* Slight lift effect */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);  /* Subtle shadow on hover */
+  color: #D35400;  /* Brand color on hover */
+  border-color: #D35400;  /* Brand color border on hover */
 }
 
 .share-btn i {
@@ -115,5 +119,10 @@ layout: default
   color: #24292e;
   font-size: 1.1rem;
   font-weight: 600;
+}
+
+.share-title {
+  color: #5C4B37;  /* Matching text color */
+  margin-bottom: 1rem;
 }
 </style>

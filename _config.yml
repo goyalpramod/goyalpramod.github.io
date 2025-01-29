@@ -105,4 +105,10 @@ defaults:
 # Security settings for iframes and external content
 webrick:
   headers:
-    Content-Security-Policy: "frame-src https://www.youtube-nocookie.com https://www.youtube.com"
+    Content-Security-Policy: >-
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+      font-src 'self' data: https://cdn.jsdelivr.net https://cdnjs.cloudflare.com;
+      frame-src https://www.youtube-nocookie.com https://www.youtube.com;
+      img-src 'self' data:

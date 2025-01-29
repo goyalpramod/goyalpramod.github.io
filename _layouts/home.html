@@ -16,28 +16,139 @@ layout: default
       <!-- Latest Blog Post Section -->
       {% if site.blogs.size > 0 %}
       <section class="mb-5">
-        <h2 class="mb-4">Latest Post</h2>
+        <h2 class="section-title mb-4">Latest Post</h2>
         {% assign latest_post = site.blogs | first %}
-        <div class="card">
-          <div class="card-body">
-            <h3 class="card-title">
+        <div class="latest-post-card">
+          <div class="card-content">
+            <div class="post-meta">
+              <span class="date">{{ latest_post.date | date: "%B %-d, %Y" }}</span>
+              <span class="separator">•</span>
+              <span class="reading-time">
+                {% capture words %}{{ latest_post.content | number_of_words }}{% endcapture %}
+                {% unless words contains "-" %}
+                  {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
+                {% endunless %}
+              </span>
+            </div>
+            <h3 class="post-title">
               <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title | escape }}</a>
             </h3>
-            <p class="text-muted">
-              {{ latest_post.date | date: "%B %-d, %Y" }} • 
-              {% capture words %}{{ latest_post.content | number_of_words }}{% endcapture %}
-              {% unless words contains "-" %}
-                {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
-              {% endunless %}
-            </p>
             {% if site.show_excerpts %}
-              {{ latest_post.excerpt }}
+              <div class="post-excerpt">{{ latest_post.excerpt }}</div>
             {% endif %}
-            <a href="{{ "/blog" | relative_url }}" class="btn btn-primary mt-3">View all posts</a>
+            <a href="{{ latest_post.url | relative_url }}" class="read-more">Continue reading →</a>
           </div>
+        </div>
+        <div class="view-all-container">
+          <a href="{{ "/blog" | relative_url }}" class="view-all-posts">View All Posts</a>
         </div>
       </section>
       {% endif %}
     </div>
   </div>
 </div>
+
+<style>
+.section-title {
+  color: #5C4B37;
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+.latest-post-card {
+  background: #FDF6E3;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: all 0.2s ease;
+  padding: 1.5rem;
+  border: 1px solid #DEB887;
+  margin-bottom: 1.5rem;
+}
+
+.latest-post-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.post-meta {
+  display: flex;
+  align-items: center;
+  color: #8B7355;
+  font-size: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.separator {
+  margin: 0 0.5rem;
+}
+
+.post-title {
+  margin-bottom: 0.8rem;
+}
+
+.post-title a {
+  color: #D35400;
+  font-size: 1.5rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.post-title a:hover {
+  color: #E67E22;
+}
+
+.post-excerpt {
+  color: #5C4B37;
+  margin-bottom: 1rem;
+}
+
+.read-more {
+  color: #D35400;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  transition: all 0.2s ease;
+}
+
+.read-more:hover {
+  color: #E67E22;
+  text-decoration: none;
+  transform: translateX(5px);
+}
+
+.view-all-container {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.view-all-posts {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #D35400;
+  color: #D35400;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.view-all-posts:hover {
+  background: #D35400;
+  color: white;
+  text-decoration: none;
+}
+
+@media (max-width: 768px) {
+  .post-meta {
+    flex-wrap: wrap;
+  }
+  
+  .separator {
+    display: none;
+  }
+  
+  .reading-time {
+    width: 100%;
+    margin-top: 0.3rem;
+  }
+}
+</style>
