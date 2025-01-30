@@ -1749,3 +1749,14 @@ article {
     gap: 1rem;
   }
 }
+
+[data-theme="dark"] {
+  .back-to-top {
+    border-color: var(--grey-color-light);
+    
+    &:hover {
+      border-color: var(--brand-color);
+      background: var(--button-gradient-hover);
+    }
+  }
+}
