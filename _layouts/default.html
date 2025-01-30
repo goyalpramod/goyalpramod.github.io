@@ -1,22 +1,70 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
 
-  {%- include head.html -%}
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
 
-  <link href='https://fonts.googleapis.com/css2?family=Nunito:wght@200..1000&display=swap' rel='stylesheet'>
-  <!-- Add Font Awesome for social icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style>
+
+  {%- include head.html -%}
+  <!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="{{ '/assets/icon.png' | relative_url }}">
+  <link rel="shortcut icon" type="image/png" href="{{ '/assets/icon.png' | relative_url }}">
+  <link rel="apple-touch-icon" href="{{ '/assets/icon.png' | relative_url }}">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   
   <style>
     body {
-      font-family: 'Nunito', sans-serif;
+      /* font-family: "Karla", serif; */
+      font-family: "Lora", serif;
+      /* font-family: "STIX Two Text", serif; */
+      /* font-family: "Bentham", serif; */
+      /* font-family: 'Nunito', sans-serif; */
       font-optical-sizing: auto;
+      font-size: large;
       font-weight: 400;
       font-style: normal;
     }
   </style>
 
-  <body>
+  <body class="preload">
 
     {%- include header.html -%}
 
@@ -36,6 +84,42 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Copy Code Script -->
     <script src="{{ '/assets/scripts/copyCode.js' | relative_url }}"></script>
+    <!-- Back to Top Script -->
+    <script src="{{ '/assets/scripts/backToTop.js' | relative_url }}"></script>
+    <!-- Table of Contents Script -->
+    <script src="{{ '/assets/scripts/toc.js' | relative_url }}"></script>
+    <script src="{{ '/assets/scripts/dark-mode.js' | relative_url }}"></script>
+
+    <!-- Firebase -->
+    {%- include firebase.html -%}
+    
+    <!-- Add voting.js script -->
+    <script type="module" src="{{ '/assets/scripts/voting.js' | relative_url }}"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
 
   </body>
 

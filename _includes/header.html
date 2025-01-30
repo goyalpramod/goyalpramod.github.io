@@ -3,11 +3,8 @@
   {%- if jekyll.environment == 'production' and site.google_analytics -%}
     {%- include google-analytics.html -%}
   {%- endif -%}
-
-  <!-- Add these two meta tags here -->
-  <meta http-equiv="Content-Security-Policy" content="frame-src https://www.youtube-nocookie.com https://www.youtube.com">
+  <!-- Add X-Frame-Options meta tag -->
   <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
- 
 
   <div class="container">
     <div class="wrapper">
@@ -24,12 +21,13 @@
 
         <div class="trigger">
           <a class="page-link" href="{{ site.baseurl }}/blog/">Blog</a>
-          <!-- <a class="page-link" href="{{ site.baseurl }}/notes/">Notes</a> -->
           <a class="page-link" href="{{ site.baseurl }}/thoughts/">Thoughts</a>
+          <a class="page-link" href="{{ site.baseurl }}/contact/">Contact Me</a>
         </div>
       </nav>
     </div>
   </div>
+
   {% if page.math != false %}
   <script>
     MathJax = {
