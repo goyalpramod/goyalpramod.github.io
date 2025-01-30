@@ -1751,3 +1751,12 @@ article {
     }
   }
 }
+
+html, body {
+  scroll-behavior: auto !important; /* Override any smooth scroll */
+}
+
+/* Only apply smooth scroll to specific elements if needed */
+.smooth-scroll {
+  scroll-behavior: smooth;
+}
