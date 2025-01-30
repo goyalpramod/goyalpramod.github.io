@@ -379,68 +379,60 @@ p {
         word-wrap: normal;
         text-align: left;
         border-bottom: none;  /* Remove any bottom border if exists */
-    }.copy-code-button {
-        position: absolute;
-        top: 0.8rem;
-        right: 1rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        color: #996633;
-        background-color: transparent;
-        border: 1.5px solid #DEB887;
-        border-radius: 6px;
-        opacity: 0.8;
-        transition: all 0.2s ease;
-        cursor: pointer;
-        
-        &::before {
-            content: "";
-            display: block;
-            width: 14px;
-            height: 14px;
-            background: currentColor;
-            mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E");
-            mask-size: cover;
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='9' y='9' width='13' height='13' rx='2' ry='2'%3E%3C/rect%3E%3Cpath d='M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1'%3E%3C/path%3E%3C/svg%3E");
-            -webkit-mask-size: cover;
-        }
-    
-        &:hover {
-            opacity: 1;
-            background-color: rgba(222, 184, 135, 0.1);
-            border-color: #D35400;
-            color: #D35400;
-            transform: translateY(-1px);
-        }
-    
-        &:active {
-            transform: translateY(0);
-        }
-    
-        &.copied {
-            color: #2E7D32;
-            border-color: #2E7D32;
-            background-color: rgba(46, 125, 50, 0.1);
-            
-            &::before {
-                content: "";
-                width: 14px;
-                height: 14px;
-                background: currentColor;
-                mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-                mask-size: cover;
-                -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'%3E%3C/polyline%3E%3C/svg%3E");
-                -webkit-mask-size: cover;
-            }
-        }
     }
- 
+
+    .copy-code-button:not(:first-of-type) {
+      display: none;
+    }
+
+    .copy-code-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    color: var(--grey-color-dark);
+    background-color: transparent;
+    border: 1.5px solid var(--grey-color-light);
+    border-radius: 6px;
+    opacity: 0;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    z-index: 2;
+    
+    // Ensure icon appears correctly
+    i {
+      font-size: 14px;
+      line-height: 1;
+      width: 14px;
+      height: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    &:hover {
+      opacity: 1;
+      background-color: var(--background-color);
+      border-color: var(--brand-color);
+      color: var(--brand-color);
+      transform: translateY(-1px);
+    }
+    
+    &.copied {
+      color: #2E7D32;
+      border-color: #2E7D32;
+      background-color: rgba(46, 125, 50, 0.1);
+      opacity: 1;
+    }
+  }
+  
   &:hover .copy-code-button {
-    opacity: 1;
+    opacity: 0.8;
   }
 }
 
