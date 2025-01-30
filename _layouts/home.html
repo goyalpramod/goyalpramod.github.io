@@ -20,20 +20,34 @@ layout: default
       </section>
 
       <!-- Latest Blog Post Section -->
+      <!-- Latest Blog Post Section -->
       {% if site.blogs.size > 0 %}
       <section>
         <h2 class="section-title">Latest Post</h2>
         {% assign latest_post = site.blogs | first %}
         <div class="latest-post-card">
           <div class="post-meta">
-            <span class="date">{{ latest_post.date | date: "%B %-d, %Y" }}</span>
-            <span class="separator">•</span>
-            <span class="reading-time">
-              {% capture words %}{{ latest_post.content | number_of_words }}{% endcapture %}
-              {% unless words contains "-" %}
-                {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
-              {% endunless %}
-            </span>
+            <div class="meta-left">
+              <span class="date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                {{ latest_post.date | date: "%B %-d, %Y" }}
+              </span>
+            </div>
+            <div class="meta-right">
+              <span class="reading-time">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                {% capture words %}{{ latest_post.content | number_of_words }}{% endcapture %}
+                {% unless words contains "-" %}
+                  {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
+                {% endunless %}
+              </span>
+            </div>
           </div>
           <h3 class="post-title">
             <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title | escape }}</a>
@@ -41,7 +55,13 @@ layout: default
           {% if site.show_excerpts %}
             <div class="post-excerpt">{{ latest_post.excerpt }}</div>
           {% endif %}
-          <a href="{{ latest_post.url | relative_url }}" class="read-more">Continue reading →</a>
+          <a href="{{ latest_post.url | relative_url }}" class="read-more">
+            Continue reading
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+              <polyline points="12 5 19 12 12 19"></polyline>
+            </svg>
+          </a>
         </div>
         <div class="view-all-container">
           <a href="{{ "/blog" | relative_url }}" class="view-all-posts">View All Posts</a>
