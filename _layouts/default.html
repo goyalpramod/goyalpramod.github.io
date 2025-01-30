@@ -1,6 +1,47 @@
 <!DOCTYPE html>
 <html lang="{{ page.lang | default: site.lang | default: "en" }}">
 
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+    transition: none !important;
+  }
+  
+  /* Disable all transitions during page load */
+  .preload * {
+    transition: none !important;
+  }
+</style>
+
   {%- include head.html -%}
   <!-- Add favicon right after head.html include -->
   <link rel="icon" type="image/png" href="{{ '/assets/icon.png' | relative_url }}">
@@ -28,7 +69,7 @@
     }
   </style>
 
-  <body>
+  <body class="preload">
 
     {%- include header.html -%}
 
