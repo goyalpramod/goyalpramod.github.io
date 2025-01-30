@@ -133,15 +133,6 @@ h6 {
   padding-bottom: 0.1em;
 }
 
-// Subtle hover effect
-h1, h2, h3, h4, h5, h6 {
-  transition: color 0.3s ease;
-  
-  &:hover {
-    color: lighten($heading-color, 8%) !important;
-  }
-}
-
 // Reduced paragraph spacing
 p {
   margin-bottom: 1.2em;  // Reduced from 1.5em
