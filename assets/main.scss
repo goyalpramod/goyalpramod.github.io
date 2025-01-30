@@ -365,22 +365,25 @@ p {
     border: 1px solid #DEB887;  /* Added border to match the theme */
     border-color: var(--grey-color-light) !important;
 
-    pre.highlight {
-        padding: 1.2rem;
-        margin: 0;
-        border-radius: 8px;
-        background: var(--code-background) !important;
-        font-size: 0.9rem;
-        line-height: 1.5;
-        min-width: 100%;
-        box-sizing: border-box;
-        overflow-x: auto;
-        white-space: pre;
-        word-wrap: normal;
-        text-align: left;
-        border-bottom: none;  /* Remove any bottom border if exists */
-    }
+    div.highlight {
+      margin: 0;
 
+      pre.highlight {
+          padding: 1rem;
+          margin: 0;
+          border-radius: 8px;
+          background: var(--code-background) !important;
+          font-size: 0.9rem;
+          line-height: 1.5;
+          min-width: 100%;
+          box-sizing: border-box;
+          overflow-x: auto;
+          white-space: pre;
+          word-wrap: normal;
+          text-align: left;
+          border-bottom: none;  /* Remove any bottom border if exists */
+      }
+    }
     .copy-code-button:not(:first-of-type) {
       display: none;
     }
@@ -399,7 +402,7 @@ p {
     background-color: transparent;
     border: 1.5px solid var(--grey-color-light);
     border-radius: 6px;
-    opacity: 0;
+    opacity: 0.5;
     transition: all 0.2s ease;
     cursor: pointer;
     z-index: 2;
@@ -444,7 +447,7 @@ p {
   overflow: hidden;
 
   pre {
-    padding: 1.2rem;
+    padding: 1rem;
     margin: 0;
     background: transparent !important;
     border: none;
@@ -461,6 +464,7 @@ p {
 
   code {
     padding: 0;
+    margin: 0;
     background: transparent !important;
     border: none;
     font-family: inherit;
