@@ -5,10 +5,13 @@
 // Define theme colors
 $brand-color:           #D35400;
 $background-color:      #FDF6E3;
-$text-color:           #5C4B37;
+$text-color:           #483C2F;
 $grey-color:           #8B7355;
 $grey-color-light:     #DEB887;
 $grey-color-dark:      #996633;
+// Add these typography variables at the top with your other variables
+$heading-color: #2C241D;  // Even darker for headings
+$heading-border-color: rgba(#996633, 0.3);  // Subtle warm border for underlines
 
 // Import minima theme
 @import "minima";
@@ -31,6 +34,94 @@ html, body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 14px;
   line-height: 1.5;
+}
+
+body {
+  color: $text-color !important;
+  font-family: 'Lora', serif;
+  font-size: 16px;  // Slightly larger for better readability
+  line-height: 1.5;  // Increased line height for better readability
+}
+
+// Refined heading styles - more subtle
+h1, h2, h3, h4, h5, h6 {
+  color: $heading-color !important;
+  font-family: 'Lora', serif;
+  font-weight: 500;  // Reduced from 700 to be more subtle
+  line-height: 1.3;
+  margin-top: 1.5em;  // Reduced from 2em
+  margin-bottom: 0.6em;  // Reduced from 0.8em
+  position: relative;
+}
+
+h1 {
+  font-size: 2.3em;
+  border-bottom: 2px solid $heading-border-color;  // Reduced from 3px
+  padding-bottom: 0.2em;
+}
+
+h2 {
+  font-size: 1.8em;
+  border-bottom: 1.5px solid $heading-border-color;  // Reduced from 2px
+  padding-bottom: 0.2em;
+}
+
+h3 {
+  font-size: 1.4em;
+  border-bottom: 1px solid $heading-border-color;
+  padding-bottom: 0.15em;
+}
+
+h4 {
+  font-size: 1.2em;
+  border-bottom: 1px solid $heading-border-color;
+  padding-bottom: 0.15em;
+}
+
+h5 {
+  font-size: 1.1em;
+  font-weight: 400;  // Even lighter
+  border-bottom: 1px solid rgba(#996633, 0.2);  // More subtle border
+  padding-bottom: 0.1em;
+}
+
+h6 {
+  font-size: 1em;
+  font-weight: 400;
+  border-bottom: 1px solid rgba(#996633, 0.2);
+  padding-bottom: 0.1em;
+}
+
+// Subtle hover effect
+h1, h2, h3, h4, h5, h6 {
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: lighten($heading-color, 8%) !important;
+  }
+}
+
+// Reduced paragraph spacing
+p {
+  margin-bottom: 1.2em;  // Reduced from 1.5em
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Content hierarchy spacing
+.post-content, .page-content {
+  h1, h2, h3, h4, h5, h6 {
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+  
+  // Add some space after headings but before paragraphs
+  h1 + p, h2 + p, h3 + p, h4 + p, h5 + p, h6 + p {
+    margin-top: 0.8em;
+  }
 }
 
 .page-content {
@@ -149,7 +240,7 @@ html, body {
 }
 
 .wrapper {
-  max-width: 650px;
+  max-width: 710px;
   margin: 0 auto;
   padding: 0 15px;
   background: transparent !important;
