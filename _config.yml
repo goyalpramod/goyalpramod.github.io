@@ -28,6 +28,7 @@ twitter_username: goyal__pramod
 github_username:  goyalpramod
 linkedin_username: goyalpramod
 youtube_username: goyal_pramod
+logo: "/assets/images/img.webp"  # Path to your image
 
 # Build settings
 theme: minima
