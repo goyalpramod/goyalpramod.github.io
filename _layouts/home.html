@@ -2,90 +2,123 @@
 layout: default
 ---
 
-<div class="container">
-  <div class="row">
-    <div class="col-md-12">
-      <!-- About Me Section -->
-      <section class="mb-5">
-        <h1 class="mb-4">Hi, I'm Pramod</h1>
-        <p>I like to make art. Currently working <a href="https://twitter.com/joindimension" target="_blank">@joindimension</a> on LLM Orchestration.</p>
-        <p>In my free time I like to make educational content and dive more into the amazing mathematical world of AI.</p>
-        <p>You can find my tech articles in the blog section and my way of life in thoughts.</p>
-      </section>
-
-      <!-- Latest Blog Post Section -->
-      {% if site.blogs.size > 0 %}
-      <section class="mb-5">
-        <h2 class="section-title mb-4">Latest Post</h2>
-        {% assign latest_post = site.blogs | first %}
-        <div class="latest-post-card">
-          <div class="card-content">
-            <div class="post-meta">
-              <span class="date">{{ latest_post.date | date: "%B %-d, %Y" }}</span>
-              <span class="separator">•</span>
-              <span class="reading-time">
-                {% capture words %}{{ latest_post.content | number_of_words }}{% endcapture %}
-                {% unless words contains "-" %}
-                  {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
-                {% endunless %}
-              </span>
-            </div>
-            <h3 class="post-title">
-              <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title | escape }}</a>
-            </h3>
-            {% if site.show_excerpts %}
-              <div class="post-excerpt">{{ latest_post.excerpt }}</div>
-            {% endif %}
-            <a href="{{ latest_post.url | relative_url }}" class="read-more">Continue reading →</a>
-          </div>
-        </div>
-        <div class="view-all-container">
-          <a href="{{ "/blog" | relative_url }}" class="view-all-posts">View All Posts</a>
-        </div>
-      </section>
-      {% endif %}
-    </div>
-  </div>
-</div>
-
 <style>
+.container {
+  position: relative;
+}
+
 .section-title {
   color: #5C4B37;
   font-size: 1.8rem;
   font-weight: 600;
 }
 
-.latest-post-card {
-  background: #F7EFE2; 
+.about-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.about-content {
+  flex: 1;
+}
+
+.portrait-container {
+  flex-shrink: 0;
+  width: 300px;
+  height: 300px;
   border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.05); 
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-  padding: 1.8rem; 
+  margin-top: var(--portrait-margin, 5rem); /* Using CSS variable for easy adjustment */
+  position: relative;
+  background: transparent;
+  /* box-shadow: 0 8px 24px rgba(139, 115, 85, 0.15); Subtle shadow added */
+  transition: transform 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.portrait-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+  display: block;
+  position: relative;
+}
+
+/* Optional: Add a subtle hover effect */
+.portrait-container:hover {
+  transform: translateY(-5px);
+}
+
+.wave-hand {
+  position: absolute;
+  bottom: 290px;
+  right: 50px;
+  font-size: 24px;
+  animation: popAndWave 4s infinite;
+  transform-origin: center;
+  display: none;
+}
+
+.portrait-container:hover .wave-hand {
+  display: block;
+}
+
+@keyframes popAndWave {
+  /* Initial pop-up */
+  0% { 
+    transform: translate(0, 30px) scale(0.2);
+    opacity: 0;
+  }
+  /* Pop up complete */
+  10% { 
+    transform: translate(0, 0) scale(1);
+    opacity: 1;
+  }
+  /* Start waving movement */
+  30% { 
+    transform: translate(-5px, -5px) rotate(-15deg);
+  }
+  40% { 
+    transform: translate(-5px, -5px) rotate(15deg);
+  }
+  50% { 
+    transform: translate(-5px, -5px) rotate(-15deg);
+  }
+  60% { 
+    transform: translate(-5px, -5px) rotate(15deg);
+  }
+  /* Return to neutral position */
+  70% { 
+    transform: translate(0, 0) rotate(0);
+  }
+  /* Stay in place for a moment */
+  90% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  /* Fade out */
+  100% { 
+    transform: translate(0, 20px);
+    opacity: 0;
+  }
+}
+
+/* Rest of your styles remain the same */
+.latest-post-card {
+  background: #F7EFE2;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 1.8rem;
   border: 1px solid rgba(222, 184, 135, 0.4);
   margin-bottom: 1.5rem;
-  position: relative; 
-  overflow: hidden;
+}
 
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(145deg, rgba(255,255,255,0.1), rgba(222,184,135,0.05));
-    pointer-events: none;
-  }
-
-  &:hover {
-    transform: translateY(-2px); 
-    box-shadow: 0 8px 24px rgba(139, 115, 85, 0.12);
-    border-color: rgba(211, 84, 0, 0.3);
-    
-    .post-title a {
-      color: #E67E22;
-    }
-  }
+.latest-post-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(139, 115, 85, 0.12);
+  border-color: rgba(211, 84, 0, 0.3);
 }
 
 .post-meta {
@@ -94,28 +127,24 @@ layout: default
   color: #8B7355;
   font-size: 1.1rem;
   margin-bottom: 0.4rem;
-  opacity: 0.9; 
 }
 
 .separator {
-  margin: 0 0.2rem;  /* Decreased from 0.5rem */
+  margin: 0 0.2rem;
 }
 
 .post-title {
-  margin-bottom: 0.2rem;  /* Decreased from 0.8rem */
-  margin-top: 0.2rem;  /* Added to reduce space after meta */
+  margin: 0.2rem 0;
 }
 
 .post-title a {
   color: #D35400;
-  font-size: 1.6rem; 
+  font-size: 1.6rem;
   text-decoration: none;
   font-weight: 600;
   line-height: 1.3;
   transition: color 0.3s ease;
-  display: inline-block; 
 }
-
 
 .post-title a:hover {
   color: #E67E22;
@@ -125,7 +154,6 @@ layout: default
   color: #5C4B37;
   margin: 0.8rem 0;
   line-height: 1.6;
-  opacity: 0.85;
 }
 
 .read-more {
@@ -138,7 +166,6 @@ layout: default
 
 .read-more:hover {
   color: #E67E22;
-  text-decoration: none;
   transform: translateX(5px);
 }
 
@@ -157,23 +184,29 @@ layout: default
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   font-weight: 500;
   background: transparent;
+}
 
-  &:hover {
-    background: rgba(211, 84, 0, 0.05); 
-    color: #E67E22; 
-    border-color: #E67E22;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(211, 84, 0, 0.08);
-    text-decoration: none;
-  }
-
-  &:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 8px rgba(211, 84, 0, 0.06);
-  }
+.view-all-posts:hover {
+  background: rgba(211, 84, 0, 0.05);
+  color: #E67E22;
+  border-color: #E67E22;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(211, 84, 0, 0.08);
 }
 
 @media (max-width: 768px) {
+  .about-section {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 2rem;
+  }
+  
+  .portrait-container {
+    width: 280px;
+    height: 280px;
+    margin-top: var(--portrait-margin-mobile, 1.5rem);
+  }
+  
   .post-meta {
     flex-wrap: wrap;
   }
@@ -188,3 +221,53 @@ layout: default
   }
 }
 </style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- About Me Section -->
+      <section class="about-section">
+        <div class="about-content">
+          <h1>Hi, I'm Pramod</h1>
+          <p>I like to make art. Currently working <a href="https://twitter.com/joindimension" target="_blank">@joindimension</a> on LLM Orchestration.</p>
+          <p>In my free time I like to make educational content and dive more into the amazing mathematical world of AI.</p>
+          <p>You can find my tech articles in the blog section and my way of life in thoughts.</p>
+        </div>
+        <div class="portrait-container">
+          <img src="/assets/images/img.webp" alt="Pramod" class="portrait-image">
+          <div class="wave-hand">👋🏼</div>
+        </div>
+      </section>
+
+      <!-- Latest Blog Post Section -->
+      {% if site.blogs.size > 0 %}
+      <section>
+        <h2 class="section-title">Latest Post</h2>
+        {% assign latest_post = site.blogs | first %}
+        <div class="latest-post-card">
+          <div class="post-meta">
+            <span class="date">{{ latest_post.date | date: "%B %-d, %Y" }}</span>
+            <span class="separator">•</span>
+            <span class="reading-time">
+              {% capture words %}{{ latest_post.content | number_of_words }}{% endcapture %}
+              {% unless words contains "-" %}
+                {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
+              {% endunless %}
+            </span>
+          </div>
+          <h3 class="post-title">
+            <a href="{{ latest_post.url | relative_url }}">{{ latest_post.title | escape }}</a>
+          </h3>
+          {% if site.show_excerpts %}
+            <div class="post-excerpt">{{ latest_post.excerpt }}</div>
+          {% endif %}
+          <a href="{{ latest_post.url | relative_url }}" class="read-more">Continue reading →</a>
+        </div>
+        <div class="view-all-container">
+          <a href="{{ "/blog" | relative_url }}" class="view-all-posts">View All Posts</a>
+        </div>
+      </section>
+      {% endif %}
+    </div>
+  </div>
+</div>
