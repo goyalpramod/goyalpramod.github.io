@@ -66,19 +66,14 @@ html, body {
   max-width: 100%;
   margin: 0;
   padding: 0;
-  -webkit-transform: translateZ(0);
-  -moz-transform: translateZ(0);
-  -ms-transform: translateZ(0);
-  -o-transform: translateZ(0);
-  transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  -moz-backface-visibility: hidden;
-  -ms-backface-visibility: hidden;
-  backface-visibility: hidden;
-  -webkit-perspective: 1000;
-  -moz-perspective: 1000;
-  -ms-perspective: 1000;
-  perspective: 1000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-color) !important;
+  color: var(--text-color) !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
 }
 
 
@@ -282,15 +277,9 @@ p {
   max-width: 710px;
   margin: 0 auto;
   padding: 0 15px;
-  position: relative;
-  left: 0;
   background: transparent !important;
   align-items: center;
   justify-content: space-between;
-  
-  // Remove any transitions that might cause shifting
-  transition: none !important;
-  transform: translateZ(0);
 }
 
 // Remove preload class after page load to enable transitions
