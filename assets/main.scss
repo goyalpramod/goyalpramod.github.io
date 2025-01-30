@@ -444,56 +444,46 @@ p {
   }
 }
 
-// Syntax highlighting
 .highlight {
-    border: none;
+  margin: 1.8rem 0;
   background: #FDFAF5 !important;
+  border-radius: 8px;
+  border: 1px solid #DEB887;
+  overflow: hidden;
 
   pre {
-    background: #FDFAF5 !important;
+    padding: 1.2rem;
+    margin: 0;
+    background: transparent !important;
+    border: none;
+    overflow-x: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  // Remove the inner border from code blocks
+  .highlighter-rouge & {
+    border: none;
   }
 
   code {
+    padding: 0;
+    background: transparent !important;
     border: none;
-    background: #FDFAF5 !important;
+    font-family: inherit;
   }
 
-  .k, .kd, .kn, .kp, .kr, .kt {  // Keywords
-    color: #A44141;
-  }
-  
-  .s, .s1, .s2 {  // Strings
-    color: #2A6F3B;
-  }
-  
-  .c, .c1 {  // Comments
-    color: #8B8B8B;
-    font-style: italic;
-  }
-  
-  .n, .nb {  // Built-in names
-    color: #5C4B37;
-  }
-  
-  .o {  // Operators
-    color: #996633;
-  }
-  
-  .nf {  // Function names
-    color: #644A93;
-  }
-
-  .mi, .mf {  // Numbers
-    color: #986801;
-  }
-
-  .na {  // Names (Attributes)
-    color: #4078f2;
-  }
-
-  .nt {  // Tags
-    color: #22863a;
-  }
+  // Syntax highlighting colors - Light mode
+  .k, .kd, .kn, .kp, .kr, .kt { color: #A44141; }  // Keywords
+  .s, .s1, .s2 { color: #2A6F3B; }  // Strings
+  .c, .c1 { color: #8B8B8B; font-style: italic; }  // Comments
+  .n, .nb { color: #5C4B37; }  // Names
+  .o { color: #996633; }  // Operators
+  .nf { color: #644A93; }  // Function names
+  .mi, .mf { color: #986801; }  // Numbers
+  .na { color: #4078f2; }  // Names (Attributes)
+  .nt { color: #22863a; }  // Tags
 }
 
 // General link styles
@@ -916,19 +906,24 @@ article {
 #dark-mode-toggle:active {
   transform: translateY(-1px);
 }
-// Syntax highlighting for dark mode
-[data-theme="dark"] .highlight {
-  .k, .kd, .kn, .kp, .kr, .kt { color: #FF8A65; }  // Keywords
-  .s, .s1, .s2 { color: #81C784; }  // Strings
-  .c, .c1 { color: #B0BEC5; }  // Comments
-  .n, .nb { color: #E6D5C0; }  // Built-in names
-  .o { color: #BFA788; }  // Operators
-  .nf { color: #B39DDB; }  // Function names
-  .mi, .mf { color: #FFB74D; }  // Numbers
-  .na { color: #64B5F6; }  // Names (Attributes)
-  .nt { color: #81C784; }  // Tags
-}
+// Dark mode overrides
+[data-theme="dark"] {
+  .highlight {
+    background: #282522 !important;
+    border-color: var(--grey-color-light);
 
+    .k, .kd, .kn, .kp, .kr, .kt { color: #ff7b86; }
+    .s, .s1, .s2 { color: #a5e075; }
+    .c, .c1 { color: #9da5b4; }
+    .n, .nb { color: #E6D5C0; }
+    .o { color: #BFA788; }
+    .nf { color: #72bffd; }
+    .mi, .mf { color: #e5a77d; }
+    .na { color: #72bffd; }
+    .nt { color: #a5e075; }
+    .nc { color: #FF6B1A; }  // Class names in dark mode
+  }
+}
 // Scrollbar styling for dark mode
 [data-theme="dark"] {
   &::-webkit-scrollbar-thumb {
