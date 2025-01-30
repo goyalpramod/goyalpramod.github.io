@@ -11,7 +11,8 @@ permalink: /thoughts/
   </header>
   
   <div class="thoughts-grid">
-    {% for thought in site.thoughts %}
+    {% assign sorted_thoughts = site.thoughts | sort: 'last_modified_at' | reverse %}
+    {% for thought in sorted_thoughts %}
       <div class="thought-card">
         {% if thought.image %}
         <a href="{{ thought.url | relative_url }}" class="thought-image-link">
@@ -23,23 +24,27 @@ permalink: /thoughts/
         
         <div class="thought-content">
           <div class="thought-meta">
-            <span class="update-date">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
-                <circle cx="12" cy="12" r="10"></circle>
-                <polyline points="12 6 12 12 16 14"></polyline>
-              </svg>
-              Last updated: {{ thought.last_modified_at | date: "%B %-d, %Y" }}
-            </span>
-            <span class="reading-time">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
-                <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
-                <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
-              </svg>
-              {% capture words %}{{ thought.content | number_of_words }}{% endcapture %}
-              {% unless words contains "-" %}
-                {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
-              {% endunless %}
-            </span>
+            <div class="meta-left">
+              <span class="update-date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                Last updated: {{ thought.last_modified_at | date: "%B %-d, %Y" }}
+              </span>
+            </div>
+            <div class="meta-right">
+              <span class="reading-time">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                {% capture words %}{{ thought.content | number_of_words }}{% endcapture %}
+                {% unless words contains "-" %}
+                  {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
+                {% endunless %}
+              </span>
+            </div>
           </div>
           
           <h2 class="thought-title">
@@ -53,6 +58,14 @@ permalink: /thoughts/
           </div>
           
           <div class="thought-footer">
+            <div class="categories">
+              {% if thought.categories.size > 0 %}
+                {% for category in thought.categories %}
+                  <span class="category">{{ category }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+            
             <a href="{{ thought.url | relative_url }}" class="read-more">
               Read more
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
@@ -60,14 +73,6 @@ permalink: /thoughts/
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </a>
-            
-            {% if thought.categories.size > 0 %}
-            <div class="categories">
-              {% for category in thought.categories %}
-                <span class="category">{{ category }}</span>
-              {% endfor %}
-            </div>
-            {% endif %}
           </div>
         </div>
       </div>

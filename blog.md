@@ -11,7 +11,8 @@ permalink: /blog/
   </header>
   
   <div class="posts-grid">
-    {% for post in site.blogs %}
+    {% assign sorted_posts = site.blogs | sort: 'date' | reverse %}
+    {% for post in sorted_posts %}
       <div class="post-card">
         {% if post.image %}
         <a href="{{ post.url | relative_url }}" class="post-image-link">
@@ -23,14 +24,27 @@ permalink: /blog/
         
         <div class="post-content">
           <div class="post-meta">
-            <span class="date">{{ post.date | date: "%B %-d, %Y" }}</span>
-            <span class="separator">•</span>
-            <span class="reading-time">
-              {% capture words %}{{ post.content | number_of_words }}{% endcapture %}
-              {% unless words contains "-" %}
-                {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
-              {% endunless %}
-            </span>
+            <div class="meta-left">
+              <span class="date">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+                {{ post.date | date: "%B %-d, %Y" }}
+              </span>
+            </div>
+            <div class="meta-right">
+              <span class="reading-time">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="meta-icon">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                {% capture words %}{{ post.content | number_of_words }}{% endcapture %}
+                {% unless words contains "-" %}
+                  {{ words | plus: 250 | divided_by: 250 | append: " minute read" }}
+                {% endunless %}
+              </span>
+            </div>
           </div>
           
           <h2 class="post-title">
@@ -44,6 +58,14 @@ permalink: /blog/
           </div>
           
           <div class="post-footer">
+            <div class="categories">
+              {% if post.categories.size > 0 %}
+                {% for category in post.categories %}
+                  <span class="category">{{ category }}</span>
+                {% endfor %}
+              {% endif %}
+            </div>
+            
             <a href="{{ post.url | relative_url }}" class="read-more">
               Continue reading
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
@@ -51,14 +73,6 @@ permalink: /blog/
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
             </a>
-            
-            {% if post.categories.size > 0 %}
-            <div class="categories">
-              {% for category in post.categories %}
-                <span class="category">{{ category }}</span>
-              {% endfor %}
-            </div>
-            {% endif %}
           </div>
         </div>
       </div>

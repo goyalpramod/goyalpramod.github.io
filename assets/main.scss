@@ -1816,3 +1816,284 @@ html, body {
     color: var(--text-color);
   }
 }
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--grey-color);
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  width: 100%;
+
+  .meta-left, .meta-right {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.reading-time {
+  color: var(--grey-color);
+  font-size: 0.9rem;
+}
+
+.post-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  gap: 1rem;
+
+  .categories {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .read-more {
+    white-space: nowrap;
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .post-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .post-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    
+    .read-more {
+      margin-left: 0;
+      margin-top: 0.5rem;
+    }
+  }
+}
+
+.thoughts-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.thoughts-header {
+  text-align: center;
+  padding: 2rem 0;
+  margin-bottom: 2rem;
+}
+
+.thoughts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+.thought-card {
+  background: var(--card-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(139, 115, 85, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(139, 115, 85, 0.12);
+    border-color: var(--brand-color);
+    
+    .thought-image {
+      transform: scale(1.05);
+    }
+  }
+}
+
+.thought-image-container {
+  width: 100%;
+  padding-top: 56.25%;
+  position: relative;
+  overflow: hidden;
+}
+
+.thought-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.thought-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.thought-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--grey-color);
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  width: 100%;
+
+  .meta-left, .meta-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .meta-icon {
+    margin-right: 0.5rem;
+  }
+}
+
+.update-date, .reading-time {
+  display: flex;
+  align-items: center;
+  color: var(--grey-color);
+  font-size: 0.9rem;
+}
+
+.thought-title {
+  margin: 0 0 1rem 0;
+
+  a {
+    color: var(--brand-color);
+    font-size: 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    line-height: 1.3;
+    transition: opacity 0.3s ease;
+
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+}
+
+.thought-excerpt {
+  color: var(--text-color);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  opacity: 0.85;
+}
+
+.thought-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+  gap: 1rem;
+
+  .categories {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .read-more {
+    white-space: nowrap;
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    .arrow-icon {
+      transition: transform 0.2s ease;
+    }
+    
+    &:hover .arrow-icon {
+      transform: translateX(3px);
+    }
+  }
+}
+
+.no-thoughts {
+  text-align: center;
+  padding: 3rem;
+  color: var(--grey-color);
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 768px) {
+  .thought-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .thought-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    
+    .read-more {
+      margin-left: 0;
+      margin-top: 0.5rem;
+    }
+  }
+
+  .thoughts-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+[data-theme="dark"] {
+  .thought-card {
+    background: var(--card-background);
+    
+    &:hover {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  .meta-icon {
+    stroke: var(--grey-color);
+  }
+}
+
+.post-meta, .thought-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--grey-color);
+  font-size: 0.95rem;
+  margin-bottom: 0.8rem;
+  width: 100%;
+
+  .meta-left, .meta-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .date, .reading-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;  // Add consistent spacing between icon and text
+  }
+
+  .meta-icon {
+    margin-right: 0.25rem;  // Small spacing between icon and text
+    flex-shrink: 0;  // Prevent icon from shrinking
+    stroke: var(--grey-color);  // Match the text color
+  }
+}
+
+// Add this for better dark mode support
+[data-theme="dark"] {
+  .post-meta, .thought-meta {
+    .meta-icon {
+      stroke: var(--grey-color);  // Match dark mode text color
+    }
+  }
+}
