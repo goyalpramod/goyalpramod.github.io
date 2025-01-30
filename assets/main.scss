@@ -701,7 +701,7 @@ pre.highlight,
 .blog-post,
 .thought-post,
 article {
-  a.content-link {
+  a:not(.share-btn):not(.vote-btn).content-link {
     position: relative;
     color: #FF5E00 !important;  // Bright orange base color
     text-decoration: none;
@@ -1750,4 +1750,69 @@ html, body {
 /* Only apply smooth scroll to specific elements if needed */
 .smooth-scroll {
   scroll-behavior: smooth;
+}
+
+// Add dark mode styles for share and vote buttons
+[data-theme="dark"] {
+  .share-section {
+    background-color: var(--card-background);
+    border-color: var(--grey-color-light);
+  }
+
+  .share-btn {
+    background-color: var(--background-color);
+    border-color: var(--grey-color-light);
+    color: var(--text-color);
+
+    &:hover {
+      background-color: var(--card-background);
+      color: var(--brand-color);
+      border-color: var(--brand-color);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    i {
+      color: var(--grey-color);
+    }
+
+    &:hover i {
+      color: var(--brand-color);
+    }
+  }
+
+  .share-title {
+    color: var(--text-color);
+  }
+
+  // Vote buttons dark mode
+  .voting-buttons {
+    background: var(--card-background);
+    border-color: var(--grey-color-light);
+  }
+
+  .vote-btn {
+    &:hover {
+      background-color: rgba(var(--brand-color), 0.1);
+      
+      .vote-icon {
+        color: var(--brand-color);
+      }
+    }
+
+    &.voted {
+      background-color: rgba(var(--brand-color), 0.15);
+      
+      .vote-icon, .vote-count {
+        color: var(--brand-color);
+      }
+    }
+  }
+
+  .vote-icon {
+    color: var(--grey-color-dark);
+  }
+
+  .vote-count {
+    color: var(--text-color);
+  }
 }
