@@ -1102,16 +1102,16 @@ article {
 /* Updated heading styles for better hierarchy - cleaner approach */
 .toc-nav .toc-h1 {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--brand-color);
   margin: 1.2rem 0 0.6rem;
   padding-left: 0.5rem;
 }
 
 .toc-nav .toc-h2 {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--brand-color);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #996633 !important;
   padding-left: 1.5rem;
   margin: 0.8rem 0 0.4rem;
 }
@@ -1119,9 +1119,25 @@ article {
 .toc-nav .toc-h3 {
   font-size: 0.85rem;
   font-weight: 500;
-  color: var(--grey-color);
+  color: #8B7355 !important;
   padding-left: 2.5rem;
   margin: 0.6rem 0 0.3rem;
+}
+
+[data-theme="dark"] {
+  .toc-nav {
+    .toc-h1 {
+      color: #FF6B1A !important;  // Brighter brand color for dark mode
+    }
+    
+    .toc-h2 {
+      color: #BFA788 !important;  // Lighter warm color for dark mode
+    }
+    
+    .toc-h3 {
+      color: #A99881 !important;  // Adjusted grey for dark mode
+    }
+  }
 }
 
 .toc-nav a:hover {
