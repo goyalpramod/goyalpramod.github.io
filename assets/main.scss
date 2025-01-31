@@ -2303,3 +2303,25 @@ html, body {
     padding: 1.5rem;
   }
 }
+
+// This needs to be refined 
+
+@media print {
+  .site-header, .site-footer, .share-buttons {
+    display: none !important;
+  }
+  
+  body {
+    font-size: 12pt;
+  }
+  
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 90%;
+  }
+
+  pre, blockquote {
+    page-break-inside: avoid;
+  }
+}
+
