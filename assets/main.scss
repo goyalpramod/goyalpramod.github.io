@@ -78,6 +78,8 @@ html, body {
 
 
 body {
+  overflow-x: hidden;
+  position: relative;
   color: var(--text-color) !important;
   font-family: 'Lora', serif;
   font-size: 16px;  // Slightly larger for better readability
@@ -158,9 +160,11 @@ p {
 }
 
 .page-content {
+  position: relative;
+  z-index: 1;
+  padding: 2rem 0;
   flex: 1 0 auto;
 }
-
 .site-header {
   background-color: var(--background-color) !important;
   border-top: 3px solid #996633 !important;
@@ -168,6 +172,8 @@ p {
   border-bottom-color: var(--grey-color-light) !important;
   min-height: 40px;
   position: relative;
+  z-index: 100;
+  width: 100%;
 }
 
 .site-title {
@@ -207,7 +213,7 @@ p {
   }
 
   .page-link {
-    color: $text-color !important;
+    color: var(--text-color) !important;
     line-height: 40px;
     text-decoration: none;
     margin-left: 1.3rem;
@@ -215,7 +221,7 @@ p {
     font-size: 18px;
 
     &:hover {
-      color: $brand-color !important;
+      color: var(--brand-color) !important;
       text-decoration: none;
     }
 
@@ -225,15 +231,16 @@ p {
   }
 }
 
-@media screen and (max-width: 600px) {
+  @media screen and (max-width: 600px) {
   .site-nav {
     position: absolute;
     top: 9px;
     right: 15px;
-    background-color: $background-color !important;
-    border: 1px solid $grey-color-light !important;
+    background-color: var(--background-color) !important;
+    border: 1px solid var(--grey-color-light) !important;
     border-radius: 5px;
     text-align: right;
+    z-index: 1000;
 
     label[for="nav-trigger"] {
       display: block;
@@ -252,11 +259,28 @@ p {
       line-height: 0;
       padding-top: 8px;
       text-align: center;
+
+      > svg {
+        width: 18px;
+        height: 15px;
+
+        path {
+          fill: var(--text-color) !important;
+        }
+      }
     }
 
     input ~ .trigger {
       clear: both;
       display: none;
+      position: absolute;
+      right: 0;
+      top: 100%;
+      background-color: var(--background-color) !important;
+      border: 1px solid var(--grey-color-light) !important;
+      border-radius: 5px;
+      padding: 5px 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     input:checked ~ .trigger {
@@ -267,8 +291,40 @@ p {
     .page-link {
       display: block;
       padding: 5px 10px;
-      margin-right: 0;
+      margin: 0;
       margin-left: 20px;
+      line-height: 1.5;
+
+      &:not(:last-child) {
+        margin-right: 0;
+      }
+
+      &:hover {
+        background-color: var(--card-background) !important;
+      }
+    }
+  }
+}
+
+[data-theme="dark"] {
+  .site-header {
+    background-color: var(--background-color) !important;
+    border-bottom-color: var(--grey-color-light) !important;
+  }
+
+  .site-nav {
+    @media screen and (max-width: 600px) {
+      background-color: var(--background-color) !important;
+      border-color: var(--grey-color-light) !important;
+
+      .menu-icon > svg path {
+        fill: var(--text-color) !important;
+      }
+
+      .trigger {
+        background-color: var(--background-color) !important;
+        border-color: var(--grey-color-light) !important;
+      }
     }
   }
 }
