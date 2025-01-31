@@ -49,7 +49,7 @@ permalink: /contact/
       <i class="fa-brands fa-linkedin-in"></i>
     </div>
     <h2 class="contact-method">LinkedIn</h2>
-    <p class="contact-description">Connect with me.</p>
+    <p class="contact-description">Things you can say in LinkedIn but NOT in real life, "Connect with me!!".</p>
     <a href="https://linkedin.com/in/{{site.linkedin_username}}" class="contact-link" target="_blank" rel="noopener noreferrer">
       {{site.linkedin_username}}
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
@@ -65,7 +65,7 @@ permalink: /contact/
       <i class="fa-brands fa-youtube"></i>
     </div>
     <h2 class="contact-method">YouTube</h2>
-    <p class="contact-description">Consider watching my videos.</p>
+    <p class="contact-description">Consider watching my videos, they make math seem fun (at least that's what I try to do).</p>
     <a href="https://youtube.com/@{{ site.youtube_username }}" class="contact-link" target="_blank" rel="noopener noreferrer">
       @{{ site.youtube_username }}
       <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
