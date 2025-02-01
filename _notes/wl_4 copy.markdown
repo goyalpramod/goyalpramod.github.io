@@ -24,3 +24,6 @@ Well consider reading it when it's out.
 Also I got a text from another friend in the morning, surpringingly she had the same problem as my previous friend who called me yesterday. 
 
 I seem to often see this pattern in people my age. Unfortunate really. 
+
+Day 6
+_ God Super sick 
