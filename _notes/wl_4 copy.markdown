@@ -27,3 +27,7 @@ I seem to often see this pattern in people my age. Unfortunate really.
 
 Day 6
 _ God Super sick 
+
+Day 7 ->
+
+- still recovering
