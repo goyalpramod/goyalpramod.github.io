@@ -68,6 +68,8 @@ The man curious for what use anyone would have for his magic wand sees around Da
 
 ## Understanding the diffferent components
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/24.webp)
+
 Now that you have a general idea of how these image generation models work, lets build each specific component out.
 
 Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, Go to this [repo]().
@@ -77,7 +79,7 @@ Additionally, The below work takes heavy inspiration from the following works
 - [The annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)
 - [Fast ai course by Jeremy Howard](https://course.fast.ai/Lessons/part2.html)
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/9.webp) [REPLACE_THIS_WITH_THE_EXPLAINING_PARTS_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/9.webp)
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/10.webp)
 
 ### Dali The Genius Artist (UNET)
@@ -235,6 +237,8 @@ lass UNet(nn.Module):
 
 #### Stable Diffusion U-Net
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/22.webp)
+
 Now let us code out the U-Net used in Stable Diffusion
 
 ### Dali's mistake fixing wand (Scheduler)
@@ -307,6 +311,8 @@ $\|\epsilon - \epsilon_\theta(x_t,t)\|_2 = \|\epsilon - \epsilon_\theta(\bar{\al
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/5.webp)
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/23.webp)
+
 > Image Taken from {add paper}
 
 This greatly simplifies are training, which can be written as the above image.
@@ -331,7 +337,7 @@ Over the years the field of image gen has substantially improved and now we are 
 
 We can use image sources as guidance, a drawing of a rough idea, structure of an image etc. Some examples are shown below.
 
-[ADD_IMAGE_OF_CONTROLNET_TEXT_IMG2IMG_ETC]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/18.webp)
 
 As Text based conditioning was the first that gained public popularity. Let's understand more on that.
 
@@ -359,13 +365,17 @@ So the magic is introduced by CLIP, let us understand how CLIP was made.
 
 It was originally created as a image classification tool, Given an image, Describe what it is talking about
 
-[ADD_IMAGE] {Photo of dog, CLIP, Photo of a dog}
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/19.webp)
 
 ```
 """
 CLIP pre-trains an image encoder and a text encoder to predict which images were paired with which texts in our dataset. We then use this behavior to turn CLIP into a zero-shot classifier. We convert all of a dataset’s classes into captions such as “a photo of a dog” and predict the class of the caption CLIP estimates best pairs with a given image.
 """
+```
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/20.webp)
+
+```
 """
 We report two algorithmic choices that led to significant compute savings. The first choice is the adoption of a contrastive objective for connecting text with images.31, 17, 35 We originally explored an image-to-text approach, similar to VirTex,33 but encountered difficulties scaling this to achieve state-of-the-art performance. In small to medium scale experiments, we found that the contrastive objective used by CLIP is 4x to 10x more efficient at zero-shot ImageNet classification. The second choice was the adoption of the Vision Transformer,36 which gave us a further 3x gain in compute efficiency over a standard ResNet. In the end, our best performing CLIP model trains on 256 GPUs for 2 weeks which is similar to existing large scale image models"""
 ```
@@ -392,6 +402,8 @@ The classifier-free guidance scale (CFG scale) is a value that controls how much
 
 This part was inspired by this [blog](https://blog.bria.ai/exploring-controlnet-a-new-perspective)
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/21.webp)
+
 """
 Training ControlNet is comprised of the following steps:
 
@@ -399,7 +411,7 @@ Cloning the pre-trained parameters of a Diffusion model, such as Stable Diffusio
 
 The trainable and locked copies of the parameters are connected via “zero convolution” layers (see here for more information) which are optimized as a part of the ControlNet framework. This is a training trick to preserve the semantics already learned by frozen model as the new conditions are trained.
 """
-
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/26.webp)
 """
 Input Component to the Foundation Text-to-Image (T2I) Model (blue) – This component passes along a noisy image and text prompt to the foundation model.
 Foundation T2I Model (orange) – This model receives the noise and text (and tensors from the control net) processes them, and generates a new image as output.
@@ -498,6 +510,8 @@ The reason we need it is quite simple.
 
 An HD image can be of the size 1080x1920, which is equal to {calculate} pixels. But in the latent space a representation of the same image (a representation, or in simpler terms a replica. Not the original) can be in 128X128 pixels a reduction by a factor of {}X
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/27.webp)
+
 Then the decoder returns this representation back to pixel image so we can see a picture. Which is more or less like the original one we started with.
 
 The reason we do this is, This makes computation substantially easier, and it also lets Dali, Or The U-Net to have to do less computation to calculate the noise.
@@ -511,6 +525,8 @@ To expand on this idea, imagine a cluster of emojis—faces, hearts, and other f
 ```
 
 ### Putting it all together
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/17.webp)
 
 - Component interaction
 - Training workflow
