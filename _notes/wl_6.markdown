@@ -11,3 +11,7 @@ image: assets/cover_images/img4.webp
 Day 1 ->
 
 still recovering from sickness 
+
+Day 2 -> 
+
+I am mostly recovered now, but taking it slow. 
