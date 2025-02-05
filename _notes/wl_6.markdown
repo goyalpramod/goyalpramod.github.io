@@ -15,3 +15,7 @@ still recovering from sickness
 Day 2 -> 
 
 I am mostly recovered now, but taking it slow. 
+
+Day 3 -> 
+
+Continued working on the blog
