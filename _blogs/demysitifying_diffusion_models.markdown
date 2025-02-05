@@ -245,7 +245,7 @@ The Diffusion Model U-Nets have attention layers present inside of them, which f
 
 Now let us code out the U-Net used in Stable Diffusion
 
-### Dali's mistake fixing wand (Scheduler)
+### Dali's mistake fixing wand (Scheduler) [INCOMPLETE]
 
 ```
 A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the maths section. 
@@ -267,7 +267,9 @@ The above image looks quite complex, But it is really simple if you understand w
 
 We start with an image and call it $X_0$ we then keep adding noise to it till we have pure [Stochastic]()(random) [Gaussian]()(Normal Distribution) Noise $X_T$.
 
-"$q(x_t|x_{t-1})$ is the conditional probability over the Probability Density Function"
+$$q(x_t|x_{t-1})$$ 
+
+"The above equation is the conditional probability over the Probability Density Function"
 
 Well wasn't that a mouthful, dont worry. I won't throw such a big sentence at you without explaining what it means.
 
@@ -290,7 +292,9 @@ Well the above is simply not computationally possible because we will need to le
 
 So we need to learn to approximate it, learn how the images might look like given the noise.
 
-and that is given by the other equation $p_\theta(x_{t-1}|x_t)$ 
+and that is given by the other equation 
+
+$$p_\theta(x_{t-1}|x_t)$$ 
 
 Now above I mentioned that we add noise, but never described how.
 
@@ -335,7 +339,9 @@ So we initially when we are adding noise to an image, we are taking it from this
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/32.webp)
 >On Left, complex initial image 
+
 >Red line represents guassian noise being added 
+
 >On right, final Normal curve
 
 This works because of a property of Normal distribution, that if we have any disturibution (Because a very specific image can be represented by a highly complex curve. Think of just pixel values) by adding a normal distribution to it, we will end up with a normal distribution 
@@ -368,10 +374,14 @@ In other words:
 In reality, all of this is done on batches of data, as one uses stochastic gradient descent to optimize neural networks.
 """
 
+[FIX_THIS_EXPLANATION]
+
 https://stable-diffusion-art.com/samplers/
 https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers
 
 ### Instructions, because everyone needs guidance (Conditioning)
+
+So far we have talked about how to generate images but have conveniently skipped over how to describe the kinds of images we want. This was another major revolution for Diffusion models, because back even when we could generate high quality images using models like [GANs](), it was tough to tell them what we want them to generate. Let us focus on that now.
 
 Over the years the field of image gen has substantially improved and now we are not only limited to texts as a means of helping us generate images.
 
@@ -380,6 +390,8 @@ We can use image sources as guidance, a drawing of a rough idea, structure of an
 As Text based conditioning was the first that gained public popularity. Let's understand more on that.
 
 #### Text Encoder
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/18.webp)
 
 The idea is relatively simple, we take texts, convert them into embeddings and send them to the U-Net layer for conditioning.
 
@@ -404,23 +416,26 @@ So the magic is introduced by CLIP, let us understand how CLIP was made.
 It was originally created as a image classification tool, Given an image, Describe what it is talking about
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/19.webp)
+> Image taken from [OpenAI's article on CLIP](https://openai.com/index/clip/)
 
-```
-"""
-CLIP pre-trains an image encoder and a text encoder to predict which images were paired with which texts in our dataset. We then use this behavior to turn CLIP into a zero-shot classifier. We convert all of a dataset’s classes into captions such as “a photo of a dog” and predict the class of the caption CLIP estimates best pairs with a given image.
-"""
-```
+Contrastive Language-Image Pre-training or CLIP pre-trains an image encoder and a text encoder which is used to predict which images are paired with which texts.
+
+The image encoder takes images and converts them into embeddings, as you can see in the above image $I_1$ represents image 1 embeddings, $I_2$ represents image 2 embeddings and so on.
+
+The text encoder takes captions of the images and converts them into embeddings similarily, $T_1$ for text 1 embeddings, $T_2$ for text 2 embeddings and so on.
+
+Now as shown above, The matrix comprises of dot product of these text and image encoding. The diagnol of the matrix is maximised whereas everything else is minimised.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/20.webp)
+> Image taken from [OpenAI's article on CLIP](https://openai.com/index/clip/)
 
-```
-"""
-We report two algorithmic choices that led to significant compute savings. The first choice is the adoption of a contrastive objective for connecting text with images.31, 17, 35 We originally explored an image-to-text approach, similar to VirTex,33 but encountered difficulties scaling this to achieve state-of-the-art performance. In small to medium scale experiments, we found that the contrastive objective used by CLIP is 4x to 10x more efficient at zero-shot ImageNet classification. The second choice was the adoption of the Vision Transformer,36 which gave us a further 3x gain in compute efficiency over a standard ResNet. In the end, our best performing CLIP model trains on 256 GPUs for 2 weeks which is similar to existing large scale image models"""
-```
+Now CLIP was originally trained for zero-shot image classification. (which is a complex way of saying that "given an image, tell what it is. Without any clues".)
 
-Now above we primarily talked about CLIP, there is another text encoder that is used called T5 created by Google. The idea is more or less similar the only difference is
+As you can see from the above image, when given an image and a dataset. CLIP returns the word which has the highest dot-product with the image encoding.
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/18.webp)
+Now we primarily talked about CLIP, But there is another text encoder that is used called T5 created by Google. The idea is more or less similar the only difference is
+
+
 
 {add how T5 is different}
 
