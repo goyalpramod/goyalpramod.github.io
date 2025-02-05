@@ -6,17 +6,7 @@ categories: [CV, ML, Maths, Code]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
 
-Things left to do:
--> Adding code for SD components
--> explaining code
--> Unifying the maths and explaining for reverse process
--> Maths for score based modeling
--> Maths for VAE
--> Appendix
--> Explaining Conditioning like CFG etc
--> Re-reading and fixing any mistakes I spot, and adding images where I see fit
-
-Diffusion models like Stable Diffusion, Flux, Dall-e etc were an enigma built upon multiple ideas and mathematical breakthroughs. So is the nature of it that most tutorials on the topic are extremely complicated or even when simplied talk a lot about it from a high level perspective.
+Diffusion models like [Stable Diffusion](), [Flux](), [Dall-e]() etc are an enigma built upon multiple ideas and mathematical breakthroughs. So is the nature of it that most tutorials on the topic are extremely complicated or even when simplified talk a lot about it from a high level perspective.
 
 There is a missing bridge between the beautiful simplification and more low level complex idea. That is the gap I have tried to fix in this blog.
 
@@ -24,13 +14,28 @@ There is a missing bridge between the beautiful simplification and more low leve
 - Understanding each component and **coding** it out
 - And finally a full section dedicated to the **maths** for the curious minds
 
+Each section of the blog has been influenced by works by pioneering ML practioners and the link to their blog/video/article is linked in the very beginning of the respective section.
+
+## How is this Blog Structured
+
+First we talk about a very high level idea of diffusion models about how they work. In doing so we will be personifying each component of the whole pipeline.
+
+Once we have a general idea of the pipeline, We will dive into the ML side of those sections. After having a general idea of the ML, we will have the code for it. As it is substantially harder to keep the blog to readable length and maintain it's quality while giving the entire code for Stable Diffusion, I will link to the exact code (with definition for each function)
+Wherever I do not explicitly code a section out.
+
+Many sections of the diffusion model pipeline is mathematics heavy, hence I have added a completely different section for that. Which is included at the end. You can understand how diffusion models work (if you believe in some assumptions without looking at the proof) along with the code, without the maths. But I will still recommend going through the Mathematical ideas behind it, because they are essential for developing further for diffusion model research.
+
+Inference with Diffusion model deserves an entirely different blog of it's own, as I hope to finish this blog in a reasonable time. I have added links in the end ([Misc]()) to where you can further learn how to make the best diffusion model art and get better at it.
+
+Let us begin!!
+
 ## The Genius Artist
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/1.webp)
-Imagine you have a super special artist, whom you tell your ideas and he instantly generates amazing images out of it. Let's name him Dali
+Imagine you have a super special artist friend, whom you tell your ideas and he instantly generates amazing images out of it. Let's name him Dali
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/2.webp)
-The way Dali starts his work is, that he first has a canvas, he listens to your instructions then creates an artwork.
+The way Dali starts his work is, that he first has a canvas, he listens to your instructions then creates an artwork. (The canvas looks like a lot of noise rather than the traditional white, more on this later)
 
 But Dali has a big problem, that he cannot make big images, he tells you that he will only create images the size of your hand. This is obviously not desirable. As for practical purposes you may want images the size of a wall, or a poster etc.
 
@@ -47,20 +52,20 @@ Dali is a kind nice guy, so he tells you about how he started out. When he was j
 That is when I found a special wand as well, which let me add and fix mistakes in a painting.
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/7.webp)
 
-I would start with an image, add a bunch of mistakes to it, and using my wand I would reverse them.
+I would start with an existing artwork, add a bunch of mistakes to it, and using my wand I would reverse them.
 
-After a while, I added so many mistakes to the original image, that they looked like pure noise. The way my canvas do, and using my special wand. I just gradually found mistakes and removed them. Till I got back the original image.
+After a while, I added so many mistakes to the original artwork, that they looked like pure noise. The way my canvas do, and using my special wand. I just gradually found mistakes and removed them. Till I got back the original image.
 
-This idea sounds fascinating, but you being you have quite a question "that sounds amazing, so did you learn what the full of mistakes image will look like for all the images in the world? Otherwise how do you know what will be the final image be from a noisy image?"
+This idea sounds fascinating, but you being you have quite a question "that sounds amazing, so did you learn what the "full of mistakes" image will look like for all the images in the world? Otherwise how do you know what will be the final image be from a noisy image?"
 
-[INSERT_IMAGE]
 "Great question!!!" Dali responds. "That is what my brothers used to do, They tried to learn the representation of all the images in the world and failed. What I did differently was, instead of learning all the images. I learnt the general idea of different images. For example, instead of learning all the faces. I learnt how do human faces look in general"
 
 Satisfied with his answers you were about to leave, when Dali stops you and asks, "Say friend, that wand of yours truly is magical. It can make my art popular worldwide because everyone can create something of value using it. Will you be kind enough to explain how it works so I can make one for myself."
 
 You really want to help Dali out, but unfortunately even you do not know how the wand works, as you are about to break the news to him. You are interrupted by a noise, "Gentlemen you wouldn't happen to have seen a magic wand around now would you? It is an artifact created with great toil and time"
 
-[INSERT_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/28.webp)
+
 You being the kind soul you are, Tell the man that you found it on the street and wish to return it.
 The man Greatly happy with your generosity, wishes to pay you back. You just say "Thank you, but I do not seek money. But it would really help my friend Dali out if you could explain how your magic wand works."
 
@@ -80,35 +85,36 @@ Additionally, The below work takes heavy inspiration from the following works
 - [Fast ai course by Jeremy Howard](https://course.fast.ai/Lessons/part2.html)
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/9.webp)
+
+If you look closely you will see how similar both these images are.
+
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/10.webp)
 
-### Dali The Genius Artist (UNET)
+The above is an oversimplification and has a few mistakes. But by the end of this blog you will have a complete understanding of how diffusion models work and how the seemingly complex model above, is quite simple.
 
-- Architecture details
-- Residual connections
-- Attention mechanisms
-- Time embeddings
-- Training objective
+### Dali The Genius Artist (U-Net)
 
-You will be surprised to know UNETs were actually introduced in a [medical paper](https://arxiv.org/pdf/1505.04597) back in 2015. Primarily for the task of image segmentation.
+Our genius artist is called a U-Net in ML terms, now if we go back to our story. Dali was responsible for figuring out the noise. The removal and addition of which was done by his magic wand. That is what the U-Net does. It predicts the noise in the image, it DOES NOT REMOVE IT.
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/25.webp)
+
+Let's understand how it works, You will be surprised to know U-Nets were actually introduced in a [medical paper](https://arxiv.org/pdf/1505.04597) back in 2015. Primarily for the task of image segmentation.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/14.webp)
 
-> Image Taken from the "U-Net: Convolutional Networks for Biomedical
-> Image Segmentation" paper
+> Image Taken from the ["U-Net: Convolutional Networks for Biomedical Image Segmentation"](https://arxiv.org/abs/1505.04597)
 
-The idea behind segmentation is, given an image "a". Create a map around the objects which need to be classified in the image.
+The idea behind segmentation is, given an image "a". Create a map "b" around the objects which need to be classified in the image.
 
 And the Reason they are called U-Net is because, well the architecture looks like a "U".
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/12.webp)
 
-> Image Taken from the "U-Net: Convolutional Networks for Biomedical
-> Image Segmentation" paper
+> Image Taken from the ["U-Net: Convolutional Networks for Biomedical Image Segmentation"](https://arxiv.org/abs/1505.04597)
 
 This looks quite complicated so let's break it down with a simpler image
 
-Also, I will proceed with the believe you have an understanding of CNNs and how they work. If not, check the appendix for a quick overview and a guide to where you can learn more on the topic.
+Also, I will proceed with the assumption you have an understanding of [CNNs]() and how they work. If not, check the [appendix]() for a quick overview and a guide to where you can learn more on the topic.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/11.webp)
 
@@ -119,8 +125,6 @@ The decoder then does [Transpose Convolutions]() to decode these extracted parts
 To understand it in our context, think instead of segmenting objects, we are segmenting the noise. Trying to find out the particular places where noise is present.
 
 To prevent the U-net from losing important information while downsampling, skip connections are added. This sends back the compressed encoded image back to the decoder so they have context from their as well.
-
-Another thing present inside Diffusion Model U-Nets is a cross attention layer, which focuses on the important parts {explain this in greater detail}
 
 #### Coding the original U-Net
 
@@ -188,7 +192,7 @@ class Up(nn.Module):
 {add explanation}
 
 ```python
-lass UNet(nn.Module):
+class UNet(nn.Module):
     def __init__(self, num_classes):
         super().__init__()
 
@@ -233,9 +237,9 @@ lass UNet(nn.Module):
 
 {add explanation}
 
-{add explanation of the attention and stuff for UNET}
-
 #### Stable Diffusion U-Net
+
+The Diffusion Model U-Nets have attention layers present inside of them, which focuses on the important parts {explain this in greater detail}
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/22.webp)
 
