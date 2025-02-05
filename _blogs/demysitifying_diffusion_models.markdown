@@ -237,7 +237,7 @@ class UNet(nn.Module):
 
 {add explanation}
 
-#### Stable Diffusion U-Net
+#### Stable Diffusion U-Net [INCOMPLETE]
 
 The Diffusion Model U-Nets have attention layers present inside of them, which focuses on the important parts {explain this in greater detail}
 
@@ -247,27 +247,35 @@ Now let us code out the U-Net used in Stable Diffusion
 
 ### Dali's mistake fixing wand (Scheduler)
 
-A quick note to the reader, This part is mostly pure mathematics. I have described each part in greater detail and simplification in the [maths section]() of the blog.
+```
+A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the maths section. 
 
 This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful.
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/6.webp)
+Also, if at any point during the explanation, if it becomes too complex. Take a break and come back, These parts alone took me weeks to write. Do not assume you can understand it in one sitting, and the idea only becomes simpler as you read more about it.
+```
 
-> Taken from the {add paper}
+As mentioned earlier, The U-Net does not remove the noise, it just predicts it. The job of removing it comes down to the scheduler.
+
+Put simply, the scheduler is just a mathematical equation that takes an image, predicted noise. And outputs another image with some noise removed from it. (I am saying images, but actually matrices are passed around)
+
+![Denoising process of an image](/assets/blog_assets/demystifying_diffusion_models/6.webp)
+
+> Image taken from [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)
 
 The above image looks quite complex, But it is really simple if you understand what is going on.
 
-We start with an image and call it $X_0$ we then keep adding noise to it till we have pure stochatic Gausian Noise $X_T$
+We start with an image and call it $X_0$ we then keep adding noise to it till we have pure [Stochastic]()(random) [Gaussian]()(Normal Distribution) Noise $X_T$.
 
-"$q(X_t|X(t-1))$ {fix this} is the conditional probability over the Probability Density Function"
+"$q(x_t|x_{t-1})$ is the conditional probability over the Probability Density Function"
 
 Well wasn't that a mouthful, dont worry. I won't throw such a big sentence at you without explaining what it means.
 
 Let's again stary with our original image $X_0$ and then we add a bit of noise to it, this is now $X_1$, then we add noise to this image that becomes $X_2$ and so on.
 
-[INSERT_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/29.webp)
 
-That scary looking equation basically says if we have the image on the right $X_(t-1)$ we can add noise to it and get image at the next timestep and represent that as $X_t$
+That scary looking equation basically says if we have the image an image $X_{t-1}$ we can add noise to it and get image at the next timestep and represent that as $X_t$
 (This is a slight oversimplification and we dive into greater detail about it in the math section)
 
 So now we have a single image, and we are able to add noise to it.
@@ -276,38 +284,66 @@ What we want to do is, the reverse process. Take noise and get an image out of i
 
 You may ask why do we not simply do what we did earlier but the otherway around so something like
 
-$$q(X_(t-1)|X_t)$$
+$$q(X_{t-1}|X_t)$$
 
 Well the above is simply not computationally possible because we will need to learn how the noise of all the images in the world looks like (remember how in the [idea]() section Dali said his brothers tried to do this and failed)
 
 So we need to learn to approximate it, learn how the images might look like given the noise.
 
-and that is given by the other equation $p(theta)$ [ADD_EQUATION]
+and that is given by the other equation $p_\theta(x_{t-1}|x_t)$ 
 
 Now above I mentioned that we add noise, but never described how.
 
 That is done by this equation
 
-$$q = N(mean, variance) $$
+$$q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I})$$
 
 We already know what the left hand side means, lets understand the right hand side.
 
-The RHS represents a Normal distribution $N$ with mean $43234$ and Variance $4234$, we pick out noise at time t from this distribution to add to our image.
+The RHS represents a Normal distribution $\mathcal{N}$ with mean $\sqrt{1-\beta_t}x_{t-1}$ and variance $\beta_t\mathbf{I}$, where we sample noise at time $t$ from this distribution to add to our image.
 
 There is one slight problem though, gradually adding so many different noise at different values of t is very computationally expensive.
 
 Using the "nice property" we can make another equation
 
-$$write euqation here$$
+$$q(x_t|x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t}x_0, (1-\bar{\alpha}_t)\mathbf{I})$$
+where $\bar{\alpha}t = \prod{s=1}^t \alpha_s$ and $\alpha_t = 1-\beta_t$
 
 This basically means, now we can add noise at any time t just using the original image. This is amazing, why? well you will understand in a while.
 
-You need to understand a few more things the $beta$ term in the above equation is a _variance shedule_ it basically controlls the curve the noise is added in
+You need to understand a few more things, the $\beta$ term in the above equation is a _variance shedule_ it basically controls the curve the noise is added into the image.
 
-[ADD_IMAGE_OF_CURVE]
-[ADD_IMAGE_OF_HOW_NOISE_CHANGES]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/30.webp)
+> Image taken from ["Improved Denoising Diffusion Probabilistic Models"](https://arxiv.org/pdf/2102.09672)
 
-Now that we understand how we can add noise to the images, how we can control the different kinds of noise, we need an objective or loss function to train over
+The above image represents how value of $\beta$ is varied. 
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/31.webp)
+> Image taken from ["Improved Denoising Diffusion Probabilistic Models"](https://arxiv.org/pdf/2102.09672)
+
+> Top is nosie being added by a linear variance scheduler, notice how after only a few steps the image starts looking like complete noise
+
+> Bottom is noise being added by a cosine variance scheduler.
+
+Now that we understand how we can add noise to the images & how we can control the different kinds of noise. But there is something much more important that we need to talk about, that is. WHY ARE WE DOING THIS and WHY DOES THIS WORK? 
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/33.webp)
+
+Images that look like images actually lie is a very specific region of all possible images in the world. An easy way to think about it will be like this, Most humans only have 2 eyes. But if you are given an infinite space of images, the pictures of humans can have n number of eyes. But you only want the images which has 2. So that significantly limits the space from where you want to get your images.
+
+So we initially when we are adding noise to an image, we are taking it from this very specific space, to the more random gaussian space. (This is done, so we can learn the reverse process. Given any random point in space, get back to this very specific space)
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/32.webp)
+>On Left, complex initial image 
+>Red line represents guassian noise being added 
+>On right, final Normal curve
+
+This works because of a property of Normal distribution, that if we have any disturibution (Because a very specific image can be represented by a highly complex curve. Think of just pixel values) by adding a normal distribution to it, we will end up with a normal distribution 
+
+[FIX_THIS_EXPLANATION]
+
+
+we need an objective or loss function to train over
 
 That is given by
 
@@ -340,8 +376,6 @@ https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers
 Over the years the field of image gen has substantially improved and now we are not only limited to texts as a means of helping us generate images.
 
 We can use image sources as guidance, a drawing of a rough idea, structure of an image etc. Some examples are shown below.
-
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/18.webp)
 
 As Text based conditioning was the first that gained public popularity. Let's understand more on that.
 
@@ -385,6 +419,8 @@ We report two algorithmic choices that led to significant compute savings. The f
 ```
 
 Now above we primarily talked about CLIP, there is another text encoder that is used called T5 created by Google. The idea is more or less similar the only difference is
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/18.webp)
 
 {add how T5 is different}
 
