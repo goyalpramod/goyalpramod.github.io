@@ -19,3 +19,7 @@ I am mostly recovered now, but taking it slow.
 Day 3 -> 
 
 Continued working on the blog
+
+day 5 ->
+
+The company incorporation was done today, also college registration and stuff. I have been very lazy lately... Idk y... I gotta work on this
