@@ -247,13 +247,9 @@ Now let us code out the U-Net used in Stable Diffusion
 
 ### Dali's mistake fixing wand (Scheduler) [INCOMPLETE]
 
-```
-A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the maths section. 
-
-This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful.
-
-Also, if at any point during the explanation, if it becomes too complex. Take a break and come back, These parts alone took me weeks to write. Do not assume you can understand it in one sitting, and the idea only becomes simpler as you read more about it.
-```
+> A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the maths section.\
+> This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful.\
+> Also, if at any point during the explanation, if it becomes too complex. Take a break and come back, Each part alone took me weeks to write. Do not assume you can understand it in one sitting, and the idea only becomes simpler as you read more about it.
 
 As mentioned earlier, The U-Net does not remove the noise, it just predicts it. The job of removing it comes down to the scheduler.
 
@@ -267,7 +263,7 @@ The above image looks quite complex, But it is really simple if you understand w
 
 We start with an image and call it $X_0$ we then keep adding noise to it till we have pure [Stochastic]()(random) [Gaussian]()(Normal Distribution) Noise $X_T$.
 
-$$q(x_t|x_{t-1})$$ 
+$$q(x_t|x_{t-1})$$
 
 "The above equation is the conditional probability over the Probability Density Function"
 
@@ -292,9 +288,9 @@ Well the above is simply not computationally possible because we will need to le
 
 So we need to learn to approximate it, learn how the images might look like given the noise.
 
-and that is given by the other equation 
+and that is given by the other equation
 
-$$p_\theta(x_{t-1}|x_t)$$ 
+$$p_\theta(x_{t-1}|x_t)$$
 
 Now above I mentioned that we add noise, but never described how.
 
@@ -318,18 +314,20 @@ This basically means, now we can add noise at any time t just using the original
 You need to understand a few more things, the $\beta$ term in the above equation is a _variance shedule_ it basically controls the curve the noise is added into the image.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/30.webp)
+
 > Image taken from ["Improved Denoising Diffusion Probabilistic Models"](https://arxiv.org/pdf/2102.09672)
 
-The above image represents how value of $\beta$ is varied. 
+The above image represents how value of $\beta$ is varied.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/31.webp)
+
 > Image taken from ["Improved Denoising Diffusion Probabilistic Models"](https://arxiv.org/pdf/2102.09672)
 
 > Top is nosie being added by a linear variance scheduler, notice how after only a few steps the image starts looking like complete noise
 
 > Bottom is noise being added by a cosine variance scheduler.
 
-Now that we understand how we can add noise to the images & how we can control the different kinds of noise. But there is something much more important that we need to talk about, that is. WHY ARE WE DOING THIS and WHY DOES THIS WORK? 
+Now that we understand how we can add noise to the images & how we can control the different kinds of noise. But there is something much more important that we need to talk about, that is. WHY ARE WE DOING THIS and WHY DOES THIS WORK?
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/33.webp)
 
@@ -338,16 +336,16 @@ Images that look like images actually lie is a very specific region of all possi
 So we initially when we are adding noise to an image, we are taking it from this very specific space, to the more random gaussian space. (This is done, so we can learn the reverse process. Given any random point in space, get back to this very specific space)
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/32.webp)
->On Left, complex initial image 
 
->Red line represents guassian noise being added 
+> On Left, complex initial image
 
->On right, final Normal curve
+> Red line represents guassian noise being added
 
-This works because of a property of Normal distribution, that if we have any disturibution (Because a very specific image can be represented by a highly complex curve. Think of just pixel values) by adding a normal distribution to it, we will end up with a normal distribution 
+> On right, final Normal curve
+
+This works because of a property of Normal distribution, that if we have any disturibution (Because a very specific image can be represented by a highly complex curve. Think of just pixel values) by adding a normal distribution to it, we will end up with a normal distribution
 
 [FIX_THIS_EXPLANATION]
-
 
 we need an objective or loss function to train over
 
@@ -416,6 +414,7 @@ So the magic is introduced by CLIP, let us understand how CLIP was made.
 It was originally created as a image classification tool, Given an image, Describe what it is talking about
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/19.webp)
+
 > Image taken from [OpenAI's article on CLIP](https://openai.com/index/clip/)
 
 Contrastive Language-Image Pre-training or CLIP pre-trains an image encoder and a text encoder which is used to predict which images are paired with which texts.
@@ -427,6 +426,7 @@ The text encoder takes captions of the images and converts them into embeddings 
 Now as shown above, The matrix comprises of dot product of these text and image encoding. The diagnol of the matrix is maximised whereas everything else is minimised.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/20.webp)
+
 > Image taken from [OpenAI's article on CLIP](https://openai.com/index/clip/)
 
 Now CLIP was originally trained for zero-shot image classification. (which is a complex way of saying that "given an image, tell what it is. Without any clues".)
@@ -435,15 +435,13 @@ As you can see from the above image, when given an image and a dataset. CLIP ret
 
 Now we primarily talked about CLIP, But there is another text encoder that is used called T5 created by Google. The idea is more or less similar the only difference is
 
-
-
 {add how T5 is different}
 
 To read more about CLIP and T5 consider reading the original https://openai.com/index/clip/
 
 #### Image to Image
 
-Latents are created of an image, noise is added, then stuff is done on this.
+Image to Image is of multiple types, you can have FaceSwap, Inpainting, ControlNet etc. But all of them follow a fairly simple method. If you have understood everything so far, this part will be a ride in the park.
 
 #### CFG
 
@@ -453,28 +451,52 @@ The classifier-free guidance scale (CFG scale) is a value that controls how much
 
 #### Control-Net
 
-[ADD_IMAGE] {What controlnet does, like it's examples n shit}
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/34.webp)
+
+> Image taken from ["Adding Conditional Control to Text-to-Image Diffusion Models"](https://arxiv.org/pdf/2302.05543)
+
+Control-Net is a popular method in the world of diffusion model, where you can take a reference image and based on that add different conditioning to achieve amazing and beautiful results. Let us understand how it works.
 
 This part was inspired by this [blog](https://blog.bria.ai/exploring-controlnet-a-new-perspective)
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/36.webp)
+
+Control-Net essentially has two components ->
+
+1. The diffusion model used for generating images
+2. The Control-Net used for conditioning
+
+The process itself is rather simple, we start with an image convert it into depth, canny or HUD representation.
+
+Then give this representation to the Control-Net which conditions the DIffusion model during the denoising process.
+
+Everything will make more sense when we see the internal architecture and understand how the control-net model is trained.
+
+**Note**: As mentioned, a complete Control-Net model is trained for a diffusion model, so a Control-Net model trained for one model won't work on another. For example, a control net model trained for SD1.5 cannot be used for SDXL.
+
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/21.webp)
 
-"""
-Training ControlNet is comprised of the following steps:
+> Image taken from ["Adding Conditional Control to Text-to-Image Diffusion Models"](https://arxiv.org/pdf/2302.05543)
 
-Cloning the pre-trained parameters of a Diffusion model, such as Stable Diffusion's latent UNet, (referred to as “trainable copy”) while also maintaining the pre-trained parameters separately (”locked copy”). It is done so that the locked parameter copy can preserve the vast knowledge learned from a large dataset, whereas the trainable copy is employed to learn task-specific aspects.
+Training a Control-Net model consists of the following steps:
 
-The trainable and locked copies of the parameters are connected via “zero convolution” layers (see here for more information) which are optimized as a part of the ControlNet framework. This is a training trick to preserve the semantics already learned by frozen model as the new conditions are trained.
-"""
+1. Cloning the pre-trained parameters of a Diffusion model, such as Stable Diffusion's latent UNet(The part on the righ referred to as "b"),while also maintaining the pre-trained parameters separately(The part on the left referred to as "a").
+
+2. "a" is kept locked, i.e not trained while training a Control-Net model to preserve the knowledge of the Diffusion model.
+
+3. The trainable blocks of "b" are trained to learn features specific to an image.
+
+4. """
+   The trainable and locked copies of the parameters are connected via “zero convolution” layers (see here for more information) which are optimized as a part of the ControlNet framework. This is a training trick to preserve the semantics already learned by frozen model as the new conditions are trained.
+   """
+
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/26.webp)
-"""
-Input Component to the Foundation Text-to-Image (T2I) Model (blue) – This component passes along a noisy image and text prompt to the foundation model.
-Foundation T2I Model (orange) – This model receives the noise and text (and tensors from the control net) processes them, and generates a new image as output.
-Input Component to the Control Model (brown)– This component passes a conditioning image, such as a depth map or an edge map (like Canny), to the ControlNet model.
-Control Net Model Component (purple) – This part processes the conditioning image through internal layers (of the Transformer) and produces a tensor. This tensor is then passed through the Control-UNet layers and integrated directly into the convolution and attention layers of the Foundation T2I model.
-"""
 
-The controlnet component consists of two part, The transformers and the Control U-Net. The control U-Net is very similar to our original unet that we started with a few important changes.
+As you can see above. The SD U-Net takes in the text encoding and the noisy image. And then generates the predicted noise.
+
+The loss calculated then is used to train the Control-Net model (inside green block)
+
+The Control-net model consists of two part, The transformers and the Control U-Net. The control U-Net is very similar to our original unet that we started with a few important changes.
 
 """
 The Transformer component converts the visual input (the “condition”) provided to the ControlNet platform into the latent space, ensuring that what enters the UNet is already adapted to the latent space.
@@ -504,7 +526,7 @@ Process of Converting 2D Input to a Tensor in ControlNet
 
 {I believe the transformer is a DiT that we should talk more about later in improvements}
 
-##### The controlnet UNET component
+**The controlnet UNET component**
 
 ```
 The Concept of a Hyper-Network
@@ -557,7 +579,7 @@ The reason it is called pixel space is pretty self-explanatory. In a computer im
 
 The encoder takes these pixels, Yes pixels. Not the images directly. Because if we take all the pixels of an image we can form a distribution. This is how such a distribution may look like only using red, green and blue.
 
-[ADD_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/35.webp)
 
 Now we take this distribution, pass it to the encoder which converts this into a latent space which has it's own distribution.
 
@@ -565,49 +587,32 @@ The reason we need it is quite simple.
 
 An HD image can be of the size 1080x1920, which is equal to {calculate} pixels. But in the latent space a representation of the same image (a representation, or in simpler terms a replica. Not the original) can be in 128X128 pixels a reduction by a factor of {}X
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/27.webp)
-
 Then the decoder returns this representation back to pixel image so we can see a picture. Which is more or less like the original one we started with.
 
 The reason we do this is, This makes computation substantially easier, and it also lets Dali, Or The U-Net to have to do less computation to calculate the noise.
 
 There is a difference between Auto-Encoders and Variational Auto-encoders. Which is explained in greater detail in the Maths section.
 
-```
-"""
-To expand on this idea, imagine a cluster of emojis—faces, hearts, and other familiar icons—all grouped together in the latent space because of their similar visual style. Now, let’s add a photorealistic image of a monkey. Unlike the emojis, this realistic image will be positioned far away from the cluster in the latent space, reflecting its distinct features and level of detail. But if we introduce an emoji of a monkey, it sits somewhere in between, sharing visual traits with both the emoji cluster and the photorealistic image. This demonstrates how the VAE learns to map out objects in the latent space, organizing them based on their visual or stylistic characteristics.
-"""
-```
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/27.webp)
+
+To expand on this idea, imagine a cluster of emojis—faces, animals, and other familiar icons—all grouped together in the pixel space because of their similar visual style.
+Now, let’s take this to the latent space. We can see that the birds are grouped together, the emojis are cultured together in another space, with similar emojis together.
+This demonstrates how the VAE learns to map out objects in the latent space, organizing them based on their visual or stylistic characteristics.
 
 ### Putting it all together
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/17.webp)
 
-- Component interaction
-- Training workflow
-- Inference workflow
-- Optimization strategies
-
 **A quicky Summary**
 
-"""
-Before we get hands on with the code, let’s refresh how inference works for a diffuser.
+Before we start with the code, let's have a quick look at everything we have understood so far.
 
-- We input a prompt to the diffuser.
-
-- This prompt is given a mathematical representation (an embedding) through the text encoder.
-
-- A latent comprised of noise is produced.
-  The U-Net predicts the noise in the latent in conjunction with the prompt.
-- The predicted noise is subtracted from the latent in conjunction with the scheduler.
-- After many iterations, the denoised latent is decompressed to produce our final generated image.
-
-The main components in use are:
-
-- a text encoder,
-- a U-Net,
-- and a VAE decoder.
-  """
+1. We begin with a prompt. (A delicious pizza)
+2. This prompt is converted into a text embedding using a text encoder.
+3. A latent noisy image is given to the U-net along with the text embeddings.
+4. The U-Net predicts the noise in the latents.
+5. The predicted noise is subtracted from the latent using the scheduler.
+6. After many iterations, the denoised latent is decoded using the decoder to produce our final generated image.
 
 ## The Dreaded Mathematics
 
@@ -625,6 +630,8 @@ As the above works were way too hard to understand. The following 3 videos reall
 As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an appendix at the bottom where I explain each mathematical ideas as simply as possible.
 
 It will take too much time and distract us from the understanding of the topic being talked at hand if I describe the mathematical ideas as well as the idea of the process in the same space.
+
+Additionaly, we will begin with the same idea that we started with when we first talked about the diffusion process. To really drive the idea home.
 
 ## Maths of the Forward Diffusion process
 
@@ -646,9 +653,9 @@ To simplify it, think of it as. given $q(x_0)$ (for value of $t$ = 1) I know the
 
 The right handside of equation 1 represents a normal distribution.
 
-Now A question that I had was how can a probability and distribution be equal, well the Left Hand Side(LHS) of equation(eq) 1 represents a Probability Density Function ([PDF]())
+Now a question that I had was how can a probability and distribution be equal, well the Left Hand Side (LHS) of equation (eq) 1 represents a Probability Density Function ([PDF]())
 
-For the Right Hand Side(RHS) of eq 1. When we write $N(x; μ, σ²)$, we're specifying that $x$ follows a normal distribution with mean $μ$ and variance $σ²$
+For the Right Hand Side (RHS) of eq 1. When we write $N(x; μ, σ²)$, we're specifying that $x$ follows a normal distribution with mean $μ$ and variance $σ²$
 
 This can be written as
 
@@ -700,49 +707,44 @@ This makes our implementation much more efficient as we can directly jump to any
 Usually, we can afford a larger update step when the sample gets noisier, so $\beta_1 < \beta_2 < \cdots < \beta_T$ and therefore $\bar{\alpha}_1 > \cdots > \bar{\alpha}_T$.\
 """
 
-"""\
-**Connection with stochastic gradient Langevin dynamics**\
-Langevin dynamics is a concept from physics, developed for statistically modeling molecular systems. Combined with stochastic gradient descent, stochastic gradient Langevin dynamics (Welling & Teh 2011) can produce samples from a probability density $p(x)$ using only the gradients $\nabla_x \log p(x)$ in a Markov chain of updates:
-$$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t, \text{ where } \epsilon_t \sim \mathcal{N}(0,\mathbf{I})$$
-where $\delta$ is the step size. When $T \to \infty, \delta \to 0$, $x_T$ equals to the true probability density $p(x)$.
-Compared to standard SGD, stochastic gradient Langevin dynamics injects Gaussian noise into the parameter updates to avoid collapses into local minima.\
-"""
+## Maths of Reverse diffusion process
 
-Let me help you understand Langevin dynamics and its connection to diffusion models. This is a fascinating bridge between physics and machine learning!
+### Score Based Modeling
+
+> **"**
+> Langevin dynamics is a concept from physics, developed for statistically modeling molecular systems. Combined with stochastic gradient descent, stochastic gradient Langevin dynamics (Welling & Teh 2011) can produce samples from a probability density $p(x)$ using only the gradients $\nabla_x \log p(x)$ in a Markov chain of updates:
+> $$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t, \text{ where } \epsilon_t \sim \mathcal{N}(0,\mathbf{I})$$
+> where $\delta$ is the step size. When $T \to \infty, \delta \to 0$, $x_T$ equals to the true probability density $p(x)$.
+> Compared to standard SGD, stochastic gradient Langevin dynamics injects Gaussian noise into the parameter updates to avoid collapses into local minima.\
+> **"**
+
+> From [Lil's Blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#connection-with-stochastic-gradient-langevin-dynamics)
+
+Before we continue further we need to understand Score based modeling.
+This is a fascinating bridge between physics and machine learning!
 First, let's understand what Langevin dynamics is trying to do. Imagine you're trying to find the lowest point in a hilly landscape while blindfolded. If you only walk downhill (like regular gradient descent), you might get stuck in a small valley that isn't actually the lowest point. Langevin dynamics solves this by occasionally taking random steps - like sometimes walking uphill - which helps you explore more of the landscape.
 The key equation is:
-xt = xt−1 + (δ/2)∇xlog⁡p(xt−1) + δϵt
+
+$$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t$$
+
 Let's break this down piece by piece:
 
-xt and xt−1 represent our position at the current and previous steps
-∇xlog⁡p(xt−1) is the gradient term - it tells us which direction to move to increase the probability
+$x_t$ and $x_{t-1}$ represent our position at the current and previous steps.\
+$\nabla_x \log p(x_{t-1})$ is the gradient term - it tells us which direction to move to increase the probability\
 δ is our step size - how far we move in each step
 ϵt is our random noise term, sampled from a normal distribution
 
 The equation combines two behaviors:
 
-A "deterministic" part: (δ/2)∇xlog⁡p(xt−1) which moves us toward higher probability regions
-A "random" part: δϵt which adds noise to help us explore
+A "deterministic" part: $\frac{\delta}{2}\nabla_x \log p(x_{t-1})$ which moves us toward higher probability regions\
+A "random" part: $\sqrt{\delta}\epsilon_t$ which adds noise to help us explore
 
 What makes this special is that when we run this process for a long time (T→∞) and with very small steps (δ→0), we're guaranteed to sample from the true probability distribution p(x). This is similar to how diffusion models gradually denoise images - they're following a similar kind of path, but in reverse!
 The connection to standard gradient descent is interesting - regular SGD would only have the gradient term, but Langevin dynamics adds that noise term ϵt. This noise prevents us from getting stuck in bad local minima, just like how shaking a jar of marbles helps them settle into a better arrangement.
 
-Let me explain why we use the logarithm of the probability (log p(x)) instead of just the probability p(x) itself. This is a fundamental concept in probability and optimization that's used across many areas of machine learning.
-First, let's understand why logarithms are useful in general with probabilities:
+This is already immensely helpful, Because if we recall our previous discussion. Our biggest issue had been how do we create an approximate of our distribution because it is computationally expensive.
 
-Numerical Stability
-When we work with probabilities, we're dealing with numbers between 0 and 1. When we multiply many small probabilities together (which happens often in machine learning), we can end up with extremely small numbers that computers struggle to handle accurately. For example:
-0.01 × 0.01 × 0.01 = 0.000001
-
-But if we take logarithms:
-log(0.01) + log(0.01) + log(0.01) = -13.82
-The logarithm transforms these tiny numbers into more manageable negative numbers that computers can handle better.
-
-Converting Multiplication to Addition
-In probability theory, we often need to multiply many probabilities together. Taking the logarithm converts multiplication into addition, which is computationally simpler and more stable:
-log(a × b) = log(a) + log(b)
-Gradient Properties
-Now, here's the key insight for why we use log p(x) in Langevin dynamics: When we take the gradient of log probability (∇log p(x)), we get something called the "score function". This score function has a special property - it points in the direction where the probability increases most rapidly.
+Now, here's the key insight of Langevin dynamics: When we take the gradient of log probability (∇log p(x)), we get something called the "_score function_". This score function has a special property - it points in the direction where the probability increases most rapidly.
 
 Let's see why through calculus:
 ∇log p(x) = ∇(log p(x)) = (1/p(x))∇p(x)
@@ -750,41 +752,16 @@ This division by p(x) acts as an automatic scaling factor. When p(x) is small, i
 
 What is P(x) though and why are we taking that. Traditionally in SGD do we not take, del(error)/del(weight)
 
-In traditional SGD for neural networks, we're trying to minimize an error function (or loss function), so we use ∂(error)/∂(weight) as you correctly noted. We're trying to find the weights that make our predictions as accurate as possible.
+In traditional SGD for neural networks, we're trying to minimize an error function (or loss function), so we use ∂(error)/∂(weight). We're trying to find the weights that make our predictions as accurate as possible.
+
 But in Langevin dynamics, we're doing something fundamentally different. Here, p(x) represents a probability distribution that we want to sample from. Think of it this way:
+
 Imagine you have a dataset of faces, and you want to generate new faces that look real. The probability p(x) would represent how likely it is that a particular image x is a real face. Areas of high p(x) would correspond to images that look like real faces, while areas of low p(x) would be images that don't look like faces at all.
 So when we take ∇log p(x), we're asking: "In which direction should I move to make this image look more like a real face?"
-Let's compare:
-
-Traditional SGD in Neural Networks:
-
-Goal: Minimize error
-Gradient: ∂(error)/∂(weight)
-Updates weights to make predictions more accurate
-
-Langevin Dynamics:
-
-Goal: Sample from a probability distribution
-Gradient: ∇log p(x)
-Updates the sample itself to look more like real data
 
 This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
 
-"""
-
-TRAINING THE MODEL
-
-Since we can't have x₀ during generation, we train a model pθ(xₜ₋₁|xₜ) to approximate q(xₜ₋₁|xₜ,x₀). This model learns to predict the denoising step without needing the original image.
-The training process works like this:
-
-Take a clean image x₀
-Sample a random timestep t
-Add noise to get xₜ using our "nice property" formula
-Train the model to predict the noise that was added
-The model learns to do this by minimizing the difference between its prediction and the actual noise
-"""
-
-## Maths of Reverse diffusion process
+## Reverse diffusion process
 
 Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process.
 
@@ -796,7 +773,7 @@ $$p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(
 
 Unfortunately it is tough to even sample from this approximate model because it is the same as our previous model, so we modify it by adding the original image $x_0$ to it as such.
 
-$$q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; \tilde{\mu}(x_t,x_0), \tilde{\beta}_t\mathbf{I})$$
+$$q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; {\color{Blue}{}\tilde{\mu}(x_t,x_0)}, {\color{red}{}\tilde{\beta}_t\mathbf{I}})$$
 
 Now this is tractable (Exaplain what this word means), let us first understand the proof for how it is tractable. Later moving on to understand how they thought of this idea in the first place
 
@@ -804,36 +781,81 @@ Using Bayes' rule, we have:
 
 $$
 \begin{aligned}
-q(x_{t-1}|x_t,x_0) &= \frac{q(x_t|x_{t-1},x_0)q(x_{t-1}|x_0)}{q(x_t|x_0)} \\
-&\propto \exp(-\frac{1}{2}(\frac{(x_t-\alpha_tx_{t-1})^2}{\beta_t} + \frac{(x_{t-1}-\bar{\alpha}_{t-1}x_0)^2}{1-\bar{\alpha}_{t-1}} - \frac{(x_t-\bar{\alpha}_tx_0)^2}{1-\bar{\alpha}_t})) \\
-&= \exp(-\frac{1}{2}(\frac{x_t^2-2\alpha_tx_tx_{t-1}+\alpha_tx_{t-1}^2}{\beta_t} + \frac{x_{t-1}^2-2\bar{\alpha}_{t-1}x_0x_{t-1}+\bar{\alpha}_{t-1}x_0^2}{1-\bar{\alpha}_{t-1}} - \frac{(x_t-\bar{\alpha}_tx_0)^2}{1-\bar{\alpha}_t})) \\
-&= \exp(-\frac{1}{2}((\frac{\alpha_t}{\beta_t}+\frac{1}{1-\bar{\alpha}_{t-1}})x_{t-1}^2 - (\frac{2\alpha_t}{\beta_t}x_t+\frac{2\bar{\alpha}_{t-1}}{1-\bar{\alpha}_{t-1}}x_0)x_{t-1} + C(x_t,x_0)))
+q(x_{t-1}|x_t,x_0) &= \frac{q(x_t|x_{t-1},x_0)q(x_{t-1}|x_0)}{q(x_t|x_0)} & \text{[Bayes' Rule: } P(A|B) = \frac{P(B|A)P(A)}{P(B)} \text{]}
 \end{aligned}
 $$
 
-where $C(x_t,x_0)$ is some function not involving $x_{t-1}$ and details are omitted. Following the standard Gaussian density function, the mean and variance can be parameterized as follows (recall that $\alpha_t=1-\beta_t$ and $\bar{\alpha}_t=\prod_{i=1}^t \alpha_i$):
+Since $q(x)$ represents a normal distribution, we can expand using the general form of a normal distribution:
+
+$$
+\mathcal{N}(x|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp(-\frac{(x-\mu)^2}{2\sigma^2})
+$$
+
+Therefore:
+
+$$
+\begin{aligned}
+q(x_{t-1}|x_t,x_0) &= \frac{q(x_t|x_{t-1},x_0)q(x_{t-1}|x_0)}{q(x_t|x_0)} \\
+&\propto \exp(-\frac{1}{2}(\frac{(x_t-\sqrt{\alpha_t}x_{t-1})^2}{\beta_t} + \frac{(x_{t-1}-\sqrt{\bar{\alpha}_{t-1}}x_0)^2}{1-\bar{\alpha}_{t-1}} - \frac{(x_t-\sqrt{\bar{\alpha}_t}x_0)^2}{1-\bar{\alpha}_t})) \\
+&= \exp(-\frac{1}{2}(\frac{x_t^2-2\sqrt{\alpha_t}x_t{\color{blue}x_{t-1}}+\color{red}{{\alpha_tx_{t-1}^2}}}{\beta_t} + \frac{{\color{red}{x_{t-1}^2}}-2\sqrt{\bar{\alpha}_{t-1}}x_0{\color{blue}x_{t-1}}+\bar{\alpha}_{t-1}x_0^2}{1-\bar{\alpha}_{t-1}} - \frac{(x_t-\sqrt{\bar{\alpha}_t}x_0)^2}{1-\bar{\alpha}_t})) \\
+&= \exp(-\frac{1}{2}({\color{red}(\frac{\alpha_t}{\beta_t}+\frac{1}{1-\bar{\alpha}_{t-1}})x_{t-1}^2} - {\color{blue}(\frac{2\sqrt{\alpha_t}}{\beta_t}x_t+\frac{2\sqrt{\bar{\alpha}_{t-1}}}{1-\bar{\alpha}_{t-1}}x_0)x_{t-1}} + C(x_t,x_0)))
+\end{aligned}
+$$
+
+where $C(x_t,x_0)$ is some function not involving $x_{t-1}$, hence details can be omitted.
+
+If we have a look again at our equation of normal distribution:
+
+$$
+\mathcal{N}(x|\mu,\sigma^2) = \frac{1}{\sqrt{2\pi\sigma^2}}\exp(-\frac{(x-\mu)^2}{2\sigma^2})
+$$
+
+Expanding the squared term in the exponential:
+
+$$
+\exp(-\frac{1}{2\sigma^2}(x^2 - 2\mu x + \mu^2))
+$$
+
+The coefficient of $x^2$ is $\frac{1}{2\sigma^2}$, and the coefficient of $x$ is $-\frac{\mu}{\sigma^2}$. All other terms not involving $x$ can be collected into the normalization constant.
+
+Therefore, comparing this with our previous equation:
+
+$$
+\color{red}{(\frac{\alpha_t}{\beta_t}+\frac{1}{1-\bar{\alpha}_{t-1}})} = \frac{1}{2\sigma^2}
+$$
+
+and
+
+$$
+\color{blue}{(\frac{2\sqrt{\alpha_t}}{\beta_t}x_t+\frac{2\sqrt{\bar{\alpha}_{t-1}}}{1-\bar{\alpha}_{t-1}}x_0)} = \frac{2\mu}{\sigma^2}
+$$
+
+Following the above logice, the mean ($\tilde{\mu}_t(x_t,x_0)$) and variance ($\tilde{\beta}_t$) can be parameterized as follows (recall that $\alpha_t=1-\beta_t$ and $\bar{\alpha}_t=\prod_{i=1}^t \alpha_i$):
 
 $$
 \begin{aligned}
 \tilde{\beta}_t &= 1/(\frac{\alpha_t}{\beta_t}+\frac{1}{1-\bar{\alpha}_{t-1}}) \\
 &= 1/(\frac{\alpha_t-\bar{\alpha}_t+\beta_t}{\beta_t(1-\bar{\alpha}_{t-1})}) \\
-&= \frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\cdot\beta_t
+&= \color{yellow}{}\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\cdot\beta_t
+
 \end{aligned}
 $$
 
 $$
 \begin{aligned}
 \tilde{\mu}_t(x_t,x_0) &= (\frac{\alpha_t}{\beta_t}x_t+\frac{\bar{\alpha}_{t-1}}{1-\bar{\alpha}_{t-1}}x_0)/(\frac{\alpha_t}{\beta_t}+\frac{1}{1-\bar{\alpha}_{t-1}}) \\
-&= (\frac{\alpha_t}{\beta_t}x_t+\frac{\bar{\alpha}_{t-1}}{1-\bar{\alpha}_{t-1}}x_0)\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\cdot\beta_t \\
+&= (\frac{\alpha_t}{\beta_t}x_t+\frac{\bar{\alpha}_{t-1}}{1-\bar{\alpha}_{t-1}}x_0)\color{yellow}\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\cdot\beta_t \\
 &= \frac{\alpha_t(1-\bar{\alpha}_{t-1})}{1-\bar{\alpha}_t}x_t+\frac{\bar{\alpha}_{t-1}\beta_t}{1-\bar{\alpha}_t}x_0
 \end{aligned}
 $$
 
-Thanks to the nice property, we can represent $x_0=\frac{1}{\sqrt{\bar{\alpha}_t}}(x_t-\sqrt{1-\bar{\alpha}_t}\epsilon_t)$ and plug it into the above equation and obtain:
+Thanks to the nice property, we can represent $x_0=\frac{1}{\sqrt{\bar{\alpha}_t}}(x_t-\sqrt{1-\bar{\alpha}_t}\epsilon_t)$ and replacing $x_0$ in the above equation we get:
 
 $$\tilde{\mu}_t = \frac{1}{\alpha_t}(x_{t-1}-\frac{\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_t)$$
 
-{add color coding for the above to make it easier to understand}
+This is great, we now have the mean in terms of $x_{t-1}$ and it does not depend on the original image $x_0$
+
+> **Note**: Constants like 2,1/2,K etc have been omitted in many places as they do not hold much significance to the final equation
 
 """
 As demonstrated in Fig. 2., such a setup is very similar to VAE and thus we can use the variational lower bound to optimize the negative log-likelihood.
@@ -892,6 +914,19 @@ L_0 &= -\log p_\theta(x_0|x_1)
 $$
 
 Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian distributions and therefore they can be computed in closed form. $L_T$ is constant and can be ignored during training because $q$ has no learnable parameters and $x_T$ is a Gaussian noise. Ho et al. 2020 models $L_0$ using a separate discrete decoder derived from $\mathcal{N}(x_0; \mu_\theta(x_1,1), \Sigma_\theta(x_1,1))$.
+"""
+
+"""
+TRAINING THE MODEL
+
+Since we can't have x₀ during generation, we train a model pθ(xₜ₋₁|xₜ) to approximate q(xₜ₋₁|xₜ,x₀). This model learns to predict the denoising step without needing the original image.
+The training process works like this:
+
+Take a clean image x₀
+Sample a random timestep t
+Add noise to get xₜ using our "nice property" formula
+Train the model to predict the noise that was added
+The model learns to do this by minimizing the difference between its prediction and the actual noise
 """
 
 ## Maths of VAE
