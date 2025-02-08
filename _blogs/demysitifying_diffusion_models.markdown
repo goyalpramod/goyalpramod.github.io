@@ -449,6 +449,8 @@ Image to Image is of multiple types, you can have FaceSwap, Inpainting, ControlN
 The classifier-free guidance scale (CFG scale) is a value that controls how much the text prompt steers the diffusion process. The AI image generation is unconditioned (i.e. the prompt is ignored) when the CFG scale is set to 0. A higher CFG scale steers the diffusion towards the prompt.
 ```
 
+More in the maths section
+
 #### Control-Net
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/34.webp)
@@ -709,59 +711,7 @@ Usually, we can afford a larger update step when the sample gets noisier, so $\b
 
 ## Maths of Reverse diffusion process
 
-### Score Based Modeling
-
-> **"**
-> Langevin dynamics is a concept from physics, developed for statistically modeling molecular systems. Combined with stochastic gradient descent, stochastic gradient Langevin dynamics (Welling & Teh 2011) can produce samples from a probability density $p(x)$ using only the gradients $\nabla_x \log p(x)$ in a Markov chain of updates:
-> $$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t, \text{ where } \epsilon_t \sim \mathcal{N}(0,\mathbf{I})$$
-> where $\delta$ is the step size. When $T \to \infty, \delta \to 0$, $x_T$ equals to the true probability density $p(x)$.
-> Compared to standard SGD, stochastic gradient Langevin dynamics injects Gaussian noise into the parameter updates to avoid collapses into local minima.\
-> **"**
-
-> From [Lil's Blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#connection-with-stochastic-gradient-langevin-dynamics)
-
-Before we continue further we need to understand Score based modeling.
-This is a fascinating bridge between physics and machine learning!
-First, let's understand what Langevin dynamics is trying to do. Imagine you're trying to find the lowest point in a hilly landscape while blindfolded. If you only walk downhill (like regular gradient descent), you might get stuck in a small valley that isn't actually the lowest point. Langevin dynamics solves this by occasionally taking random steps - like sometimes walking uphill - which helps you explore more of the landscape.
-The key equation is:
-
-$$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t$$
-
-Let's break this down piece by piece:
-
-$x_t$ and $x_{t-1}$ represent our position at the current and previous steps.\
-$\nabla_x \log p(x_{t-1})$ is the gradient term - it tells us which direction to move to increase the probability\
-δ is our step size - how far we move in each step
-ϵt is our random noise term, sampled from a normal distribution
-
-The equation combines two behaviors:
-
-A "deterministic" part: $\frac{\delta}{2}\nabla_x \log p(x_{t-1})$ which moves us toward higher probability regions\
-A "random" part: $\sqrt{\delta}\epsilon_t$ which adds noise to help us explore
-
-What makes this special is that when we run this process for a long time (T→∞) and with very small steps (δ→0), we're guaranteed to sample from the true probability distribution p(x). This is similar to how diffusion models gradually denoise images - they're following a similar kind of path, but in reverse!
-The connection to standard gradient descent is interesting - regular SGD would only have the gradient term, but Langevin dynamics adds that noise term ϵt. This noise prevents us from getting stuck in bad local minima, just like how shaking a jar of marbles helps them settle into a better arrangement.
-
-This is already immensely helpful, Because if we recall our previous discussion. Our biggest issue had been how do we create an approximate of our distribution because it is computationally expensive.
-
-Now, here's the key insight of Langevin dynamics: When we take the gradient of log probability (∇log p(x)), we get something called the "_score function_". This score function has a special property - it points in the direction where the probability increases most rapidly.
-
-Let's see why through calculus:
-∇log p(x) = ∇(log p(x)) = (1/p(x))∇p(x)
-This division by p(x) acts as an automatic scaling factor. When p(x) is small, it makes the gradient larger, and when p(x) is large, it makes the gradient smaller. This natural scaling helps our sampling process explore the probability space more efficiently.
-
-What is P(x) though and why are we taking that. Traditionally in SGD do we not take, del(error)/del(weight)
-
-In traditional SGD for neural networks, we're trying to minimize an error function (or loss function), so we use ∂(error)/∂(weight). We're trying to find the weights that make our predictions as accurate as possible.
-
-But in Langevin dynamics, we're doing something fundamentally different. Here, p(x) represents a probability distribution that we want to sample from. Think of it this way:
-
-Imagine you have a dataset of faces, and you want to generate new faces that look real. The probability p(x) would represent how likely it is that a particular image x is a real face. Areas of high p(x) would correspond to images that look like real faces, while areas of low p(x) would be images that don't look like faces at all.
-So when we take ∇log p(x), we're asking: "In which direction should I move to make this image look more like a real face?"
-
-This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
-
-## Reverse diffusion process
+### Reverse diffusion process
 
 Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process.
 
@@ -857,8 +807,66 @@ This is great, we now have the mean in terms of $x_{t-1}$ and it does not depend
 
 > **Note**: Constants like 2,1/2,K etc have been omitted in many places as they do not hold much significance to the final equation
 
+Now we have the mean, which can help us denoise the image. But we still need a training objective, using which the model gradually learns the approximation function. 
+
+### Training Loss ($L_t$) 
+
+Our original objective was to create an approcimate conditional probability distribution using which we could train a neural network to reverse the diffusion process.
+
+
+$p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \boldsymbol{\mu}_\theta(\mathbf{x}_t, t), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$. 
+
+We wish to train $\boldsymbol{\mu}_\theta$ to predict $\tilde{\boldsymbol{\mu}}_t = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t)$. Because $\mathbf{x}_t$ is available as input at training time.
+
+we can instead reparameterize the Gaussian noise term to make it predict $\boldsymbol{\epsilon}_t$ from the input $\mathbf{x}_t$ at time step $t$:
+
+$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t) = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))$
+
+Thus $\mathbf{x}_{t-1} = \mathcal{N}(\mathbf{x}_{t-1}; \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$
+
+The loss term $L_t$ is parameterized to minimize the difference from $\tilde{\boldsymbol{\mu}}$:
+
+$L_t = \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)\|_2^2}\|\tilde{\boldsymbol{\mu}}_t(\mathbf{x}_t, \mathbf{x}_0) - \boldsymbol{\mu}_\theta(\mathbf{x}_t, t)\|^2\right]$
+
+This scary looking equation is simply the Mean Squared Error for an [estimator](https://en.wikipedia.org/wiki/Mean_squared_error#Estimator)
+
+Also given as,
+$\text{MSE}(\hat{\theta}) = \mathbb{E}_{\theta}\left[(\hat{\theta} - \theta)^2\right]$
+
+$= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t) - \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))\|^2\right]$
+
+$= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\|^2\right]$
+
+$= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t, t)\|^2\right]$
+
+
+## Simplification
+
+Ho et al. in ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239) found that training the diffusion model works better with a simplified objective that ignores the weighting term:
+
+$L_t^{\text{simple}} = \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)\|^2]$
+
+$= \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t,t)\|^2]$
+
+The final simple objective is:
+
+$L^{\text{simple}} = L_t^{\text{simple}} + C$
+
+where $C$ is a constant not depending on $\theta$.
+
+Hence the equations simply become
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
+
+Congratulations, you have a complete understanding of how we came to these equations now. Do not take from granted to how these equations were reached. I have furter added the mathematical backing to the ideas which led to the creation of these equations. Consider checking them out in the [Appendix]()
+
 """
-As demonstrated in Fig. 2., such a setup is very similar to VAE and thus we can use the variational lower bound to optimize the negative log-likelihood.
+Mathematical backing for Diffusion 
+
+
+Thus we calculate something called the cariational lower bound (More details in the VAE math section) to optimize the negative log-likelihood
+
+
 
 $$
 \begin{aligned}
@@ -871,7 +879,7 @@ $$
 
 Let $\mathcal{L}_{VLB} = \mathbb{E}_{q(x_{0:T})}[\log \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})}] \geq -\mathbb{E}_{q(x_0)}\log p_\theta(x_0)$
 
-It is also straightforward to get the same result using Jensen's inequality. Say we want to minimize the cross entropy as the learning objective,
+We can also get the same result using Jensen's inequality. Say we want to minimize the cross entropy as the learning objective,
 
 $$
 \begin{aligned}
@@ -884,7 +892,6 @@ $$
 \end{aligned}
 $$
 
-[Continued in next message...]
 
 To convert each term in the equation to be analytically computable, the objective can be further rewritten to be a combination of several KL-divergence and entropy terms:
 
@@ -914,7 +921,62 @@ L_0 &= -\log p_\theta(x_0|x_1)
 $$
 
 Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian distributions and therefore they can be computed in closed form. $L_T$ is constant and can be ignored during training because $q$ has no learnable parameters and $x_T$ is a Gaussian noise. Ho et al. 2020 models $L_0$ using a separate discrete decoder derived from $\mathcal{N}(x_0; \mu_\theta(x_1,1), \Sigma_\theta(x_1,1))$.
+
 """
+
+
+### Score Based Modeling
+
+> **"**
+> Langevin dynamics is a concept from physics, developed for statistically modeling molecular systems. Combined with stochastic gradient descent, stochastic gradient Langevin dynamics (Welling & Teh 2011) can produce samples from a probability density $p(x)$ using only the gradients $\nabla_x \log p(x)$ in a Markov chain of updates:
+> $$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t, \text{ where } \epsilon_t \sim \mathcal{N}(0,\mathbf{I})$$
+> where $\delta$ is the step size. When $T \to \infty, \delta \to 0$, $x_T$ equals to the true probability density $p(x)$.
+> Compared to standard SGD, stochastic gradient Langevin dynamics injects Gaussian noise into the parameter updates to avoid collapses into local minima.\
+> **"**
+
+> From [Lil's Blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#connection-with-stochastic-gradient-langevin-dynamics)
+
+Before we continue further we need to understand Score based modeling.
+This is a fascinating bridge between physics and machine learning!
+First, let's understand what Langevin dynamics is trying to do. Imagine you're trying to find the lowest point in a hilly landscape while blindfolded. If you only walk downhill (like regular gradient descent), you might get stuck in a small valley that isn't actually the lowest point. Langevin dynamics solves this by occasionally taking random steps - like sometimes walking uphill - which helps you explore more of the landscape.
+The key equation is:
+
+$$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t$$
+
+Let's break this down piece by piece:
+
+$x_t$ and $x_{t-1}$ represent our position at the current and previous steps.\
+$\nabla_x \log p(x_{t-1})$ is the gradient term - it tells us which direction to move to increase the probability\
+δ is our step size - how far we move in each step
+ϵt is our random noise term, sampled from a normal distribution
+
+The equation combines two behaviors:
+
+A "deterministic" part: $\frac{\delta}{2}\nabla_x \log p(x_{t-1})$ which moves us toward higher probability regions\
+A "random" part: $\sqrt{\delta}\epsilon_t$ which adds noise to help us explore
+
+What makes this special is that when we run this process for a long time (T→∞) and with very small steps (δ→0), we're guaranteed to sample from the true probability distribution p(x). This is similar to how diffusion models gradually denoise images - they're following a similar kind of path, but in reverse!
+The connection to standard gradient descent is interesting - regular SGD would only have the gradient term, but Langevin dynamics adds that noise term ϵt. This noise prevents us from getting stuck in bad local minima, just like how shaking a jar of marbles helps them settle into a better arrangement.
+
+This is already immensely helpful, Because if we recall our previous discussion. Our biggest issue had been how do we create an approximate of our distribution because it is computationally expensive.
+
+Now, here's the key insight of Langevin dynamics: When we take the gradient of log probability (∇log p(x)), we get something called the "_score function_". This score function has a special property - it points in the direction where the probability increases most rapidly.
+
+Let's see why through calculus:
+∇log p(x) = ∇(log p(x)) = (1/p(x))∇p(x)
+This division by p(x) acts as an automatic scaling factor. When p(x) is small, it makes the gradient larger, and when p(x) is large, it makes the gradient smaller. This natural scaling helps our sampling process explore the probability space more efficiently.
+
+What is P(x) though and why are we taking that. Traditionally in SGD do we not take, del(error)/del(weight)
+
+In traditional SGD for neural networks, we're trying to minimize an error function (or loss function), so we use ∂(error)/∂(weight). We're trying to find the weights that make our predictions as accurate as possible.
+
+But in Langevin dynamics, we're doing something fundamentally different. Here, p(x) represents a probability distribution that we want to sample from. Think of it this way:
+
+Imagine you have a dataset of faces, and you want to generate new faces that look real. The probability p(x) would represent how likely it is that a particular image x is a real face. Areas of high p(x) would correspond to images that look like real faces, while areas of low p(x) would be images that don't look like faces at all.
+So when we take ∇log p(x), we're asking: "In which direction should I move to make this image look more like a real face?"
+
+This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
+
 
 """
 TRAINING THE MODEL
@@ -928,6 +990,14 @@ Add noise to get xₜ using our "nice property" formula
 Train the model to predict the noise that was added
 The model learns to do this by minimizing the difference between its prediction and the actual noise
 """
+
+## Classifier Guidance 
+
+## CFG 
+
+## stuff 
+
+There is still a lot of things that we can discuss like LDMs, Distillation etc. But now you have the essentially idea for majority of how SD maths work. So you can tackle it on your own, you can check more about it [here]()
 
 ## Maths of VAE
 
