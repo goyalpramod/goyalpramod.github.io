@@ -353,24 +353,19 @@ That is given by
 
 $\|\epsilon - \epsilon_\theta(x_t,t)\|_2 = \|\epsilon - \epsilon_\theta(\bar{\alpha}_t x_0 + (1-\bar{\alpha}_t)\epsilon,t)\|_2$
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/5.webp)
-
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/23.webp)
-
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
 > Image Taken from {add paper}
 
 This greatly simplifies are training, which can be written as the above image.
 
-"""
-In other words:
+In summary:
 
-- we take a random sample $\mathbf{x}_0$ from the real unknown and possibly complex data distribution $q(\mathbf{x}_0)$
+- we take a random sample $\mathbf{x}_0$ from the real unknown and complex data distribution $q(\mathbf{x}_0)$
 - we sample a noise level $t$ uniformly between $1$ and $T$ (i.e., a random time step)
 - we sample some noise from a Gaussian distribution and corrupt the input by this noise at level $t$ (using the nice property defined above)
 - the neural network is trained to predict this noise based on the corrupted image $\mathbf{x}_t$ (i.e. noise applied on $\mathbf{x}_0$ based on known schedule $\beta_t$)
 
 In reality, all of this is done on batches of data, as one uses stochastic gradient descent to optimize neural networks.
-"""
 
 [FIX_THIS_EXPLANATION]
 
@@ -745,10 +740,11 @@ Therefore:
 
 $$
 \begin{aligned}
-q(x_{t-1}|x_t,x_0) &= \frac{q(x_t|x_{t-1},x_0)q(x_{t-1}|x_0)}{q(x_t|x_0)} \\
-&\propto \exp(-\frac{1}{2}(\frac{(x_t-\sqrt{\alpha_t}x_{t-1})^2}{\beta_t} + \frac{(x_{t-1}-\sqrt{\bar{\alpha}_{t-1}}x_0)^2}{1-\bar{\alpha}_{t-1}} - \frac{(x_t-\sqrt{\bar{\alpha}_t}x_0)^2}{1-\bar{\alpha}_t})) \\
-&= \exp(-\frac{1}{2}(\frac{x_t^2-2\sqrt{\alpha_t}x_t{\color{blue}x_{t-1}}+\color{red}{{\alpha_tx_{t-1}^2}}}{\beta_t} + \frac{{\color{red}{x_{t-1}^2}}-2\sqrt{\bar{\alpha}_{t-1}}x_0{\color{blue}x_{t-1}}+\bar{\alpha}_{t-1}x_0^2}{1-\bar{\alpha}_{t-1}} - \frac{(x_t-\sqrt{\bar{\alpha}_t}x_0)^2}{1-\bar{\alpha}_t})) \\
-&= \exp(-\frac{1}{2}({\color{red}(\frac{\alpha_t}{\beta_t}+\frac{1}{1-\bar{\alpha}_{t-1}})x_{t-1}^2} - {\color{blue}(\frac{2\sqrt{\alpha_t}}{\beta_t}x_t+\frac{2\sqrt{\bar{\alpha}_{t-1}}}{1-\bar{\alpha}_{t-1}}x_0)x_{t-1}} + C(x_t,x_0)))
+q(\mathbf{x}_{t-1} \vert \mathbf{x}_t, \mathbf{x}_0) 
+&= q(\mathbf{x}_t \vert \mathbf{x}_{t-1}, \mathbf{x}_0) \frac{ q(\mathbf{x}_{t-1} \vert \mathbf{x}_0) }{ q(\mathbf{x}_t \vert \mathbf{x}_0) } \\
+&\propto \exp \Big(-\frac{1}{2} \big(\frac{(\mathbf{x}_t - \sqrt{\alpha_t} \mathbf{x}_{t-1})^2}{\beta_t} + \frac{(\mathbf{x}_{t-1} - \sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_0)^2}{1-\bar{\alpha}_{t-1}} - \frac{(\mathbf{x}_t - \sqrt{\bar{\alpha}_t} \mathbf{x}_0)^2}{1-\bar{\alpha}_t} \big) \Big) \\
+&= \exp \Big(-\frac{1}{2} \big(\frac{\mathbf{x}_t^2 - 2\sqrt{\alpha_t} \mathbf{x}_t \color{blue}{\mathbf{x}_{t-1}} \color{black}{+ \alpha_t} \color{red}{\mathbf{x}_{t-1}^2} }{\beta_t} + \frac{ \color{red}{\mathbf{x}_{t-1}^2} \color{black}{- 2 \sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_0} \color{blue}{\mathbf{x}_{t-1}} \color{black}{+ \bar{\alpha}_{t-1} \mathbf{x}_0^2}  }{1-\bar{\alpha}_{t-1}} - \frac{(\mathbf{x}_t - \sqrt{\bar{\alpha}_t} \mathbf{x}_0)^2}{1-\bar{\alpha}_t} \big) \Big) \\
+&= \exp\Big( -\frac{1}{2} \big( \color{red}{(\frac{\alpha_t}{\beta_t} + \frac{1}{1 - \bar{\alpha}_{t-1}})} \mathbf{x}_{t-1}^2 - \color{blue}{(\frac{2\sqrt{\alpha_t}}{\beta_t} \mathbf{x}_t + \frac{2\sqrt{\bar{\alpha}_{t-1}}}{1 - \bar{\alpha}_{t-1}} \mathbf{x}_0)} \mathbf{x}_{t-1} \color{black}{ + C(\mathbf{x}_t, \mathbf{x}_0) \big) \Big)}
 \end{aligned}
 $$
 
@@ -860,70 +856,6 @@ Hence the equations simply become
 
 Congratulations, you have a complete understanding of how we came to these equations now. Do not take from granted to how these equations were reached. I have furter added the mathematical backing to the ideas which led to the creation of these equations. Consider checking them out in the [Appendix]()
 
-"""
-Mathematical backing for Diffusion 
-
-
-Thus we calculate something called the cariational lower bound (More details in the VAE math section) to optimize the negative log-likelihood
-
-
-
-$$
-\begin{aligned}
--\log p_\theta(x_0) &\leq -\log p_\theta(x_0) + D_{KL}(q(x_{1:T}|x_0)\|p_\theta(x_{1:T}|x_0)); \text{ KL is non-negative} \\
-&= -\log p_\theta(x_0) + \mathbb{E}_{x_{1:T}\sim q(x_{1:T}|x_0)}[\log \frac{q(x_{1:T}|x_0)p_\theta(x_{0:T})}{p_\theta(x_0)}] \\
-&= -\log p_\theta(x_0) + \mathbb{E}_q[\log \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})} + \log p_\theta(x_0)] \\
-&= \mathbb{E}_q[\log \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})}]
-\end{aligned}
-$$
-
-Let $\mathcal{L}_{VLB} = \mathbb{E}_{q(x_{0:T})}[\log \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})}] \geq -\mathbb{E}_{q(x_0)}\log p_\theta(x_0)$
-
-We can also get the same result using Jensen's inequality. Say we want to minimize the cross entropy as the learning objective,
-
-$$
-\begin{aligned}
-\mathcal{L}_{CE} &= -\mathbb{E}_{q(x_0)}\log p_\theta(x_0) \\
-&= -\mathbb{E}_{q(x_0)}\log(\int p_\theta(x_{0:T})dx_{1:T}) \\
-&= -\mathbb{E}_{q(x_0)}\log(\int \frac{q(x_{1:T}|x_0)}{q(x_{1:T}|x_0)}p_\theta(x_{0:T})dx_{1:T}) \\
-&= -\mathbb{E}_{q(x_0)}\log(\mathbb{E}_{q(x_{1:T}|x_0)}\frac{p_\theta(x_{0:T})}{q(x_{1:T}|x_0)}) \\
-&\leq -\mathbb{E}_{q(x_{0:T})}\log\frac{p_\theta(x_{0:T})}{q(x_{1:T}|x_0)} \\
-&= \mathbb{E}_{q(x_{0:T})}[\log \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})}] = \mathcal{L}_{VLB}
-\end{aligned}
-$$
-
-
-To convert each term in the equation to be analytically computable, the objective can be further rewritten to be a combination of several KL-divergence and entropy terms:
-
-$$
-\begin{aligned}
-\mathcal{L}_{VLB} &= \mathbb{E}_{q(x_{0:T})}[\log \frac{q(x_{1:T}|x_0)}{p_\theta(x_{0:T})}] \\
-&= \mathbb{E}_q[\log \frac{\prod_{t=1}^T q(x_t|x_{t-1})}{p_\theta(x_T)\prod_{t=1}^T p_\theta(x_{t-1}|x_t)}] \\
-&= \mathbb{E}_q[-\log p_\theta(x_T) + \sum_{t=1}^T \log \frac{q(x_t|x_{t-1})}{p_\theta(x_{t-1}|x_t)}] \\
-&= \mathbb{E}_q[-\log p_\theta(x_T) + \sum_{t=2}^T \log \frac{q(x_t|x_{t-1})}{p_\theta(x_{t-1}|x_t)} + \log \frac{q(x_1|x_0)}{p_\theta(x_0|x_1)}] \\
-&= \mathbb{E}_q[-\log p_\theta(x_T) + \sum_{t=2}^T \log \frac{q(x_{t-1}|x_t,x_0)}{p_\theta(x_{t-1}|x_t)} \cdot \frac{q(x_t|x_0)}{q(x_{t-1}|x_0)} + \log \frac{q(x_1|x_0)}{p_\theta(x_0|x_1)}] \\
-&= \mathbb{E}_q[D_{KL}(q(x_T|x_0)\|p_\theta(x_T)) + \sum_{t=2}^T D_{KL}(q(x_{t-1}|x_t,x_0)\|p_\theta(x_{t-1}|x_t)) - \log p_\theta(x_0|x_1)]
-\end{aligned}
-$$
-
-Let's label each component in the variational lower bound loss separately:
-
-$$\mathcal{L}_{VLB} = L_T + L_{T-1} + \cdots + L_0$$
-
-where:
-
-$$
-\begin{aligned}
-L_T &= D_{KL}(q(x_T|x_0)\|p_\theta(x_T)) \\
-L_t &= D_{KL}(q(x_t|x_{t+1},x_0)\|p_\theta(x_t|x_{t+1})) \text{ for } 1 \leq t \leq T-1 \\
-L_0 &= -\log p_\theta(x_0|x_1)
-\end{aligned}
-$$
-
-Every KL term in $\mathcal{L}_{VLB}$ (except for $L_0$) compares two Gaussian distributions and therefore they can be computed in closed form. $L_T$ is constant and can be ignored during training because $q$ has no learnable parameters and $x_T$ is a Gaussian noise. Ho et al. 2020 models $L_0$ using a separate discrete decoder derived from $\mathcal{N}(x_0; \mu_\theta(x_1,1), \Sigma_\theta(x_1,1))$.
-
-"""
-
 
 ### Score Based Modeling
 
@@ -977,19 +909,7 @@ So when we take ∇log p(x), we're asking: "In which direction should I move to 
 
 This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
 
-
-"""
-TRAINING THE MODEL
-
-Since we can't have x₀ during generation, we train a model pθ(xₜ₋₁|xₜ) to approximate q(xₜ₋₁|xₜ,x₀). This model learns to predict the denoising step without needing the original image.
-The training process works like this:
-
-Take a clean image x₀
-Sample a random timestep t
-Add noise to get xₜ using our "nice property" formula
-Train the model to predict the noise that was added
-The model learns to do this by minimizing the difference between its prediction and the actual noise
-"""
+To learn more about Score Based Modeling, consider reading this [blog by Yang Song](https://yang-song.net/blog/2021/score/) 
 
 ## Classifier Guidance 
 
@@ -1001,6 +921,66 @@ There is still a lot of things that we can discuss like LDMs, Distillation etc. 
 
 ## Maths of VAE
 
+This part of blog takes inspiration from Lilian's blog on [VAE](https://lilianweng.github.io/posts/2018-08-12-vae/)
+
+
+
+## Papers to read
+
+[Denoising Diffusion Implicit Model](https://arxiv.org/pdf/2010.02502)
+
+* DDIM is another scheduler, 
+
+[Generative Modeling by Estimating Gradients of the
+Data Distribution](https://arxiv.org/pdf/1907.05600)
+
+* The original paper by yang song that discusses ideas about score based modeling
+
+[PROGRESSIVE DISTILLATION FOR FAST SAMPLING
+OF DIFFUSION MODELS](https://arxiv.org/pdf/2202.00512)
+
+* The paper that introduced the idea of distillation 
+
+[Denoising Diffusion Probabilistic Models](https://arxiv.org/pdf/2006.11239)
+
+DDPM was the first major breakthrough in diffusion modeling 
+
+[Elucidating the Design Space of Diffusion-Based
+Generative Models](https://arxiv.org/pdf/2206.00364)
+
+
+[CLASSIFIER-FREE DIFFUSION GUIDANCE](https://arxiv.org/pdf/2207.12598)
+
+The paper that introduced CFG
+
+[Diffusion Models Beat GANs on Image Synthesis](https://arxiv.org/pdf/2105.05233)
+
+Paper by openai researchers that introduced singificant 
+
+[Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114)
+
+The original paper on VAE 
+
+[Photorealistic Text-to-Image Diffusion Models
+with Deep Language Understanding](https://arxiv.org/pdf/2205.11487)
+
+The original Image Gen paper by Google 
+
+[SCORE-BASED GENERATIVE MODELING THROUGH
+STOCHASTIC DIFFERENTIAL EQUATIONS](https://arxiv.org/pdf/2011.13456)
+
+First paper on score based modeling 
+
+[Scalable Diffusion Models with Transformers](https://arxiv.org/pdf/2212.09748)
+
+The paper that introduced DiTs
+
+[High-Resolution Image Synthesis with Latent Diffusion Models
+](https://arxiv.org/pdf/2112.10752)
+
+The paper that changed the course of history by introducing 
+
+
 Helpful docs
 
 [Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
@@ -1010,12 +990,6 @@ Helpful docs
 [torch.cat](https://pytorch.org/docs/main/generated/torch.cat.html)\
 [ConvTranspose2d](https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html)\
 [Upsample](https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html)
-
-### VAE
-
-### CLIP
-
-### DDPM
 
 ### DDIM
 
