@@ -16,7 +16,7 @@ There is a missing bridge between the beautiful simplification and more low leve
 
 Each section of the blog has been influenced by works by pioneering ML practioners and the link to their blog/video/article is linked in the very beginning of the respective section.
 
-## How is this Blog Structured
+## How this Blog is Structured
 
 First we talk about a very high level idea of diffusion models about how they work. In doing so we will be personifying each component of the whole pipeline.
 
@@ -354,6 +354,7 @@ That is given by
 $\|\epsilon - \epsilon_\theta(x_t,t)\|_2 = \|\epsilon - \epsilon_\theta(\bar{\alpha}_t x_0 + (1-\bar{\alpha}_t)\epsilon,t)\|_2$
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
+
 > Image Taken from {add paper}
 
 This greatly simplifies are training, which can be written as the above image.
@@ -740,7 +741,7 @@ Therefore:
 
 $$
 \begin{aligned}
-q(\mathbf{x}_{t-1} \vert \mathbf{x}_t, \mathbf{x}_0) 
+q(\mathbf{x}_{t-1} \vert \mathbf{x}_t, \mathbf{x}_0)
 &= q(\mathbf{x}_t \vert \mathbf{x}_{t-1}, \mathbf{x}_0) \frac{ q(\mathbf{x}_{t-1} \vert \mathbf{x}_0) }{ q(\mathbf{x}_t \vert \mathbf{x}_0) } \\
 &\propto \exp \Big(-\frac{1}{2} \big(\frac{(\mathbf{x}_t - \sqrt{\alpha_t} \mathbf{x}_{t-1})^2}{\beta_t} + \frac{(\mathbf{x}_{t-1} - \sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_0)^2}{1-\bar{\alpha}_{t-1}} - \frac{(\mathbf{x}_t - \sqrt{\bar{\alpha}_t} \mathbf{x}_0)^2}{1-\bar{\alpha}_t} \big) \Big) \\
 &= \exp \Big(-\frac{1}{2} \big(\frac{\mathbf{x}_t^2 - 2\sqrt{\alpha_t} \mathbf{x}_t \color{blue}{\mathbf{x}_{t-1}} \color{black}{+ \alpha_t} \color{red}{\mathbf{x}_{t-1}^2} }{\beta_t} + \frac{ \color{red}{\mathbf{x}_{t-1}^2} \color{black}{- 2 \sqrt{\bar{\alpha}_{t-1}} \mathbf{x}_0} \color{blue}{\mathbf{x}_{t-1}} \color{black}{+ \bar{\alpha}_{t-1} \mathbf{x}_0^2}  }{1-\bar{\alpha}_{t-1}} - \frac{(\mathbf{x}_t - \sqrt{\bar{\alpha}_t} \mathbf{x}_0)^2}{1-\bar{\alpha}_t} \big) \Big) \\
@@ -803,14 +804,13 @@ This is great, we now have the mean in terms of $x_{t-1}$ and it does not depend
 
 > **Note**: Constants like 2,1/2,K etc have been omitted in many places as they do not hold much significance to the final equation
 
-Now we have the mean, which can help us denoise the image. But we still need a training objective, using which the model gradually learns the approximation function. 
+Now we have the mean, which can help us denoise the image. But we still need a training objective, using which the model gradually learns the approximation function.
 
-### Training Loss ($L_t$) 
+### Training Loss ($L_t$)
 
 Our original objective was to create an approcimate conditional probability distribution using which we could train a neural network to reverse the diffusion process.
 
-
-$p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \boldsymbol{\mu}_\theta(\mathbf{x}_t, t), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$. 
+$p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \boldsymbol{\mu}_\theta(\mathbf{x}_t, t), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$.
 
 We wish to train $\boldsymbol{\mu}_\theta$ to predict $\tilde{\boldsymbol{\mu}}_t = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t)$. Because $\mathbf{x}_t$ is available as input at training time.
 
@@ -835,7 +835,6 @@ $= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\
 
 $= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t, t)\|^2\right]$
 
-
 ## Simplification
 
 Ho et al. in ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239) found that training the diffusion model works better with a simplified objective that ignores the weighting term:
@@ -855,7 +854,6 @@ Hence the equations simply become
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
 
 Congratulations, you have a complete understanding of how we came to these equations now. Do not take from granted to how these equations were reached. I have furter added the mathematical backing to the ideas which led to the creation of these equations. Consider checking them out in the [Appendix]()
-
 
 ### Score Based Modeling
 
@@ -909,45 +907,167 @@ So when we take ∇log p(x), we're asking: "In which direction should I move to 
 
 This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
 
-To learn more about Score Based Modeling, consider reading this [blog by Yang Song](https://yang-song.net/blog/2021/score/) 
+To learn more about Score Based Modeling, consider reading this [blog by Yang Song](https://yang-song.net/blog/2021/score/)
 
-## Classifier Guidance 
+## Classifier Guidance
 
-## CFG 
+## CFG
 
-## stuff 
+## stuff
 
 There is still a lot of things that we can discuss like LDMs, Distillation etc. But now you have the essentially idea for majority of how SD maths work. So you can tackle it on your own, you can check more about it [here]()
 
 ## Maths of VAE
 
-This part of blog takes inspiration from Lilian's blog on [VAE](https://lilianweng.github.io/posts/2018-08-12-vae/)
+This part of blog takes inspiration from Lilian's blog on [VAE](https://lilianweng.github.io/posts/2018-08-12-vae/) and [Jaan's Blog](https://jaan.io/what-is-variational-autoencoder-vae-tutorial/#glossary) on the topic.
 
+To understand the mathematics behind VAE lets begin by setting some conventions first:
 
+- $x$ represents a real input data point (an image)
+- $z$ represents the latent space variables
+- $p(z)$: The prior - what we think z should look like before seeing any data
+- $p(x|z)$: The likelihood - how to generate data from the latent representation
+- $p(z|x)$: The posterior - given data, what's its latent representation?
+
+The central idea is we have a latent space $z$ and when we sample a data point $x^*_i$ from it, we want it to be as close as possible to the original datapoint $x_i$
+
+This is represented mathematically as $p(z|x)$ (Think right to left: given x, we want to get z)
+
+From Bayes' formula we can write:
+
+$$p(z|x) = \frac{p(x|z)p(z)}{p(x)}$$
+
+We can calculate $p(x)$ as:
+
+$$p(x) = \int p(x|z)p(z)dz$$
+(Where did this come from?)
+
+Unfortunately, this integral is computationally very expensive as we need to evaluate it over all possible configurations of latent variables.
+
+Hence instead of calculating $p(z|x)$ directly, we calculate an approximation $q_{\lambda}(z|x)$, parameterized by $\lambda$. For example, if $q$ were Gaussian, $\lambda$ would represent the mean and variance of the latent variables for each datapoint: $\lambda_{x_i} = (\mu_{x_i}, \sigma^2_{x_i})$.
+
+Now how do we know how close this approximation is to our original data distribution? That is where KL Divergence comes in.
+
+> KLD deserves an entire blog on its own. Due to time & length constraints, I am recommending the following two blogs, which will help you get the whole idea ASAP: [Blog 1](https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained) & [Blog 2](https://colah.github.io/posts/2015-09-Visual-Information/).
+
+Using KLD we can write:
+
+$$KL(q_{\lambda}(z|x)||p(z|x)) = E_q[\log q_{\lambda}(z|x)] - E_q[\log p(x,z)] + \log p(x)$$
+
+We want to find a value of $\lambda$ that minimizes the difference between these two distributions. Which we can write as:
+
+$$q^*_{\lambda}(z|x) = \arg\min_{\lambda} KL(q_{\lambda}(z|x)||p(z|x))$$
+
+Sadly, even this is intractable (hard to compute) as we again have our $p(z|x)$ term in it.
+
+So we introduce ELBO (Evidence Lower BOund), which provides us with a tractable way to optimize our model. ELBO represents the lower bound on the evidence (log probability) of our observed data. It is written as:
+
+$$ELBO(\lambda) = E_q[\log p(x,z)] - E_q[\log q_{\lambda}(z|x)]$$
+
+Notice how we can combine this with the equation of KLD we wrote earlier and get the following formula:
+
+$$\log p(x) = ELBO(\lambda) + KL(q_{\lambda}(z|x)||p(z|x))$$
+
+By Jensen's inequality, the KLD is always greater than or equal to zero. Hence if we minimize KLD we will maximize ELBO. This makes our lives easier as we can indeed calculate the ELBO.
+
+We can decompose the ELBO for a single data point as following:
+
+$$ELBO_i(\lambda) = E_{q_{\lambda}(z|x_i)}[\log p(x_i|z)] - KL(q_{\lambda}(z|x_i)||p(z))$$
+
+We can see that this is equivalent to our previous definition of ELBO through the following derivation:
+
+Starting with our original ELBO:
+$$ELBO(\lambda) = E_q[\log p(x,z)] - E_q[\log q_{\lambda}(z|x)]$$
+
+We can expand $\log p(x,z)$ using the chain rule of probability:
+$$\log p(x,z) = \log p(x|z) + \log p(z)$$
+
+Substituting this back:
+$$ELBO(\lambda) = E_q[\log p(x|z) + \log p(z)] - E_q[\log q_{\lambda}(z|x)]$$
+
+Using the linearity of expectation:
+$$ELBO(\lambda) = E_q[\log p(x|z)] + E_q[\log p(z)] - E_q[\log q_{\lambda}(z|x)]$$
+
+Rearranging terms:
+$$ELBO(\lambda) = E_q[\log p(x|z)] - (E_q[\log q_{\lambda}(z|x)] - E_q[\log p(z)])$$
+
+The term in parentheses is exactly the KL divergence between $q_{\lambda}(z|x)$ and $p(z)$, giving us:
+$$ELBO(\lambda) = E_q[\log p(x|z)] - KL(q_{\lambda}(z|x)||p(z))$$
+
+Which is the same as our single-point ELBO formula.
+
+## Connecting to Neural Networks
+
+Now that we understand the mathematical foundation, let's see how this translates to actual neural networks.
+
+The key insight is that we can implement our probability distributions using neural networks:
+
+1. **The Encoder Network (Inference Network)**
+
+   - Takes input data $x$ and outputs parameters $\lambda$
+   - Implements our approximate posterior $q_{\theta}(z|x)$
+   - Parameters $\theta$ are the weights and biases of this network
+
+2. **The Decoder Network (Generative Network)**
+   - Takes latent variables $z$ and reconstructs the data
+   - Implements our likelihood $p_{\phi}(x|z)$
+   - Parameters $\phi$ are the weights and biases of this network
+
+With these networks, we can rewrite our ELBO formula to include the network parameters:
+
+$$ELBO_i(\theta,\phi) = E_{q_{\theta}(z|x_i)}[\log p_{\phi}(x_i|z)] - KL(q_{\theta}(z|x_i)||p(z))$$
+
+This formula serves as our loss function (technically its negative):
+$$Loss_i(\theta,\phi) = -ELBO_i(\theta,\phi)$$
+
+Let's break down what each term means in practice:
+
+1. **First Term**: $E_{q_{\theta}(z|x_i)}[\log p_{\phi}(x_i|z)]$
+
+   - This is our reconstruction loss
+   - How well can we reconstruct the input after encoding and decoding?
+   - Think of it as "How close is the output to the input?"
+
+2. **Second Term**: $KL(q_{\theta}(z|x_i)||p(z))$
+   - This is our regularization term
+   - Keeps our latent space well-behaved
+   - Makes sure our encoded representations don't deviate too far from our prior
+
+We optimize this loss function using stochastic gradient descent, which:
+
+- Updates encoder parameters ($\theta$) to better approximate the posterior
+- Updates decoder parameters ($\phi$) to better reconstruct the input
+
+> Note: This is called variational EM (Expectation Maximization) because we're maximizing the expected log-likelihood of our data with respect to both sets of parameters.
+
+And that's it! We've connected the dots between probability theory and neural networks. The VAE is essentially:
+
+1. An encoder that compresses data into a well-behaved latent space
+2. A decoder that reconstructs data from this latent space
+3. A loss function that ensures both good reconstruction and well-structured latent representations
 
 ## Papers to read
 
 [Denoising Diffusion Implicit Model](https://arxiv.org/pdf/2010.02502)
 
-* DDIM is another scheduler, 
+- DDIM is another scheduler,
 
 [Generative Modeling by Estimating Gradients of the
 Data Distribution](https://arxiv.org/pdf/1907.05600)
 
-* The original paper by yang song that discusses ideas about score based modeling
+- The original paper by yang song that discusses ideas about score based modeling
 
 [PROGRESSIVE DISTILLATION FOR FAST SAMPLING
 OF DIFFUSION MODELS](https://arxiv.org/pdf/2202.00512)
 
-* The paper that introduced the idea of distillation 
+- The paper that introduced the idea of distillation
 
 [Denoising Diffusion Probabilistic Models](https://arxiv.org/pdf/2006.11239)
 
-DDPM was the first major breakthrough in diffusion modeling 
+DDPM was the first major breakthrough in diffusion modeling
 
 [Elucidating the Design Space of Diffusion-Based
 Generative Models](https://arxiv.org/pdf/2206.00364)
-
 
 [CLASSIFIER-FREE DIFFUSION GUIDANCE](https://arxiv.org/pdf/2207.12598)
 
@@ -955,21 +1075,21 @@ The paper that introduced CFG
 
 [Diffusion Models Beat GANs on Image Synthesis](https://arxiv.org/pdf/2105.05233)
 
-Paper by openai researchers that introduced singificant 
+Paper by openai researchers that introduced singificant
 
 [Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114)
 
-The original paper on VAE 
+The original paper on VAE
 
 [Photorealistic Text-to-Image Diffusion Models
 with Deep Language Understanding](https://arxiv.org/pdf/2205.11487)
 
-The original Image Gen paper by Google 
+The original Image Gen paper by Google
 
 [SCORE-BASED GENERATIVE MODELING THROUGH
 STOCHASTIC DIFFERENTIAL EQUATIONS](https://arxiv.org/pdf/2011.13456)
 
-First paper on score based modeling 
+First paper on score based modeling
 
 [Scalable Diffusion Models with Transformers](https://arxiv.org/pdf/2212.09748)
 
@@ -978,8 +1098,7 @@ The paper that introduced DiTs
 [High-Resolution Image Synthesis with Latent Diffusion Models
 ](https://arxiv.org/pdf/2112.10752)
 
-The paper that changed the course of history by introducing 
-
+The paper that changed the course of history by introducing
 
 Helpful docs
 
