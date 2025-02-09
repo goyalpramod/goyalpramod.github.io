@@ -18,16 +18,15 @@ Each section of the blog has been influenced by works by pioneering ML practitio
 
 ## How this Blog is Structured
 
-First we talk about a very high level idea of diffusion models about how they work. In doing so we will be personifying each component of the whole pipeline.
+First we talk about a very high level idea of diffusion models understanding how they work. In doing so we will be personifying each component of the whole pipeline.
 
 Once we have a general idea of the pipeline, We will dive into the ML side of those sections.
 
-Many sections of the diffusion model pipeline is mathematics heavy, hence I have added a completely different section for that. Which is included after we understand the ML components. You can understand how diffusion models work (if you believe in some assumptions without looking at the proof) along with the code, without the maths. But I will still recommend going through the Mathematical ideas behind it, because they are essential for developing further for diffusion model research.
+Many sections of the diffusion model pipeline are mathematics heavy, hence I have added a completely different section for that. Which is included after we understand the ML components. You can understand how diffusion models work (if you believe in some assumptions without looking at the proof) along with the code, without the maths. But I will still recommend going through the Mathematical ideas behind it, because they are essential for text to image research.
 
-After Understanding everything, we will code it out. As it is substantially harder to keep the blog to readable length and maintain it's quality while giving the entire code for Stable Diffusion, I will link to the exact code (with definition for each function)
-Wherever I do not explicitly code a section out.
+After Understanding everything, we will code it out. As it is substantially harder to keep the blog to a readable length and maintain it's quality while giving the entire code for Stable Diffusion, I will link to the exact code (with definition for each function) Wherever I do not explicitly code a section out.
 
-Inference with Diffusion model deserves an entirely different blog of it's own, as I hope to finish this blog in a reasonable time. I have added links in the end ([Misc]()) to where you can further learn how to make the best diffusion model art and get better at it.
+Inference with Diffusion model deserves an entirely different blog of it's own, as I hope to finish this blog in a reasonable time. I have added links in the end ([Misc](#misc--references)) to where you can further learn how to make the best diffusion model art and get better at it.
 
 Let us begin!!
 
@@ -41,26 +40,28 @@ The way Dali starts his work is, that he first has a canvas, he listens to your 
 
 But Dali has a big problem, that he cannot make big images, he tells you that he will only create images the size of your hand. This is obviously not desirable. As for practical purposes you may want images the size of a wall, or a poster etc.
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/8.webp)
 That is when a magic wand falls from the sky, and it has two modes Encoder(Compress size) and Decoder(Enlarge size). That gives you a great idea. You will start with the size of the canvas that you like, Encode it. Give the encoded canvas to Dali, he will make his art, And then you can decode the created art to get it back to the original shape you want.
 
 This works and you are really happy.
 
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/8.webp)
+
 But you are curious about how Dali works, so you ask him. "Dali why do you always start with this noisy canvas instead of pure white canvas? and how did you learn to generate so many amazing images?"
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/4.webp)
 Dali is a kind nice guy, so he tells you about how he started out. When he was just a newbie artist. The world was filled with great art. Art so complex that I could not reproduce it, nobody could.
 
 That is when I found a special wand as well, which let me add and fix mistakes in a painting.
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/7.webp)
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/4.webp)
 
 I would start with an existing artwork, add a bunch of mistakes to it, and using my wand I would reverse them.
 
 After a while, I added so many mistakes to the original artwork, that they looked like pure noise. The way my canvas do, and using my special wand. I just gradually found mistakes and removed them. Till I got back the original image.
 
-This idea sounds fascinating, but you being you have quite a question "that sounds amazing, so did you learn what the "full of mistakes" image will look like for all the images in the world? Otherwise how do you know what will be the final image be from a noisy image?"
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/7.webp)
 
-"Great question!!!" Dali responds. "That is what my brothers used to do, They tried to learn the representation of all the images in the world and failed. What I did differently was, instead of learning all the images. I learnt the general idea of different images. For example, instead of learning all the faces. I learnt how do human faces look in general"
+This idea sounds fascinating, but you being you have quite a question "that sounds amazing, so did you learn what the "full of mistakes" image looks like for all the images in the world? Otherwise how do you know what the final image will be from a noisy image?"
+
+"Great question!!!" Dali responds. "That is what my brothers used to do, They tried to learn the representation of all the images in the world and failed. What I did differently was, instead of learning all the images. I learnt the general idea of different images. For example, instead of learning all the faces. I learnt how human faces look like in general"
 
 Satisfied with his answers you were about to leave, when Dali stops you and asks, "Say friend, that wand of yours truly is magical. It can make my art popular worldwide because everyone can create something of value using it. Will you be kind enough to explain how it works so I can make one for myself."
 
@@ -69,17 +70,29 @@ You really want to help Dali out, but unfortunately even you do not know how the
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/28.webp)
 
 You being the kind soul you are, Tell the man that you found it on the street and wish to return it.
-The man Greatly happy with your generosity, wishes to pay you back. You just say "Thank you, but I do not seek money. But it would really help my friend Dali out if you could explain how your magic wand works."
+The man Greatly happy with your generosity, wishes to pay you back. You just say "Thank you, but I do not seek money. It would be nice if you could help my friend Dali out, by explaining how your magic wand works."
 
 The man curious for what use anyone would have for his magic wand sees around Dali's studio, and understands that he is a great artist. Happy to help him he says. "My name is Auto, and I shall tell you about my magic wand."
+
+"There is a special dimension that my grandpappy found, where everything big can be made small, and when we try to get these small things back from this dimension. It turns back big in our world.
+
+That is what the encode command of the wand does, it turns the object into how it would look like in the special dimension.
+
+You can then make changes to the object, And when we do the decode command. It turns it back into this dimension making it big.
+
+I will give you as many wands as you want!!"
+
+Dali is extremely happy, you are happy for your friend, and Auto is happy that he got a new customer.
+
+The end.
 
 ## Understanding the diffferent components
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/24.webp)
 
-Now that you have a general idea of how these image generation models work, lets build each specific component out.
+Now that you have a general idea of how these image generation models work, let's understand each specific component out.
 
-Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, Go to this [repo]().
+Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, Go to this [repo](https://github.com/goyalpramod/paper_implementations).
 
 Additionally, The below work takes heavy inspiration from the following works
 
@@ -100,13 +113,17 @@ Our genius artist is called a U-Net in ML terms, now if we go back to our story.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/25.webp)
 
-Let's understand how it works, You will be surprised to know U-Nets were actually introduced in a [medical paper](https://arxiv.org/pdf/1505.04597) back in 2015. Primarily for the task of image segmentation.
+In the above image, the U-Net predicts the noise in a step wise manner. The scheduler is responsible for removing it. (indicated by the "-" sign)
+
+Let's understand how it works.
+
+You will be surprised to know U-Nets were actually introduced in a [medical paper](https://arxiv.org/pdf/1505.04597) back in 2015. Primarily for the task of image segmentation.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/14.webp)
 
 > Image Taken from the ["U-Net: Convolutional Networks for Biomedical Image Segmentation"](https://arxiv.org/abs/1505.04597)
 
-The idea behind segmentation is, given an image "a". Create a map "b" around the objects which need to be classified in the image.
+The idea behind segmentation is, given an image "a". Create a map "b" around the objects which needs to be classified in the image.
 
 And the Reason they are called U-Net is because, well the architecture looks like a "U".
 
@@ -116,21 +133,21 @@ And the Reason they are called U-Net is because, well the architecture looks lik
 
 This looks quite complicated so let's break it down with a simpler image
 
-Also, I will proceed with the assumption you have an understanding of [CNNs]() and how they work. If not, check the [appendix]() for a quick overview and a guide to where you can learn more on the topic.
+Also, I will proceed with the assumption you have an understanding of [CNNs](https://en.wikipedia.org/wiki/Convolutional_neural_network) and how they work. If not, check the [Misc](#misc--references) for a guide to where you can learn more on the topic.
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/11.webp)
+![Image of simplified U-Net](/assets/blog_assets/demystifying_diffusion_models/11.webp)
 
-The encoder side does [convolutions]() to extract features from images, then compresses them to only focus on the relevant parts.
+The encoder side does convolutions to extract features from images, then compresses them to only focus on the relevant parts.
 
-The decoder then does [Transpose Convolutions]() to decode these extracted parts back into the original image size.
+The decoder then does transpose convolutions to decode these extracted parts back into the original image size.
 
 To understand it in our context, think instead of segmenting objects, we are segmenting the noise. Trying to find out the particular places where noise is present.
 
-To prevent the U-net from losing important information while downsampling, skip connections are added. This sends back the compressed encoded image back to the decoder so they have context from their as well.
+To prevent the U-net from losing important information while down-sampling, skip connections are added. These send back the compressed encoded image back to the decoder so they have context from there as well.
 
 #### Coding the original U-Net
 
-They are easier to understand when we write them down in code. So let us do that. (We start with coding the original U-Net out first, then add the complexities of the one used in Stable Diffusion)
+They are easier to understand when we write them down in code. So let us do that. (We start with coding the original U-Net out first, then add the complexities of the one used in Stable Diffusion later)
 
 ```python
 class DoubleConv(nn.Module):
@@ -164,7 +181,7 @@ class Down(nn.Module):
         return self.maxpool_conv(x)
 ```
 
-A simple Down block, that compresses the size of the image. This makes sure we only focus on the relevant part. Imagine it like this Given most images, like pictures of dogs, person in a beach, Photo of the moon etc. The most interesting part (the dog,person,moon) usually take up a small or half the photo
+A simple Down block, that compresses the size of the image. This makes sure we only focus on the relevant part. Imagine it like this Given most images, like pictures of dogs, person in a beach, Photo of the moon etc. The most interesting part (the dog, person, moon) usually take up a small part or half the photo.
 
 ```python
 class Up(nn.Module):
@@ -203,6 +220,8 @@ class Up(nn.Module):
         # Step 4: Process combined features through double convolution
         return self.conv(x)
 ```
+
+This is the Up sampling step which creates the mask, which is needed for segmentation of the image.
 
 ```python
 class UNet(nn.Module):
@@ -294,12 +313,12 @@ def resnet_block(features, time_embedding, skip_connection):
     return final
 ```
 
-If you are new to ResNets, consider reading more [here](https://medium.com/towards-data-science/the-w3h-of-alexnet-vggnet-resnet-and-inception-7baaaecccc96)
+If you are new to ResNets, consider reading more [here](https://medium.com/towards-data-science/the-w3h-of-alexnet-vggnet-resnet-and-inception-7baaaecccc96).
 
 The ResNet blocks are crucial because they:
 
 - Maintain spatial information about the image
-  \*Help the model understand how features should change based on the denoising step
+- Help the model understand how features should change based on the denoising step
 - Prevent vanishing gradients through residual connections
 
 **Attention Blocks**\
@@ -327,7 +346,7 @@ def attention_block(features, prompt_embedding):
     return output
 ```
 
-To read more about attention, consider reading my blog on the topic [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/#understanding-self-attention)
+To read more about attention, consider reading my blog on the topic [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/#understanding-self-attention).
 
 The attention blocks are essential because they:
 
@@ -369,7 +388,7 @@ For example, when generating an image of "a red cat sitting on a blue chair":
 
 #### Diffusion Transformer (DiT)
 
-Remember how earlier we talked about U-Nets being the brain behind image generation? Well, there's another architecture that's becoming increasingly popular - the Diffusion Transformer (DiT). Think of it as giving Dali a different kind of artistic training, one that's more about seeing the whole canvas at once rather than focusing on different parts separately.
+There's another architecture that's becoming increasingly popular - the Diffusion Transformer (DiT). Think of it as giving Dali a different kind of artistic training, one that's more about seeing the whole canvas at once rather than focusing on different parts separately.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/38.webp)
 
@@ -419,13 +438,13 @@ The future is likely to see more models using DiT architectures or hybrid approa
 
 ### Dali's mistake fixing wand (Scheduler)
 
-> A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the maths section.\
+> A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the [maths](#maths-of-the-forward-diffusion-process) section.\
 > This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful.\
-> Also, if at any point during the explanation, if it becomes too complex. Take a break and come back, Each part alone took me weeks to write. Do not assume you can understand it in one sitting, and the idea only becomes simpler as you read more about it.
+> Also, if at any point during the explanation, it becomes too complex to comprehend. Consider taking a break and continuing later, Each part alone took me weeks to write. Do not assume you can understand it in one sitting, and the idea only becomes simpler as you read more about it.
 
 As mentioned earlier, The U-Net does not remove the noise, it just predicts it. The job of removing it comes down to the scheduler.
 
-Put simply, the scheduler is just a mathematical equation that takes an image, predicted noise. And outputs another image with some noise removed from it. (I am saying images, but actually matrices are passed around)
+Put simply, the scheduler is just a mathematical equation that takes an image & predicted noise. And outputs another image with some noise removed from it. (I am saying images, but actually matrices are passed around)
 
 ![Denoising process of an image](/assets/blog_assets/demystifying_diffusion_models/6.webp)
 
@@ -433,30 +452,32 @@ Put simply, the scheduler is just a mathematical equation that takes an image, p
 
 The above image looks quite complex, But it is really simple if you understand what is going on.
 
-We start with an image and call it $X_0$ we then keep adding noise to it till we have pure [Stochastic]()(random) [Gaussian]()(Normal Distribution) Noise $X_T$.
+We start with an image and call it $X_0$ we then keep adding noise to it till we have pure [Stochastic](https://en.wikipedia.org/wiki/Stochastic) (random) [Gaussian](https://en.wikipedia.org/wiki/Gaussian_function) (Normal Distribution) Noise $X_T$.
 
 $$q(x_t|x_{t-1})$$
 
 "The above equation is the conditional probability over the Probability Density Function"
 
-Well wasn't that a mouthful, dont worry. I won't throw such a big sentence at you without explaining what it means.
+Well wasn't that a mouthful, don't worry. I won't throw such a big sentence at you without explaining what it means.
 
-Let's again stary with our original image $X_0$ and then we add a bit of noise to it, this is now $X_1$, then we add noise to this image that becomes $X_2$ and so on.
+Let's again start with our original image $X_0$ and then we add a bit of noise to it, this is now $X_1$, then we add noise to this image that becomes $X_2$ and so on.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/29.webp)
 
-That scary looking equation basically says if we have the image an image $X_{t-1}$ we can add noise to it and get image at the next timestep and represent that as $X_t$
-(This is a slight oversimplification and we dive into greater detail about it in the math section)
+That scary looking equation basically says if we have an image $X_{t-1}$ we can add noise to it and get the image at the next timestep, represented as $X_t$
+(This is a slight oversimplification and we dive into greater detail about it in the [math](#maths-of-the-forward-diffusion-process) section)
 
 So now we have a single image, and we are able to add noise to it.
 
+> **Note**: A simple method I use to keep in mind is whenever an equation like $p(A|B)$ is present, it simply means think right to left. Given B, what can be A.
+
 What we want to do is, the reverse process. Take noise and get an image out of it.
 
-You may ask why do we not simply do what we did earlier but the otherway around so something like
+You may ask why do we not simply do what we did earlier but the other way around so something like
 
 $$q(X_{t-1}|X_t)$$
 
-Well the above is simply not computationally possible because we will need to learn how the noise of all the images in the world looks like (remember how in the [idea]() section Dali said his brothers tried to do this and failed)
+Well the above is simply not computationally possible ([Intractable](https://www.umsl.edu/~siegelj/information_theory/classassignments/Lombardo/04_intractableproblems.html) is the lingo used for it in software world) because we will need to learn how the noise of all the images in the world looks like (remember how in the [idea](#the-genius-artist) section Dali said his brothers tried to do this and failed)
 
 So we need to learn to approximate it, learn how the images might look like given the noise.
 
@@ -470,18 +491,22 @@ That is done by this equation
 
 $$q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I})$$
 
-We already know what the left hand side means, lets understand the right hand side.
+We already know what the left hand side (LHS) means, lets understand the right hand side (RHS).
 
 The RHS represents a Normal distribution $\mathcal{N}$ with mean $\sqrt{1-\beta_t}x_{t-1}$ and variance $\beta_t\mathbf{I}$, where we sample noise at time $t$ from this distribution to add to our image.
 
 There is one slight problem though, gradually adding so many different noise at different values of t is very computationally expensive.
 
-Using the "nice property" we can make another equation
+Using the "nice property" we can make another equation. (Explained and derived in the [maths](#maths-of-reverse-diffusion-process) section)
 
 $$q(x_t|x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t}x_0, (1-\bar{\alpha}_t)\mathbf{I})$$
-where $\bar{\alpha}t = \prod{s=1}^t \alpha_s$ and $\alpha_t = 1-\beta_t$
+where $\bar{\alpha}_t = \prod_{i=1}^t \alpha_i$ and $\alpha_t = 1-\beta_t$
 
-This basically means, now we can add noise at any time t just using the original image. This is amazing, why? well you will understand in a while.
+($\prod_{i=1}^t \alpha_i$ this simply means the values of alpha multiplied from $1$ to $t$, $\alpha_1 \cdot \alpha_2 \cdot \alpha_3 \cdot ... \cdot \alpha_t$)
+
+This equation lets us add noise at any time t just using the original image. This is amazing, why? Because during training it will be very tough to go sequentially from $t=1$ to $t=n$ just to figure out how the noisy image will look like at timestep $n=40$. The above equation saves us from this computational inefficiency.
+
+> **Note**: we have been repeatedly using the term timestep. Funny enough it has nothing to do with time. It is just a name used in convention. We might as well replace it simply with Step or even Count. So do not think timestep with a notion of time. But rather the number of steps.
 
 You need to understand a few more things, the $\beta$ term in the above equation is a _variance shedule_ it basically controls the curve the noise is added into the image.
 
@@ -495,11 +520,11 @@ The above image represents how value of $\beta$ is varied.
 
 > Image taken from ["Improved Denoising Diffusion Probabilistic Models"](https://arxiv.org/pdf/2102.09672)
 
-> Top is nosie being added by a linear variance scheduler, notice how after only a few steps the image starts looking like complete noise
+> Top is noise being added by a linear variance scheduler, notice how after only a few steps the image starts looking like complete noise
 
 > Bottom is noise being added by a cosine variance scheduler.
 
-Now that we understand how we can add noise to the images & how we can control the different kinds of noise. But there is something much more important that we need to talk about, that is. WHY ARE WE DOING THIS and WHY DOES THIS WORK?
+Now that we understand how we can add noise to the images & how we can control the different kinds of noise. There is something much more important that we still haven't talked about, that is. WHY ARE WE DOING THIS and WHY DOES THIS WORK?
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/33.webp)
 
@@ -529,7 +554,7 @@ $\|\epsilon - \epsilon_\theta(x_t,t)\|_2 = \|\epsilon - \epsilon_\theta(\bar{\al
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
 
-> Image Taken from {add paper}
+> Image Taken from ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239)
 
 This greatly simplifies are training, which can be written as the above image.
 
@@ -542,9 +567,9 @@ In summary:
 
 This process is efficient because:
 
-We can jump to any level of noise directly (thanks to the "nice property")\
-We know exactly what noise we added, so we can precisely measure how well our model predicts it\
-By learning to identify the noise at any degradation level, the model implicitly learns how to restore images
+- We can jump to any level of noise directly (thanks to the "nice property")
+- We know exactly what noise we added, so we can precisely measure how well our model predicts it
+- By learning to identify the noise at any degradation level, the model implicitly learns how to restore images
 
 This training happens in batches, where the model learns from multiple examples simultaneously, gradually improving its ability to identify and later remove noise from images.
 
@@ -554,7 +579,7 @@ To know more about the differences during inference. Check this [blog](https://s
 
 ### Instructions, because everyone needs guidance (Conditioning)
 
-So far we have talked about how to generate images but have conveniently skipped over how to describe the kinds of images we want. This was another major revolution for Diffusion models, because back even when we could generate high quality images using models like [GANs](), it was tough to tell them what we want them to generate. Let us focus on that now.
+So far we have talked about how to generate images but have conveniently skipped over how to describe the kinds of images we want. This was another major revolution for Diffusion models, because back even when we could generate high quality images using models like [GANs](https://arxiv.org/pdf/1812.04948), it was tough to tell them what we want them to generate. Let us focus on that now.
 
 Over the years the field of image gen has substantially improved and now we are not only limited to texts as a means of helping us generate images.
 
@@ -586,7 +611,7 @@ So the magic is introduced by CLIP, let us understand how CLIP was made.
 
 ##### CLIP (Contrastive Language–Image Pre-training)
 
-It was originally created as a image classification tool, Given an image, Describe what it is talking about
+It was originally created as a image classification tool. Given an image, describe what it.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/19.webp)
 
@@ -598,7 +623,9 @@ The image encoder takes images and converts them into embeddings, as you can see
 
 The text encoder takes captions of the images and converts them into embeddings similarily, $T_1$ for text 1 embeddings, $T_2$ for text 2 embeddings and so on.
 
-Now as shown above, The matrix comprises of dot product of these text and image encoding. The diagnol of the matrix is maximised whereas everything else is minimised.
+Now as shown above, The matrix comprises of dot product of these text and image encoding. The diagonal of the matrix is maximized whereas everything else is minimized.
+
+The diagonal of the matrix is maximized because it represents the similarity scores between correctly paired image-text pairs (e.g., $I_1 \cdot T_1$, $I_2 \cdot T_2$), while off-diagonal elements represent incorrect pairings (e.g., $I_1 \cdot T_2$). By maximizing the diagonal values through training, CLIP learns to encode semantically related images and texts into similar vector spaces, ensuring that an image's embedding has the highest dot product with its corresponding text description's embedding, thereby learning a shared semantic space where related visual and textual content are proximal.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/20.webp)
 
@@ -608,7 +635,9 @@ Now CLIP was originally trained for zero-shot image classification. (which is a 
 
 As you can see from the above image, when given an image and a dataset. CLIP returns the word which has the highest dot-product (The dot-product measures the similarity) with the image encoding.
 
-Now we primarily talked about CLIP, But there is another text encoder that is used called [T5](<https://en.wikipedia.org/wiki/T5_(language_model)>) created by Google. The idea is more or less similar the only difference is
+Now we primarily talked about CLIP, But there is another text encoder that is used called [T5](<https://en.wikipedia.org/wiki/T5_(language_model)>) created by Google.
+
+##### T5
 
 T5 (Text-to-Text Transfer Transformer) differs from CLIP's text encoder in several key ways:
 
@@ -634,7 +663,7 @@ Image to Image is of multiple types, you can have FaceSwap, Inpainting, ControlN
 
 ##### Control-Net
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/34.webp)
+![Image of controlnet outputs](/assets/blog_assets/demystifying_diffusion_models/34.webp)
 
 > Image taken from ["Adding Conditional Control to Text-to-Image Diffusion Models"](https://arxiv.org/pdf/2302.05543)
 
@@ -649,13 +678,13 @@ Control-Net essentially has two components ->
 1. The diffusion model used for generating images
 2. The Control-Net used for conditioning
 
-The process itself is rather simple, we start with an image convert it into depth, canny or HUD representation.
+The process itself is rather simple, we start with an image convert it into depth, canny or HUD representation. (This can be done through simple Computer Vision functions)
 
-Then give this representation to the Control-Net which conditions the DIffusion model during the denoising process.
+Then this representation is given to the Control-Net which conditions the Diffusion model during the denoising process.
 
 Everything will make more sense when we see the internal architecture and understand how the control-net model is trained.
 
-**Note**: As mentioned, a complete Control-Net model is trained for a diffusion model, so a Control-Net model trained for one model won't work on another. For example, a control net model trained for SD1.5 cannot be used for SDXL.
+> **Note**: As mentioned, a complete Control-Net model is trained for a diffusion model, so a Control-Net model trained for one model won't work on another. For example, a control net model trained for SD1.5 cannot be used for SDXL.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/21.webp)
 
@@ -677,7 +706,7 @@ As you can see above. The SD U-Net takes in the text encoding and the noisy imag
 
 The loss calculated then is used to train the Control-Net model (inside green block)
 
-The Control-net model consists of two parts, The transformers and the Control U-Net. The control U-Net is very similar to our original unet that we started with a few important changes. (More on this in a while)
+The Control-net model consists of two parts, The transformers and the Control U-Net.
 
 The transformer's job is to take whatever condition we give it (depth map, edge detection etc.) and convert it into something that our U-Net can understand (latent space representation).
 
@@ -699,11 +728,9 @@ Let's understand how this translation happens:
      - The height and width of our features
      - Different types of features we extracted (channels)
 
-{I believe the transformer is a DiT that we should talk more about later in improvements}
+**The ControlNet U-Net Component**
 
-### The ControlNet U-Net Component
-
-Let's first understand what a Hyper-Network is:
+ControlNet is a type of [Hyper-network](https://arxiv.org/abs/1609.09106) so let's first understand what a Hyper-Network is:
 
 Imagine you have a very talented artist (our base model) who is amazing at drawing pictures based on descriptions. Now, what if you want them to draw pictures based on descriptions AND reference sketches? Instead of retraining the artist (which would be time-consuming and might make them forget their original skills), we give them an assistant (hyper-network) who understands sketches and can guide the artist.
 
@@ -749,11 +776,11 @@ The magic of inpainting in diffusion models is that it only applies the denoisin
 2. Looks at the surrounding context (trees, water, buildings)
 3. Carefully fills in the erased parts to match perfectly with the rest
 
-#### How Does It Actually Work?
+**How Does It Actually Work?**
 
 Behind the scenes, inpainting uses a clever modification of our regular diffusion process. Let's understand the technical bits:
 
-1. **Masked Diffusion**:
+**Masked Diffusion**:
 
 ```python
    # x is our image, mask is 1 for areas to keep, 0 for areas to fill
@@ -768,7 +795,7 @@ We only add noise to the areas we want to fill in
 Original parts of the image stay untouched
 This preserves exact details in unmasked regions
 
-Conditional Denoising
+**Conditional Denoising**
 
 ```python
 def denoise_step(x_t, t, mask, original_x):
@@ -785,13 +812,13 @@ The model sees both the masked and unmasked regions
 This helps it understand the context and maintain consistency
 But updates only happen in masked areas
 
-Additional Conditioning:
+**Additional Conditioning:**
 
 The model gets extra information:
 
-The mask itself (where to fill)
-The surrounding context (what to match)
-Any text prompts (what to create)
+- The mask itself (where to fill)
+- The surrounding context (what to match)
+- Any text prompts (what to create)
 
 This helps it generate content that fits seamlessly
 
@@ -821,16 +848,18 @@ def inpaint_image(original, mask, prompt):
 
 This powerful technique is used for:
 
-Removing unwanted objects from photos
-Restoring damaged parts of old images
-Extending images beyond their original boundaries
-Creating variations of specific parts while keeping the rest intact
+- Removing unwanted objects from photos
+- Restoring damaged parts of old images
+- Extending images beyond their original boundaries
+- Creating variations of specific parts while keeping the rest intact
 
 The best part? The same diffusion process we learned about earlier handles this naturally - it just needs to know which parts to leave alone and which parts to work on!
 
-It is a complete magic during inference. Consider reading this [blog](https://stable-diffusion-art.com/inpainting_basics/) to learn more.
+It is complete magic during inference. Consider reading this [blog](https://stable-diffusion-art.com/inpainting_basics/) to learn more.
 
-## LoRA (Low-Rank Adaptation)
+#### LoRA (Low-Rank Adaptation)
+
+> **Note**: Lora's are a huge part of Image generation models and deserve an entire blog to them. Here I have tried to give a quick introduction to the idea.
 
 Remember how earlier we talked about Dali learning the general idea of images rather than specific ones? Well, what if Dali wanted to learn a very specific style - like drawing in the style of Van Gogh, or creating anime characters? Teaching the entire model from scratch would be like making Dali relearn everything just to add one style. That would be quite inefficient!
 
@@ -859,14 +888,14 @@ What makes LoRA especially clever is how it achieves these changes. Instead of s
 
 This [video](https://www.youtube.com/watch?v=qJeaCHQ1k2w&t=1s) helped me immensely while writing this part.
 
-Unfortunately for the both of us, This part too is very maths heavy. So again I will leave the intuition and derivation for the [maths section]() of the blog and just talk about the idea, show the equations and write out the code.
+Unfortunately for the both of us, This part too is very maths heavy. So again I will leave the intuition and derivation for the [maths section](#maths-of-vae) of the blog and just talk about the idea, show the equations and write out the code.
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/13.webp)
+![Image of VAE](/assets/blog_assets/demystifying_diffusion_models/13.webp)
 The above image is actually what happens inside of an Variational Auto-Encoder but if you are anything like me. It probably doesn't make any sense.
 
 So let's look at a simpler representation and come back to this when it makes more sense.
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/15.webp)
+![Simplified image of VAE](/assets/blog_assets/demystifying_diffusion_models/15.webp)
 
 On the left side we have something called the pixel space, these are images that humans understand.
 
@@ -880,18 +909,18 @@ Now we take this distribution, pass it to the encoder which converts this into a
 
 The reason we need it is quite simple.
 
-An HD image can be of the size 1080x1920, which is equal to {calculate} pixels. But in the latent space a representation of the same image (a representation, or in simpler terms a replica. Not the original) can be in 128X128 pixels a reduction by a factor of {}X
+An HD image can be of the size 1080x1920, which is equal to 2073600 pixels. But in the latent space a representation of the same image (a representation, or in simpler terms a replica. Not the original) can be in 128X128 pixels a reduction by a factor of 126X
 
 Then the decoder returns this representation back to pixel image so we can see a picture. Which is more or less like the original one we started with.
 
 The reason we do this is, This makes computation substantially easier, and it also lets Dali, Or The U-Net to have to do less computation to calculate the noise.
 
-There is a difference between Auto-Encoders and Variational Auto-encoders. Which is explained in greater detail in the Maths section.
+Autoencoders (AEs) and Variational Autoencoders (VAEs) differ fundamentally in their encoding approach: Traditional autoencoders learn deterministic mappings that encode inputs directly into fixed latent vectors, while VAEs learn to encode inputs into probability distributions (typically Gaussian) in the latent space, from which latent vectors are sampled. This probabilistic nature of VAEs enables them to generate new samples and provides a more principled approach to learning continuous latent representations. To read more on this, go through the [math section](#maths-of-vae) as well as consider reading this [blog](https://lilianweng.github.io/posts/2018-08-12-vae/)
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/27.webp)
 
 To expand on this idea, imagine a cluster of emojis—faces, animals, and other familiar icons—all grouped together in the pixel space because of their similar visual style.
-Now, let’s take this to the latent space. We can see that the birds are grouped together, the emojis are cultured together in another space, with similar emojis together.
+Now, let’s take this to the latent space. We can see that the birds are grouped together, the emojis are clustered together in another space, with similar emojis together.
 This demonstrates how the VAE learns to map out objects in the latent space, organizing them based on their visual or stylistic characteristics.
 
 ### Putting it all together
@@ -900,7 +929,7 @@ This demonstrates how the VAE learns to map out objects in the latent space, org
 
 **A quicky Summary**
 
-Before we start with the code, let's have a quick look at everything we have understood so far.
+Before we move further, let's have a quick look at everything we have understood so far.
 
 1. We begin with a prompt. (A delicious pizza)
 2. This prompt is converted into a text embedding using a text encoder.
@@ -908,6 +937,8 @@ Before we start with the code, let's have a quick look at everything we have und
 4. The U-Net predicts the noise in the latents.
 5. The predicted noise is subtracted from the latent using the scheduler.
 6. After many iterations, the denoised latent is decoded using the decoder to produce our final generated image.
+
+> **Note**: Initially I had stated in the [idea](#the-genius-artist) section that we start with a noisy image which is encoded. That is false, as we can simply start with a noisy latent image. Hence during inference the encoder is not required. Unless we are using it for image to image.
 
 ## The Dreaded Mathematics
 
@@ -922,11 +953,11 @@ As the above works were way too hard to understand. The following 3 videos reall
 - [Diffusion Models | Paper Explanation | Math Explained](https://www.youtube.com/watch?v=HoKDTa5jHvg)
 - [Denoising Diffusion Probabilistic Models | DDPM Explained](https://www.youtube.com/watch?v=H45lF4sUgiE&t=1583s)
 
-As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an appendix at the bottom where I explain each mathematical ideas as simply as possible.
+As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an [Misc & References](#misc--references) at the bottom where you can find guides to each mathematical ideas, explained as simply as possible.
 
-It will take too much time and distract us from the understanding of the topic being talked at hand if I describe the mathematical ideas as well as the idea of the process in the same space.
+It will take too much time and distract us from the understanding of the topic at hand if I describe the mathematical ideas as well as the idea of the process in the same space.
 
-Additionaly, we will begin with the same idea that we started with when we first talked about the diffusion process. To really drive the idea home.
+Additionally, we will begin with the same idea that we started with when we first talked about the diffusion process. To really drive the idea home.
 
 ## Maths of the Forward Diffusion process
 
@@ -935,22 +966,22 @@ Imagine you have a large dataset of images, we will represent this real data dis
 
 In the forward diffusion process we add small amounts of Gaussian noise to the image ($x_0$) in $T$ steps. Which produces a bunch of noisy images as each step which we can label as $x_1,\ldots,x_T$. These steps are controlled by a variance schedule given by $\beta_t$. The value of $\beta_t$ ranges from 0 to 1 (i.e it can take values like 0.002, 0.5,0.283 etc) for $t, \ldots, T$. (Mathematically represented as ${\beta_t \in (0,1)}_{t=1}^T$)
 
-There are many reasons we choose Gaussian noise, but it's mainly due to the properties of normal distribution. (about which you can read more here)
+There are many reasons we choose Gaussian noise, but it's mainly due to the properties of normal distribution. (about which you can read more [here](https://en.wikipedia.org/wiki/Normal_distribution#Properties))
 
 Now let us look at the big scary forward diffusion equation and understand what is going on
 
 $$q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I}) \tag{1}$$
 $$q(x_{1:T}|x_0) = \prod_{t=1}^T q(x_t|x_{t-1}) \tag{2}$$
 
-$q(x_t|x_{t-1})$ means that given that I know $q(x_{t-1})$ what is the probability of $q(x_t)$ This is also knows as [bayes theorem]().
+$q(x_t|x_{t-1})$ means that given that I know $q(x_{t-1})$ what is the probability of $q(x_t)$ This is also knows as [bayes theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem).
 
-To simplify it, think of it as. given $q(x_0)$ (for value of $t$ = 1) I know the value of $q(x_1)$.
+To simplify it, think of it as. Given $q(x_0)$ (for value of $t$ = 1) what is the value of $q(x_1)$.
 
-The right handside of equation 1 represents a normal distribution.
+The right hand side (RHS) of equation 1 represents a normal distribution.
 
-Now a question that I had was how can a probability and distribution be equal, well the Left Hand Side (LHS) of equation (eq) 1 represents a Probability Density Function ([PDF]())
+Now a question that I had, was how can probability and distribution be equal, well the Left Hand Side (LHS) of equation (eq) 1 represents a Probability Density Function ([PDF](https://en.wikipedia.org/wiki/Probability_density_function))
 
-For the Right Hand Side (RHS) of eq 1. When we write $N(x; μ, σ²)$, we're specifying that $x$ follows a normal distribution with mean $μ$ and variance $σ²$
+For the RHS of eq 1. When we write $N(x; μ, σ²)$, we're specifying that $x$ follows a normal distribution with mean $μ$ and variance $σ²$
 
 This can be written as
 
@@ -958,9 +989,9 @@ $$p(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\ri
 
 As $t$ becomes larger. And eventually when $T \to \infty$ (This means as $T$ approaches infinity, or just a really large number). The initial data sample $x_0$ loses its features and turns into an isotropic Gaussian Distribution.
 
-{explain equation 2 as well}
+Whilst eq 2 looks complex, it simply means. Given the original image $x_0$ all the values of $x_t$ from $t=1$ to $t=T$ are equal to, multiplication of the PDF from $t=1$ to $t=T$
 
-Let's talk about an interesting property - we can actually sample $x_t$ at any arbitrary time step. This means we don't need to go through the diffusion process step by step to get to a specific noise level.
+Let's talk about an interesting property - we can actually sample $x_t$ at any arbitrary time step (This is the "nice property"). This means we don't need to go through the diffusion process step by step to get to a specific noise level.
 
 First, let's understand something fundamental about normal distributions. Any normal distribution can be represented in the following form:
 
@@ -977,7 +1008,7 @@ $$x_t = \sqrt{1-\beta_t}x_{t-1} + \sqrt{\beta_t}\epsilon_{t-1}$$
 To make our equations simpler, let's define $\alpha_t = 1-\beta_t$. This gives us:
 $$x_t = \sqrt{\alpha_t}x_{t-1} + \sqrt{1-\alpha_t}\epsilon_{t-1}$$
 
-Now, we can substitute the expression for $x_{t-1}$ in terms of $x_{t-2}$:
+Now, we can substitute the expression for $x_{t-1}$ in terms of $x_{t-2}$ (in the above equation just replace $t$ with $t-1$):
 $$x_t = \sqrt{\alpha_t}(\sqrt{\alpha_{t-1}}x_{t-2} + \sqrt{1-\alpha_{t-1}}\epsilon_{t-2}) + \sqrt{1-\alpha_t}\epsilon_{t-1}$$
 
 A key property of normal distributions is that when we add two normal distributions, their means and variances can be combined. Using this property and some algebraic manipulation, we get:
@@ -996,12 +1027,6 @@ This final equation is quite powerful. It allows us to directly sample $x_t$ at 
 
 This makes our implementation much more efficient as we can directly jump to any noise level without calculating all the intermediate steps.
 
-{explain about alpha as well, and rewrite this in your tone a bit more}
-
-"""\
-Usually, we can afford a larger update step when the sample gets noisier, so $\beta_1 < \beta_2 < \cdots < \beta_T$ and therefore $\bar{\alpha}_1 > \cdots > \bar{\alpha}_T$.\
-"""
-
 ## Maths of Reverse diffusion process
 
 ### Reverse diffusion process
@@ -1011,14 +1036,16 @@ Now what we want to do is take a noisy image $x_t$ and get the original image $x
 Essentially we want to sample from $q(x_{t-1}|x_t)$, Which is quite tough as there can be millions of noisy images for actual images. To combat this we create an approximation (why do they work and how do they work in a minute) $p_\theta$ to approximate these conditional probabilities in order to run the _reverse diffusion process_.
 
 Which can be represented as
-$$p_\theta(x_{0:T}) = p(x_T)\prod_{t=1}^T p_\theta(x_{t-1}|x_t)$$
 $$p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(x_t,t))$$
+$$p_\theta(x_{0:T}) = p(x_T)\prod_{t=1}^T p_\theta(x_{t-1}|x_t)$$
+
+(Notice how the above two equation are very similar to the equations we started out with for the forward diffusion process)
 
 Unfortunately it is tough to even sample from this approximate model because it is the same as our previous model, so we modify it by adding the original image $x_0$ to it as such.
 
 $$q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; {\color{Blue}{}\tilde{\mu}(x_t,x_0)}, {\color{red}{}\tilde{\beta}_t\mathbf{I}})$$
 
-Now this is tractable (Exaplain what this word means), let us first understand the proof for how it is tractable. Later moving on to understand how they thought of this idea in the first place
+Now this is tractable (I.e computationally possible), let us first understand the proof for how it is tractable. Later moving on to understand how they thought of this idea in the first place [INCOMPLETE_THIS_WAS_NEVER_EXPLAINED]
 
 Using Bayes' rule, we have:
 
@@ -1150,7 +1177,7 @@ Hence the equations simply become
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
 
-Congratulations, you have a complete understanding of how we came to these equations now. Do not take from granted to how these equations were reached. I have furter added the mathematical backing to the ideas which led to the creation of these equations. Consider checking them out in the [Appendix]()
+Congratulations, you have a complete understanding of how we came to these equations now. Do not take from granted to how these equations were reached. We have skipped over a lot of the groundbreaking mathematical ideas which led to the creation of the above equation. Read more [here](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
 
 ### Score Based Modeling
 
@@ -1236,6 +1263,10 @@ $$\bar{\epsilon}_\theta(x_t,t) = \epsilon_\theta(x_t,t) - (1-\bar{\alpha}_t)\nab
 And to control how strongly we follow the classifier's guidance, we add a weight $w$:
 
 $$\bar{\epsilon}_\theta(x_t,t) = \epsilon_\theta(x_t,t) - (1-\bar{\alpha}_t)w\nabla_{x_t}\log f_\phi(y|x_t)$$
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/43.webp)
+
+> Image taken from ["Diffusion Models Beat GANs on Image Synthesis"](https://arxiv.org/pdf/2105.05233)
 
 #### Classifier-Free Guidance
 
@@ -1516,31 +1547,16 @@ Here's a curated list of papers that shaped the field of diffusion models, arran
 - Key innovation: Continuous-time formulation of generative modeling
 - Impact: Created a theoretical framework connecting different approaches
 
-### Recent Advances
-
-[**PROGRESSIVE DISTILLATION FOR FAST SAMPLING OF DIFFUSION MODELS**](https://arxiv.org/pdf/2202.00512) (2022)
-
-- Addressed the slow sampling speed of diffusion models
-- Key innovation: Student models that can generate high-quality samples in few steps
-- Impact: Made diffusion models more practical for real-time applications
-
-[**Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding**](https://arxiv.org/pdf/2205.11487) (2022)
-
-- Introduced Imagen, pushing boundaries of text-to-image generation
-- Key innovation: Using large language models for better text understanding
-- Impact: Showed the importance of strong text encoders in text-to-image models
-
-[**Elucidating the Design Space of Diffusion-Based Generative Models**](https://arxiv.org/pdf/2206.00364) (2022)
-
-- Comprehensive analysis of diffusion model design choices
-- Key innovation: Systematic study of architecture and training decisions
-- Impact: Provided practical guidelines for building better diffusion models
-
-## The code [INCOMPLETE]
+## The code
 
 Let's Gradually make this section more complex, starting with the quickest way to start generating images to the more complex methods
 
-This [website](https://nn.labml.ai/diffusion/stable_diffusion/index.html) is an amazing starting point to understand what each line of code does. Consider checking it out, it helped me significantly while writing this section. 
+This [website](https://nn.labml.ai/diffusion/stable_diffusion/index.html) is an amazing starting point to understand what each line of code does. Consider checking it out, it helped me significantly while writing this section.
+
+The following section takes significant help from the following two sources
+
+- [Machine Learning from Scratch: Stable Diffusion](https://colab.research.google.com/drive/1mm67_irYu3qU3hnfzqK5yQC38Fd5UFam?usp=sharing#scrollTo=BwFZstOIspxB)
+- [The Annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)
 
 ### Diffusers by Huggingface
 
@@ -1570,11 +1586,444 @@ If you wish to modify the different components without actually coding them out,
 
 ### VAE
 
+```python
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+class Encoder(nn.Module):
+    def __init__(self, in_channels=3, latent_dim=4):
+        super().__init__()
+        # Convolutional layers for feature extraction
+        # Each conv layer reduces spatial dimensions by 2 and increases channels
+        self.conv1 = nn.Conv2d(in_channels, 32, kernel_size=3, stride=2, padding=1)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3, stride=2, padding=1)
+        self.conv3 = nn.Conv2d(64, 128, kernel_size=3, stride=2, padding=1)
+        self.conv4 = nn.Conv2d(128, 256, kernel_size=3, stride=2, padding=1)
+
+        # Batch normalization layers for training stability
+        self.bn1 = nn.BatchNorm2d(32)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.bn3 = nn.BatchNorm2d(128)
+        self.bn4 = nn.BatchNorm2d(256)
+
+        # Linear layers to produce mean and log variance of latent space
+        self.fc_mu = nn.Linear(256 * 4 * 4, latent_dim)
+        self.fc_var = nn.Linear(256 * 4 * 4, latent_dim)
+
+    def forward(self, x):
+        # Apply convolutions with ReLU activation and batch norm
+        x = F.relu(self.bn1(self.conv1(x)))  # 32x32
+        x = F.relu(self.bn2(self.conv2(x)))  # 16x16
+        x = F.relu(self.bn3(self.conv3(x)))  # 8x8
+        x = F.relu(self.bn4(self.conv4(x)))  # 4x4
+
+        # Flatten for linear layers
+        x = x.view(x.size(0), -1)
+
+        # Get mean and log variance
+        mu = self.fc_mu(x)
+        log_var = self.fc_var(x)
+
+        return mu, log_var
+
+class Decoder(nn.Module):
+    def __init__(self, latent_dim=4, out_channels=3):
+        super().__init__()
+        # Initial linear layer to transform latent vector
+        self.fc = nn.Linear(latent_dim, 256 * 4 * 4)
+
+        # Transposed convolutions for upsampling
+        # Each layer doubles spatial dimensions
+        self.deconv1 = nn.ConvTranspose2d(256, 128, kernel_size=4, stride=2, padding=1)
+        self.deconv2 = nn.ConvTranspose2d(128, 64, kernel_size=4, stride=2, padding=1)
+        self.deconv3 = nn.ConvTranspose2d(64, 32, kernel_size=4, stride=2, padding=1)
+        self.deconv4 = nn.ConvTranspose2d(32, out_channels, kernel_size=4, stride=2, padding=1)
+
+        # Batch normalization layers
+        self.bn1 = nn.BatchNorm2d(128)
+        self.bn2 = nn.BatchNorm2d(64)
+        self.bn3 = nn.BatchNorm2d(32)
+
+    def forward(self, z):
+        # Transform latent vector and reshape
+        x = self.fc(z)
+        x = x.view(x.size(0), 256, 4, 4)
+
+        # Apply transposed convolutions with ReLU and batch norm
+        x = F.relu(self.bn1(self.deconv1(x)))  # 8x8
+        x = F.relu(self.bn2(self.deconv2(x)))  # 16x16
+        x = F.relu(self.bn3(self.deconv3(x)))  # 32x32
+        x = torch.tanh(self.deconv4(x))        # 64x64
+
+        return x
+
+class VAE(nn.Module):
+    def __init__(self, in_channels=3, latent_dim=4):
+        super().__init__()
+        self.encoder = Encoder(in_channels, latent_dim)
+        self.decoder = Decoder(latent_dim, in_channels)
+
+    def reparameterize(self, mu, log_var):
+        """
+        Reparameterization trick to sample from N(mu, var) from N(0,1).
+        :param mu: Mean of the latent Gaussian
+        :param log_var: Log variance of the latent Gaussian
+        :return: Sampled point from latent space
+        """
+        std = torch.exp(0.5 * log_var)  # standard deviation
+        eps = torch.randn_like(std)     # `randn_like` as we need the same size
+        sample = mu + (eps * std)       # sampling as if coming from the input space
+        return sample
+
+    def forward(self, x):
+        # Encode input to get mu and log_var
+        mu, log_var = self.encoder(x)
+
+        # Get latent vector through reparameterization
+        z = self.reparameterize(mu, log_var)
+
+        # Decode latent vector
+        reconstruction = self.decoder(z)
+
+        return reconstruction, mu, log_var
+
+def vae_loss(recon_x, x, mu, log_var):
+    """
+    Compute VAE loss function.
+    :param recon_x: Reconstructed input
+    :param x: Original input
+    :param mu: Mean of the latent Gaussian
+    :param log_var: Log variance of the latent Gaussian
+    :return: VAE loss (reconstruction loss + KL divergence)
+    """
+    # Reconstruction loss (binary cross entropy)
+    recon_loss = F.mse_loss(recon_x, x, reduction='sum')
+
+    # KL divergence loss
+    kl_loss = -0.5 * torch.sum(1 + log_var - mu.pow(2) - log_var.exp())
+
+    # Total loss is reconstruction loss + KL divergence
+    total_loss = recon_loss + kl_loss
+
+    return total_loss
+
+```
+
 ### U-Net
 
-### Scheduler
+```python
+# backbone, Residual Block (Checked)
+class ResBlock(nn.Module):
+    def __init__(self, in_channel, time_emb_dim, out_channel=None, ):
+        super().__init__()
+        if out_channel is None:
+            out_channel = in_channel
+        self.norm1 = nn.GroupNorm(32, in_channel, eps=1e-05, affine=True)
+        self.conv1 = nn.Conv2d(in_channel, out_channel, kernel_size=3, stride=1, padding=1)
+        self.time_emb_proj = nn.Linear(in_features=time_emb_dim, out_features=out_channel, bias=True)
+        self.norm2 = nn.GroupNorm(32, out_channel, eps=1e-05, affine=True)
+        self.dropout = nn.Dropout(p=0.0, inplace=False)
+        self.conv2 = nn.Conv2d(out_channel, out_channel, kernel_size=3, stride=1, padding=1)
+        self.nonlinearity = nn.SiLU()
+        if in_channel == out_channel:
+            self.conv_shortcut = nn.Identity()
+        else:
+            self.conv_shortcut = nn.Conv2d(in_channel, out_channel, kernel_size=1, stride=1)
 
-### Training code
+    def forward(self, x, t_emb, cond=None):
+        # Input conv
+        h = self.norm1(x)
+        h = self.nonlinearity(h)
+        h = self.conv1(h)
+        # Time modulation
+        if t_emb is not None:
+            t_hidden = self.time_emb_proj(self.nonlinearity(t_emb))
+            h = h + t_hidden[:, :, None, None]
+        # Output conv
+        h = self.norm2(h)
+        h = self.nonlinearity(h)
+        h = self.dropout(h)
+        h = self.conv2(h)
+        # Skip connection
+        return h + self.conv_shortcut(x)
+
+
+# UpSampling (Checked)
+class UpSample(nn.Module):
+    def __init__(self, channel, scale_factor=2, mode='nearest'):
+        super(UpSample, self).__init__()
+        self.scale_factor = scale_factor
+        self.mode = mode
+        self.conv = nn.Conv2d(channel, channel, kernel_size=3, stride=1, padding=1, )
+
+    def forward(self, x):
+        x = F.interpolate(x, scale_factor=self.scale_factor, mode=self.mode)
+        return self.conv(x)
+
+
+# DownSampling (Checked)
+class DownSample(nn.Module):
+    def __init__(self, channel, ):
+        super(DownSample, self).__init__()
+        self.conv = nn.Conv2d(channel, channel, kernel_size=3, stride=2, padding=1, )
+
+    def forward(self, x):
+        return self.conv(x)  # F.interpolate(x, scale_factor=1/self.scale_factor, mode=self.mode)
+```
+
+```python
+# Self and Cross Attention mechanism (Checked)
+class CrossAttention(nn.Module):
+    """General implementation of Cross & Self Attention multi-head
+    """
+    def __init__(self, embed_dim, hidden_dim, context_dim=None, num_heads=8, ):
+        super(CrossAttention, self).__init__()
+        self.hidden_dim = hidden_dim
+        self.context_dim = context_dim
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
+        self.head_dim = embed_dim // num_heads
+        self.to_q = nn.Linear(hidden_dim, embed_dim, bias=False)
+        if context_dim is None:
+            # Self Attention
+            self.to_k = nn.Linear(hidden_dim, embed_dim, bias=False)
+            self.to_v = nn.Linear(hidden_dim, embed_dim, bias=False)
+            self.self_attn = True
+        else:
+            # Cross Attention
+            self.to_k = nn.Linear(context_dim, embed_dim, bias=False)
+            self.to_v = nn.Linear(context_dim, embed_dim, bias=False)
+            self.self_attn = False
+        self.to_out = nn.Sequential(
+            nn.Linear(embed_dim, hidden_dim, bias=True)
+        )  # this could be omitted
+
+    def forward(self, tokens, context=None):
+        Q = self.to_q(tokens)
+        K = self.to_k(tokens) if self.self_attn else self.to_k(context)
+        V = self.to_v(tokens) if self.self_attn else self.to_v(context)
+        # print(Q.shape, K.shape, V.shape)
+        # transform heads onto batch dimension
+        Q = rearrange(Q, 'B T (H D) -> (B H) T D', H=self.num_heads, D=self.head_dim)
+        K = rearrange(K, 'B T (H D) -> (B H) T D', H=self.num_heads, D=self.head_dim)
+        V = rearrange(V, 'B T (H D) -> (B H) T D', H=self.num_heads, D=self.head_dim)
+        # print(Q.shape, K.shape, V.shape)
+        scoremats = torch.einsum("BTD,BSD->BTS", Q, K)
+        attnmats = F.softmax(scoremats / math.sqrt(self.head_dim), dim=-1)
+        # print(scoremats.shape, attnmats.shape, )
+        ctx_vecs = torch.einsum("BTS,BSD->BTD", attnmats, V)
+        # split the heads transform back to hidden.
+        ctx_vecs = rearrange(ctx_vecs, '(B H) T D -> B T (H D)', H=self.num_heads, D=self.head_dim)
+        # TODO: note this `to_out` is also a linear layer, could be in principle merged into the to_value layer.
+        return self.to_out(ctx_vecs)
+```
+
+```python
+# Transformer layers
+class TransformerBlock(nn.Module):
+    def __init__(self, hidden_dim, context_dim, num_heads=8):
+        super(TransformerBlock, self).__init__()
+        self.attn1 = CrossAttention(hidden_dim, hidden_dim, num_heads=num_heads)  # self attention
+        self.attn2 = CrossAttention(hidden_dim, hidden_dim, context_dim, num_heads=num_heads)  # cross attention
+
+        self.norm1 = nn.LayerNorm(hidden_dim)
+        self.norm2 = nn.LayerNorm(hidden_dim)
+        self.norm3 = nn.LayerNorm(hidden_dim)
+        # to be compatible with Diffuser, could simplify.
+        self.ff = FeedForward_GEGLU(hidden_dim, )
+        # A more common version used in transformers.
+        # self.ff = nn.Sequential(
+        #     nn.Linear(hidden_dim, 3 * hidden_dim),
+        #     nn.GELU(),
+        #     nn.Linear(3 * hidden_dim, hidden_dim)
+        # )
+
+    def forward(self, x, context=None):
+        x = self.attn1(self.norm1(x)) + x
+        x = self.attn2(self.norm2(x), context=context) + x
+        x = self.ff(self.norm3(x)) + x
+        return x
+
+
+class GEGLU_proj(nn.Module):
+    def __init__(self, in_dim, out_dim):
+        super(GEGLU_proj, self).__init__()
+        self.proj = nn.Linear(in_dim, 2 * out_dim)
+
+    def forward(self, x):
+        x = self.proj(x)
+        x, gates = x.chunk(2, dim=-1)
+        return x * F.gelu(gates)
+
+
+class FeedForward_GEGLU(nn.Module):
+    # https://github.com/huggingface/diffusers/blob/95414bd6bf9bb34a312a7c55f10ba9b379f33890/src/diffusers/models/attention.py#L339
+    # A variant of the gated linear unit activation function from https://arxiv.org/abs/2002.05202.
+    def __init__(self, hidden_dim, mult=4):
+        super(FeedForward_GEGLU, self).__init__()
+        self.net = nn.Sequential(
+            GEGLU_proj(hidden_dim, mult * hidden_dim),
+            nn.Dropout(0.0),
+            nn.Linear(mult * hidden_dim, hidden_dim)
+        )  # to be compatible with Diffuser, could simplify.
+
+    def forward(self, x, ):
+        return self.net(x)
+
+
+class SpatialTransformer(nn.Module):
+    def __init__(self, hidden_dim, context_dim, num_heads=8):
+        super(SpatialTransformer, self).__init__()
+        self.norm = nn.GroupNorm(32, hidden_dim, eps=1e-6, affine=True)
+        self.proj_in = nn.Conv2d(hidden_dim, hidden_dim, kernel_size=1, stride=1, padding=0)
+        # self.transformer = TransformerBlock(hidden_dim, context_dim, num_heads=8)
+        self.transformer_blocks = nn.Sequential(
+            TransformerBlock(hidden_dim, context_dim, num_heads=8)
+        )  # to be compatible with Diffuser, could simplify.
+        self.proj_out = nn.Conv2d(hidden_dim, hidden_dim, kernel_size=1, stride=1, padding=0)
+
+    def forward(self, x, cond=None):
+        b, c, h, w = x.shape
+        x_in = x
+        # context = rearrange(context, "b c T -> b T c")
+        x = self.proj_in(self.norm(x))
+        x = rearrange(x, "b c h w->b (h w) c")
+        x = self.transformer_blocks[0](x, cond)
+        x = rearrange(x, 'b (h w) c -> b c h w', h=h, w=w)
+        return self.proj_out(x) + x_in
+```
+
+```python
+# Modified Container. Modify the nn.Sequential to time modulated Sequential
+class TimeModulatedSequential(nn.Sequential):
+    """ Modify the nn.Sequential to time modulated Sequential """
+    def forward(self, x, t_emb, cond=None):
+        for module in self:
+            if isinstance(module, TimeModulatedSequential):
+                x = module(x, t_emb, cond)
+            elif isinstance(module, ResBlock):
+                # For certain layers, add the time modulation.
+                x = module(x, t_emb)
+            elif isinstance(module, SpatialTransformer):
+                # For certain layers, add the class conditioning.
+                x = module(x, cond=cond)
+            else:
+                x = module(x)
+
+        return x
+```
+
+```python
+class UNet_SD(nn.Module):
+
+    def __init__(self, in_channels=4,
+                 base_channels=320,
+                 time_emb_dim=1280,
+                 context_dim=768,
+                 multipliers=(1, 2, 4, 4),
+                 attn_levels=(0, 1, 2),
+                 nResAttn_block=2,
+                 cat_unet=True):
+        super().__init__()
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.in_channels = in_channels
+        self.out_channels = in_channels
+        base_channels = base_channels
+        time_emb_dim = time_emb_dim
+        context_dim = context_dim
+        multipliers = multipliers
+        nlevel = len(multipliers)
+        self.base_channels = base_channels
+        # attn_levels = [0, 1, 2]
+        level_channels = [base_channels * mult for mult in multipliers]
+        # Transform time into embedding
+        self.time_embedding = nn.Sequential(OrderedDict({
+            "linear_1": nn.Linear(base_channels, time_emb_dim, bias=True),
+            "act": nn.SiLU(),
+            "linear_2": nn.Linear(time_emb_dim, time_emb_dim, bias=True),
+        })
+        )  # 2 layer MLP
+        self.conv_in = nn.Conv2d(self.in_channels, base_channels, 3, stride=1, padding=1)
+
+        # Tensor Downsample blocks
+        nResAttn_block = nResAttn_block
+        self.down_blocks = TimeModulatedSequential()  # nn.ModuleList()
+        self.down_blocks_channels = [base_channels]
+        cur_chan = base_channels
+        for i in range(nlevel):
+            for j in range(nResAttn_block):
+                res_attn_sandwich = TimeModulatedSequential()
+                # input_chan of first ResBlock is different from the rest.
+                res_attn_sandwich.append(ResBlock(in_channel=cur_chan, time_emb_dim=time_emb_dim, out_channel=level_channels[i]))
+                if i in attn_levels:
+                    # add attention except for the last level
+                    res_attn_sandwich.append(SpatialTransformer(level_channels[i], context_dim=context_dim))
+                cur_chan = level_channels[i]
+                self.down_blocks.append(res_attn_sandwich)
+                self.down_blocks_channels.append(cur_chan)
+            # res_attn_sandwich.append(DownSample(level_channels[i]))
+            if not i == nlevel - 1:
+                self.down_blocks.append(TimeModulatedSequential(DownSample(level_channels[i])))
+                self.down_blocks_channels.append(cur_chan)
+
+        self.mid_block = TimeModulatedSequential(
+            ResBlock(cur_chan, time_emb_dim),
+            SpatialTransformer(cur_chan, context_dim=context_dim),
+            ResBlock(cur_chan, time_emb_dim),
+        )
+
+        # Tensor Upsample blocks
+        self.up_blocks = nn.ModuleList() # TimeModulatedSequential()  #
+        for i in reversed(range(nlevel)):
+            for j in range(nResAttn_block + 1):
+                res_attn_sandwich = TimeModulatedSequential()
+                res_attn_sandwich.append(ResBlock(in_channel=cur_chan + self.down_blocks_channels.pop(),
+                                                  time_emb_dim=time_emb_dim, out_channel=level_channels[i]))
+                if i in attn_levels:
+                    res_attn_sandwich.append(SpatialTransformer(level_channels[i], context_dim=context_dim))
+                cur_chan = level_channels[i]
+                if j == nResAttn_block and i != 0:
+                    res_attn_sandwich.append(UpSample(level_channels[i]))
+                self.up_blocks.append(res_attn_sandwich)
+        # Read out from tensor to latent space
+        self.output = nn.Sequential(
+            nn.GroupNorm(32, base_channels, ),
+            nn.SiLU(),
+            nn.Conv2d(base_channels, self.out_channels, 3, padding=1),
+        )
+        self.to(self.device)
+
+    def time_proj(self, time_steps, max_period: int = 10000):
+        if time_steps.ndim == 0:
+            time_steps = time_steps.unsqueeze(0)
+        half = self.base_channels // 2
+        frequencies = torch.exp(- math.log(max_period)
+                                * torch.arange(start=0, end=half, dtype=torch.float32) / half
+                                ).to(device=time_steps.device)
+        angles = time_steps[:, None].float() * frequencies[None, :]
+        return torch.cat([torch.cos(angles), torch.sin(angles)], dim=-1)
+
+    def forward(self, x, time_steps, cond=None, encoder_hidden_states=None, output_dict=True):
+        if cond is None and encoder_hidden_states is not None:
+            cond = encoder_hidden_states
+        t_emb = self.time_proj(time_steps)
+        t_emb = self.time_embedding(t_emb)
+        x = self.conv_in(x)
+        down_x_cache = [x]
+        for module in self.down_blocks:
+            x = module(x, t_emb, cond)
+            down_x_cache.append(x)
+        x = self.mid_block(x, t_emb, cond)
+        for module in self.up_blocks:
+            x = module(torch.cat((x, down_x_cache.pop()), dim=1), t_emb, cond)
+        x = self.output(x)
+        if output_dict:
+            return edict(sample=x)
+        else:
+            return x
+```
 
 [Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
 [BatchNorm2d](https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html1)\
@@ -1584,11 +2033,204 @@ If you wish to modify the different components without actually coding them out,
 [ConvTranspose2d](https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html)\
 [Upsample](https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html)
 
-## Understanding the metrics [INCOMPLETE]
+### Scheduler
 
-This is interesting as well because... how do you tell a computer which is a good image and which is a bad image without actually doing a vibe check.
+```python
+import torch
+import numpy as np
+from typing import Optional, Tuple
 
-This really makes you appreaciate how the loss function was created doesnt it now!!
+
+class DDIMScheduler:
+    def __init__(
+        self,
+        num_train_timesteps: int = 1000,
+        beta_start: float = 0.0001,
+        beta_end: float = 0.02,
+        clip_sample: bool = True,
+        set_alpha_to_one: bool = True,
+        steps_offset: int = 0,
+        prediction_type: str = "epsilon",  # "epsilon" or "sample"
+    ):
+        """
+        Initialize DDIM Scheduler.
+        Args:
+            num_train_timesteps: Number of diffusion steps used to train the model
+            beta_start: Starting beta value
+            beta_end: Final beta value
+            clip_sample: Whether to clip predicted sample between -1 and 1
+            set_alpha_to_one: Whether to set final alpha to 1
+            steps_offset: Offset added to the inference steps
+            prediction_type: Type of prediction ("epsilon" for predicted noise, "sample" for predicted x_0)
+        """
+        self.num_train_timesteps = num_train_timesteps
+        self.clip_sample = clip_sample
+        self.set_alpha_to_one = set_alpha_to_one
+        self.steps_offset = steps_offset
+        self.prediction_type = prediction_type
+
+        # Create beta schedule
+        self.betas = torch.linspace(
+            beta_start,
+            beta_end,
+            num_train_timesteps,
+            dtype=torch.float32
+        )
+
+        # Calculate alphas
+        self.alphas = 1.0 - self.betas
+        self.alphas_cumprod = torch.cumprod(self.alphas, dim=0)
+
+        # Set final alpha if required
+        if self.set_alpha_to_one:
+            self.alphas_cumprod[-1] = 1.0
+
+        # Calculate derived values
+        self.sqrt_alphas_cumprod = torch.sqrt(self.alphas_cumprod)
+        self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - self.alphas_cumprod)
+
+        # Store for inference
+        self.num_inference_steps = None
+        self.timesteps = None
+
+    def set_timesteps(
+        self,
+        num_inference_steps: int,
+        device: str = "cpu"
+    ):
+        """
+        Sets the discrete timesteps used for the diffusion chain.
+        Args:
+            num_inference_steps: Number of diffusion steps used during inference
+            device: PyTorch device
+        """
+        self.num_inference_steps = num_inference_steps
+
+        # Create evenly spaced timesteps
+        step_ratio = self.num_train_timesteps // self.num_inference_steps
+        timesteps = np.arange(0, num_inference_steps) * step_ratio
+
+        # Add offset and clip
+        timesteps = timesteps + self.steps_offset
+        timesteps = np.clip(timesteps, 0, self.num_train_timesteps - 1)
+
+        # Convert to tensor and reverse order
+        self.timesteps = torch.from_numpy(timesteps[::-1].copy()).to(device)
+
+    def step(
+        self,
+        model_output: torch.FloatTensor,
+        timestep: int,
+        sample: torch.FloatTensor,
+        eta: float = 0.0,
+        use_clipped_model_output: bool = False,
+    ) -> Tuple[torch.FloatTensor, Optional[dict]]:
+        """
+        Predict the sample at the previous timestep by reversing the DDIM process.
+        Args:
+            model_output: Direct output from learned diffusion model
+            timestep: Current discrete timestep
+            sample: Current instance of sample being created
+            eta: Parameter between 0 and 1, controlling the stochasticity (0 = DDIM, 1 = DDPM)
+            use_clipped_model_output: Whether to use clipped model output
+        """
+        # Get index of current timestep
+        step_index = (self.timesteps == timestep).nonzero().item()
+        prev_timestep = 0 if step_index == len(self.timesteps) - 1 else self.timesteps[step_index + 1]
+
+        # Get alphas for current and previous timestep
+        alpha_prod_t = self.alphas_cumprod[timestep]
+        alpha_prod_t_prev = self.alphas_cumprod[prev_timestep] if prev_timestep >= 0 else torch.tensor(1.0)
+
+        # For numerical stability
+        alpha_prod_t = torch.clamp(alpha_prod_t, min=1e-7)
+        alpha_prod_t_prev = torch.clamp(alpha_prod_t_prev, min=1e-7)
+
+        # Predict x_0
+        if self.prediction_type == "epsilon":
+            pred_x0 = (sample - torch.sqrt(1 - alpha_prod_t) * model_output) / torch.sqrt(alpha_prod_t)
+        elif self.prediction_type == "sample":
+            pred_x0 = model_output
+
+        # Clip predicted x0 if needed
+        if self.clip_sample:
+            pred_x0 = torch.clamp(pred_x0, -1, 1)
+
+        # Get direction pointing to x_t
+        if alpha_prod_t_prev == 0:
+            dir_xt = torch.zeros_like(model_output)
+        else:
+            dir_xt = torch.sqrt(1 - alpha_prod_t_prev - eta**2 * (1 - alpha_prod_t)) * model_output
+
+        # Random noise for stochasticity
+        if eta > 0:
+            noise = torch.randn_like(model_output)
+            variance = eta * torch.sqrt((1 - alpha_prod_t_prev) / (1 - alpha_prod_t)) * torch.sqrt(1 - alpha_prod_t / alpha_prod_t_prev)
+        else:
+            noise = 0
+            variance = 0
+
+        # Compute the previous sample
+        prev_sample = torch.sqrt(alpha_prod_t_prev) * pred_x0 + dir_xt + variance * noise
+
+        return prev_sample
+
+    def add_noise(
+        self,
+        original_samples: torch.FloatTensor,
+        noise: torch.FloatTensor,
+        timesteps: torch.IntTensor
+    ) -> torch.FloatTensor:
+        """
+        Add noise to samples based on timesteps.
+        Args:
+            original_samples: Clean images
+            noise: Random noise
+            timesteps: Timesteps at which to add noise
+        """
+        sqrt_alpha_prod = self.sqrt_alphas_cumprod[timesteps]
+        sqrt_one_minus_alpha_prod = self.sqrt_one_minus_alphas_cumprod[timesteps]
+
+        # Expand for broadcasting
+        sqrt_alpha_prod = sqrt_alpha_prod.flatten()
+        while len(sqrt_alpha_prod.shape) < len(original_samples.shape):
+            sqrt_alpha_prod = sqrt_alpha_prod.unsqueeze(-1)
+
+        sqrt_one_minus_alpha_prod = sqrt_one_minus_alpha_prod.flatten()
+        while len(sqrt_one_minus_alpha_prod.shape) < len(original_samples.shape):
+            sqrt_one_minus_alpha_prod = sqrt_one_minus_alpha_prod.unsqueeze(-1)
+
+        noisy_samples = sqrt_alpha_prod * original_samples + sqrt_one_minus_alpha_prod * noise
+        return noisy_samples
+```
+
+### Note
+
+The above code is mostly simplified version of each component to help you understand how you can code it out, or even understand what goes on in the more complex implementations. For the entire training script consider going to this [repo](), Additionally this [resource](https://colab.research.google.com/drive/1Y5wr91g5jmpCDiX-RLfWL1eSBWoSuLqO?usp=sharing#scrollTo=BL4hmuUOLVbW) would be insanely helpful.
+
+Also I would like to leave you with an interesting problem here. How do you compare which models are better than others without human intervention?
+
+I.e How does the metrics work? Few of the popular one's are [Fréchet inception distance](<https://en.wikipedia.org/wiki/Fr%C3%A9chet_inception_distance#:~:text=The%20Fr%C3%A9chet%20inception%20distance%20(FID,GAN)%20or%20a%20diffusion%20model.>), [Inception score](https://en.wikipedia.org/wiki/Inception_score), [Structural similarity index measure](https://en.wikipedia.org/wiki/Structural_similarity_index_measure#:~:text=The%20structural%20similarity%20index%20measure,the%20similarity%20between%20two%20images.) etc.
+
+### Recent Advances
+
+[**PROGRESSIVE DISTILLATION FOR FAST SAMPLING OF DIFFUSION MODELS**](https://arxiv.org/pdf/2202.00512) (2022)
+
+- Addressed the slow sampling speed of diffusion models
+- Key innovation: Student models that can generate high-quality samples in few steps
+- Impact: Made diffusion models more practical for real-time applications
+
+[**Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding**](https://arxiv.org/pdf/2205.11487) (2022)
+
+- Introduced Imagen, pushing boundaries of text-to-image generation
+- Key innovation: Using large language models for better text understanding
+- Impact: Showed the importance of strong text encoders in text-to-image models
+
+[**Elucidating the Design Space of Diffusion-Based Generative Models**](https://arxiv.org/pdf/2206.00364) (2022)
+
+- Comprehensive analysis of diffusion model design choices
+- Key innovation: Systematic study of architecture and training decisions
+- Impact: Provided practical guidelines for building better diffusion models
 
 ## Misc & References
 
