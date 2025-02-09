@@ -367,6 +367,10 @@ For example, when generating an image of "a red cat sitting on a blue chair":
 
 3. Skip connections preserve spatial details throughout the process
 
+#### Diffusion Transformer (DiT) [INCOMPLETE]
+
+Let's also briefly talking about DiT's as they are an innovation that are often used in model text to image models, This is how the architecture looks like
+
 ### Dali's mistake fixing wand (Scheduler)
 
 > A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the maths section.\
@@ -556,13 +560,27 @@ Now as shown above, The matrix comprises of dot product of these text and image 
 
 Now CLIP was originally trained for zero-shot image classification. (which is a complex way of saying that "given an image, tell what it is. Without any clues".)
 
-As you can see from the above image, when given an image and a dataset. CLIP returns the word which has the highest dot-product with the image encoding.
+As you can see from the above image, when given an image and a dataset. CLIP returns the word which has the highest dot-product (The dot-product measures the similarity) with the image encoding.
 
-Now we primarily talked about CLIP, But there is another text encoder that is used called T5 created by Google. The idea is more or less similar the only difference is
+Now we primarily talked about CLIP, But there is another text encoder that is used called [T5](<https://en.wikipedia.org/wiki/T5_(language_model)>) created by Google. The idea is more or less similar the only difference is
 
-{add how T5 is different}
+T5 (Text-to-Text Transfer Transformer) differs from CLIP's text encoder in several key ways:
 
-To read more about CLIP and T5 consider reading the original https://openai.com/index/clip/
+1. **Architecture & Purpose**:
+
+   - CLIP's text encoder is specifically designed for image-text alignment
+   - T5 is a general-purpose text model that treats every NLP task as a text-to-text problem
+
+2. **Training Approach**:
+
+   - CLIP learns through contrastive learning between image-text pairs
+   - T5 is trained through a masked language modeling approach, where it learns to generate text by completing various text-based tasks
+
+3. **Output Use**:
+   - In Stable Diffusion, T5 creates richer text embeddings that capture more nuanced language understanding
+   - These embeddings provide more detailed semantic information to guide the image generation process
+
+The main reason Stable Diffusion uses T5 is its superior ability to understand and represent complex text descriptions, helping create more accurate and detailed image generations.
 
 #### Image to Image
 
@@ -599,15 +617,13 @@ Everything will make more sense when we see the internal architecture and unders
 
 Training a Control-Net model consists of the following steps:
 
-1. Cloning the pre-trained parameters of a Diffusion model, such as Stable Diffusion's latent UNet(The part on the righ referred to as "b"),while also maintaining the pre-trained parameters separately(The part on the left referred to as "a").
+1. Cloning the pre-trained parameters of a Diffusion model, such as Stable Diffusion's latent UNet(The part on the right referred to as "b"), while also maintaining the pre-trained parameters separately(The part on the left referred to as "a").
 
 2. "a" is kept locked, i.e not trained while training a Control-Net model to preserve the knowledge of the Diffusion model.
 
 3. The trainable blocks of "b" are trained to learn features specific to an image.
 
-4. """
-   The trainable and locked copies of the parameters are connected via “zero convolution” layers (see here for more information) which are optimized as a part of the ControlNet framework. This is a training trick to preserve the semantics already learned by frozen model as the new conditions are trained.
-   """
+4. The two copies ("a" and "b") are connected through "zero convolution" layers, which are trained to bridge the locked knowledge from "a" with the new conditions being learned in "b".
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/26.webp)
 
@@ -615,61 +631,59 @@ As you can see above. The SD U-Net takes in the text encoding and the noisy imag
 
 The loss calculated then is used to train the Control-Net model (inside green block)
 
-The Control-net model consists of two part, The transformers and the Control U-Net. The control U-Net is very similar to our original unet that we started with a few important changes.
+The Control-net model consists of two parts, The transformers and the Control U-Net. The control U-Net is very similar to our original unet that we started with a few important changes. (More on this in a while)
 
-"""
-The Transformer component converts the visual input (the “condition”) provided to the ControlNet platform into the latent space, ensuring that what enters the UNet is already adapted to the latent space.
-"""
+The transformer's job is to take whatever condition we give it (depth map, edge detection etc.) and convert it into something that our U-Net can understand (latent space representation).
 
-"""
-In the Transformer, the depth map is converted into a tensor through a series of convolutional layers that perform feature extraction from the original image, transforming it into a multi-dimensional data array. This tensor is then fed into the ControlNet UNet for further processing and integration with the information from the base model.
+Think of it like this, if you are reading a book in Spanish but only know English, you will need a translator. Similarly, our U-Net only understands latent space representation, so the transformer acts as a translator converting our condition into this representation.
 
-The conversion of a depth map into a tensor in ControlNet involves several stages based on Convolutional Neural Networks (CNNs). Let's break down the process in more technical detail:
+Let's understand how this translation happens:
 
-Process of Converting 2D Input to a Tensor in ControlNet
+1. First Contact:
 
-1. Initial Convolution
-   The 2D input, such as a depth map (or any other 2D image), passes through the initial convolutional layers in the model. These layers perform convolution operations, where fixed-size filters (kernels) slide over the input and perform calculations on groups of neighboring pixels.
+   - The condition (like a depth map) goes through multiple convolution layers
+   - These layers are like filters that extract important features from our input
+   - For example, in a depth map, it might identify where objects start and end
 
-2. Feature Extraction:
-   The convolutional filters extract features from the image, such as edges, angles, and patterns, generating multi-dimensional feature maps that represent the original information.
-
-3. Converting the Input to a Tensor:
-   The result of the feature extraction process is a tensor – a multi-dimensional data structure organized as N×H×W×C, where:
-   N represents the batch size,
-   H, W represent the height and width of the feature maps,
-   C represents the number of channels or feature maps.
-   This tensor represents the abstracted information extracted from the 2D input and is now ready for further processing in the ControlNet UNet.
-
-"""
+2. Creating Understanding:
+   - These features are organized into a special format called a tensor
+   - Think of a tensor like a very organized filing cabinet where each drawer (dimension) stores specific types of information
+   - This tensor has information about:
+     - How many images we're processing (batch size)
+     - The height and width of our features
+     - Different types of features we extracted (channels)
 
 {I believe the transformer is a DiT that we should talk more about later in improvements}
 
-**The controlnet UNET component**
+### The ControlNet U-Net Component
 
-```
-The Concept of a Hyper-Network
+Let's first understand what a Hyper-Network is:
 
-The idea of a hyper-network, or an external model, isn’t new.
+Imagine you have a very talented artist (our base model) who is amazing at drawing pictures based on descriptions. Now, what if you want them to draw pictures based on descriptions AND reference sketches? Instead of retraining the artist (which would be time-consuming and might make them forget their original skills), we give them an assistant (hyper-network) who understands sketches and can guide the artist.
 
-https://arxiv.org/pdf/1609.09106
+![Image showing hypernetwork concept]()
 
-It’s based on the premise that you have a base foundational  model that’s large, powerful, and highly intelligent, but it’s tailored to a very specific task (for example, converting text into images). Instead of retraining this large model for a new task( for example converting text + depth map into images), we create a hyper (external) network precisely adapted to the required task.
+> Image taken from [HyperNetworks](https://arxiv.org/pdf/1609.09106)
 
-This hyper network is much smaller than the foundation modeland is connected to the base model, and we only train the hyper network. The result is an efficient and effective solution that allows for precise adjustments without altering the foundation model itself.
+This is exactly what ControlNet does! Instead of modifying our powerful Stable Diffusion model (the artist), it creates a smaller network (the assistant) that:
 
-This is exactly what’s being done here in the ControlNet platform.
-```
+- Takes in our conditions (like depth maps, sketches)
+- Processes them to extract useful information
+- Guides the main model in using this information
 
-```
-ControlNet connects to this model in a clever way: it takes the visual input that will serve as a condition (like a depth map) and processes it. The output from the ControlNet-UNet is then fed into the convolutional and attention layers of the T2I model, allowing the processed information to merge with the signals in the foundation model (the merging is quite simple, it’s just an addition of the elements).
+Now, how does this guidance actually work?
 
-This means that the ControlNet UNet introduces new information that influences the final outcome of the foundation T2I without altering the weights of the underlying T2I model, thereby maintaining its stability throughout the process.
-```
+Remember our U-Net from earlier? The ControlNet U-Net connects to it in a very simple way:
+
+1. It processes our condition (like a depth map)
+2. At each step in the U-Net, it adds its processed information to the main model's features
+3. This addition subtly guides the main model without changing its learned knowledge
+
+Think of it like this: Our artist (main model) is painting based on a description, and the assistant (ControlNet) is constantly whispering suggestions about the reference sketch, helping create an artwork that follows both the description AND the sketch.
 
 For implementation of the original controlnet consider reading this [blog](https://huggingface.co/blog/controlnet), the original [repo](https://github.com/lllyasviel/ControlNet) and [paper](https://arxiv.org/pdf/2302.05543)
 
-#### LoRA
+#### LoRA [INCOMPLETE]
 
 ```
 The cross-attention mechanism is the most important machinery of the Stable Diffusion model.
@@ -1030,9 +1044,9 @@ This is why Langevin dynamics is particularly relevant to diffusion models. Reme
 
 To learn more about Score Based Modeling, consider reading this [blog by Yang Song](https://yang-song.net/blog/2021/score/)
 
-## Classifier Guidance
+## Classifier Guidance [INCOMPLETE]
 
-## CFG
+## CFG [INCOMPLETE]
 
 ```
 The classifier-free guidance scale (CFG scale) is a value that controls how much the text prompt steers the diffusion process. The AI image generation is unconditioned (i.e. the prompt is ignored) when the CFG scale is set to 0. A higher CFG scale steers the diffusion towards the prompt.
@@ -1121,7 +1135,9 @@ $$ELBO(\lambda) = E_q[\log p(x|z)] - KL(q_{\lambda}(z|x)||p(z))$$
 
 Which is the same as our single-point ELBO formula.
 
-## The Reparameterization Trick
+## The Reparameterization Trick [INCOMPLETE]
+
+[ADD_IMAGE]
 
 There's a critical problem we haven't addressed yet. Remember our ELBO formula:
 
@@ -1215,7 +1231,7 @@ And that's it! We've connected the dots between probability theory and neural ne
 2. A decoder that reconstructs data from this latent space
 3. A loss function that ensures both good reconstruction and well-structured latent representations
 
-## Papers to read
+## Papers to read [INCOMPLETE]
 
 [Denoising Diffusion Implicit Model](https://arxiv.org/pdf/2010.02502)
 
@@ -1279,9 +1295,7 @@ Helpful docs
 [ConvTranspose2d](https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html)\
 [Upsample](https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html)
 
-### DDIM
-
-## The code
+## The code [INCOMPLETE]
 
 ## Understanding the metrics
 
@@ -1289,27 +1303,24 @@ This is interesting as well because... how do you tell a computer which is a goo
 
 This really makes you appreaciate how the loss function was created doesnt it now!!
 
-## Things to talk about from the fast ai notebooks:
-
-- [Stable diffsion components](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) Build SD from taking components from HF
--
-
-## How to help out
-
-- share
-- translate
-- drop feedback
-
 ## Misc
 
 - civitai
 - comfyui
 - https://stable-diffusion-art.com/author/andrew/ The blogs by this guy are absolutely mind boggling, if you are really intersted in this space. Check this out.
 
-## Appendix
+## How to help out
 
-### PDF
+- **Share**: Consider clicking on any of the links below to share this blog, It reaches more people and they get to learn something new. Which make's me happy :), also. Consider tagging me from my socials.
+- **Translate**: This blog is written in english, but there are a lot of people who do not speak english. I will be really glad if you are willing to translate this work in the language you prefer. (Consider raising a PR and I will attach your translation at the top)
+- **Corrections & Feedback**: I am human, and I too can err. If you find I have made any mistakes, again feel free to raise a PR. Or contact me through my socials.
 
-### KL Divergence
+## Personal Note
 
-### Bayes' rule -->
+Back in 2022 when I first saw Dall-e, It absolutely blew my mind. That was the moment I realised I really wanted to pursue ML.
+
+I have put my heart and soul into writing this, I really hope it is something that can ignite the love for the amazing worls of ML in your heart as well.
+
+I wrote this because when I first tried to understand Stable Diffusion I was bombarded with complex Code, Maths, ML Ideas that I did not understand. Heck Linear Regression was tough for me. This is something that I have written that I wish my past self had access to.
+
+If you are reading this, then you most probably finished the blog. Hope you enjoyed it and learned something new. Thank you for reading!! -->
