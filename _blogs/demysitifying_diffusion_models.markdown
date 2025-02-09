@@ -367,9 +367,55 @@ For example, when generating an image of "a red cat sitting on a blue chair":
 
 3. Skip connections preserve spatial details throughout the process
 
-#### Diffusion Transformer (DiT) [INCOMPLETE]
+#### Diffusion Transformer (DiT)
 
-Let's also briefly talking about DiT's as they are an innovation that are often used in model text to image models, This is how the architecture looks like
+Remember how earlier we talked about U-Nets being the brain behind image generation? Well, there's another architecture that's becoming increasingly popular - the Diffusion Transformer (DiT). Think of it as giving Dali a different kind of artistic training, one that's more about seeing the whole canvas at once rather than focusing on different parts separately.
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/38.webp)
+
+> Image taken from ["Scalable Diffusion Models with Transformers"](https://arxiv.org/pdf/2212.09748)
+
+To understand DiTs, let's first recall what made U-Nets special:
+
+1. They look at images at different scales (like an artist looking at both details and the big picture)
+2. They have skip connections (like keeping notes about earlier versions of the painting)
+3. They process information in a hierarchical way (working from rough sketch to fine details)
+
+DiTs take a completely different approach. Instead of processing the image in this hierarchical way, they treat the image more like a sequence of patches - imagine cutting up the canvas into small squares and looking at how each square relates to all other squares.
+
+Here's how it works:
+
+1. **Patch Embedding**:
+
+   - The noisy image is divided into small patches (usually 16×16 pixels)
+   - Each patch is converted into a sequence of numbers (like translating visual information into a language DiT can understand)
+   - If this reminds you of how CLIP processes images, you're spot on!
+
+2. **Global Attention**:
+
+   - Unlike U-Net where each part mainly focuses on its neighbors, in DiT every patch can directly interact with every other patch
+   - It's like the artist being able to simultaneously consider how every part of the painting relates to every other part
+   - This is done through transformer blocks, similar to what powers ChatGPT but adapted for images
+
+3. **Time and Prompt Integration**:
+   - The noise level (time step) is embedded directly into the sequence
+   - Text prompts are also converted into embeddings and can influence how patches interact
+   - This creates a unified way for the model to consider all the information at once
+
+The advantages of DiTs are:
+
+- Better at capturing long-range relationships in images (like ensuring consistency across the entire image)
+- More flexible in handling different types of inputs
+- Often easier to scale up to larger models
+
+But there's no free lunch - DiTs typically require more computational resources than U-Nets and can be trickier to train. This is why many popular models still use U-Nets or hybrid approaches.
+
+A practical example of DiT's power is in handling global consistency. Let's say you're generating an image of "a symmetrical face":
+
+- A U-Net might need to work hard to ensure both sides of the face match
+- A DiT can more easily maintain symmetry because it's always looking at the relationship between all parts of the face simultaneously
+
+The future is likely to see more models using DiT architectures or hybrid approaches combining the best of both U-Net and DiT worlds. After all, even great artists can learn new techniques!
 
 ### Dali's mistake fixing wand (Scheduler)
 
@@ -661,7 +707,7 @@ Let's first understand what a Hyper-Network is:
 
 Imagine you have a very talented artist (our base model) who is amazing at drawing pictures based on descriptions. Now, what if you want them to draw pictures based on descriptions AND reference sketches? Instead of retraining the artist (which would be time-consuming and might make them forget their original skills), we give them an assistant (hyper-network) who understands sketches and can guide the artist.
 
-![Image showing hypernetwork concept]()
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/39.webp)
 
 > Image taken from [HyperNetworks](https://arxiv.org/pdf/1609.09106)
 
@@ -683,15 +729,129 @@ Think of it like this: Our artist (main model) is painting based on a descriptio
 
 For implementation of the original controlnet consider reading this [blog](https://huggingface.co/blog/controlnet), the original [repo](https://github.com/lllyasviel/ControlNet) and [paper](https://arxiv.org/pdf/2302.05543)
 
-#### LoRA [INCOMPLETE]
+##### Inpainting
 
+Let's quickly understand inpainting - it's like having an artist who can fill in missing or damaged parts of a photo while keeping everything else exactly the same.
+
+![Image showing inpainting concept](/assets/blog_assets/demystifying_diffusion_models/41.webp)
+
+> Image taken from ["Image inpainting based on sparse representations with a perceptual metric"](https://www.researchgate.net/publication/269588939_Image_inpainting_based_on_sparse_representations_with_a_perceptual_metric)
+
+Looking at the image above:
+
+- In (a), we have our original image of a person jumping
+- In (b), we have a mask showing which part we want to keep (in white)
+- In (c), we see how we can use this information to remove the person from the scene
+
+The magic of inpainting in diffusion models is that it only applies the denoising process to the masked areas while keeping the rest of the image unchanged. Think of it like having an artist who:
+
+1. Gets a photo with some parts erased
+2. Looks at the surrounding context (trees, water, buildings)
+3. Carefully fills in the erased parts to match perfectly with the rest
+
+#### How Does It Actually Work?
+
+Behind the scenes, inpainting uses a clever modification of our regular diffusion process. Let's understand the technical bits:
+
+1. **Masked Diffusion**:
+
+```python
+   # x is our image, mask is 1 for areas to keep, 0 for areas to fill
+   def add_noise_to_masked_area(x, mask, noise_level):
+       noise = generate_gaussian_noise(x.shape)
+       # Only add noise to masked areas (where mask = 0)
+       noisy_x = x * mask + noise * (1 - mask)
+       return noisy_x
 ```
-The cross-attention mechanism is the most important machinery of the Stable Diffusion model.
 
-Let’s use the prompt “A man with blue eyes” as an example. Stable Diffusion pairs the words “blue” and “eyes” together. It then uses this information to steer the reverse diffusion of an image region to render a pair of blue eyes. (cross-attention between the prompt and the image)
+We only add noise to the areas we want to fill in
+Original parts of the image stay untouched
+This preserves exact details in unmasked regions
 
-A side note: Hypernetwork, a technique to fine-tune Stable Diffusion models, hijacks the cross-attention network to insert styles. LoRA models modify the weights of the cross-attention module to change styles. The fact that modifying this module alone can fine-tune a Stabe Diffusion model tells you how important this module is.
+Conditional Denoising
+
+```python
+def denoise_step(x_t, t, mask, original_x):
+    # Predict noise for the entire image
+    predicted_noise = model(x_t, t)
+
+    # Only apply denoising to masked regions
+    x_t_denoised = denoise(x_t, predicted_noise)
+    result = x_t_denoised * (1 - mask) + original_x * mask
+    return result
 ```
+
+The model sees both the masked and unmasked regions
+This helps it understand the context and maintain consistency
+But updates only happen in masked areas
+
+Additional Conditioning:
+
+The model gets extra information:
+
+The mask itself (where to fill)
+The surrounding context (what to match)
+Any text prompts (what to create)
+
+This helps it generate content that fits seamlessly
+
+Here's how these pieces work together in practice:
+
+```python
+def inpaint_image(original, mask, prompt):
+    # Initialize with original image
+    x = original.clone()
+
+    # Step 1: Add noise only to masked region
+    x_noisy = add_noise_to_masked_area(x, mask, noise_level=1.0)
+
+    # Step 2: Gradually denoise while respecting mask
+    for t in reversed(range(num_steps)):
+        # Predict and denoise while maintaining original pixels
+        x = denoise_step(x_noisy, t, mask, original)
+
+        # Apply any prompt guidance
+        x = apply_guidance(x, prompt, guidance_scale)
+
+        # Ensure masked areas stay unchanged
+        x = x * (1 - mask) + original * mask
+
+    return x
+```
+
+This powerful technique is used for:
+
+Removing unwanted objects from photos
+Restoring damaged parts of old images
+Extending images beyond their original boundaries
+Creating variations of specific parts while keeping the rest intact
+
+The best part? The same diffusion process we learned about earlier handles this naturally - it just needs to know which parts to leave alone and which parts to work on!
+
+## LoRA (Low-Rank Adaptation)
+
+Remember how earlier we talked about Dali learning the general idea of images rather than specific ones? Well, what if Dali wanted to learn a very specific style - like drawing in the style of Van Gogh, or creating anime characters? Teaching the entire model from scratch would be like making Dali relearn everything just to add one style. That would be quite inefficient!
+
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/40.webp)
+
+> Image taken from ["LORA: LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS"](https://arxiv.org/pdf/2106.09685)
+
+This is where LoRA comes in. Instead of retraining the whole model, LoRA only modifies a tiny but crucial part - the cross-attention mechanism. Think of cross-attention as Dali's ability to understand and connect your instructions with what he's drawing.
+Let's break this down with an example:
+When you say "A man with blue eyes", two important things happen:
+
+The model needs to understand that "blue" and "eyes" go together
+It needs to know where and how to draw these blue eyes in the image
+
+The cross-attention mechanism handles these connections. It's like Dali's artistic intuition that knows when you say "blue eyes", you want the eyes to be blue, not the skin or the background.
+LoRA works by making small adjustments to this cross-attention mechanism. Instead of teaching Dali completely new techniques, it's like giving him a small set of notes about a specific style. These notes are much smaller (often less than 1% of the original model size!) but can significantly change how Dali draws.
+For example:
+
+Want Dali to draw in anime style? Add a LoRA that tweaks how he interprets and draws faces and eyes
+Want more realistic portraits? A LoRA can adjust how he handles skin textures and lighting
+Want a specific artist's style? LoRA can modify how he approaches colors and brush strokes
+
+What makes LoRA especially clever is how it achieves these changes. Instead of storing full-sized modifications, it uses something called "low-rank decomposition" - think of it as finding a clever shorthand way to write down the changes. This is why LoRA files are so small compared to full models, yet can create dramatic style changes.
 
 ### The Magical Wand (Variational Auto-Encoder)
 
@@ -1044,13 +1204,67 @@ This is why Langevin dynamics is particularly relevant to diffusion models. Reme
 
 To learn more about Score Based Modeling, consider reading this [blog by Yang Song](https://yang-song.net/blog/2021/score/)
 
-## Classifier Guidance [INCOMPLETE]
+### Mathematics of Guidance in Diffusion Models
 
-## CFG [INCOMPLETE]
+Let's understand how we can mathematically guide our diffusion process to better follow our prompts. There are two main approaches: Classifier Guidance and Classifier-Free Guidance (CFG).
 
-```
-The classifier-free guidance scale (CFG scale) is a value that controls how much the text prompt steers the diffusion process. The AI image generation is unconditioned (i.e. the prompt is ignored) when the CFG scale is set to 0. A higher CFG scale steers the diffusion towards the prompt.
-```
+#### Classifier Guidance
+
+First, recall that our diffusion process tries to predict and remove noise. The base noise prediction is:
+
+$$\nabla_{x_t}\log q(x_t) = -\frac{1}{1-\bar{\alpha}_t}\epsilon_\theta(x_t,t)$$
+
+When we want to incorporate class or prompt information $y$, we can write the score function for the joint distribution $q(x_t,y)$ as:
+
+$$\nabla_{x_t}\log q(x_t,y) = \nabla_{x_t}\log q(x_t) + \nabla_{x_t}\log q(y|x_t)$$
+
+This looks complex, but the idea is simple - we're combining:
+
+- How the image should evolve naturally ($\nabla_{x_t}\log q(x_t)$)
+- How it should change to better match our prompt ($\nabla_{x_t}\log q(y|x_t)$)
+
+We can approximate this using a classifier $f_\phi(y|x_t)$:
+
+$$\nabla_{x_t}\log q(x_t,y) \approx -\frac{1}{1-\bar{\alpha}_t}\epsilon_\theta(x_t,t) + \nabla_{x_t}\log f_\phi(y|x_t)$$
+
+This gives us our classifier-guided noise predictor:
+
+$$\bar{\epsilon}_\theta(x_t,t) = \epsilon_\theta(x_t,t) - (1-\bar{\alpha}_t)\nabla_{x_t}\log f_\phi(y|x_t)$$
+
+And to control how strongly we follow the classifier's guidance, we add a weight $w$:
+
+$$\bar{\epsilon}_\theta(x_t,t) = \epsilon_\theta(x_t,t) - (1-\bar{\alpha}_t)w\nabla_{x_t}\log f_\phi(y|x_t)$$
+
+#### Classifier-Free Guidance
+
+CFG takes a different approach. Instead of training a separate classifier, we use the same model to predict noise both with and without conditioning.
+
+Let's say we have:
+
+- $\epsilon_\theta(x_t,t)$: Unconditional noise prediction
+- $\epsilon_\theta(x_t,t,y)$: Conditional noise prediction (using prompt)
+
+The gradient of an implicit classifier can be written as:
+
+$$\nabla_{x_t}\log p(y|x_t) = \nabla_{x_t}\log p(x_t|y) - \nabla_{x_t}\log p(x_t)$$
+
+$$= -\frac{1}{1-\bar{\alpha}_t}(\epsilon_\theta(x_t,t,y) - \epsilon_\theta(x_t,t))$$
+
+When we plug this into our guidance formula, we get:
+
+$$\bar{\epsilon}_\theta(x_t,t,y) = \epsilon_\theta(x_t,t,y) + w(\epsilon_\theta(x_t,t,y) - \epsilon_\theta(x_t,t))$$
+
+Which simplifies to:
+
+$$\bar{\epsilon}_\theta(x_t,t,y) = (w+1)\epsilon_\theta(x_t,t,y) - w\epsilon_\theta(x_t,t)$$
+
+This final equation is what most modern diffusion models use. The weight $w$ (often called the CFG scale) controls how much we want our generation to follow the prompt:
+
+- $w = 0$: Pure unconditional generation
+- $w = 1$: Normal conditional generation
+- $w > 1$: Increased adherence to the prompt
+
+The beauty of CFG is its simplicity - we don't need a separate classifier, just the difference between conditional and unconditional predictions from our main model.
 
 ## stuff
 
@@ -1135,9 +1349,12 @@ $$ELBO(\lambda) = E_q[\log p(x|z)] - KL(q_{\lambda}(z|x)||p(z))$$
 
 Which is the same as our single-point ELBO formula.
 
-## The Reparameterization Trick [INCOMPLETE]
+## The Reparameterization Trick
 
-[ADD_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/42.webp)
+
+> Image taken from ["From Autoencoder to Beta-VAE by Lillian Weng"](https://lilianweng.github.io/posts/2018-08-12-vae/#reparameterization-trick)
+> ]
 
 There's a critical problem we haven't addressed yet. Remember our ELBO formula:
 
@@ -1231,61 +1448,93 @@ And that's it! We've connected the dots between probability theory and neural ne
 2. A decoder that reconstructs data from this latent space
 3. A loss function that ensures both good reconstruction and well-structured latent representations
 
-## Papers to read [INCOMPLETE]
+## Essential Papers in Diffusion Models
 
-[Denoising Diffusion Implicit Model](https://arxiv.org/pdf/2010.02502)
+Here's a curated list of papers that shaped the field of diffusion models, arranged chronologically to show how the technology evolved.
 
-- DDIM is another scheduler,
+### Foundational Papers
 
-[Generative Modeling by Estimating Gradients of the
-Data Distribution](https://arxiv.org/pdf/1907.05600)
+[**Auto-Encoding Variational Bayes**](https://arxiv.org/pdf/1312.6114) (2013)
 
-- The original paper by yang song that discusses ideas about score based modeling
+- Introduced the VAE framework that later became crucial for latent diffusion models
+- Key innovation: Reparameterization trick for training deep generative models
+- Impact: Created the foundation for modern generative models
 
-[PROGRESSIVE DISTILLATION FOR FAST SAMPLING
-OF DIFFUSION MODELS](https://arxiv.org/pdf/2202.00512)
+[**Denoising Diffusion Probabilistic Models (DDPM)**](https://arxiv.org/pdf/2006.11239) (2020)
 
-- The paper that introduced the idea of distillation
+- First major breakthrough in making diffusion models practical
+- Key innovation: Showed how to train diffusion models efficiently using a simple noise prediction objective
+- Impact: Set the basic framework that most modern diffusion models build upon
 
-[Denoising Diffusion Probabilistic Models](https://arxiv.org/pdf/2006.11239)
+### Architecture Innovations
 
-DDPM was the first major breakthrough in diffusion modeling
+[**Denoising Diffusion Implicit Models (DDIM)**](https://arxiv.org/pdf/2010.02502) (2020)
 
-[Elucidating the Design Space of Diffusion-Based
-Generative Models](https://arxiv.org/pdf/2206.00364)
+- Solved the slow sampling problem in DDPMs
+- Key innovation: Developed a non-Markovian sampling process that needs fewer steps
+- Impact: Made diffusion models much faster and more practical for real applications
 
-[CLASSIFIER-FREE DIFFUSION GUIDANCE](https://arxiv.org/pdf/2207.12598)
+[**High-Resolution Image Synthesis with Latent Diffusion Models**](https://arxiv.org/pdf/2112.10752) (2022)
 
-The paper that introduced CFG
+- Introduced Stable Diffusion, making diffusion models accessible to everyone
+- Key innovation: Performing diffusion in compressed latent space instead of pixel space
+- Impact: Revolutionized the field by making high-quality image generation possible on consumer hardware
 
-[Diffusion Models Beat GANs on Image Synthesis](https://arxiv.org/pdf/2105.05233)
+[**Scalable Diffusion Models with Transformers (DiT)**](https://arxiv.org/pdf/2212.09748) (2022)
 
-Paper by openai researchers that introduced singificant
+- Reimagined diffusion model architecture using transformers
+- Key innovation: Replaced U-Net with a transformer-based architecture
+- Impact: Showed how transformer architectures could be effectively used for image generation
 
-[Auto-Encoding Variational Bayes](https://arxiv.org/pdf/1312.6114)
+### Guidance and Control
 
-The original paper on VAE
+[**CLASSIFIER-FREE DIFFUSION GUIDANCE**](https://arxiv.org/pdf/2207.12598) (2022)
 
-[Photorealistic Text-to-Image Diffusion Models
-with Deep Language Understanding](https://arxiv.org/pdf/2205.11487)
+- Solved the need for separate classifiers in guided diffusion
+- Key innovation: Using the difference between conditional and unconditional generations for guidance
+- Impact: Became the standard approach for controlling diffusion models
 
-The original Image Gen paper by Google
+[**Diffusion Models Beat GANs on Image Synthesis**](https://arxiv.org/pdf/2105.05233) (2021)
 
-[SCORE-BASED GENERATIVE MODELING THROUGH
-STOCHASTIC DIFFERENTIAL EQUATIONS](https://arxiv.org/pdf/2011.13456)
+- Proved diffusion models could outperform GANs
+- Key innovation: Combined classifier guidance with architectural improvements
+- Impact: Helped shift the field's focus from GANs to diffusion models
 
-First paper on score based modeling
+### Score-Based Methods
 
-[Scalable Diffusion Models with Transformers](https://arxiv.org/pdf/2212.09748)
+[**Generative Modeling by Estimating Gradients of the Data Distribution**](https://arxiv.org/pdf/1907.05600) (2019)
 
-The paper that introduced DiTs
+- Introduced score-based modeling perspective
+- Key innovation: Connected noise-conditional score networks with diffusion
+- Impact: Provided theoretical foundations for understanding diffusion models
 
-[High-Resolution Image Synthesis with Latent Diffusion Models
-](https://arxiv.org/pdf/2112.10752)
+[**SCORE-BASED GENERATIVE MODELING THROUGH STOCHASTIC DIFFERENTIAL EQUATIONS**](https://arxiv.org/pdf/2011.13456) (2020)
 
-The paper that changed the course of history by introducing
+- Unified score-based models and diffusion models
+- Key innovation: Continuous-time formulation of generative modeling
+- Impact: Created a theoretical framework connecting different approaches
 
-Helpful docs
+### Recent Advances
+
+[**PROGRESSIVE DISTILLATION FOR FAST SAMPLING OF DIFFUSION MODELS**](https://arxiv.org/pdf/2202.00512) (2022)
+
+- Addressed the slow sampling speed of diffusion models
+- Key innovation: Student models that can generate high-quality samples in few steps
+- Impact: Made diffusion models more practical for real-time applications
+
+[**Photorealistic Text-to-Image Diffusion Models with Deep Language Understanding**](https://arxiv.org/pdf/2205.11487) (2022)
+
+- Introduced Imagen, pushing boundaries of text-to-image generation
+- Key innovation: Using large language models for better text understanding
+- Impact: Showed the importance of strong text encoders in text-to-image models
+
+[**Elucidating the Design Space of Diffusion-Based Generative Models**](https://arxiv.org/pdf/2206.00364) (2022)
+
+- Comprehensive analysis of diffusion model design choices
+- Key innovation: Systematic study of architecture and training decisions
+- Impact: Provided practical guidelines for building better diffusion models
+
+## The code [INCOMPLETE]
 
 [Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
 [BatchNorm2d](https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html1)\
@@ -1295,9 +1544,7 @@ Helpful docs
 [ConvTranspose2d](https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html)\
 [Upsample](https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html)
 
-## The code [INCOMPLETE]
-
-## Understanding the metrics
+## Understanding the metrics [INCOMPLETE]
 
 This is interesting as well because... how do you tell a computer which is a good image and which is a bad image without actually doing a vibe check.
 
