@@ -828,6 +828,8 @@ Creating variations of specific parts while keeping the rest intact
 
 The best part? The same diffusion process we learned about earlier handles this naturally - it just needs to know which parts to leave alone and which parts to work on!
 
+It is a complete magic during inference. Consider reading this [blog](https://stable-diffusion-art.com/inpainting_basics/) to learn more.
+
 ## LoRA (Low-Rank Adaptation)
 
 Remember how earlier we talked about Dali learning the general idea of images rather than specific ones? Well, what if Dali wanted to learn a very specific style - like drawing in the style of Van Gogh, or creating anime characters? Teaching the entire model from scratch would be like making Dali relearn everything just to add one style. That would be quite inefficient!
@@ -1536,6 +1538,44 @@ Here's a curated list of papers that shaped the field of diffusion models, arran
 
 ## The code [INCOMPLETE]
 
+Let's Gradually make this section more complex, starting with the quickest way to start generating images to the more complex methods
+
+This [website](https://nn.labml.ai/diffusion/stable_diffusion/index.html) is an amazing starting point to understand what each line of code does. Consider checking it out, it helped me significantly while writing this section. 
+
+### Diffusers by Huggingface
+
+This section takes inspiration from the blog [Stable Diffusion with 🧨 Diffusers](https://huggingface.co/blog/stable_diffusion) by HuggingFace
+
+```python
+from diffusers import StableDiffusionPipeline
+
+pipe = StableDiffusionPipeline.from_pretrained("CompVis/stable-diffusion-v1-4")
+pipe.to("cuda")
+
+prompt = "a photograph of an astronaut riding a horse"
+
+image = pipe(prompt).images[0]
+
+# you can save the image with
+# image.save(f"astronaut_rides_horse.png")
+```
+
+[ADD_OUTPUT_IMAGE]
+
+As surprsing as it may seem, you only need the above 5 lines to start generating images using SD.
+
+This is nice, but what is the point of everything we have learned if we stick to just abstraction layers. Lets move forward
+
+If you wish to modify the different components without actually coding them out, that is also possible using diffusers. COnsider reading this [blog](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) to understand how to do that.
+
+### VAE
+
+### U-Net
+
+### Scheduler
+
+### Training code
+
 [Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
 [BatchNorm2d](https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html1)\
 [MaxPool2d](https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html)\
@@ -1550,11 +1590,13 @@ This is interesting as well because... how do you tell a computer which is a goo
 
 This really makes you appreaciate how the loss function was created doesnt it now!!
 
-## Misc
+## Misc & References
 
 - civitai
 - comfyui
 - https://stable-diffusion-art.com/author/andrew/ The blogs by this guy are absolutely mind boggling, if you are really intersted in this space. Check this out.
+- [Mathematical Foundation of Diffusion Generative Models](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/foundation-diffusion-generative-models) & [Understanding Stable Diffusion from "Scratch"
+  ](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/stable-diffusion-scratch).These class materials from harvard were pretty nice and I consulted them a few times
 
 ## How to help out
 
