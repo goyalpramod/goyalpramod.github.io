@@ -996,6 +996,48 @@ $$ELBO(\lambda) = E_q[\log p(x|z)] - KL(q_{\lambda}(z|x)||p(z))$$
 
 Which is the same as our single-point ELBO formula.
 
+## The Reparameterization Trick
+
+There's a critical problem we haven't addressed yet. Remember our ELBO formula:
+
+$$ELBO_i(\theta,\phi) = E_{q_{\theta}(z|x_i)}[\log p_{\phi}(x_i|z)] - KL(q_{\theta}(z|x_i)||p(z))$$
+
+To optimize this, we need to calculate gradients through the entire process. However, sampling from $q_{\theta}(z|x_i)$ is a random operation, and we can't backpropagate through random sampling!
+
+### The Problem
+
+1. Our encoder outputs parameters for a probability distribution (usually mean $\mu$ and variance $\sigma^2$ for a Gaussian)
+2. We sample $z$ from this distribution
+3. We can't compute gradients through this random sampling step
+
+### The Solution: Reparameterization Trick
+
+Instead of directly sampling $z$, we:
+1. Sample a random noise $\epsilon$ from a standard normal distribution $\mathcal{N}(0,1)$
+2. Transform it using our distribution parameters:
+
+$$z = \mu + \sigma \odot \epsilon$$
+
+where $\odot$ represents element-wise multiplication.
+
+This is equivalent to sampling from $\mathcal{N}(\mu, \sigma^2)$, but now the randomness is separated from the network parameters!
+
+### Why This Works
+
+- The random sampling ($\epsilon$) is now independent of the network parameters
+- $\mu$ and $\sigma$ are direct outputs of our encoder network
+- We can backpropagate through this transformation
+- During backpropagation, $\epsilon$ is treated as a constant
+
+In practice, our VAE now looks like this:
+1. Encoder outputs $\mu$ and $\sigma$
+2. Sample $\epsilon \sim \mathcal{N}(0,1)$
+3. Compute $z = \mu + \sigma \odot \epsilon$
+4. Feed $z$ into decoder
+5. Calculate loss and backpropagate
+
+This trick is what makes VAEs trainable in practice!
+
 ## Connecting to Neural Networks
 
 Now that we understand the mathematical foundation, let's see how this translates to actual neural networks.
