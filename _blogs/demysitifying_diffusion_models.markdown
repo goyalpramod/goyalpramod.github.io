@@ -6,24 +6,26 @@ categories: [CV, ML, Maths, Code]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
 
-Diffusion models like [Stable Diffusion](), [Flux](), [Dall-e]() etc are an enigma built upon multiple ideas and mathematical breakthroughs. So is the nature of it that most tutorials on the topic are extremely complicated or even when simplified talk a lot about it from a high level perspective.
+Diffusion models like [Stable Diffusion](https://huggingface.co/stabilityai/stable-diffusion-3.5-large), [Flux](https://huggingface.co/black-forest-labs/FLUX.1-dev), [Dall-e](https://openai.com/index/dall-e-3/) etc are an enigma built upon multiple ideas and mathematical breakthroughs. So is the nature of it that most tutorials on the topic are extremely complicated or even when simplified talk a lot about it from a high level perspective.
 
 There is a missing bridge between the beautiful simplification and more low level complex idea. That is the gap I have tried to fix in this blog.
 
 - Starting with the simple **idea** behind diffusion models
+- A full section dedicated to the **maths** for the curious minds
 - Understanding each component and **coding** it out
-- And finally a full section dedicated to the **maths** for the curious minds
 
-Each section of the blog has been influenced by works by pioneering ML practioners and the link to their blog/video/article is linked in the very beginning of the respective section.
+Each section of the blog has been influenced by works by pioneering ML practitioners and the link to their blog/video/article is linked in the very beginning of the respective section.
 
 ## How this Blog is Structured
 
 First we talk about a very high level idea of diffusion models about how they work. In doing so we will be personifying each component of the whole pipeline.
 
-Once we have a general idea of the pipeline, We will dive into the ML side of those sections. After having a general idea of the ML, we will have the code for it. As it is substantially harder to keep the blog to readable length and maintain it's quality while giving the entire code for Stable Diffusion, I will link to the exact code (with definition for each function)
-Wherever I do not explicitly code a section out.
+Once we have a general idea of the pipeline, We will dive into the ML side of those sections.
 
-Many sections of the diffusion model pipeline is mathematics heavy, hence I have added a completely different section for that. Which is included at the end. You can understand how diffusion models work (if you believe in some assumptions without looking at the proof) along with the code, without the maths. But I will still recommend going through the Mathematical ideas behind it, because they are essential for developing further for diffusion model research.
+Many sections of the diffusion model pipeline is mathematics heavy, hence I have added a completely different section for that. Which is included after we understand the ML components. You can understand how diffusion models work (if you believe in some assumptions without looking at the proof) along with the code, without the maths. But I will still recommend going through the Mathematical ideas behind it, because they are essential for developing further for diffusion model research.
+
+After Understanding everything, we will code it out. As it is substantially harder to keep the blog to readable length and maintain it's quality while giving the entire code for Stable Diffusion, I will link to the exact code (with definition for each function)
+Wherever I do not explicitly code a section out.
 
 Inference with Diffusion model deserves an entirely different blog of it's own, as I hope to finish this blog in a reasonable time. I have added links in the end ([Misc]()) to where you can further learn how to make the best diffusion model art and get better at it.
 
@@ -35,7 +37,7 @@ Let us begin!!
 Imagine you have a super special artist friend, whom you tell your ideas and he instantly generates amazing images out of it. Let's name him Dali
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/2.webp)
-The way Dali starts his work is, that he first has a canvas, he listens to your instructions then creates an artwork. (The canvas looks like a lot of noise rather than the traditional white, more on this later)
+The way Dali starts his work is, that he first has a canvas, he listens to your instructions then creates an artwork. (The canvas looks a lot like noise rather than the traditional white, more on this later)
 
 But Dali has a big problem, that he cannot make big images, he tells you that he will only create images the size of your hand. This is obviously not desirable. As for practical purposes you may want images the size of a wall, or a poster etc.
 
@@ -168,28 +170,39 @@ A simple Down block, that compresses the size of the image. This makes sure we o
 class Up(nn.Module):
     def __init__(self, in_channels, out_channels, bilinear=True):
         super().__init__()
+        # Choose between two upsampling methods
         if bilinear:
+            # Method 1: Simple bilinear interpolation
+            # Doubles the spatial dimensions using interpolation
             self.up = nn.Upsample(scale_factor=2, mode='bilinear', align_corners=True)
         else:
+            # Method 2: Learnable transposed convolution
+            # Doubles spatial dimensions while halving channels
             self.up = nn.ConvTranspose2d(in_channels, in_channels // 2, kernel_size=2, stride=2)
 
+        # Apply two consecutive convolutions after combining features
         self.conv = DoubleConv(in_channels, out_channels)
 
     def forward(self, x1, x2):
+        # Step 1: Upsample the lower resolution feature map (x1)
         x1 = self.up(x1)
 
-        # Handle size differences
-        diff_y = x2.size()[2] - x1.size()[2]
-        diff_x = x2.size()[3] - x1.size()[3]
+        # Step 2: Handle size mismatches between upsampled and skip connection
+        # Calculate the difference in height and width
+        diff_y = x2.size()[2] - x1.size()[2]  # Height difference
+        diff_x = x2.size()[3] - x1.size()[3]  # Width difference
 
+        # Add padding to make sizes match
+        # The padding is distributed evenly on both sides
         x1 = F.pad(x1, [diff_x // 2, diff_x - diff_x // 2,
                        diff_y // 2, diff_y - diff_y // 2])
 
-        x = torch.cat([x2, x1], dim=1)
+        # Step 3: Combine features from upsampled path and skip connection
+        x = torch.cat([x2, x1], dim=1)  # Concatenate along channel dimension
+
+        # Step 4: Process combined features through double convolution
         return self.conv(x)
 ```
-
-{add explanation}
 
 ```python
 class UNet(nn.Module):
@@ -235,17 +248,126 @@ class UNet(nn.Module):
 
 ```
 
-{add explanation}
+By putting together the Down and Up blocks we have the final U-Net as coded above.
 
-#### Stable Diffusion U-Net [INCOMPLETE]
+#### Stable Diffusion U-Net
 
-The Diffusion Model U-Nets have attention layers present inside of them, which focuses on the important parts {explain this in greater detail}
+The Diffusion Model U-Net is quite different. But it follows the same principles as discussed above.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/22.webp)
 
-Now let us code out the U-Net used in Stable Diffusion
+First, let's understand what goes into this U-Net:
 
-### Dali's mistake fixing wand (Scheduler) [INCOMPLETE]
+Input Components
+
+- Noisy Latents: The noisy image we're trying to denoise
+- Prompt Embedding: Text information converted into a numerical representation
+- Time Step Embedding: Information about which denoising step we're on
+
+The ResNet and Attention blocks work together in a complementary way to process this information:
+
+**ResNet Blocks**\
+These blocks receive three inputs that are combined:
+
+1. The main feature path (coming from previous layers)
+2. The time step embedding
+3. The residual skip connection (from earlier in the network)
+
+Inside a ResNet Block (Pseudo-code):
+
+```python
+# Simplified ResNet block structure
+def resnet_block(features, time_embedding, skip_connection):
+    # Time embedding projection
+    time_features = project_time_embedding(time_embedding)
+
+    # Combine features with time information
+    combined = features + time_features
+
+    # Apply convolutions with residual connection
+    output = conv1(combined)
+    output = activation(output)
+    output = conv2(output)
+
+    # Add skip connection
+    final = output + skip_connection
+    return final
+```
+
+If you are new to ResNets, consider reading more [here](https://medium.com/towards-data-science/the-w3h-of-alexnet-vggnet-resnet-and-inception-7baaaecccc96)
+
+The ResNet blocks are crucial because they:
+
+- Maintain spatial information about the image
+  \*Help the model understand how features should change based on the denoising step
+- Prevent vanishing gradients through residual connections
+
+**Attention Blocks**\
+Attention blocks receive:
+
+- The feature maps from ResNet blocks
+- The prompt embedding (indirectly through cross-attention)
+
+Inside an attention block(Pseudo-code):
+
+```python
+# Simplified attention block structure
+def attention_block(features, prompt_embedding):
+    # Self-attention: Image features attending to themselves
+    q, k, v = project_to_qkv(features)
+    self_attention = compute_attention(q, k, v)
+
+    # Cross-attention: Image features attending to text
+    q_cross = project_query(features)
+    k_cross, v_cross = project_kv(prompt_embedding)
+    cross_attention = compute_attention(q_cross, k_cross, v_cross)
+
+    # Combine both attention results
+    output = self_attention + cross_attention
+    return output
+```
+
+To read more about attention, consider reading my blog on the topic [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/#understanding-self-attention)
+
+The attention blocks are essential because they:
+
+- Help the model focus on relevant parts of the image based on the text prompt
+- Allow the model to understand relationships between different parts of the image
+- Enable text-image alignment during the generation process
+
+Why This Architecture Works So Well
+
+1. Progressive Refinement
+
+   - The U-Net structure allows the model to work at multiple scales
+   - Early layers capture broad structure
+   - Middle layers refine details
+   - Later layers add fine details
+
+2. Information Flow
+
+   - ResNet blocks ensure gradient flow and feature preservation
+   - Attention blocks align image generation with text description
+   - Skip connections preserve spatial information
+
+3. Controlled Generation
+
+   - Time step embeddings guide the denoising process
+   - Prompt embeddings guide the semantic content
+   - Their combination enables precise control over the generation
+
+For example, when generating an image of "a red cat sitting on a blue chair":
+
+1. ResNet blocks handle the basic structure and progressive denoising
+2. Attention blocks ensure:
+
+   - The cat is actually red
+   - The chair is actually blue
+   - The cat is positioned correctly relative to the chair
+
+3. Skip connections preserve spatial details throughout the process
+
+### Dali's mistake fixing wand (Scheduler)
 
 > A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the maths section.\
 > This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful.\
@@ -343,9 +465,11 @@ So we initially when we are adding noise to an image, we are taking it from this
 
 > On right, final Normal curve
 
-This works because of a property of Normal distribution, that if we have any disturibution (Because a very specific image can be represented by a highly complex curve. Think of just pixel values) by adding a normal distribution to it, we will end up with a normal distribution
+The power of using normal (Gaussian) distributions in diffusion models comes from a fundamental property called the "stability property" of normal distributions. Here's how it works:
 
-[FIX_THIS_EXPLANATION]
+When we start with any distribution (like our complex image) and add Gaussian noise to it repeatedly, the resulting distribution gradually becomes more and more Gaussian. This is due to the [_Central Limit Theorem_](https://en.wikipedia.org/wiki/Central_limit_theorem), one of the most important principles in probability theory.
+
+Think of it like mixing paint colors: If you start with any color (our original image distribution) and keep adding white paint (Gaussian noise) in small amounts, eventually your color will become consistently whitish, regardless of what color you started with. Similarly, adding Gaussian noise gradually transforms our complex image distribution into a simple Gaussian distribution.
 
 we need an objective or loss function to train over
 
@@ -361,17 +485,22 @@ This greatly simplifies are training, which can be written as the above image.
 
 In summary:
 
-- we take a random sample $\mathbf{x}_0$ from the real unknown and complex data distribution $q(\mathbf{x}_0)$
-- we sample a noise level $t$ uniformly between $1$ and $T$ (i.e., a random time step)
-- we sample some noise from a Gaussian distribution and corrupt the input by this noise at level $t$ (using the nice property defined above)
-- the neural network is trained to predict this noise based on the corrupted image $\mathbf{x}_t$ (i.e. noise applied on $\mathbf{x}_0$ based on known schedule $\beta_t$)
+- **Original Artwork ($\mathbf{x}_0$)**: We start with a clean image from our dataset.
+- **Progressive Damage (t)**: We simulate different levels of damage by choosing a random time step t. It's like choosing how degraded we want our image to be.
+- **Adding Known Damage ($\mathbf{x}_t$)**: We add a specific amount of Gaussian noise to our image based on t. This is like deliberately damaging the artwork in a controlled way, where we know exactly what damage we added.
+- **Training the Restorer**: Our neural network (like our art restorer) looks at the damaged image and tries to identify what damage was added. The loss function $|\epsilon - \epsilon_\theta(x_t,t)|_2$ measures how well the network identified the damage.
 
-In reality, all of this is done on batches of data, as one uses stochastic gradient descent to optimize neural networks.
+This process is efficient because:
 
-[FIX_THIS_EXPLANATION]
+We can jump to any level of noise directly (thanks to the "nice property")\
+We know exactly what noise we added, so we can precisely measure how well our model predicts it\
+By learning to identify the noise at any degradation level, the model implicitly learns how to restore images
 
-https://stable-diffusion-art.com/samplers/
-https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers
+This training happens in batches, where the model learns from multiple examples simultaneously, gradually improving its ability to identify and later remove noise from images.
+
+Above we discussed mainly about DDPM, but there are many kinds of schedulers. You can check few of the popular one's [here](https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers)
+
+To know more about the differences during inference. Check this [blog](https://stable-diffusion-art.com/samplers/)
 
 ### Instructions, because everyone needs guidance (Conditioning)
 
@@ -439,15 +568,7 @@ To read more about CLIP and T5 consider reading the original https://openai.com/
 
 Image to Image is of multiple types, you can have FaceSwap, Inpainting, ControlNet etc. But all of them follow a fairly simple method. If you have understood everything so far, this part will be a ride in the park.
 
-#### CFG
-
-```
-The classifier-free guidance scale (CFG scale) is a value that controls how much the text prompt steers the diffusion process. The AI image generation is unconditioned (i.e. the prompt is ignored) when the CFG scale is set to 0. A higher CFG scale steers the diffusion towards the prompt.
-```
-
-More in the maths section
-
-#### Control-Net
+##### Control-Net
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/34.webp)
 
@@ -913,6 +1034,10 @@ To learn more about Score Based Modeling, consider reading this [blog by Yang So
 
 ## CFG
 
+```
+The classifier-free guidance scale (CFG scale) is a value that controls how much the text prompt steers the diffusion process. The AI image generation is unconditioned (i.e. the prompt is ignored) when the CFG scale is set to 0. A higher CFG scale steers the diffusion towards the prompt.
+```
+
 ## stuff
 
 There is still a lot of things that we can discuss like LDMs, Distillation etc. But now you have the essentially idea for majority of how SD maths work. So you can tackle it on your own, you can check more about it [here]()
@@ -1013,6 +1138,7 @@ To optimize this, we need to calculate gradients through the entire process. How
 ### The Solution: Reparameterization Trick
 
 Instead of directly sampling $z$, we:
+
 1. Sample a random noise $\epsilon$ from a standard normal distribution $\mathcal{N}(0,1)$
 2. Transform it using our distribution parameters:
 
@@ -1030,6 +1156,7 @@ This is equivalent to sampling from $\mathcal{N}(\mu, \sigma^2)$, but now the ra
 - During backpropagation, $\epsilon$ is treated as a constant
 
 In practice, our VAE now looks like this:
+
 1. Encoder outputs $\mu$ and $\sigma$
 2. Sample $\epsilon \sim \mathcal{N}(0,1)$
 3. Compute $z = \mu + \sigma \odot \epsilon$
