@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: blog
 title: "Demystifying Diffusion Models"
 date: 2025-02-10 12:00:00 +0530
@@ -10,37 +10,37 @@ Diffusion models like [Stable Diffusion](https://huggingface.co/stabilityai/stab
 
 There is a missing bridge between the beautiful simplification and more low level complex idea. That is the gap I have tried to fix in this blog.
 
-- Starting with the simple **idea** behind diffusion models
-- A full section dedicated to the **maths** for the curious minds
-- Understanding each component and **coding** it out
+- Starting with the simple [**idea**](#the-genius-artist) behind diffusion models
+- A full section dedicated to the [**maths**](#the-dreaded-mathematics) for the curious minds
+- Understanding each component and [**coding**](#the-code) it out
 
-Each section of the blog has been influenced by works by pioneering ML practitioners and the link to their blog/video/article is linked in the very beginning of the respective section.
+Each section of the blog has been influenced by works of pioneering ML practitioners and the link to their blog/video/article is linked in the very beginning of the respective section.
 
 ## How this Blog is Structured
 
-First we talk about a very high level idea of diffusion models understanding how they work. In doing so we will be personifying each component of the whole pipeline.
+First we will discuss the very high level idea of diffusion models, understanding how they work. In doing so we will be personifying each component of the whole pipeline.
 
 Once we have a general idea of the pipeline, We will dive into the ML side of those sections.
 
-Many sections of the diffusion model pipeline are mathematics heavy, hence I have added a completely different section for that. Which is included after we understand the ML components. You can understand how diffusion models work (if you believe in some assumptions without looking at the proof) along with the code, without the maths. But I will still recommend going through the Mathematical ideas behind it, because they are essential for text to image research.
+Many sections of the diffusion model pipeline are mathematics heavy, hence I have added a completely different section for that. Which is included after we understand the ML components. You can understand how diffusion models work (if you believe in some assumptions without looking at the proof) along with the code, without the maths. But I will still recommend going through the mathematical ideas behind it, because they are essential for text to image research.
 
-After Understanding everything, we will code it out. As it is substantially harder to keep the blog to a readable length and maintain it's quality while giving the entire code for Stable Diffusion, I will link to the exact code (with definition for each function) Wherever I do not explicitly code a section out.
+After Understanding everything, we will code it out. As it is substantially harder to keep the blog to a readable length and maintain it's quality while giving the entire code for Stable Diffusion, I will link to the exact code (with definition for each function) which can help you train the entire pipeline from scratch.
 
-Inference with Diffusion model deserves an entirely different blog of it's own, as I hope to finish this blog in a reasonable time. I have added links in the end ([Misc](#misc--references)) to where you can further learn how to make the best diffusion model art and get better at it.
+Inference with Diffusion model deserves an entirely different blog of it's own, as I hope to finish this blog in a reasonable time. I have added links in the [end](#misc--references) where you can further learn how to make the best diffusion model art and get better at it.
 
 Let us begin!!
 
 ## The Genius Artist
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/1.webp)
-Imagine you have a super special artist friend, whom you tell your ideas and he instantly generates amazing images out of it. Let's name him Dali
+Imagine you have a super special artist friend, whom you tell your ideas and he instantly generates amazing images out of it. Let's name him Dali.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/2.webp)
-The way Dali starts his work is, that he first has a canvas, he listens to your instructions then creates an artwork. (The canvas looks a lot like noise rather than the traditional white, more on this later)
+The way Dali starts his work is; He first has a canvas, he then listens to your instructions using which he creates art. (The canvas looks a lot like noise rather than the traditional white, more on this later)
 
-But Dali has a big problem, that he cannot make big images, he tells you that he will only create images the size of your hand. This is obviously not desirable. As for practical purposes you may want images the size of a wall, or a poster etc.
+But Dali has a big problem, he cannot make big images, he tells you that he will only create images the size of your hand. This is obviously not desirable. As for practical purposes you may want images the size of a wall, or a poster.
 
-That is when a magic wand falls from the sky, and it has two modes Encoder(Compress size) and Decoder(Enlarge size). That gives you a great idea. You will start with the size of the canvas that you like, Encode it. Give the encoded canvas to Dali, he will make his art, And then you can decode the created art to get it back to the original shape you want.
+That is when a magic wand falls from the sky, and it has two modes Encoder(Compress size) and Decoder(Enlarge size). That gives you a great idea. You will start with the size of the canvas that you like, Encode it. Give the encoded canvas to Dali, he will make his art, and then you can decode the created art to get it back to the original shape you want.
 
 This works and you are really happy.
 
@@ -48,20 +48,21 @@ This works and you are really happy.
 
 But you are curious about how Dali works, so you ask him. "Dali why do you always start with this noisy canvas instead of pure white canvas? and how did you learn to generate so many amazing images?"
 
-Dali is a kind nice guy, so he tells you about how he started out. When he was just a newbie artist. The world was filled with great art. Art so complex that I could not reproduce it, nobody could.
+Dali is a nice guy, so he tells you about how he started out.\
+ "When I was just a newbie artist. The world was filled with great art. Art so complex that I could not reproduce it, nobody could."
 
-That is when I found a special wand as well, which let me add and fix mistakes in a painting.
+"Until I found a special wand, which let me add and fix mistakes in a painting."
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/4.webp)
 
-I would start with an existing artwork, add a bunch of mistakes to it, and using my wand I would reverse them.
+"I would start with an existing artwork, add a bunch of mistakes to it, and using my wand I would reverse them."
 
-After a while, I added so many mistakes to the original artwork, that they looked like pure noise. The way my canvas do, and using my special wand. I just gradually found mistakes and removed them. Till I got back the original image.
+"After a while, I added so many mistakes to the original artwork, that they looked like pure noise. The way my canvas do, and using my special wand. I just gradually found mistakes and removed them. Till I got back the original image."
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/7.webp)
 
-This idea sounds fascinating, but you being you have quite a question "that sounds amazing, so did you learn what the "full of mistakes" image looks like for all the images in the world? Otherwise how do you know what the final image will be from a noisy image?"
+This idea amazes you. But you being you, have quite a question "That sounds amazing, so did you learn what the "full of mistakes" image looks like for all the images in the world? Otherwise how do you know what the final image will be from a noisy image?"
 
-"Great question!!!" Dali responds. "That is what my brothers used to do, They tried to learn the representation of all the images in the world and failed. What I did differently was, instead of learning all the images. I learnt the general idea of different images. For example, instead of learning all the faces. I learnt how human faces look like in general"
+"Great question!!!" Dali responds. "That is what my brothers used to do, They tried to learn the representation of all the images in the world and failed. What I did differently was, instead of learning all the images. I learnt the general idea of different images. For example, instead of learning all the faces. I learnt how a face looks like in general"
 
 Satisfied with his answers you were about to leave, when Dali stops you and asks, "Say friend, that wand of yours truly is magical. It can make my art popular worldwide because everyone can create something of value using it. Will you be kind enough to explain how it works so I can make one for myself."
 
@@ -69,8 +70,8 @@ You really want to help Dali out, but unfortunately even you do not know how the
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/28.webp)
 
-You being the kind soul you are, Tell the man that you found it on the street and wish to return it.
-The man Greatly happy with your generosity, wishes to pay you back. You just say "Thank you, but I do not seek money. It would be nice if you could help my friend Dali out, by explaining how your magic wand works."
+You being the kind soul you are, tell the man that you found it on the street and wish to return it.
+The man greatly happy with your generosity, wishes to pay you back. You reply with "Thank you, but I do not seek money. It would be nice if you could help my friend Dali out, by explaining how your magic wand works."
 
 The man curious for what use anyone would have for his magic wand sees around Dali's studio, and understands that he is a great artist. Happy to help him he says. "My name is Auto, and I shall tell you about my magic wand."
 
@@ -86,20 +87,18 @@ Dali is extremely happy, you are happy for your friend, and Auto is happy that h
 
 The end.
 
-## Understanding the diffferent components
-
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/24.webp)
+## Understanding Stable Diffusion
 
 Now that you have a general idea of how these image generation models work, let's understand each specific component out.
 
-Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, Go to this [repo](https://github.com/goyalpramod/paper_implementations).
+Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, go to this [repo](https://github.com/goyalpramod/paper_implementations).
 
-Additionally, The below work takes heavy inspiration from the following works
+Additionally, The below work takes heavy inspiration from the following works:
 
 - [The annotated Diffusion Model](https://huggingface.co/blog/annotated-diffusion)
 - [Fast ai course by Jeremy Howard](https://course.fast.ai/Lessons/part2.html)
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/9.webp)
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/24.webp)
 
 If you look closely you will see how similar both these images are.
 
@@ -113,7 +112,7 @@ Our genius artist is called a U-Net in ML terms, now if we go back to our story.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/25.webp)
 
-In the above image, the U-Net predicts the noise in a step wise manner. The scheduler is responsible for removing it. (indicated by the "-" sign)
+In the above image, the U-Net predicts the noise in a step wise manner. The scheduler is responsible for removing it (indicated by the "-" sign).
 
 Let's understand how it works.
 
@@ -121,19 +120,19 @@ You will be surprised to know U-Nets were actually introduced in a [medical pape
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/14.webp)
 
-> Image Taken from the ["U-Net: Convolutional Networks for Biomedical Image Segmentation"](https://arxiv.org/abs/1505.04597)
+> Image taken from the ["U-Net: Convolutional Networks for Biomedical Image Segmentation"](https://arxiv.org/abs/1505.04597)
 
 The idea behind segmentation is, given an image "a". Create a map "b" around the objects which needs to be classified in the image.
 
-And the Reason they are called U-Net is because, well the architecture looks like a "U".
+And the reason these are called U-Nets is because, well the architecture looks like a "U".
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/12.webp)
 
-> Image Taken from the ["U-Net: Convolutional Networks for Biomedical Image Segmentation"](https://arxiv.org/abs/1505.04597)
+> Image taken from the ["U-Net: Convolutional Networks for Biomedical Image Segmentation"](https://arxiv.org/abs/1505.04597)
 
-This looks quite complicated so let's break it down with a simpler image
+This looks quite complicated so let's break it down with a simpler image.
 
-Also, I will proceed with the assumption you have an understanding of [CNNs](https://en.wikipedia.org/wiki/Convolutional_neural_network) and how they work. If not, check the [Misc](#misc--references) for a guide to where you can learn more on the topic.
+Also, I will proceed with the assumption you have an understanding of [CNNs](https://en.wikipedia.org/wiki/Convolutional_neural_network) and how they work. If not, check the [misc](#misc--references) for a guide to where you can learn more on the topic.
 
 ![Image of simplified U-Net](/assets/blog_assets/demystifying_diffusion_models/11.webp)
 
@@ -143,11 +142,11 @@ The decoder then does [transpose convolutions](https://towardsdatascience.com/un
 
 To understand it in our context, think instead of segmenting objects, we are segmenting the noise. Trying to find out the particular places where noise is present.
 
-To prevent the U-net from losing important information while down-sampling, skip connections are added. These send back the compressed encoded image back to the decoder so they have context from there as well.
+To prevent the U-net from losing important information while down-sampling, skip connections are added. These send the compressed encoded image back to the decoder so they have context from there as well.
 
 #### Coding the original U-Net
 
-They are easier to understand when we write them down in code. So let us do that. (We start with coding the original U-Net out first, then add the complexities of the one used in Stable Diffusion later)
+It's easier to understand when we write it down in code. So let us do that. (We start with coding the original U-Net out first, then add the complexities of the one used in Stable Diffusion later)
 
 ```python
 class DoubleConv(nn.Module):
@@ -181,7 +180,7 @@ class Down(nn.Module):
         return self.maxpool_conv(x)
 ```
 
-A simple Down block, that compresses the size of the image. This makes sure we only focus on the relevant part. Imagine it like this Given most images, like pictures of dogs, person in a beach, Photo of the moon etc. The most interesting part (the dog, person, moon) usually take up a small part or half the photo.
+A simple Down block, that compresses the size of the image. This makes sure we only focus on the relevant part. Imagine it like this given most images, like pictures of dogs, person in a beach, photo of the moon etc. The most interesting part (the dog, person, moon) usually take up a small part of the image.
 
 ```python
 class Up(nn.Module):
@@ -221,7 +220,7 @@ class Up(nn.Module):
         return self.conv(x)
 ```
 
-This is the Up sampling step which creates the mask, which is needed for segmentation of the image.
+This is the Up sampling block that helps generate the mask, which is needed for segmentation of the image.
 
 ```python
 class UNet(nn.Module):
@@ -292,7 +291,7 @@ These blocks receive three inputs that are combined:
 2. The time step embedding
 3. The residual skip connection (from earlier in the network)
 
-Inside a ResNet Block (Pseudo-code):
+Inside a ResNet Block (pseudo-code):
 
 ```python
 # Simplified ResNet block structure
@@ -321,13 +320,12 @@ The ResNet blocks are crucial because they:
 - Help the model understand how features should change based on the denoising step
 - Prevent vanishing gradients through residual connections
 
-**Attention Blocks**\
 Attention blocks receive:
 
 - The feature maps from ResNet blocks
 - The prompt embedding (indirectly through cross-attention)
 
-Inside an attention block(Pseudo-code):
+Inside an attention block (pseudo-code):
 
 ```python
 # Simplified attention block structure
@@ -354,7 +352,7 @@ The attention blocks are essential because they:
 - Allow the model to understand relationships between different parts of the image
 - Enable text-image alignment during the generation process
 
-Why This Architecture Works So Well
+**Why This Architecture Works So Well**
 
 1. Progressive Refinement
 
@@ -370,7 +368,6 @@ Why This Architecture Works So Well
    - Skip connections preserve spatial information
 
 3. Controlled Generation
-
    - Time step embeddings guide the denoising process
    - Prompt embeddings guide the semantic content
    - Their combination enables precise control over the generation
@@ -438,7 +435,7 @@ The future is likely to see more models using DiT architectures or hybrid approa
 
 ### Dali's mistake fixing wand (Scheduler)
 
-> A quick note, This part is mostly purely Mathematical. And as mentioned earlier, everything is described in greater detail in the [maths](#maths-of-the-forward-diffusion-process) section.\
+> A quick note, This part is mostly purely mathematical. And as mentioned earlier, everything is described in greater detail in the [maths](#maths-of-the-forward-diffusion-process) section.\
 > This here is mostly a quick idea that one will need to understand how scheduler's work. If you are interested in how these came to be, I urge you to check out the mathematics behind it, because it is quite beautiful.\
 > Also, if at any point during the explanation, it becomes too complex to comprehend. Consider taking a break and continuing later, Each part alone took me weeks to write. Do not assume you can understand it in one sitting, and the idea only becomes simpler as you read more about it.
 
@@ -448,11 +445,11 @@ Put simply, the scheduler is just a mathematical equation that takes an image & 
 
 ![Denoising process of an image](/assets/blog_assets/demystifying_diffusion_models/6.webp)
 
-> Image taken from [Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)
+> Image taken from "[Denoising Diffusion Probabilistic Models](https://arxiv.org/abs/2006.11239)"
 
 The above image looks quite complex, But it is really simple if you understand what is going on.
 
-We start with an image and call it $X_0$ we then keep adding noise to it till we have pure [Stochastic](https://en.wikipedia.org/wiki/Stochastic) (random) [Gaussian](https://en.wikipedia.org/wiki/Gaussian_function) (Normal Distribution) Noise $X_T$.
+We start with an image and call it $X_0$ we then keep adding noise to it till we have pure [Stochastic](https://en.wikipedia.org/wiki/Stochastic) (Random) [Gaussian](https://en.wikipedia.org/wiki/Gaussian_function) (Normal Distribution) Noise $X_T$ (A completely noisy image).
 
 $$q(x_t|x_{t-1})$$
 
@@ -460,7 +457,7 @@ $$q(x_t|x_{t-1})$$
 
 Well wasn't that a mouthful, don't worry. I won't throw such a big sentence at you without explaining what it means.
 
-Let's again start with our original image $X_0$ and then we add a bit of noise to it, this is now $X_1$, then we add noise to this image that becomes $X_2$ and so on.
+Let's again start with our original image $X_0$ and then add a bit of noise to it, this is now $X_1$, then we add more noise to this image and it becomes $X_2$ and we can keep doing this for $t$ steps.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/29.webp)
 
@@ -469,7 +466,7 @@ That scary looking equation basically says if we have an image $X_{t-1}$ we can 
 
 So now we have a single image, and we are able to add noise to it.
 
-> **Note**: A simple method I use to keep in mind is whenever an equation like p(A\|B) is present, it simply means think right to left. Given B, what can be A.
+> **Note**: A simple method I use to keep in mind, whenever an equation like p(A\|B) is present. Simply think right to left. Given B, what can be A.
 
 What we want to do is, the reverse process. Take noise and get an image out of it.
 
@@ -495,14 +492,15 @@ We already know what the left hand side (LHS) means, lets understand the right h
 
 The RHS represents a Normal distribution $\mathcal{N}$ with mean $\sqrt{1-\beta_t}x_{t-1}$ and variance $\beta_t\mathbf{I}$, where we sample noise at time $t$ from this distribution to add to our image.
 
-There is one slight problem though, gradually adding so many different noise at different values of t is very computationally expensive.
+There is one slight problem though, gradually adding noise at different values of t is very computationally expensive.
 
 Using the "nice property" we can make another equation. (Explained and derived in the [maths](#maths-of-reverse-diffusion-process) section)
 
 $$q(x_t|x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t}x_0, (1-\bar{\alpha}_t)\mathbf{I})$$
-where $\bar{\alpha}_t = \prod_{i=1}^t \alpha_i$ and $\alpha_t = 1-\beta_t$
 
-($\prod_{i=1}^t \alpha_i$ this simply means the values of alpha multiplied from $1$ to $t$, $\alpha_1 \cdot \alpha_2 \cdot \alpha_3 \cdot ... \cdot \alpha_t$)
+where $$\alpha_t = 1-\beta_t$$ and $$\bar{\alpha}_t = \prod_{i=1}^t \alpha_i$$
+
+($\prod_{i=1}^t \alpha_i$ means the values of alpha multiplied from $1$ to $t$, $\alpha_1 \cdot \alpha_2 \cdot \alpha_3 \cdot ... \cdot \alpha_t$)
 
 This equation lets us add noise at any time t just using the original image. This is amazing, why? Because during training it will be very tough to go sequentially from $t=1$ to $t=n$ just to figure out how the noisy image will look like at timestep $n=40$. The above equation saves us from this computational inefficiency.
 
@@ -528,9 +526,11 @@ Now that we understand how we can add noise to the images & how we can control t
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/33.webp)
 
-Images that look like images actually lie is a very specific region of all possible images in the world. An easy way to think about it will be like this, Most humans only have 2 eyes. But if you are given an infinite space of images, the pictures of humans can have n number of eyes. But you only want the images which has 2. So that significantly limits the space from where you want to get your images.
+Images that look like images actually lie is a very specific region of all possible images in the world. An easy way to think about it will be like this, most humans only have 2 eyes. But if you are given an infinite space of images, the pictures of humans can have n number of eyes. But you only want the images which has 2. So that significantly limits the space from where you want to get your images.
 
-So we initially when we are adding noise to an image, we are taking it from this very specific space, to the more random gaussian space. (This is done, so we can learn the reverse process. Given any random point in space, get back to this very specific space)
+Hence, initially by adding noise to an image. We are taking it from this very specific space, to the more random gaussian space. (This is done, so we can learn the reverse process. Given any random point in space, get back to this very specific space)
+
+We have been constantly talking about adding Gaussian Noise, but haven't discussed the reason. So let's take a minute to understand the rationale behind that as well.
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/32.webp)
 
@@ -546,15 +546,13 @@ When we start with any distribution (like our complex image) and add Gaussian no
 
 Think of it like mixing paint colors: If you start with any color (our original image distribution) and keep adding white paint (Gaussian noise) in small amounts, eventually your color will become consistently whitish, regardless of what color you started with. Similarly, adding Gaussian noise gradually transforms our complex image distribution into a simple Gaussian distribution.
 
-we need an objective or loss function to train over
+Now we understand how to add noise, how to add noise to an image at any given timestep $t$ and also why we are doing this. But how do we train a model using this? That is where the reverse diffusion process comes into the picture. As it is extremely math heavy, read about it in the [maths](#maths-of-reverse-diffusion-process) section, here we will directly write the loss function we train over.
 
-That is given by
+$$\nabla_\theta \|\epsilon - \epsilon_\theta(\sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon,t)\|^2$$
 
-$\|\epsilon - \epsilon_\theta(x_t,t)\|_2 = \|\epsilon - \epsilon_\theta(\bar{\alpha}_t x_0 + (1-\bar{\alpha}_t)\epsilon,t)\|_2$
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/5.webp)
 
-![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
-
-> Image Taken from ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239)
+> Image taken from ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239)
 
 This greatly simplifies are training, which can be written as the above image.
 
@@ -573,9 +571,11 @@ This process is efficient because:
 
 This training happens in batches, where the model learns from multiple examples simultaneously, gradually improving its ability to identify and later remove noise from images.
 
-Above we discussed mainly about DDPM, but there are many kinds of schedulers. You can check few of the popular one's [here](https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers)
+> **Note**: If you have played around with SD, you might know that you can switch the schedulers during inference. So is the model trained on each of these schedulers? No, The equation that we showed above just helps us train the model to predict the noise. Now we can use different schedulers (These are just mathematical equation that take noisy image & predicted noise. And return a less noisy image) to remove the noise. We have derived DDPM scheduler in the [maths section](#reverse-diffusion-process)
 
-To know more about the differences during inference. Check this [blog](https://stable-diffusion-art.com/samplers/)
+Above we discussed mainly about DDPM, but there are many kinds of schedulers. You can check few of the popular one's [here](https://huggingface.co/docs/diffusers/main/en/using-diffusers/schedulers).
+
+To know more about the differences during inference. Check this [blog](https://stable-diffusion-art.com/samplers/).
 
 ### Instructions, because everyone needs guidance (Conditioning)
 
@@ -583,19 +583,19 @@ So far we have talked about how to generate images but have conveniently skipped
 
 Over the years the field of image gen has substantially improved and now we are not only limited to texts as a means of helping us generate images.
 
-We can use image sources as guidance, a drawing of a rough idea, structure of an image etc. Some examples are shown below.
+We can use image sources as guidance, a drawing of a rough idea, structure of an image etc.
 
-As Text based conditioning was the first that gained public popularity. Let's understand more on that.
+As text based conditioning was the first that gained public popularity. Let's understand more on that.
 
 #### Text Encoder
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/18.webp)
 
-The idea is relatively simple, we take texts, convert them into embeddings and send them to the U-Net layer for conditioning.
+The idea is relatively simple, we take texts, convert them into embeddings and send them to the U-Net layer for conditioning (whispering to Dali about what we want him to draw).
 
 The how is more interesting if you think about it in my opinion. Throughout our discussion of diffusion models, we never talked about image description or any means to teach a model about an image.
 
-All the diffusion model understands is how a image looks like, without any idea about what an image is and what it contains. It's just really good at creating images which well... look like images.
+All that a diffusion model understands is how a image looks like, without any idea about what an image is and what it contains. It's just really good at creating images which well... look like images.
 
 Then how can we guide it using texts about what we want it to do.
 
@@ -635,7 +635,7 @@ Now CLIP was originally trained for zero-shot image classification. (which is a 
 
 As you can see from the above image, when given an image and a dataset. CLIP returns the word which has the highest dot-product (The dot-product measures the similarity) with the image encoding.
 
-Now we primarily talked about CLIP, But there is another text encoder that is used called [T5](<https://en.wikipedia.org/wiki/T5_(language_model)>) created by Google.
+Now we primarily talked about CLIP, But there is another text encoder that is also used in practice called [T5](<https://en.wikipedia.org/wiki/T5_(language_model)>) by Google.
 
 ##### T5
 
@@ -857,7 +857,7 @@ The best part? The same diffusion process we learned about earlier handles this 
 
 It is complete magic during inference. Consider reading this [blog](https://stable-diffusion-art.com/inpainting_basics/) to learn more.
 
-#### LoRA (Low-Rank Adaptation)
+##### LoRA (Low-Rank Adaptation)
 
 > **Note**: Lora's are a huge part of Image generation models and deserve an entire blog to them. Here I have tried to give a quick introduction to the idea.
 
@@ -865,7 +865,7 @@ Remember how earlier we talked about Dali learning the general idea of images ra
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/40.webp)
 
-> Image taken from ["LORA: LOW-RANK ADAPTATION OF LARGE LANGUAGE MODELS"](https://arxiv.org/pdf/2106.09685)
+> Image taken from ["LoRA: Low-Rank Adaptation of Large Language Models"](https://arxiv.org/pdf/2106.09685)
 
 This is where LoRA comes in. Instead of retraining the whole model, LoRA only modifies a tiny but crucial part - the cross-attention mechanism. Think of cross-attention as Dali's ability to understand and connect your instructions with what he's drawing.
 Let's break this down with an example:
@@ -888,7 +888,7 @@ What makes LoRA especially clever is how it achieves these changes. Instead of s
 
 This [video](https://www.youtube.com/watch?v=qJeaCHQ1k2w&t=1s) helped me immensely while writing this part.
 
-Unfortunately for the both of us, This part too is very maths heavy. So again I will leave the intuition and derivation for the [maths section](#maths-of-vae) of the blog and just talk about the idea, show the equations and write out the code.
+Unfortunately for the both of us, this part too is very maths heavy. So again I will leave the derivation for the [maths section](#maths-of-vae) of the blog and just talk about the idea and show the equation.
 
 ![Image of VAE](/assets/blog_assets/demystifying_diffusion_models/13.webp)
 The above image is actually what happens inside of an Variational Auto-Encoder but if you are anything like me. It probably doesn't make any sense.
@@ -915,7 +915,7 @@ Then the decoder returns this representation back to pixel image so we can see a
 
 The reason we do this is, This makes computation substantially easier, and it also lets Dali, Or The U-Net to have to do less computation to calculate the noise.
 
-Autoencoders (AEs) and Variational Autoencoders (VAEs) differ fundamentally in their encoding approach: Traditional autoencoders learn deterministic mappings that encode inputs directly into fixed latent vectors, while VAEs learn to encode inputs into probability distributions (typically Gaussian) in the latent space, from which latent vectors are sampled. This probabilistic nature of VAEs enables them to generate new samples and provides a more principled approach to learning continuous latent representations. To read more on this, go through the [math section](#maths-of-vae) as well as consider reading this [blog](https://lilianweng.github.io/posts/2018-08-12-vae/)
+Autoencoders (AEs) and Variational Autoencoders (VAEs) differ fundamentally in their encoding approach: Traditional autoencoders learn deterministic mappings that encode inputs directly into fixed latent vectors, while VAEs learn to encode inputs into probability distributions (typically Gaussian) in the latent space, from which latent vectors are sampled. This probabilistic nature of VAEs enables them to generate new samples and provides a more principled approach to learning continuous latent representations. To read more on this, go through the [math section](#maths-of-vae) as well as consider reading this [blog](https://lilianweng.github.io/posts/2018-08-12-vae/).
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/27.webp)
 
@@ -923,7 +923,7 @@ To expand on this idea, imagine a cluster of emojis—faces, animals, and other 
 Now, let’s take this to the latent space. We can see that the birds are grouped together, the emojis are clustered together in another space, with similar emojis together.
 This demonstrates how the VAE learns to map out objects in the latent space, organizing them based on their visual or stylistic characteristics.
 
-### Putting it all together
+## Putting it all together
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/17.webp)
 
@@ -938,7 +938,8 @@ Before we move further, let's have a quick look at everything we have understood
 5. The predicted noise is subtracted from the latent using the scheduler.
 6. After many iterations, the denoised latent is decoded using the decoder to produce our final generated image.
 
-> **Note**: Initially I had stated in the [idea](#the-genius-artist) section that we start with a noisy image which is encoded. That is false, as we can simply start with a noisy latent image. Hence during inference the encoder is not required. Unless we are using it for image to image.
+> **Note**: Initially I had stated in the [idea](#the-genius-artist) section that we start with a noisy image which is encoded. That is false, as we can simply start with a noisy latent image. Hence during inference the encoder is not required. Unless we are using it for image to image.\
+> Also, For the scheduler we learned how we can use it to train a model. But never talked about how we can use it during inference. I.e how can we remove noise from it. More on that in the maths section.
 
 ## The Dreaded Mathematics
 
@@ -961,7 +962,7 @@ Additionally, we will begin with the same idea that we started with when we firs
 
 ## Maths of the Forward Diffusion process
 
-Imagine you have a large dataset of images, we will represent this real data distribution as $q(x)$ and we take an image from it (data point) $x_0$.
+Imagine you have a large dataset of images, we will represent this real data distribution as $q(x)$ and we take an image from it (data point/image) $x_0$.
 (Which is mathematically represented as $x_0 \sim q(x)$).
 
 In the forward diffusion process we add small amounts of Gaussian noise to the image ($x_0$) in $T$ steps. Which produces a bunch of noisy images as each step which we can label as $x_1,\ldots,x_T$. These steps are controlled by a variance schedule given by $\beta_t$. The value of $\beta_t$ ranges from 0 to 1 (i.e it can take values like 0.002, 0.5,0.283 etc) for $t, \ldots, T$. (Mathematically represented as ${\beta_t \in (0,1)}_{t=1}^T$)
@@ -971,6 +972,7 @@ There are many reasons we choose Gaussian noise, but it's mainly due to the prop
 Now let us look at the big scary forward diffusion equation and understand what is going on
 
 $$q(x_t\|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I}) \tag{1}$$
+
 $$q(x_{1:T}\|x_0) = \prod_{t=1}^T q(x_t\|x_{t-1}) \tag{2}$$
 
 $q(x_t\|x_{t-1})$ means that given that I know $q(x_{t-1})$ what is the probability of $q(x_t)$. This is also known as [bayes theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem).
@@ -979,7 +981,7 @@ To simplify it, think of it as. Given $q(x_0)$ (for value of $t$ = 1) what is th
 
 The right hand side (RHS) of equation 1 represents a normal distribution.
 
-Now a question that I had, was how can probability and distribution be equal, well the Left Hand Side (LHS) of equation (eq) 1 represents a Probability Density Function ([PDF](https://en.wikipedia.org/wiki/Probability_density_function))
+Now a question that I had, was how can probability and distribution be equal, well the Left Hand Side (LHS) of equation (eq) 1 represents a Probability Density Function ([PDF](https://en.wikipedia.org/wiki/Probability_density_function)), which is also a distribution.
 
 For the RHS of eq 1. When we write $N(x; μ, σ²)$, we're specifying that $x$ follows a normal distribution with mean $μ$ and variance $σ²$
 
@@ -987,7 +989,7 @@ This can be written as
 
 $$p(x) = \frac{1}{\sqrt{2\pi\sigma^2}} \exp\left(-\frac{(x-\mu)^2}{2\sigma^2}\right)$$
 
-As $t$ becomes larger. And eventually when $T \to \infty$ (This means as $T$ approaches infinity, or just a really large number). The initial data sample $x_0$ loses its features and turns into an isotropic Gaussian Distribution.
+As $t$ becomes larger. And eventually when $T \to \infty$ (This means as $T$ approaches infinity, or just a really large number). The initial data sample $x_0$ loses its features and turns into an [Isotropic Gaussian Distribution](https://math.stackexchange.com/questions/1991961/gaussian-distribution-is-isotropic).
 
 Whilst eq 2 looks complex, it simply means. Given the original image $x_0$ all the values of $x_t$ from $t=1$ to $t=T$ are equal to, multiplication of the PDF from $t=1$ to $t=T$
 
@@ -1000,26 +1002,30 @@ $$X = \mu + \sigma \epsilon$$
 where $\epsilon \sim \mathcal{N}(0,1)$ (This means $\epsilon$ is sampled from a normal distribution with mean 0 and variance 1)
 
 Taking our equation from before:
+
 $$q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I})$$
 
 We can rewrite this using the above form as:
+
 $$x_t = \sqrt{1-\beta_t}x_{t-1} + \sqrt{\beta_t}\epsilon_{t-1}$$
 
 To make our equations simpler, let's define $\alpha_t = 1-\beta_t$. This gives us:
+
 $$x_t = \sqrt{\alpha_t}x_{t-1} + \sqrt{1-\alpha_t}\epsilon_{t-1}$$
 
 Now, we can substitute the expression for $x_{t-1}$ in terms of $x_{t-2}$ (in the above equation just replace $t$ with $t-1$):
+
 $$x_t = \sqrt{\alpha_t}(\sqrt{\alpha_{t-1}}x_{t-2} + \sqrt{1-\alpha_{t-1}}\epsilon_{t-2}) + \sqrt{1-\alpha_t}\epsilon_{t-1}$$
 
 A key property of normal distributions is that when we add two normal distributions, their means and variances can be combined. Using this property and some algebraic manipulation, we get:
 
 $$x_t = \sqrt{\alpha_t\alpha_{t-1}}x_{t-2} + \sqrt{1-\alpha_t\alpha_{t-1}}\bar{\epsilon}_{t-2}$$
 
-If we continue this process all the way back to our original image $x_0$, and define $\bar{\alpha}_t$ as the product of all $\alpha$s from 1 to t ($\bar{\alpha}_t = \prod_{i=1}^t \alpha_i$), we arrive at:
+If we continue this process all the way back to our original image $$x_0$$, and define $$\bar{\alpha}_t$$ as the product of all $$\alpha$$s from 1 to t ($$\bar{\alpha}_t = \prod_{i=1}^t \alpha_i$$), we arrive at:
 
 $$x_t = \sqrt{\bar{\alpha}_t}x_0 + \sqrt{1-\bar{\alpha}_t}\epsilon$$
 
-This final equation is quite powerful. It allows us to directly sample $x_t$ at any timestep $t$ using just:
+This final equation is quite powerful. As tt allows us to directly sample $x_t$ at any timestep $t$ using just:
 
 - The original image $x_0$
 - The cumulative product of alphas up to time $t$ ($\bar{\alpha}_t$)
@@ -1029,6 +1035,8 @@ This makes our implementation much more efficient as we can directly jump to any
 
 ## Maths of Reverse diffusion process
 
+> **Note**: If you have made it this far, you should be immensely proud of yourself. It is not easy to make sense of all the mathematics that you have made sense of so far. Be proud because ML mathematics will only ever get sightlier more complex than this. This is the upper limit, which you have reached with your tenacity.
+
 ### Reverse diffusion process
 
 Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process.
@@ -1036,7 +1044,9 @@ Now what we want to do is take a noisy image $x_t$ and get the original image $x
 Essentially we want to sample from $q(x_{t-1}\|x_t)$, Which is quite tough as there can be millions of noisy images for actual images. To combat this we create an approximation (why do they work and how do they work in a minute) $p_\theta$ to approximate these conditional probabilities in order to run the _reverse diffusion process_.
 
 Which can be represented as
+
 $$p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(x_t,t))$$
+
 $$p_\theta(x_{0:T}) = p(x_T)\prod_{t=1}^T p_\theta(x_{t-1}|x_t)$$
 
 (Notice how the above two equation are very similar to the equations we started out with for the forward diffusion process)
@@ -1045,9 +1055,68 @@ Unfortunately it is tough to even sample from this approximate model because it 
 
 $$q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; {\color{Blue}{}\tilde{\mu}(x_t,x_0)}, {\color{red}{}\tilde{\beta}_t\mathbf{I}})$$
 
-Now this is tractable (I.e computationally possible), let us first understand the proof for how it is tractable. Later moving on to understand how they thought of this idea in the first place [INCOMPLETE_THIS_WAS_NEVER_EXPLAINED]
+Now this is tractable (I.e computationally possible), let us first understand why it is tractable. Later moving on to using this to generate a loss function.
 
-Using Bayes' rule, we have:
+When we only condition on $x_t$ (the noisy image) with the equation $$p_\theta(x_{t-1}\|x_t)$$, our model faces a significant challenge. Imagine trying to guess what a slightly less noisy version of a noisy image should look like, without any reference to the original image. There are countless possibilities! This makes the problem intractable because:
+
+1. The model needs to consider all possible original images that could have resulted in $x_t$
+2. For each possibility, it needs to calculate the probability of that being the correct original image
+3. It then needs to integrate over all these possibilities to make its prediction
+
+This is computationally infeasible and lacks a closed-form solution.
+
+When we modify our formulation to include $x_0$, creating $$q(x_{t-1}\|x_t,x_0)$$, several wonderful mathematical properties emerge:
+
+1. **Complete Information**:
+
+   - We now know both the starting point ($x_0$) and current point $x_t$
+   - This means we can calculate exactly how much noise was added during the forward process
+   - The randomness becomes deterministic when we have this information
+
+2. **Gaussian Properties**:
+   - Our forward process $q(x_t\|x_0)$ is Gaussian
+   - Thanks to the properties of Gaussian distributions, $q(x_{t-1}\|x_t,x_0)$ is also Gaussian
+   - This gives us closed-form solutions for the mean and variance
+
+Here's a concrete analogy: Imagine trying to guess the middle point of a line:
+
+- If you only know one endpoint $x_t$, there are infinite possible middle points
+- If you know both endpoints ($x_t$ and $x_0$), you can calculate the middle point exactly
+
+**Why This Works in Practice**
+
+During training, this approach is perfectly feasible because:
+
+```
+Training Phase:
+- We have access to x₀ (original images)
+- We can calculate the exact posterior $q(x_{t-1}\|x_t,x_0)$
+- Our model learns to approximate this posterior distribution
+```
+
+```
+Inference Phase:
+- We only need $p_\theta(x_{t-1}\|x_t)$
+- The model has learned the patterns of noise removal
+- We can generate new images without needing $x_0$
+```
+
+#### Mathematical Insight
+
+The key mathematical insight is that by conditioning on $x_0$, we transform an intractable marginalization problem into a tractable direct computation. Our posterior becomes:
+
+$$q(x_{t-1}|x_t,x_0) = \mathcal{N}(x_{t-1}; \tilde{\mu}(x_t,x_0), \tilde{\beta}_t\mathbf{I})$$
+
+Where both μ̃ and β̃_t have closed-form solutions that we can compute efficiently.
+
+This formulation gives us the best of both worlds:
+
+- Tractable mathematics during training
+- Practical applicability during inference
+
+By leveraging this insight, diffusion models can effectively learn the reverse process while keeping the mathematics manageable and computationally feasible.
+
+Now using the equation and Bayes' rule, we have:
 
 $$
 \begin{aligned}
@@ -1072,6 +1141,8 @@ q(\mathbf{x}_{t-1} \vert \mathbf{x}_t, \mathbf{x}_0)
 &= \exp\Big( -\frac{1}{2} \big( \color{red}{(\frac{\alpha_t}{\beta_t} + \frac{1}{1 - \bar{\alpha}_{t-1}})} \mathbf{x}_{t-1}^2 - \color{blue}{(\frac{2\sqrt{\alpha_t}}{\beta_t} \mathbf{x}_t + \frac{2\sqrt{\bar{\alpha}_{t-1}}}{1 - \bar{\alpha}_{t-1}} \mathbf{x}_0)} \mathbf{x}_{t-1} \color{black}{ + C(\mathbf{x}_t, \mathbf{x}_0) \big) \Big)}
 \end{aligned}
 $$
+
+> Note: Notice the proportionality sign ($$\propto$$) in the 1st step of the derivation. This shows that we are omitting the constants ($$\frac{1}{\sqrt{2\pi\sigma^2}}$$) for now. Also in the next step we have simply used $$(A + B)^2 = A^2 + 2AB + B^2$$
 
 where $C(x_t,x_0)$ is some function not involving $x_{t-1}$, hence details can be omitted.
 
@@ -1101,7 +1172,7 @@ $$
 \color{blue}{(\frac{2\sqrt{\alpha_t}}{\beta_t}x_t+\frac{2\sqrt{\bar{\alpha}_{t-1}}}{1-\bar{\alpha}_{t-1}}x_0)} = \frac{2\mu}{\sigma^2}
 $$
 
-Following the above logice, the mean ($\tilde{\mu}_t(x_t,x_0)$) and variance ($\tilde{\beta}_t$) can be parameterized as follows (recall that $\alpha_t=1-\beta_t$ and $\bar{\alpha}_t=\prod_{i=1}^t \alpha_i$):
+Following the above logic, the mean ($$\tilde{\mu}_t(x_t,x_0)$$) and variance ($$\tilde{\beta}_t$$) can be parameterized as follows (recall that $$\alpha_t=1-\beta_t$$ and $$\bar{\alpha}_t=\prod_{i=1}^t \alpha_i$$):
 
 $$
 \begin{aligned}
@@ -1120,11 +1191,38 @@ $$
 \end{aligned}
 $$
 
-Thanks to the nice property, we can represent $x_0=\frac{1}{\sqrt{\bar{\alpha}_t}}(x_t-\sqrt{1-\bar{\alpha}_t}\epsilon_t)$ and replacing $x_0$ in the above equation we get:
+Let's break down this derivation step by step:
+
+1. We start with a complex fraction that has terms involving both $$x_t$$ and $$x_0$$. This is our initial mean equation.
+
+2. To simplify this complex fraction, we use a common mathematical technique: multiply both numerator and denominator by the same term (which is equivalent to multiplying by 1). In this case, we multiply by $$\frac{1-\bar{\alpha}_{t-1}}{1-\bar{\alpha}_t}\cdot\beta_t$$ (shown in yellow).
+
+3. After distributing terms and simplifying:
+
+- The $$\frac{\alpha_t}{\beta_t}$$ term combines with $$\beta_t$$ to give us just $$\alpha_t$$
+- The fraction $$\frac{\bar{\alpha}_{t-1}}{1-\bar{\alpha}_{t-1}}$$ simplifies when multiplied by $$(1-\bar{\alpha}_{t-1})$$
+- All terms get divided by $$(1-\bar{\alpha}_t)$$ due to our multiplication
+
+This gives us our final simplified form where the mean is expressed as two clean terms, one involving $$x_t$$ and one involving $$x_0$$.
+
+Thanks to the nice property, we can represent $$x_0=\frac{1}{\sqrt{\bar{\alpha}_t}}(x_t-\sqrt{1-\bar{\alpha}_t}\epsilon_t)$$ and replacing $$x_0$$ in the above equation:
+
+$$
+\begin{aligned}
+\tilde{\mu}_t &= \frac{\alpha_t(1-\bar{\alpha}_{t-1})}{1-\bar{\alpha}_t}x_t+\frac{\bar{\alpha}_{t-1}\beta_t}{1-\bar{\alpha}_t}\cdot\frac{1}{\sqrt{\bar{\alpha}_t}}(x_t-\sqrt{1-\bar{\alpha}_t}\epsilon_t) \\
+&= \frac{\alpha_t(1-\bar{\alpha}_{t-1})}{1-\bar{\alpha}_t}x_t+\frac{\bar{\alpha}_{t-1}\beta_t}{1-\bar{\alpha}_t}\cdot\frac{x_t}{\sqrt{\bar{\alpha}_t}}-\frac{\bar{\alpha}_{t-1}\beta_t}{1-\bar{\alpha}_t}\cdot\frac{\sqrt{1-\bar{\alpha}_t}}{\sqrt{\bar{\alpha}_t}}\epsilon_t
+\end{aligned}
+$$
+
+Using the property that $$\bar{\alpha}_t = \bar{\alpha}_{t-1}\alpha_t$$ and $$\beta_t = 1-\alpha_t$$, we can simplify to get:
 
 $$\tilde{\mu}_t = \frac{1}{\alpha_t}(x_{t-1}-\frac{\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\epsilon_t)$$
 
-This is great, we now have the mean in terms of $x_{t-1}$ and it does not depend on the original image $x_0$
+This is great, we now have the mean in terms of $$x_{t-1}$$ and it does not depend on the original image $$x_0$$. The key mathematical properties used in this derivation are:
+
+1. $$\bar{\alpha}_t = \bar{\alpha}_{t-1}\alpha_t$$ (product of alphas)
+2. $$\beta_t = 1-\alpha_t$$ (relationship between beta and alpha)
+3. The reparameterization of $$x_0$$ in terms of $$x_t$$ and $$\epsilon_t$$
 
 > **Note**: Constants like 2,1/2,K etc have been omitted in many places as they do not hold much significance to the final equation
 
@@ -1136,9 +1234,9 @@ Our original objective was to create an approcimate conditional probability dist
 
 $$p_\theta(\mathbf{x}_{t-1}\|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \boldsymbol{\mu}_\theta(\mathbf{x}_t, t), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)).$$
 
-We wish to train $\boldsymbol{\mu}_\theta$ to predict $\tilde{\boldsymbol{\mu}}_t = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t)$. Because $\mathbf{x}_t$ is available as input at training time.
+We wish to train $\boldsymbol{\mu}_\theta$ to predict $\tilde{\boldsymbol{\mu}}_t$. Because $\mathbf{x}_t$ is available as input at training time.
 
-we can instead reparameterize the Gaussian noise term to make it predict $\boldsymbol{\epsilon}_t$ from the input $\mathbf{x}_t$ at time step $t$:
+But through all our toil, we can reparameterize the Gaussian noise term to make it predict $\boldsymbol{\epsilon}_t$ from the input $\mathbf{x}_t$ at time step $t$:
 
 $$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t) = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))$$
 
@@ -1148,7 +1246,7 @@ The loss term $L_t$ is parameterized to minimize the difference from $\tilde{\bo
 
 $$L_t = \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)\|_2^2}\|\tilde{\boldsymbol{\mu}}_t(\mathbf{x}_t, \mathbf{x}_0) - \boldsymbol{\mu}_\theta(\mathbf{x}_t, t)\|^2\right]$$
 
-This scary looking equation is simply the Mean Squared Error for an [estimator](https://en.wikipedia.org/wiki/Mean_squared_error#Estimator)
+This scary looking equation is simply the Mean Squared Error for an [estimator](https://en.wikipedia.org/wiki/Mean_squared_error#Estimator). (MSE is a popular loss function in ML)
 
 Also given as,
 
@@ -1161,7 +1259,7 @@ $$
 \end{align*}
 $$
 
-## Simplification
+#### Simplification
 
 Ho et al. in ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239) found that training the diffusion model works better with a simplified objective that ignores the weighting term:
 
@@ -1182,21 +1280,22 @@ Hence the equations simply become
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/37.webp)
 
-Congratulations, you have a complete understanding of how we came to these equations now. Do not take from granted to how these equations were reached. We have skipped over a lot of the groundbreaking mathematical ideas which led to the creation of the above equation. Read more [here](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/)
+Congratulations, you have a complete understanding of how we came to these equations now. Do not take from granted to how these equations were reached. We have skipped over a lot of the groundbreaking mathematical ideas which led to the creation of the above equation. Read more [here](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/).
 
 ### Score Based Modeling
 
 > **"**
-> Langevin dynamics is a concept from physics, developed for statistically modeling molecular systems. Combined with stochastic gradient descent, stochastic gradient Langevin dynamics (Welling & Teh 2011) can produce samples from a probability density $p(x)$ using only the gradients $\nabla_x \log p(x)$ in a Markov chain of updates:
-> $$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t, \text{ where } \epsilon_t \sim \mathcal{N}(0,\mathbf{I})$$
-> where $\delta$ is the step size. When $T \to \infty, \delta \to 0$, $x_T$ equals to the true probability density $p(x)$.
+> Langevin dynamics is a concept from physics, developed for statistically modeling molecular systems. Combined with stochastic gradient descent, stochastic gradient Langevin dynamics (Welling & Teh 2011) can produce samples from a probability density $p(x)$ using only the gradients $\nabla_x \log p(x)$ in a Markov chain of updates:\
+> $$x_t = x_{t-1} + \frac{\delta}{2}\nabla_x \log p(x_{t-1}) + \sqrt{\delta}\epsilon_t, \text{ where } \epsilon_t \sim \mathcal{N}(0,\mathbf{I})$$\
+> where $\delta$ is the step size. When $T \to \infty, \delta \to 0$, $x_T$ equals to the true probability density $p(x)$.\
 > Compared to standard SGD, stochastic gradient Langevin dynamics injects Gaussian noise into the parameter updates to avoid collapses into local minima.\
 > **"**
 
 > From [Lil's Blog](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/#connection-with-stochastic-gradient-langevin-dynamics)
 
-Before we continue further we need to understand Score based modeling.
-This is a fascinating bridge between physics and machine learning!
+Score based modeling, was a revolutionary idea that set the stones for further progress in diffusion model.\
+It is a fascinating bridge between physics and machine learning!
+
 First, let's understand what Langevin dynamics is trying to do. Imagine you're trying to find the lowest point in a hilly landscape while blindfolded. If you only walk downhill (like regular gradient descent), you might get stuck in a small valley that isn't actually the lowest point. Langevin dynamics solves this by occasionally taking random steps - like sometimes walking uphill - which helps you explore more of the landscape.
 The key equation is:
 
@@ -1213,30 +1312,81 @@ The equation combines two behaviors:
 
 A "deterministic" part: $\frac{\delta}{2}\nabla_x \log p(x_{t-1})$ which moves us toward higher probability regions\
 A "random" part: $\sqrt{\delta}\epsilon_t$ which adds noise to help us explore
+What makes this special is that when we run this process for a long time ($$T\rightarrow\infty$$) and with very small steps ($$\delta\rightarrow0$$), we're guaranteed to sample from the true probability distribution $$p(x)$$. This is similar to how diffusion models gradually denoise images - they're following a similar kind of path, but in reverse!
 
-What makes this special is that when we run this process for a long time (T→∞) and with very small steps (δ→0), we're guaranteed to sample from the true probability distribution p(x). This is similar to how diffusion models gradually denoise images - they're following a similar kind of path, but in reverse!
-The connection to standard gradient descent is interesting - regular SGD would only have the gradient term, but Langevin dynamics adds that noise term ϵt. This noise prevents us from getting stuck in bad local minima, just like how shaking a jar of marbles helps them settle into a better arrangement.
+The connection to standard gradient descent is interesting - regular SGD would only have the gradient term, but Langevin dynamics adds that noise term $$\epsilon_t$$. This noise prevents us from getting stuck in bad local minima, just like how shaking a jar of marbles helps them settle into a better arrangement.
 
 This is already immensely helpful, Because if we recall our previous discussion. Our biggest issue had been how do we create an approximate of our distribution because it is computationally expensive.
 
-Now, here's the key insight of Langevin dynamics: When we take the gradient of log probability (∇log p(x)), we get something called the "_score function_". This score function has a special property - it points in the direction where the probability increases most rapidly.
+Now, here's the key insight of Langevin dynamics: When we take the gradient of log probability ($$\nabla\log p(x)$$), we get something called the "_score function_". This score function has a special property - it points in the direction where the probability increases most rapidly.
 
 Let's see why through calculus:
-∇log p(x) = ∇(log p(x)) = (1/p(x))∇p(x)
-This division by p(x) acts as an automatic scaling factor. When p(x) is small, it makes the gradient larger, and when p(x) is large, it makes the gradient smaller. This natural scaling helps our sampling process explore the probability space more efficiently.
 
-What is P(x) though and why are we taking that. Traditionally in SGD do we not take, del(error)/del(weight)
+$$\nabla\log p(x) = \nabla(\log p(x)) = \frac{1}{p(x)}\nabla p(x)$$
 
-In traditional SGD for neural networks, we're trying to minimize an error function (or loss function), so we use ∂(error)/∂(weight). We're trying to find the weights that make our predictions as accurate as possible.
+This division by $$p(x)$$ acts as an automatic scaling factor. When $$p(x)$$ is small, it makes the gradient larger, and when $$p(x)$$ is large, it makes the gradient smaller. This natural scaling helps our sampling process explore the probability space more efficiently.
 
-But in Langevin dynamics, we're doing something fundamentally different. Here, p(x) represents a probability distribution that we want to sample from. Think of it this way:
+What is $$p(x)$$ though and why are we taking that. Traditionally in SGD do we take, $\frac{\partial(\text{error})}{\partial(\text{weight})}$
 
-Imagine you have a dataset of faces, and you want to generate new faces that look real. The probability p(x) would represent how likely it is that a particular image x is a real face. Areas of high p(x) would correspond to images that look like real faces, while areas of low p(x) would be images that don't look like faces at all.
-So when we take ∇log p(x), we're asking: "In which direction should I move to make this image look more like a real face?"
+In traditional SGD for neural networks, we're trying to minimize an error function (or loss function), so we use $$\frac{\partial(\text{error})}{\partial(\text{weight})}$$. We're trying to find the weights that make our predictions as accurate as possible.
 
-This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The ∇log p(x) term tells us how to modify our noisy image at each step to make it look more like real data.
+But in Langevin dynamics, we're doing something fundamentally different. Here, $$p(x)$$ represents a probability distribution that we want to sample from. Think of it this way:
+
+Imagine you have a dataset of faces, and you want to generate new faces that look real. The probability $$p(x)$$ would represent how likely it is that a particular image $$x$$ is a real face. Areas of high $$p(x)$$ would correspond to images that look like real faces, while areas of low $$p(x)$$ would be images that don't look like faces at all.
+
+So when we take $$\nabla\log p(x)$$, we're asking: "In which direction should I move to make this image look more like a real face?"
+
+This is why Langevin dynamics is particularly relevant to diffusion models. Remember how diffusion models start with noise and gradually transform it into an image? The $$\nabla\log p(x)$$ term tells us how to modify our noisy image at each step to make it look more like real data.
 
 To learn more about Score Based Modeling, consider reading this [blog by Yang Song](https://yang-song.net/blog/2021/score/)
+
+### The Score Function: Bridging Diffusion and Guidance
+
+Remember how we started with our forward diffusion process? We had:
+
+$$q(x_t|x_0) = \mathcal{N}(x_t; \sqrt{\bar{\alpha}_t}x_0, (1-\bar{\alpha}_t)\mathbf{I})$$
+
+This equation tells us the probability distribution of our noisy image $x_t$ given the original image $x_0$. Now, here's where things get interesting. The score function we mentioned in the score-based modeling section is defined as:
+
+$$\text{score}(x) = \nabla_x \log p(x)$$
+
+When we apply this to our forward diffusion process $q(x_t|x_0)$, we can derive our key equation. Let's do this step by step:
+
+1. First, let's write out the log probability for a Gaussian distribution:
+
+   $$\log q(x_t|x_0) = -\frac{(x_t - \sqrt{\bar{\alpha}_t}x_0)^2}{2(1-\bar{\alpha}_t)} + C$$
+
+   where $C$ is a normalization constant we can ignore for the gradient.
+
+2. Taking the gradient with respect to $x_t$:
+
+   $$\nabla_{x_t}\log q(x_t|x_0) = -\frac{x_t - \sqrt{\bar{\alpha}_t}x_0}{1-\bar{\alpha}_t}$$
+
+3. Remember our reparameterization trick from earlier? We can express $x_0$ in terms of $x_t$ and $\epsilon$:
+
+   $$x_0 = \frac{1}{\sqrt{\bar{\alpha}_t}}(x_t - \sqrt{1-\bar{\alpha}_t}\epsilon_t)$$
+
+4. Substituting this in:
+
+   $$\nabla_{x_t}\log q(x_t|x_0) = -\frac{x_t - \sqrt{\bar{\alpha}_t}(\frac{1}{\sqrt{\bar{\alpha}_t}}(x_t - \sqrt{1-\bar{\alpha}_t}\epsilon_t))}{1-\bar{\alpha}_t}$$
+
+5. After simplifying (and some algebra that we'll skip for sanity), we get:
+
+   $$\nabla_{x_t}\log q(x_t) = -\frac{1}{1-\bar{\alpha}_t}\epsilon_t$$
+
+6. In practice, we use our model's prediction $\epsilon_\theta(x_t,t)$ instead of the true noise $\epsilon_t$, giving us our final equation:
+
+   $$\nabla_{x_t}\log q(x_t) = -\frac{1}{1-\bar{\alpha}_t}\epsilon_\theta(x_t,t)$$
+
+This equation is powerful because it connects three key concepts:
+
+- The forward diffusion process (through $\bar{\alpha}_t$)
+- The noise prediction model (through $\epsilon_\theta$)
+- The score function (through $\nabla_{x_t}\log q$)
+
+Understanding this connection is crucial because it shows us why the noise prediction approach works - it's actually learning to estimate the score function scaled by a constant factor! This is why we can use it in our guidance equations, as it tells us how to modify our noisy image to make it more like what we want.
+
+> **Note**: The score function interpretation is particularly elegant because it shows that our diffusion model isn't just randomly removing noise - it's learning the underlying structure of the probability distribution of real images. When we do guidance, we're essentially tweaking this learned structure to better match our prompts.
 
 ### Mathematics of Guidance in Diffusion Models
 
@@ -1304,9 +1454,7 @@ This final equation is what most modern diffusion models use. The weight $w$ (of
 
 The beauty of CFG is its simplicity - we don't need a separate classifier, just the difference between conditional and unconditional predictions from our main model.
 
-## stuff
-
-There is still a lot of things that we can discuss like LDMs, Distillation etc. But now you have the essentially idea for majority of how SD maths work. So you can tackle it on your own, you can check more about it [here]()
+> **Note**:There is still a lot of things that we can discuss like LDMs, Distillation etc. But now you have the essential idea for majority of how SD maths work. So you can tackle it on your own, you can check more about it [here](https://lilianweng.github.io/posts/2021-07-11-diffusion-models/).
 
 ## Maths of VAE
 
@@ -1331,7 +1479,8 @@ $$p(z|x) = \frac{p(x|z)p(z)}{p(x)}$$
 We can calculate $p(x)$ as:
 
 $$p(x) = \int p(x|z)p(z)dz$$
-(Where did this come from?)
+
+(This equation comes from [The Law of Total Probability](https://en.wikipedia.org/wiki/Law_of_total_probability))
 
 Unfortunately, this integral is computationally very expensive as we need to evaluate it over all possible configurations of latent variables.
 
@@ -1339,7 +1488,9 @@ Hence instead of calculating $p(z\|x)$ directly, we calculate an approximation $
 
 Now how do we know how close this approximation is to our original data distribution? That is where KL Divergence comes in.
 
-> KLD deserves an entire blog on its own. Due to time & length constraints, I am recommending the following two blogs, which will help you get the whole idea ASAP: [Blog 1](https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained) & [Blog 2](https://colah.github.io/posts/2015-09-Visual-Information/).
+> **What is KLD?** Kullback-Leibler Divergence (KLD) measures how different two probability distributions are from each other. Think of it as measuring the "distance" between distributions, but it's not a true distance because it's asymmetric ($KL(P\|Q) \neq KL(Q\|P)$). In our case, we use it to measure how far our approximation $q_{\lambda}(z\|x)$ is from the true posterior $p(z\|x)$. The smaller the KLD, the better our approximation.
+
+> KLD deserves an entire blog on its own. Due to time & length constraints, I am recommending the following two blogs, which will help you get the whole idea ASAP. [Blog 1](https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained) & [Blog 2](https://colah.github.io/posts/2015-09-Visual-Information/).
 
 Using KLD we can write:
 
@@ -1351,7 +1502,7 @@ $$q^*_{\lambda}(z|x) = \arg\min_{\lambda} KL(q_{\lambda}(z|x)||p(z|x))$$
 
 Sadly, even this is intractable (hard to compute) as we again have our $p(z\|x)$ term in it.
 
-So we introduce ELBO (Evidence Lower BOund), which provides us with a tractable way to optimize our model. ELBO represents the lower bound on the evidence (log probability) of our observed data. It is written as:
+So we introduce [ELBO](https://en.wikipedia.org/wiki/Evidence_lower_bound) (Evidence Lower BOund), which provides us with a tractable way to optimize our model. ELBO represents the lower bound on the evidence (log probability) of our observed data. It is written as:
 
 $$ELBO(\lambda) = E_q[\log p(x,z)] - E_q[\log q_{\lambda}(z|x)]$$
 
@@ -1359,7 +1510,9 @@ Notice how we can combine this with the equation of KLD we wrote earlier and get
 
 $$\log p(x) = ELBO(\lambda) + KL(q_{\lambda}(z|x)||p(z|x))$$
 
-By Jensen's inequality, the KLD is always greater than or equal to zero. Hence if we minimize KLD we will maximize ELBO. This makes our lives easier as we can indeed calculate the ELBO.
+> **What is ELBO?** ELBO is a clever mathematical trick that gives us a way to maximize $p(x)$ indirectly. Instead of computing the intractable $p(x)$ directly, we compute a lower bound that's easier to calculate. Think of it like measuring the height of a building - instead of climbing to measure the exact height (intractable), we measure its shadow and use trigonometry (tractable). The beauty of ELBO is that when we maximize it, we're also maximizing $p(x)$, since ELBO is always less than or equal to $\log p(x)$.
+
+By [Jensen's inequality](https://en.wikipedia.org/wiki/Jensen%27s_inequality), the KLD is always greater than or equal to zero. Hence if we minimize KLD we will maximize ELBO. This makes our lives easier as we can indeed calculate the ELBO.
 
 We can decompose the ELBO for a single data point as following:
 
@@ -1368,26 +1521,32 @@ $$ELBO_i(\lambda) = E_{q_{\lambda}(z|x_i)}[\log p(x_i|z)] - KL(q_{\lambda}(z|x_i
 We can see that this is equivalent to our previous definition of ELBO through the following derivation:
 
 Starting with our original ELBO:
+
 $$ELBO(\lambda) = E_q[\log p(x,z)] - E_q[\log q_{\lambda}(z|x)]$$
 
 We can expand $\log p(x,z)$ using the chain rule of probability:
+
 $$\log p(x,z) = \log p(x|z) + \log p(z)$$
 
 Substituting this back:
+
 $$ELBO(\lambda) = E_q[\log p(x|z) + \log p(z)] - E_q[\log q_{\lambda}(z|x)]$$
 
 Using the linearity of expectation:
+
 $$ELBO(\lambda) = E_q[\log p(x|z)] + E_q[\log p(z)] - E_q[\log q_{\lambda}(z|x)]$$
 
 Rearranging terms:
+
 $$ELBO(\lambda) = E_q[\log p(x|z)] - (E_q[\log q_{\lambda}(z|x)] - E_q[\log p(z)])$$
 
 The term in parentheses is exactly the KL divergence between $q_{\lambda}(z\|x)$ and $p(z)$, giving us:
+
 $$ELBO(\lambda) = E_q[\log p(x\|z)] - KL(q_{\lambda}(z|x)||p(z))$$
 
 Which is the same as our single-point ELBO formula.
 
-## The Reparameterization Trick
+### The Reparameterization Trick
 
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/42.webp)
 
@@ -1395,17 +1554,17 @@ Which is the same as our single-point ELBO formula.
 
 There's a critical problem we haven't addressed yet. Remember our ELBO formula:
 
-$$ELBO_i(\theta,\phi) = E_{q_{\theta}(z|x_i)}[\log p_{\phi}(x_i|z)] - KL(q_{\theta}(z|x_i)||p(z))$$
+$$ELBO_i(\lambda,\phi) = E_{q_{\lambda}(z|x_i)}[\log p_{\phi}(x_i|z)] - KL(q_{\lambda}(z|x_i)||p(z))$$
 
-To optimize this, we need to calculate gradients through the entire process. However, sampling from $q_{\theta}(z\|x_i)$ is a random operation, and we can't backpropagate through random sampling!
+To optimize this, we need to calculate gradients through the entire process. However, sampling from $q_{\lambda}(z\|x_i)$ is a random operation, and we can't backpropagate through random sampling!
 
-### The Problem
+**The Problem**
 
 1. Our encoder outputs parameters for a probability distribution (usually mean $\mu$ and variance $\sigma^2$ for a Gaussian)
 2. We sample $z$ from this distribution
 3. We can't compute gradients through this random sampling step
 
-### The Solution: Reparameterization Trick
+**The Solution: Reparameterization Trick**
 
 Instead of directly sampling $z$, we:
 
@@ -1418,7 +1577,7 @@ where $\odot$ represents element-wise multiplication.
 
 This is equivalent to sampling from $\mathcal{N}(\mu, \sigma^2)$, but now the randomness is separated from the network parameters!
 
-### Why This Works
+**Why This Works**
 
 - The random sampling ($\epsilon$) is now independent of the network parameters
 - $\mu$ and $\sigma$ are direct outputs of our encoder network
@@ -1435,7 +1594,7 @@ In practice, our VAE now looks like this:
 
 This trick is what makes VAEs trainable in practice!
 
-## Connecting to Neural Networks
+### Connecting to Neural Networks
 
 Now that we understand the mathematical foundation, let's see how this translates to actual neural networks.
 
@@ -1444,8 +1603,8 @@ The key insight is that we can implement our probability distributions using neu
 1. **The Encoder Network (Inference Network)**
 
    - Takes input data $x$ and outputs parameters $\lambda$
-   - Implements our approximate posterior $q_{\theta}(z\|x)$
-   - Parameters $\theta$ are the weights and biases of this network
+   - Implements our approximate posterior $q_{\lambda}(z\|x)$
+   - Parameters $\lambda$ are the weights and biases of this network
 
 2. **The Decoder Network (Generative Network)**
    - Takes latent variables $z$ and reconstructs the data
@@ -1454,27 +1613,28 @@ The key insight is that we can implement our probability distributions using neu
 
 With these networks, we can rewrite our ELBO formula to include the network parameters:
 
-$$ELBO_i(\theta,\phi) = E_{q_{\theta}(z|x_i)}[\log p_{\phi}(x_i|z)] - KL(q_{\theta}(z|x_i)||p(z))$$
+$$ELBO_i(\lambda,\phi) = E_{q_{\lambda}(z|x_i)}[\log p_{\phi}(x_i|z)] - KL(q_{\lambda}(z|x_i)||p(z))$$
 
 This formula serves as our loss function (technically its negative):
-$$Loss_i(\theta,\phi) = -ELBO_i(\theta,\phi)$$
+
+$$Loss_i(\lambda,\phi) = -ELBO_i(\lambda,\phi)$$
 
 Let's break down what each term means in practice:
 
-1. **First Term**: $E_{q_{\theta}(z\|x_i)}[\log p_{\phi}(x_i\|z)]$
+1. **First Term**: $E_{q_{\lambda}(z\|x_i)}[\log p_{\phi}(x_i\|z)]$
 
    - This is our reconstruction loss
    - How well can we reconstruct the input after encoding and decoding?
    - Think of it as "How close is the output to the input?"
 
-2. **Second Term**: $KL(q_{\theta}(z\|x_i)\|\|p(z))$
+2. **Second Term**: $KL(q_{\lambda}(z\|x_i)\|\|p(z))$
    - This is our regularization term
    - Keeps our latent space well-behaved
    - Makes sure our encoded representations don't deviate too far from our prior
 
 We optimize this loss function using stochastic gradient descent, which:
 
-- Updates encoder parameters ($\theta$) to better approximate the posterior
+- Updates encoder parameters ($\lambda$) to better approximate the posterior
 - Updates decoder parameters ($\phi$) to better reconstruct the input
 
 > Note: This is called variational EM (Expectation Maximization) because we're maximizing the expected log-likelihood of our data with respect to both sets of parameters.
@@ -1484,72 +1644,6 @@ And that's it! We've connected the dots between probability theory and neural ne
 1. An encoder that compresses data into a well-behaved latent space
 2. A decoder that reconstructs data from this latent space
 3. A loss function that ensures both good reconstruction and well-structured latent representations
-
-## Essential Papers in Diffusion Models
-
-Here's a curated list of papers that shaped the field of diffusion models, arranged chronologically to show how the technology evolved.
-
-### Foundational Papers
-
-[**Auto-Encoding Variational Bayes**](https://arxiv.org/pdf/1312.6114) (2013)
-
-- Introduced the VAE framework that later became crucial for latent diffusion models
-- Key innovation: Reparameterization trick for training deep generative models
-- Impact: Created the foundation for modern generative models
-
-[**Denoising Diffusion Probabilistic Models (DDPM)**](https://arxiv.org/pdf/2006.11239) (2020)
-
-- First major breakthrough in making diffusion models practical
-- Key innovation: Showed how to train diffusion models efficiently using a simple noise prediction objective
-- Impact: Set the basic framework that most modern diffusion models build upon
-
-### Architecture Innovations
-
-[**Denoising Diffusion Implicit Models (DDIM)**](https://arxiv.org/pdf/2010.02502) (2020)
-
-- Solved the slow sampling problem in DDPMs
-- Key innovation: Developed a non-Markovian sampling process that needs fewer steps
-- Impact: Made diffusion models much faster and more practical for real applications
-
-[**High-Resolution Image Synthesis with Latent Diffusion Models**](https://arxiv.org/pdf/2112.10752) (2022)
-
-- Introduced Stable Diffusion, making diffusion models accessible to everyone
-- Key innovation: Performing diffusion in compressed latent space instead of pixel space
-- Impact: Revolutionized the field by making high-quality image generation possible on consumer hardware
-
-[**Scalable Diffusion Models with Transformers (DiT)**](https://arxiv.org/pdf/2212.09748) (2022)
-
-- Reimagined diffusion model architecture using transformers
-- Key innovation: Replaced U-Net with a transformer-based architecture
-- Impact: Showed how transformer architectures could be effectively used for image generation
-
-### Guidance and Control
-
-[**Classifier-Free Diffusion Guidance**](https://arxiv.org/pdf/2207.12598) (2022)
-
-- Solved the need for separate classifiers in guided diffusion
-- Key innovation: Using the difference between conditional and unconditional generations for guidance
-- Impact: Became the standard approach for controlling diffusion models
-
-[**Diffusion Models Beat GANs on Image Synthesis**](https://arxiv.org/pdf/2105.05233) (2021)
-
-- Proved diffusion models could outperform GANs
-- Key innovation: Combined classifier guidance with architectural improvements
-- Impact: Helped shift the field's focus from GANs to diffusion models
-
-### Score-Based Methods
-
-[**Generative Modeling by Estimating Gradients of the Data Distribution**](https://arxiv.org/pdf/1907.05600) (2019)
-
-- Introduced score-based modeling perspective
-- Key innovation: Connected noise-conditional score networks with diffusion
-- Impact: Provided theoretical foundations for understanding diffusion models
-
-[**Score-based Generative Modeling Through Stochastic Differential Equations**](https://arxiv.org/pdf/2011.13456) (2020)
-
-- Unified score-based models and diffusion models
-- Key innovation: Continuous-time formulation of generative modeling
-- Impact: Created a theoretical framework connecting different approaches
 
 ## The code
 
@@ -1580,13 +1674,13 @@ image = pipe(prompt).images[0]
 # image.save(f"astronaut_rides_horse.png")
 ```
 
-[ADD_OUTPUT_IMAGE]
+![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/44.webp)
 
 As surprsing as it may seem, you only need the above 5 lines to start generating images using SD.
 
 This is nice, but what is the point of everything we have learned if we stick to just abstraction layers. Lets move forward
 
-If you wish to modify the different components without actually coding them out, that is also possible using diffusers. COnsider reading this [blog](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) to understand how to do that.
+If you wish to modify the different components without actually coding them out, that is also possible using diffusers. Consider reading this [blog](https://forbo7.github.io/forblog/posts/13_implementing_stable_diffusion_from_its_components.html) to understand how to do that.
 
 ### VAE
 
@@ -2360,6 +2454,8 @@ class UNet_SD(nn.Module):
         return edict(sample=x) if output_dict else x
 ```
 
+### Scheduler
+
 ```python
 """
 DDPM (Denoising Diffusion Probabilistic Models) Scheduler Implementation.
@@ -2604,17 +2700,83 @@ class DDPMScheduler:
         return velocity
 ```
 
-### Note
+## Essential Papers in Diffusion Models
 
-The above code is mostly simplified version of each component to help you understand how you can code it out, or even understand what goes on in the more complex implementations. For the entire training script consider going to this [repo](), Additionally this [resource](https://colab.research.google.com/drive/1Y5wr91g5jmpCDiX-RLfWL1eSBWoSuLqO?usp=sharing#scrollTo=BL4hmuUOLVbW) would be insanely helpful.
+Here's a curated list of papers that shaped the field of diffusion models, arranged chronologically to show how the technology evolved.
 
-Also I would like to leave you with an interesting problem here. How do you compare which models are better than others without human intervention?
+### Foundational Papers
 
-I.e How does the metrics work? Few of the popular one's are [Fréchet inception distance](<https://en.wikipedia.org/wiki/Fr%C3%A9chet_inception_distance#:~:text=The%20Fr%C3%A9chet%20inception%20distance%20(FID,GAN)%20or%20a%20diffusion%20model.>), [Inception score](https://en.wikipedia.org/wiki/Inception_score), [Structural similarity index measure](https://en.wikipedia.org/wiki/Structural_similarity_index_measure#:~:text=The%20structural%20similarity%20index%20measure,the%20similarity%20between%20two%20images.) etc.
+[**Pixel Recurrent Neural Networks**](https://arxiv.org/pdf/1601.06759) (2016)
+
+- Pioneered autoregressive modeling of images at the pixel level
+
+- Key innovation: Fast two-dimensional recurrent layers and effective residual connections
+
+- Impact: Set new benchmarks for log-likelihood scores on natural images and demonstrated globally coherent image generation
+
+[**Auto-Encoding Variational Bayes**](https://arxiv.org/pdf/1312.6114) (2013)
+
+- Introduced the VAE framework that later became crucial for latent diffusion models
+- Key innovation: Reparameterization trick for training deep generative models
+- Impact: Created the foundation for modern generative models
+
+[**Denoising Diffusion Probabilistic Models (DDPM)**](https://arxiv.org/pdf/2006.11239) (2020)
+
+- First major breakthrough in making diffusion models practical
+- Key innovation: Showed how to train diffusion models efficiently using a simple noise prediction objective
+- Impact: Set the basic framework that most modern diffusion models build upon
+
+### Architecture Innovations
+
+[**Denoising Diffusion Implicit Models (DDIM)**](https://arxiv.org/pdf/2010.02502) (2020)
+
+- Solved the slow sampling problem in DDPMs
+- Key innovation: Developed a non-Markovian sampling process that needs fewer steps
+- Impact: Made diffusion models much faster and more practical for real applications
+
+[**High-Resolution Image Synthesis with Latent Diffusion Models**](https://arxiv.org/pdf/2112.10752) (2022)
+
+- Introduced Stable Diffusion, making diffusion models accessible to everyone
+- Key innovation: Performing diffusion in compressed latent space instead of pixel space
+- Impact: Revolutionized the field by making high-quality image generation possible on consumer hardware
+
+[**Scalable Diffusion Models with Transformers (DiT)**](https://arxiv.org/pdf/2212.09748) (2022)
+
+- Reimagined diffusion model architecture using transformers
+- Key innovation: Replaced U-Net with a transformer-based architecture
+- Impact: Showed how transformer architectures could be effectively used for image generation
+
+### Guidance and Control
+
+[**Classifier-Free Diffusion Guidance**](https://arxiv.org/pdf/2207.12598) (2022)
+
+- Solved the need for separate classifiers in guided diffusion
+- Key innovation: Using the difference between conditional and unconditional generations for guidance
+- Impact: Became the standard approach for controlling diffusion models
+
+[**Diffusion Models Beat GANs on Image Synthesis**](https://arxiv.org/pdf/2105.05233) (2021)
+
+- Proved diffusion models could outperform GANs
+- Key innovation: Combined classifier guidance with architectural improvements
+- Impact: Helped shift the field's focus from GANs to diffusion models
+
+### Score-Based Methods
+
+[**Generative Modeling by Estimating Gradients of the Data Distribution**](https://arxiv.org/pdf/1907.05600) (2019)
+
+- Introduced score-based modeling perspective
+- Key innovation: Connected noise-conditional score networks with diffusion
+- Impact: Provided theoretical foundations for understanding diffusion models
+
+[**Score-based Generative Modeling Through Stochastic Differential Equations**](https://arxiv.org/pdf/2011.13456) (2020)
+
+- Unified score-based models and diffusion models
+- Key innovation: Continuous-time formulation of generative modeling
+- Impact: Created a theoretical framework connecting different approaches
 
 ### Recent Advances
 
-[**PROGRESSIVE DISTILLATION FOR FAST SAMPLING OF DIFFUSION MODELS**](https://arxiv.org/pdf/2202.00512) (2022)
+[**Progressive Distillation for Fast Sampling of Diffusion Models**](https://arxiv.org/pdf/2202.00512) (2022)
 
 - Addressed the slow sampling speed of diffusion models
 - Key innovation: Student models that can generate high-quality samples in few steps
@@ -2632,13 +2794,24 @@ I.e How does the metrics work? Few of the popular one's are [Fréchet inception 
 - Key innovation: Systematic study of architecture and training decisions
 - Impact: Provided practical guidelines for building better diffusion models
 
+### Note
+
+The above code is mostly simplified version of each component to help you understand how you can code it out, or even understand what goes on in the more complex implementations. For the entire training script consider going to this [repo](https://github.com/goyalpramod/paper_implementations), Additionally this [resource](https://colab.research.google.com/drive/1Y5wr91g5jmpCDiX-RLfWL1eSBWoSuLqO?usp=sharing#scrollTo=BL4hmuUOLVbW) would be insanely helpful.
+
+Also I would like to leave you with an interesting problem here. How do you compare which models are better than others without human intervention?
+
+I.e How does the metrics work? Few of the popular one's are [Fréchet inception distance](<https://en.wikipedia.org/wiki/Fr%C3%A9chet_inception_distance#:~:text=The%20Fr%C3%A9chet%20inception%20distance%20(FID,GAN)%20or%20a%20diffusion%20model.>), [Inception score](https://en.wikipedia.org/wiki/Inception_score), [Structural similarity index measure](https://en.wikipedia.org/wiki/Structural_similarity_index_measure#:~:text=The%20structural%20similarity%20index%20measure,the%20similarity%20between%20two%20images.) etc.
+
 ## Misc & References
 
-- civitai
-- comfyui
-- https://stable-diffusion-art.com/author/andrew/ The blogs by this guy are absolutely mind boggling, if you are really intersted in this space. Check this out.
+- [CivitAI](https://civitai.com/), This is the go-to place for ideas, models, articles, tutorials. This is the everything Gen AI place.
+- [Midjourney SREF](https://midjourneysref.com/), One of the most beautiful websites in my opinion. Open it, it's a surprise.
+- [ComfyUI](https://github.com/comfyanonymous/ComfyUI), This is nothing but pure magic. Have you seen the [spaghetti dancing video](https://www.youtube.com/watch?v=g6XbOZG2Hxk) thing's like these are created using ComfyUI, re-lighting, mixing Control-Net, inpainting etc.
+- [Blogs by Andrew](https://stable-diffusion-art.com/author/andrew/). The blogs by this guy are absolutely mind boggling, if you are really intersted in this space. Check it out.
 - [Mathematical Foundation of Diffusion Generative Models](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/foundation-diffusion-generative-models) & [Understanding Stable Diffusion from "Scratch"
   ](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/stable-diffusion-scratch).These class materials from harvard were pretty nice and I consulted them a few times
+- [Stat Quest](https://www.youtube.com/c/joshstarmer). One of the best places to learn statistics.
+- [Blog on Bayesian Statistics](https://statswithr.github.io/book/the-basics-of-bayesian-statistics.html).
 
 ## How to help out
 
@@ -2654,4 +2827,4 @@ I have put my heart and soul into writing this, I really hope it is something th
 
 I wrote this because when I first tried to understand Stable Diffusion I was bombarded with complex Code, Maths, ML Ideas that I did not understand. Heck Linear Regression was tough for me. This is something that I have written that I wish my past self had access to.
 
-If you are reading this, then you most probably finished the blog. Hope you enjoyed it and learned something new. Thank you for reading!! -->
+If you are reading this, then you most probably finished the blog. Hope you enjoyed it and learned something new. Thank you for reading!!
