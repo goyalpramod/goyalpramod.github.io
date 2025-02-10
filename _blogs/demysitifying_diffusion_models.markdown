@@ -89,7 +89,7 @@ The end.
 
 ## Understanding Stable Diffusion
 
-Now that you have a general idea of how these image generation models work, let's understand each specific component out.
+Now that you have a general idea of how these image generation models work, let's understand each specific component out. Beginning with the [U-Net](#dali-the-genius-artist-u-net), which predicts the noise. Then moving on to the [Scheduler](#dalis-mistake-fixing-wand-scheduler), responsible for removing the predicted noise. After which we will have a look at the different [Conditioning](#instructions-because-everyone-needs-guidance-conditioning) like [text encoders](#text-encoder), [ControlNet](#control-net), [LoRA](#lora-low-rank-adaptation) etc. And finally finish by understanding [VAEs](#the-magical-wand-variational-auto-encoder), which revolutionized diffusion models and is the foundation of high quality image generation.
 
 Also, the respective code in each section is for understanding purposes. If you wish to run the entire pipeline, go to this [repo](https://github.com/goyalpramod/paper_implementations).
 
