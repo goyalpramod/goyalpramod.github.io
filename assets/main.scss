@@ -1345,6 +1345,14 @@ article {
   margin: 0.6rem 0 0.3rem;
 }
 
+// Add new h4 style with more indentation
+.toc-nav .toc-h4 {
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-color) !important;
+  padding-left: 3.5rem;  // More indentation than h3
+  margin: 0.4rem 0 0.2rem;
+}
 
 .toc-nav {     
     &:hover {
@@ -1367,6 +1375,10 @@ article {
     .toc-h3 {
       color: var(--grey-color) !important;  // Darker grey
     }
+
+    .toc-h4 {
+      color: var(--grey-color) !important;
+    }
     
     a:hover {
       color: var(--brand-color) !important;
@@ -1378,7 +1390,8 @@ article {
 .toc-nav {
   .active.toc-h1,
   .active.toc-h2,
-  .active.toc-h3 {
+  .active.toc-h3,
+  .active.toc-h4 {
     background-color: var(--grey-color-light);
     color: var(--brand-color) !important;
   }
@@ -1404,6 +1417,13 @@ article {
   background-color: rgba(0, 0, 0, 0.08);
   font-weight: 500;
 }
+
+// Add h4 active state
+.toc-nav .active.toc-h4 {
+  background-color: rgba(0, 0, 0, 0.08);
+  font-weight: 400;
+}
+
 
 /* Improve spacing between sections */
 .toc-nav li:not(:last-child) {

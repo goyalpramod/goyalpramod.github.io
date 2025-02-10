@@ -7,15 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
   
   if (!article || !tocNav) return;
 
-  // Get all h2 and h3 headings from the article
-  const headings = article.querySelectorAll('h2, h3');
+  // Updated to include h4
+  const headings = article.querySelectorAll('h2, h3, h4');
   
   if (headings.length === 0) {
     tocToggle.style.display = 'none';
     return;
   }
   
-  // Toggle ToC visibility with the main button
+  // Rest of the code remains the same
   tocToggle.addEventListener('click', (e) => {
     e.stopPropagation();
     tocWrapper.classList.toggle('active');
@@ -25,18 +25,15 @@ document.addEventListener('DOMContentLoaded', () => {
     tocWrapper.classList.remove('active');
   });
 
-  // Close ToC when clicking outside
   document.addEventListener('click', (e) => {
     if (!tocWrapper.contains(e.target) && !tocToggle.contains(e.target)) {
       tocWrapper.classList.remove('active');
     }
   });
   
-  // Create ToC structure
   const ul = document.createElement('ul');
   
   headings.forEach((heading, index) => {
-    // Add id to heading if it doesn't have one
     if (!heading.id) {
       heading.id = `heading-${index}`;
     }
@@ -60,16 +57,13 @@ document.addEventListener('DOMContentLoaded', () => {
   
   tocNav.appendChild(ul);
   
-  // Highlight current section while scrolling
   const observerCallback = (entries) => {
     entries.forEach(entry => {
       const id = entry.target.getAttribute('id');
       const tocItem = tocNav.querySelector(`a[href="#${id}"]`);
       
       if (entry.isIntersecting) {
-        // Remove active class from all links
         tocNav.querySelectorAll('a').forEach(a => a.classList.remove('active'));
-        // Add active class to current link
         if (tocItem) tocItem.classList.add('active');
       }
     });
@@ -80,4 +74,4 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   
   headings.forEach(heading => observer.observe(heading));
-}); 
+});
