@@ -1685,7 +1685,7 @@ article {
   position: relative;
 
   @media screen and (max-width: 768px) {
-    object-position: center 0%;  // Move face up in mobile view
+    object-position: center -17px;  // Move face up in mobile view
   }
 }
 
