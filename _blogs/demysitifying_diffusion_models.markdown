@@ -1151,22 +1151,26 @@ $$L_t = \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsy
 This scary looking equation is simply the Mean Squared Error for an [estimator](https://en.wikipedia.org/wiki/Mean_squared_error#Estimator)
 
 Also given as,
-$$\begin{align*}
+
+$$
+\begin{align*}
 \text{MSE}(\hat{\theta}) &= \mathbb{E}_{\theta}\left[(\hat{\theta} - \theta)^2\right] \\
 &= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t) - \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))\|^2\right] \\
 &= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\|^2\right] \\
 &= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t, t)\|^2\right]
-\end{align*}$$
-
+\end{align*}
+$$
 
 ## Simplification
 
 Ho et al. in ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239) found that training the diffusion model works better with a simplified objective that ignores the weighting term:
 
-$$\begin{align*}
+$$
+\begin{align*}
 L_t^{\text{simple}} &= \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)\|^2] \\
 &= \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t,t)\|^2]
-\end{align*}$$
+\end{align*}
+$$
 
 The final simple objective is:
 
@@ -1627,7 +1631,9 @@ class Encoder(nn.Module):
         log_var = self.fc_var(x)
 
         return mu, log_var
+```
 
+```python
 class Decoder(nn.Module):
     def __init__(self, latent_dim=4, out_channels=3):
         super().__init__()
@@ -1658,7 +1664,9 @@ class Decoder(nn.Module):
         x = torch.tanh(self.deconv4(x))        # 64x64
 
         return x
+```
 
+```python
 class VAE(nn.Module):
     def __init__(self, in_channels=3, latent_dim=4):
         super().__init__()
@@ -1714,407 +1722,748 @@ def vae_loss(recon_x, x, mu, log_var):
 ### U-Net
 
 ```python
-# backbone, Residual Block (Checked)
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
+"""
+Core components of the Stable Diffusion U-Net architecture.
+
+Architecture Overview:
+    ResBlock
+    [Input] → GroupNorm → SiLU → Conv2d → TimeEmb → GroupNorm → SiLU → Dropout → Conv2d → [Output]
+                                           ↑
+                                    Time Embedding
+
+    UpSample
+    [Input] → Interpolate → Conv2d → [Output]
+
+    DownSample
+    [Input] → Conv2d(stride=2) → [Output]
+"""
+
 class ResBlock(nn.Module):
-    def __init__(self, in_channel, time_emb_dim, out_channel=None, ):
+    """Residual block with time embedding for Stable Diffusion U-Net.
+
+    This block processes features and incorporates time information through:
+    1. Main path: Norm → NonLinear → Conv → TimeEmb → Norm → NonLinear → Dropout → Conv
+    2. Skip connection: Identity or 1x1 Conv if channels change
+
+    Args:
+        in_channel (int): Number of input channels
+        time_emb_dim (int): Dimension of time embedding
+        out_channel (int, optional): Number of output channels. Defaults to in_channel.
+    """
+    def __init__(self, in_channel, time_emb_dim, out_channel=None):
         super().__init__()
-        if out_channel is None:
-            out_channel = in_channel
-        self.norm1 = nn.GroupNorm(32, in_channel, eps=1e-05, affine=True)
-        self.conv1 = nn.Conv2d(in_channel, out_channel, kernel_size=3, stride=1, padding=1)
-        self.time_emb_proj = nn.Linear(in_features=time_emb_dim, out_features=out_channel, bias=True)
-        self.norm2 = nn.GroupNorm(32, out_channel, eps=1e-05, affine=True)
-        self.dropout = nn.Dropout(p=0.0, inplace=False)
-        self.conv2 = nn.Conv2d(out_channel, out_channel, kernel_size=3, stride=1, padding=1)
-        self.nonlinearity = nn.SiLU()
-        if in_channel == out_channel:
-            self.conv_shortcut = nn.Identity()
-        else:
-            self.conv_shortcut = nn.Conv2d(in_channel, out_channel, kernel_size=1, stride=1)
+        # If out_channel not specified, maintain same channel dimensions
+        out_channel = out_channel or in_channel
+
+        # Main processing path
+        self.norm1 = nn.GroupNorm(32, in_channel)  # Normalize input features
+        self.conv1 = nn.Conv2d(in_channel, out_channel, 3, padding=1)  # First conv, maintain spatial dims
+
+        # Time embedding projection
+        self.time_emb_proj = nn.Linear(time_emb_dim, out_channel)  # Project time embedding to channel dim
+
+        # Second norm and conv
+        self.norm2 = nn.GroupNorm(32, out_channel)
+        self.dropout = nn.Dropout(p=0.0)  # Optional dropout for regularization
+        self.conv2 = nn.Conv2d(out_channel, out_channel, 3, padding=1)  # Second conv
+        self.nonlinearity = nn.SiLU()  # Non-linear activation (Swish/SiLU)
+
+        # Skip connection: Identity if channels match, else 1x1 conv
+        self.skip_connection = (
+            nn.Identity() if in_channel == out_channel
+            else nn.Conv2d(in_channel, out_channel, 1)
+        )
 
     def forward(self, x, t_emb, cond=None):
-        # Input conv
+        """
+        Forward pass of ResBlock.
+
+        Args:
+            x (torch.Tensor): Input tensor [B, C, H, W]
+            t_emb (torch.Tensor): Time embedding [B, time_emb_dim]
+            cond (torch.Tensor, optional): Conditional embedding (unused in this block)
+
+        Returns:
+            torch.Tensor: Processed feature map [B, out_channel, H, W]
+        """
+        # Main path
         h = self.norm1(x)
         h = self.nonlinearity(h)
         h = self.conv1(h)
-        # Time modulation
+
+        # Add time information if provided
         if t_emb is not None:
-            t_hidden = self.time_emb_proj(self.nonlinearity(t_emb))
-            h = h + t_hidden[:, :, None, None]
-        # Output conv
+            # Project and reshape time embedding to feature map
+            time_emb = self.nonlinearity(t_emb)
+            time_emb = self.time_emb_proj(time_emb)
+            h = h + time_emb[:, :, None, None]  # Add time info to each spatial location
+
+        # Second conv block
         h = self.norm2(h)
         h = self.nonlinearity(h)
         h = self.dropout(h)
         h = self.conv2(h)
-        # Skip connection
-        return h + self.conv_shortcut(x)
+
+        # Combine with skip connection
+        return h + self.skip_connection(x)
 
 
-# UpSampling (Checked)
 class UpSample(nn.Module):
+    """Upsampling block for U-Net decoder.
+
+    Doubles spatial dimensions using interpolation followed by a conv.
+
+    Args:
+        channel (int): Number of channels
+        scale_factor (int, optional): Factor to scale spatial dims. Defaults to 2.
+        mode (str, optional): Interpolation mode. Defaults to 'nearest'.
+    """
     def __init__(self, channel, scale_factor=2, mode='nearest'):
-        super(UpSample, self).__init__()
+        super().__init__()
         self.scale_factor = scale_factor
         self.mode = mode
-        self.conv = nn.Conv2d(channel, channel, kernel_size=3, stride=1, padding=1, )
+        self.conv = nn.Conv2d(channel, channel, 3, padding=1)  # Smooth upsampled features
 
     def forward(self, x):
+        """
+        Args:
+            x (torch.Tensor): Input tensor [B, C, H, W]
+        Returns:
+            torch.Tensor: Upsampled tensor [B, C, H*scale, W*scale]
+        """
+        # Upsample spatially then convolve for smoothing
         x = F.interpolate(x, scale_factor=self.scale_factor, mode=self.mode)
         return self.conv(x)
 
 
-# DownSampling (Checked)
 class DownSample(nn.Module):
-    def __init__(self, channel, ):
-        super(DownSample, self).__init__()
-        self.conv = nn.Conv2d(channel, channel, kernel_size=3, stride=2, padding=1, )
+    """Downsampling block for U-Net encoder.
+
+    Halves spatial dimensions using strided convolution.
+
+    Args:
+        channel (int): Number of channels
+    """
+    def __init__(self, channel):
+        super().__init__()
+        self.conv = nn.Conv2d(channel, channel, 3, stride=2, padding=1)
 
     def forward(self, x):
-        return self.conv(x)  # F.interpolate(x, scale_factor=1/self.scale_factor, mode=self.mode)
+        """
+        Args:
+            x (torch.Tensor): Input tensor [B, C, H, W]
+        Returns:
+            torch.Tensor: Downsampled tensor [B, C, H/2, W/2]
+        """
+        return self.conv(x)
 ```
 
 ```python
-# Self and Cross Attention mechanism (Checked)
+import math
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from einops import rearrange
+
+"""
+Attention and Transformer components for Stable Diffusion U-Net.
+
+Architecture Overview:
+    CrossAttention:
+    [Query] → Linear → Reshape(heads)     [Key] → Linear → Reshape(heads)      [Value] → Linear → Reshape(heads)
+         ↓                                    ↓                                      ↓
+    MatMul(Q, K) → Scale → Softmax → MatMul(Attention, V) → Reshape → Linear → [Output]
+
+    TransformerBlock:
+    [Input] → Norm → SelfAttn → Add → Norm → CrossAttn → Add → Norm → FeedForward → Add → [Output]
+"""
+
 class CrossAttention(nn.Module):
-    """General implementation of Cross & Self Attention multi-head
+    """Multi-head Cross/Self Attention mechanism.
+
+    Can function as either self-attention (context_dim=None) or
+    cross-attention (context_dim specified) module.
+
+    Args:
+        embed_dim (int): Total embedding dimension
+        hidden_dim (int): Dimension of input features
+        context_dim (int, optional): Dimension of context features. If None, acts as self-attention
+        num_heads (int, optional): Number of attention heads. Defaults to 8
     """
-    def __init__(self, embed_dim, hidden_dim, context_dim=None, num_heads=8, ):
-        super(CrossAttention, self).__init__()
+    def __init__(self, embed_dim, hidden_dim, context_dim=None, num_heads=8):
+        super().__init__()
         self.hidden_dim = hidden_dim
         self.context_dim = context_dim
         self.embed_dim = embed_dim
         self.num_heads = num_heads
         self.head_dim = embed_dim // num_heads
+        assert self.head_dim * num_heads == embed_dim, "embed_dim must be divisible by num_heads"
+
+        # Query projection - always projects from hidden_dim
         self.to_q = nn.Linear(hidden_dim, embed_dim, bias=False)
-        if context_dim is None:
-            # Self Attention
-            self.to_k = nn.Linear(hidden_dim, embed_dim, bias=False)
-            self.to_v = nn.Linear(hidden_dim, embed_dim, bias=False)
-            self.self_attn = True
-        else:
-            # Cross Attention
-            self.to_k = nn.Linear(context_dim, embed_dim, bias=False)
-            self.to_v = nn.Linear(context_dim, embed_dim, bias=False)
-            self.self_attn = False
-        self.to_out = nn.Sequential(
-            nn.Linear(embed_dim, hidden_dim, bias=True)
-        )  # this could be omitted
+
+        # Key & Value projections - from hidden_dim (self-attention) or context_dim (cross-attention)
+        input_dim = hidden_dim if context_dim is None else context_dim
+        self.to_k = nn.Linear(input_dim, embed_dim, bias=False)
+        self.to_v = nn.Linear(input_dim, embed_dim, bias=False)
+        self.self_attn = context_dim is None
+
+        # Output projection
+        self.to_out = nn.Linear(embed_dim, hidden_dim)
 
     def forward(self, tokens, context=None):
-        Q = self.to_q(tokens)
-        K = self.to_k(tokens) if self.self_attn else self.to_k(context)
-        V = self.to_v(tokens) if self.self_attn else self.to_v(context)
-        # print(Q.shape, K.shape, V.shape)
-        # transform heads onto batch dimension
-        Q = rearrange(Q, 'B T (H D) -> (B H) T D', H=self.num_heads, D=self.head_dim)
-        K = rearrange(K, 'B T (H D) -> (B H) T D', H=self.num_heads, D=self.head_dim)
-        V = rearrange(V, 'B T (H D) -> (B H) T D', H=self.num_heads, D=self.head_dim)
-        # print(Q.shape, K.shape, V.shape)
-        scoremats = torch.einsum("BTD,BSD->BTS", Q, K)
-        attnmats = F.softmax(scoremats / math.sqrt(self.head_dim), dim=-1)
-        # print(scoremats.shape, attnmats.shape, )
-        ctx_vecs = torch.einsum("BTS,BSD->BTD", attnmats, V)
-        # split the heads transform back to hidden.
-        ctx_vecs = rearrange(ctx_vecs, '(B H) T D -> B T (H D)', H=self.num_heads, D=self.head_dim)
-        # TODO: note this `to_out` is also a linear layer, could be in principle merged into the to_value layer.
-        return self.to_out(ctx_vecs)
-```
+        """
+        Args:
+            tokens (torch.Tensor): Input tensor [B, T, hidden_dim]
+            context (torch.Tensor, optional): Context tensor [B, S, context_dim] for cross-attention
+                                           None for self-attention
+        Returns:
+            torch.Tensor: Attended tensor [B, T, hidden_dim]
+        """
+        # Project inputs to queries, keys, and values
+        Q = self.to_q(tokens)  # [B, T, embed_dim]
 
-```python
-# Transformer layers
+        # For self-attention, K & V come from input tokens
+        # For cross-attention, K & V come from context
+        source = tokens if self.self_attn else context
+        K = self.to_k(source)  # [B, S, embed_dim]
+        V = self.to_v(source)  # [B, S, embed_dim]
+
+        # Reshape for multi-head attention
+        # [B, T/S, embed_dim] -> [B*num_heads, T/S, head_dim]
+        Q = rearrange(Q, 'b t (h d) -> (b h) t d', h=self.num_heads)
+        K = rearrange(K, 'b s (h d) -> (b h) s d', h=self.num_heads)
+        V = rearrange(V, 'b s (h d) -> (b h) s d', h=self.num_heads)
+
+        # Compute scaled dot-product attention
+        # [B*num_heads, T, head_dim] @ [B*num_heads, head_dim, S] -> [B*num_heads, T, S]
+        attention_scores = torch.einsum('btd,bsd->bts', Q, K)
+        attention_weights = F.softmax(attention_scores / math.sqrt(self.head_dim), dim=-1)
+
+        # Apply attention to values
+        # [B*num_heads, T, S] @ [B*num_heads, S, head_dim] -> [B*num_heads, T, head_dim]
+        attended_values = torch.einsum('bts,bsd->btd', attention_weights, V)
+
+        # Reshape back and project to output dimension
+        # [B*num_heads, T, head_dim] -> [B, T, embed_dim] -> [B, T, hidden_dim]
+        attended_values = rearrange(attended_values, '(b h) t d -> b t (h d)', h=self.num_heads)
+        return self.to_out(attended_values)
+
+
+class GEGLU(nn.Module):
+    """Gated GLU variant for feed-forward layers.
+
+    Implementation of the gated variant from paper:
+    "GLU Variants Improve Transformer" https://arxiv.org/abs/2002.05202
+    """
+    def __init__(self, in_dim, out_dim):
+        super().__init__()
+        self.proj = nn.Linear(in_dim, 2 * out_dim)
+
+    def forward(self, x):
+        # Split projection into value and gate
+        x = self.proj(x)
+        x, gates = x.chunk(2, dim=-1)
+        # Apply GELU gating
+        return x * F.gelu(gates)
+
+
+class FeedForward(nn.Module):
+    """Feed-forward network with GEGLU activation.
+
+    Args:
+        hidden_dim (int): Input and output dimension
+        mult (int, optional): Multiplier for inner dimension. Defaults to 4
+    """
+    def __init__(self, hidden_dim, mult=4):
+        super().__init__()
+        self.net = nn.Sequential(
+            GEGLU(hidden_dim, mult * hidden_dim),
+            nn.Dropout(0.0),  # Optional dropout for regularization
+            nn.Linear(mult * hidden_dim, hidden_dim)
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
 class TransformerBlock(nn.Module):
-    def __init__(self, hidden_dim, context_dim, num_heads=8):
-        super(TransformerBlock, self).__init__()
-        self.attn1 = CrossAttention(hidden_dim, hidden_dim, num_heads=num_heads)  # self attention
-        self.attn2 = CrossAttention(hidden_dim, hidden_dim, context_dim, num_heads=num_heads)  # cross attention
+    """Transformer block combining self-attention, cross-attention, and feed-forward layers.
 
+    Architecture per block:
+    1. Self-attention with residual
+    2. Cross-attention with residual (if context provided)
+    3. Feed-forward with residual
+
+    Args:
+        hidden_dim (int): Dimension of input features
+        context_dim (int): Dimension of context features
+        num_heads (int, optional): Number of attention heads. Defaults to 8
+    """
+    def __init__(self, hidden_dim, context_dim, num_heads=8):
+        super().__init__()
+        # Self-attention layer
+        self.attn1 = CrossAttention(hidden_dim, hidden_dim, num_heads=num_heads)
+        # Cross-attention layer
+        self.attn2 = CrossAttention(hidden_dim, hidden_dim, context_dim, num_heads=num_heads)
+
+        # Layer normalization for each sub-layer
         self.norm1 = nn.LayerNorm(hidden_dim)
         self.norm2 = nn.LayerNorm(hidden_dim)
         self.norm3 = nn.LayerNorm(hidden_dim)
-        # to be compatible with Diffuser, could simplify.
-        self.ff = FeedForward_GEGLU(hidden_dim, )
-        # A more common version used in transformers.
-        # self.ff = nn.Sequential(
-        #     nn.Linear(hidden_dim, 3 * hidden_dim),
-        #     nn.GELU(),
-        #     nn.Linear(3 * hidden_dim, hidden_dim)
-        # )
+
+        # Feed-forward network
+        self.ff = FeedForward(hidden_dim)
 
     def forward(self, x, context=None):
+        """
+        Args:
+            x (torch.Tensor): Input tensor [B, T, hidden_dim]
+            context (torch.Tensor, optional): Context tensor for cross-attention
+        Returns:
+            torch.Tensor: Transformed tensor [B, T, hidden_dim]
+        """
+        # Self-attention block
         x = self.attn1(self.norm1(x)) + x
+        # Cross-attention block
         x = self.attn2(self.norm2(x), context=context) + x
+        # Feed-forward block
         x = self.ff(self.norm3(x)) + x
         return x
 
 
-class GEGLU_proj(nn.Module):
-    def __init__(self, in_dim, out_dim):
-        super(GEGLU_proj, self).__init__()
-        self.proj = nn.Linear(in_dim, 2 * out_dim)
-
-    def forward(self, x):
-        x = self.proj(x)
-        x, gates = x.chunk(2, dim=-1)
-        return x * F.gelu(gates)
-
-
-class FeedForward_GEGLU(nn.Module):
-    # https://github.com/huggingface/diffusers/blob/95414bd6bf9bb34a312a7c55f10ba9b379f33890/src/diffusers/models/attention.py#L339
-    # A variant of the gated linear unit activation function from https://arxiv.org/abs/2002.05202.
-    def __init__(self, hidden_dim, mult=4):
-        super(FeedForward_GEGLU, self).__init__()
-        self.net = nn.Sequential(
-            GEGLU_proj(hidden_dim, mult * hidden_dim),
-            nn.Dropout(0.0),
-            nn.Linear(mult * hidden_dim, hidden_dim)
-        )  # to be compatible with Diffuser, could simplify.
-
-    def forward(self, x, ):
-        return self.net(x)
-
-
 class SpatialTransformer(nn.Module):
+    """Spatial Transformer for processing 2D feature maps with attention.
+
+    Reshapes 2D features to sequence, applies transformer block, then reshapes back.
+
+    Args:
+        hidden_dim (int): Number of input channels/hidden dimension
+        context_dim (int): Dimension of context features
+        num_heads (int, optional): Number of attention heads. Defaults to 8
+    """
     def __init__(self, hidden_dim, context_dim, num_heads=8):
-        super(SpatialTransformer, self).__init__()
-        self.norm = nn.GroupNorm(32, hidden_dim, eps=1e-6, affine=True)
-        self.proj_in = nn.Conv2d(hidden_dim, hidden_dim, kernel_size=1, stride=1, padding=0)
-        # self.transformer = TransformerBlock(hidden_dim, context_dim, num_heads=8)
+        super().__init__()
+        self.norm = nn.GroupNorm(32, hidden_dim)
+        # Project input features
+        self.proj_in = nn.Conv2d(hidden_dim, hidden_dim, kernel_size=1)
+
+        # Transformer blocks (using sequential for compatibility)
         self.transformer_blocks = nn.Sequential(
-            TransformerBlock(hidden_dim, context_dim, num_heads=8)
-        )  # to be compatible with Diffuser, could simplify.
-        self.proj_out = nn.Conv2d(hidden_dim, hidden_dim, kernel_size=1, stride=1, padding=0)
+            TransformerBlock(hidden_dim, context_dim, num_heads=num_heads)
+        )
+
+        # Project output features
+        self.proj_out = nn.Conv2d(hidden_dim, hidden_dim, kernel_size=1)
 
     def forward(self, x, cond=None):
+        """
+        Args:
+            x (torch.Tensor): Input feature map [B, C, H, W]
+            cond (torch.Tensor, optional): Conditioning tensor for cross-attention
+        Returns:
+            torch.Tensor: Transformed feature map [B, C, H, W]
+        """
         b, c, h, w = x.shape
-        x_in = x
-        # context = rearrange(context, "b c T -> b T c")
+        spatial_size = h * w
+
+        # Store input for residual
+        residual = x
+
+        # Project and reshape to sequence
         x = self.proj_in(self.norm(x))
-        x = rearrange(x, "b c h w->b (h w) c")
+        x = rearrange(x, 'b c h w -> b (h w) c')
+
+        # Apply transformer blocks
         x = self.transformer_blocks[0](x, cond)
+
+        # Reshape back to 2D and project
         x = rearrange(x, 'b (h w) c -> b c h w', h=h, w=w)
-        return self.proj_out(x) + x_in
+        x = self.proj_out(x)
+
+        # Add residual
+        return x + residual
 ```
 
 ```python
-# Modified Container. Modify the nn.Sequential to time modulated Sequential
+"""
+Main U-Net architecture for Stable Diffusion.
+
+Architecture Overview:
+                                   CrossAttn + ResBlock + Time Embedding
+                                              ↓
+[Input] → Encoder Blocks → Middle Block → Decoder Blocks → [Output]
+    ↓    (Down blocks)                    (Up blocks)         ↑
+    └─────────── Skip Connections ─────────────────────────────┘
+
+TimeModulatedSequential handles special forward passes for time embedding and conditioning.
+"""
+
+import math
+import torch
+import torch.nn as nn
+from collections import OrderedDict
+from easydict import edict
+
+
 class TimeModulatedSequential(nn.Sequential):
-    """ Modify the nn.Sequential to time modulated Sequential """
+    """Custom Sequential container that handles time embeddings and conditioning.
+
+    Modifies nn.Sequential to properly pass time embeddings and conditioning
+    through specific layer types (ResBlock, SpatialTransformer).
+    """
     def forward(self, x, t_emb, cond=None):
+        """
+        Args:
+            x (torch.Tensor): Input tensor
+            t_emb (torch.Tensor): Time embedding
+            cond (torch.Tensor, optional): Conditioning tensor
+
+        Returns:
+            torch.Tensor: Processed tensor
+        """
         for module in self:
             if isinstance(module, TimeModulatedSequential):
+                # Recursively handle nested TimeModulatedSequential
                 x = module(x, t_emb, cond)
             elif isinstance(module, ResBlock):
-                # For certain layers, add the time modulation.
+                # Pass time embedding to ResBlocks
                 x = module(x, t_emb)
             elif isinstance(module, SpatialTransformer):
-                # For certain layers, add the class conditioning.
+                # Pass conditioning to SpatialTransformer
                 x = module(x, cond=cond)
             else:
+                # Regular forward pass for other layers
                 x = module(x)
-
         return x
-```
 
-```python
+
 class UNet_SD(nn.Module):
+    """U-Net architecture specifically designed for Stable Diffusion.
 
-    def __init__(self, in_channels=4,
-                 base_channels=320,
-                 time_emb_dim=1280,
-                 context_dim=768,
-                 multipliers=(1, 2, 4, 4),
-                 attn_levels=(0, 1, 2),
-                 nResAttn_block=2,
-                 cat_unet=True):
+    Features:
+    - Time conditioning through embeddings
+    - Cross-attention for incorporating context
+    - Skip connections between encoder and decoder
+    - Multiple resolution levels with varying channel depths
+
+    Args:
+        in_channels (int): Number of input channels (typically 4 for latent)
+        base_channels (int): Base channel multiplier
+        time_emb_dim (int): Dimension of time embeddings
+        context_dim (int): Dimension of context features
+        multipliers (tuple): Channel multipliers for each level
+        attn_levels (tuple): Levels to apply attention
+        nResAttn_block (int): Number of ResBlock+Attention blocks per level
+        cat_unet (bool): Whether to concatenate skip connections
+    """
+    def __init__(
+        self,
+        in_channels=4,
+        base_channels=320,
+        time_emb_dim=1280,
+        context_dim=768,
+        multipliers=(1, 2, 4, 4),
+        attn_levels=(0, 1, 2),
+        nResAttn_block=2,
+        cat_unet=True
+    ):
         super().__init__()
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+        # Store configuration
         self.in_channels = in_channels
         self.out_channels = in_channels
-        base_channels = base_channels
-        time_emb_dim = time_emb_dim
-        context_dim = context_dim
-        multipliers = multipliers
-        nlevel = len(multipliers)
         self.base_channels = base_channels
-        # attn_levels = [0, 1, 2]
+
+        # Calculate channels per level
         level_channels = [base_channels * mult for mult in multipliers]
-        # Transform time into embedding
+        nlevel = len(multipliers)
+
+        # Time embedding network (2-layer MLP)
         self.time_embedding = nn.Sequential(OrderedDict({
-            "linear_1": nn.Linear(base_channels, time_emb_dim, bias=True),
+            "linear_1": nn.Linear(base_channels, time_emb_dim),
             "act": nn.SiLU(),
-            "linear_2": nn.Linear(time_emb_dim, time_emb_dim, bias=True),
-        })
-        )  # 2 layer MLP
-        self.conv_in = nn.Conv2d(self.in_channels, base_channels, 3, stride=1, padding=1)
+            "linear_2": nn.Linear(time_emb_dim, time_emb_dim),
+        }))
 
-        # Tensor Downsample blocks
-        nResAttn_block = nResAttn_block
-        self.down_blocks = TimeModulatedSequential()  # nn.ModuleList()
-        self.down_blocks_channels = [base_channels]
-        cur_chan = base_channels
-        for i in range(nlevel):
-            for j in range(nResAttn_block):
-                res_attn_sandwich = TimeModulatedSequential()
-                # input_chan of first ResBlock is different from the rest.
-                res_attn_sandwich.append(ResBlock(in_channel=cur_chan, time_emb_dim=time_emb_dim, out_channel=level_channels[i]))
-                if i in attn_levels:
-                    # add attention except for the last level
-                    res_attn_sandwich.append(SpatialTransformer(level_channels[i], context_dim=context_dim))
-                cur_chan = level_channels[i]
-                self.down_blocks.append(res_attn_sandwich)
-                self.down_blocks_channels.append(cur_chan)
-            # res_attn_sandwich.append(DownSample(level_channels[i]))
-            if not i == nlevel - 1:
-                self.down_blocks.append(TimeModulatedSequential(DownSample(level_channels[i])))
-                self.down_blocks_channels.append(cur_chan)
+        # Initial convolution to get to base_channels
+        self.conv_in = nn.Conv2d(self.in_channels, base_channels, 3, padding=1)
 
+        # === Encoder Path (Downsampling) ===
+        self.down_blocks = TimeModulatedSequential()
+        self.down_blocks_channels = [base_channels]  # Track for skip connections
+        cur_channels = base_channels
+
+        # Build encoder blocks
+        for level_idx in range(nlevel):
+            # Add ResBlock + Attention blocks
+            for block_idx in range(nResAttn_block):
+                block = TimeModulatedSequential()
+
+                # First block might have different input channels
+                block.append(
+                    ResBlock(
+                        in_channel=cur_channels,
+                        time_emb_dim=time_emb_dim,
+                        out_channel=level_channels[level_idx]
+                    )
+                )
+
+                # Add attention on specified levels
+                if level_idx in attn_levels:
+                    block.append(
+                        SpatialTransformer(
+                            level_channels[level_idx],
+                            context_dim=context_dim
+                        )
+                    )
+
+                cur_channels = level_channels[level_idx]
+                self.down_blocks.append(block)
+                self.down_blocks_channels.append(cur_channels)
+
+            # Add downsampling except for last level
+            if level_idx < nlevel - 1:
+                self.down_blocks.append(
+                    TimeModulatedSequential(DownSample(level_channels[level_idx]))
+                )
+                self.down_blocks_channels.append(cur_channels)
+
+        # === Middle Block ===
         self.mid_block = TimeModulatedSequential(
-            ResBlock(cur_chan, time_emb_dim),
-            SpatialTransformer(cur_chan, context_dim=context_dim),
-            ResBlock(cur_chan, time_emb_dim),
+            ResBlock(cur_channels, time_emb_dim),
+            SpatialTransformer(cur_channels, context_dim=context_dim),
+            ResBlock(cur_channels, time_emb_dim)
         )
 
-        # Tensor Upsample blocks
-        self.up_blocks = nn.ModuleList() # TimeModulatedSequential()  #
-        for i in reversed(range(nlevel)):
-            for j in range(nResAttn_block + 1):
-                res_attn_sandwich = TimeModulatedSequential()
-                res_attn_sandwich.append(ResBlock(in_channel=cur_chan + self.down_blocks_channels.pop(),
-                                                  time_emb_dim=time_emb_dim, out_channel=level_channels[i]))
-                if i in attn_levels:
-                    res_attn_sandwich.append(SpatialTransformer(level_channels[i], context_dim=context_dim))
-                cur_chan = level_channels[i]
-                if j == nResAttn_block and i != 0:
-                    res_attn_sandwich.append(UpSample(level_channels[i]))
-                self.up_blocks.append(res_attn_sandwich)
-        # Read out from tensor to latent space
+        # === Decoder Path (Upsampling) ===
+        self.up_blocks = nn.ModuleList()
+
+        # Build decoder blocks
+        for level_idx in reversed(range(nlevel)):
+            # Add ResBlock + Attention + Upsample blocks
+            for block_idx in range(nResAttn_block + 1):
+                block = TimeModulatedSequential()
+
+                # Add ResBlock with skip connection
+                skip_channels = self.down_blocks_channels.pop()
+                block.append(
+                    ResBlock(
+                        in_channel=cur_channels + skip_channels,
+                        time_emb_dim=time_emb_dim,
+                        out_channel=level_channels[level_idx]
+                    )
+                )
+
+                # Add attention on specified levels
+                if level_idx in attn_levels:
+                    block.append(
+                        SpatialTransformer(
+                            level_channels[level_idx],
+                            context_dim=context_dim
+                        )
+                    )
+
+                cur_channels = level_channels[level_idx]
+
+                # Add upsampling except for last block of first level
+                if block_idx == nResAttn_block and level_idx != 0:
+                    block.append(UpSample(level_channels[level_idx]))
+
+                self.up_blocks.append(block)
+
+        # === Output Block ===
         self.output = nn.Sequential(
-            nn.GroupNorm(32, base_channels, ),
+            nn.GroupNorm(32, base_channels),
             nn.SiLU(),
-            nn.Conv2d(base_channels, self.out_channels, 3, padding=1),
+            nn.Conv2d(base_channels, self.out_channels, 3, padding=1)
         )
+
+        # Move model to device
         self.to(self.device)
 
-    def time_proj(self, time_steps, max_period: int = 10000):
-        if time_steps.ndim == 0:
-            time_steps = time_steps.unsqueeze(0)
+    def time_proj(self, timesteps, max_period: int = 10000):
+        """Project timesteps to sinusoidal time embeddings.
+
+        Args:
+            timesteps (torch.Tensor): Input timesteps
+            max_period (int): Maximum period for sinusoidal embedding
+
+        Returns:
+            torch.Tensor: Time embeddings
+        """
+        # Handle scalar timesteps
+        if timesteps.ndim == 0:
+            timesteps = timesteps.unsqueeze(0)
+
+        # Calculate frequency bands
         half = self.base_channels // 2
-        frequencies = torch.exp(- math.log(max_period)
-                                * torch.arange(start=0, end=half, dtype=torch.float32) / half
-                                ).to(device=time_steps.device)
-        angles = time_steps[:, None].float() * frequencies[None, :]
+        frequencies = torch.exp(
+            -math.log(max_period) *
+            torch.arange(0, half, dtype=torch.float32) / half
+        ).to(device=timesteps.device)
+
+        # Create sinusoidal embeddings
+        angles = timesteps[:, None].float() * frequencies[None, :]
         return torch.cat([torch.cos(angles), torch.sin(angles)], dim=-1)
 
-    def forward(self, x, time_steps, cond=None, encoder_hidden_states=None, output_dict=True):
+    def forward(self, x, timesteps, cond=None, encoder_hidden_states=None, output_dict=True):
+        """
+        Forward pass of U-Net.
+
+        Args:
+            x (torch.Tensor): Input tensor [B, C, H, W]
+            timesteps (torch.Tensor): Timesteps [B]
+            cond (torch.Tensor, optional): Conditioning tensor
+            encoder_hidden_states (torch.Tensor, optional): Alternative conditioning
+            output_dict (bool): Whether to return output as dict
+
+        Returns:
+            Union[torch.Tensor, edict]: Output tensor or dict with 'sample' key
+        """
+        # Handle conditioning
         if cond is None and encoder_hidden_states is not None:
             cond = encoder_hidden_states
-        t_emb = self.time_proj(time_steps)
+
+        # Get time embeddings
+        t_emb = self.time_proj(timesteps)
         t_emb = self.time_embedding(t_emb)
+
+        # Initial processing
         x = self.conv_in(x)
-        down_x_cache = [x]
+
+        # === Encoder Path ===
+        skip_connections = [x]
         for module in self.down_blocks:
             x = module(x, t_emb, cond)
-            down_x_cache.append(x)
+            skip_connections.append(x)
+
+        # === Middle Block ===
         x = self.mid_block(x, t_emb, cond)
+
+        # === Decoder Path ===
         for module in self.up_blocks:
-            x = module(torch.cat((x, down_x_cache.pop()), dim=1), t_emb, cond)
+            # Get skip connection and concatenate
+            skip_x = skip_connections.pop()
+            x = torch.cat((x, skip_x), dim=1)
+            x = module(x, t_emb, cond)
+
+        # === Output ===
         x = self.output(x)
-        if output_dict:
-            return edict(sample=x)
-        else:
-            return x
+
+        # Return format based on output_dict flag
+        return edict(sample=x) if output_dict else x
 ```
 
-[Conv2d](https://pytorch.org/docs/stable/generated/torch.nn.Conv2d.html)\
-[BatchNorm2d](https://pytorch.org/docs/stable/generated/torch.nn.BatchNorm2d.html1)\
-[MaxPool2d](https://pytorch.org/docs/stable/generated/torch.nn.MaxPool2d.html)\
-[Sequential](https://pytorch.org/docs/stable/generated/torch.nn.Sequential.html)\
-[torch.cat](https://pytorch.org/docs/main/generated/torch.cat.html)\
-[ConvTranspose2d](https://pytorch.org/docs/stable/generated/torch.nn.ConvTranspose2d.html)\
-[Upsample](https://pytorch.org/docs/stable/generated/torch.nn.Upsample.html)
-
-### Scheduler
-
 ```python
+"""
+DDPM (Denoising Diffusion Probabilistic Models) Scheduler Implementation.
+
+Mathematical Overview:
+    Forward Process (q): x_t = √α_t * x_0 + √(1-α_t) * ε
+    Reverse Process (p): x_{t-1} = 1/√(1-β_t) * (x_t - β_t/√(1-ᾱ_t) * ε_θ) + σ_t * z
+    where:
+        - α_t = 1 - β_t
+        - ᾱ_t = Π(α_1...α_t)
+        - ε_θ: Predicted noise
+        - z: Random noise
+        - σ_t: √β_t (for simplified variant)
+"""
+
 import torch
 import numpy as np
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Union
 
 
-class DDIMScheduler:
+class DDPMScheduler:
+    """DDPM Scheduler for the original diffusion process.
+
+    Implements the diffusion process from "Denoising Diffusion Probabilistic Models"
+    (https://arxiv.org/abs/2006.11239).
+    """
+
     def __init__(
         self,
         num_train_timesteps: int = 1000,
         beta_start: float = 0.0001,
         beta_end: float = 0.02,
+        beta_schedule: str = "linear",
         clip_sample: bool = True,
-        set_alpha_to_one: bool = True,
-        steps_offset: int = 0,
-        prediction_type: str = "epsilon",  # "epsilon" or "sample"
+        prediction_type: str = "epsilon",
+        variance_type: str = "fixed_small",
     ):
-        """
-        Initialize DDIM Scheduler.
+        """Initialize DDPM Scheduler.
+
         Args:
-            num_train_timesteps: Number of diffusion steps used to train the model
-            beta_start: Starting beta value
-            beta_end: Final beta value
-            clip_sample: Whether to clip predicted sample between -1 and 1
-            set_alpha_to_one: Whether to set final alpha to 1
-            steps_offset: Offset added to the inference steps
-            prediction_type: Type of prediction ("epsilon" for predicted noise, "sample" for predicted x_0)
+            num_train_timesteps: Total number of timesteps used in training
+            beta_start: Starting noise schedule value
+            beta_end: Ending noise schedule value
+            beta_schedule: Type of beta schedule ('linear' or 'scaled_linear')
+            clip_sample: Whether to clip predicted samples to [-1, 1]
+            prediction_type: What model predicts ("epsilon": noise, "sample": x_0)
+            variance_type: Type of variance to use ('fixed_small', 'fixed_large', 'learned')
         """
         self.num_train_timesteps = num_train_timesteps
         self.clip_sample = clip_sample
-        self.set_alpha_to_one = set_alpha_to_one
-        self.steps_offset = steps_offset
         self.prediction_type = prediction_type
+        self.variance_type = variance_type
 
-        # Create beta schedule
-        self.betas = torch.linspace(
-            beta_start,
-            beta_end,
-            num_train_timesteps,
-            dtype=torch.float32
-        )
+        # Create noise schedule (β_t)
+        if beta_schedule == "linear":
+            self.betas = torch.linspace(
+                beta_start, beta_end, num_train_timesteps, dtype=torch.float32
+            )
+        elif beta_schedule == "scaled_linear":
+            # Variance is increased for larger timesteps (more noise)
+            self.betas = torch.linspace(
+                beta_start**0.5, beta_end**0.5, num_train_timesteps, dtype=torch.float32
+            ) ** 2
+        else:
+            raise ValueError(f"Unknown beta schedule: {beta_schedule}")
 
-        # Calculate alphas
+        # Calculate basic α terms
         self.alphas = 1.0 - self.betas
         self.alphas_cumprod = torch.cumprod(self.alphas, dim=0)
+        self.alphas_cumprod_prev = torch.cat([torch.tensor([1.]), self.alphas_cumprod[:-1]])
 
-        # Set final alpha if required
-        if self.set_alpha_to_one:
-            self.alphas_cumprod[-1] = 1.0
-
-        # Calculate derived values
+        # Calculate forward process terms
         self.sqrt_alphas_cumprod = torch.sqrt(self.alphas_cumprod)
-        self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1.0 - self.alphas_cumprod)
+        self.sqrt_one_minus_alphas_cumprod = torch.sqrt(1. - self.alphas_cumprod)
 
-        # Store for inference
-        self.num_inference_steps = None
+        # Calculate posterior variance terms
+        # q(x_{t-1} | x_t, x_0)
+        self.posterior_variance = (
+            self.betas * (1. - self.alphas_cumprod_prev) / (1. - self.alphas_cumprod)
+        )
+
+        # Setup timesteps
         self.timesteps = None
+        self.num_inference_steps = None
 
     def set_timesteps(
         self,
         num_inference_steps: int,
-        device: str = "cpu"
+        device: Union[str, torch.device] = "cpu"
     ):
-        """
-        Sets the discrete timesteps used for the diffusion chain.
+        """Set up timesteps for the inference process.
+
         Args:
-            num_inference_steps: Number of diffusion steps used during inference
-            device: PyTorch device
+            num_inference_steps: Number of inference steps to use
+            device: Device to place tensors on
         """
         self.num_inference_steps = num_inference_steps
 
         # Create evenly spaced timesteps
-        step_ratio = self.num_train_timesteps // self.num_inference_steps
+        step_ratio = self.num_train_timesteps // num_inference_steps
         timesteps = np.arange(0, num_inference_steps) * step_ratio
 
-        # Add offset and clip
-        timesteps = timesteps + self.steps_offset
+        # Ensure valid range and convert to tensor
         timesteps = np.clip(timesteps, 0, self.num_train_timesteps - 1)
-
-        # Convert to tensor and reverse order
         self.timesteps = torch.from_numpy(timesteps[::-1].copy()).to(device)
 
     def step(
@@ -2122,56 +2471,66 @@ class DDIMScheduler:
         model_output: torch.FloatTensor,
         timestep: int,
         sample: torch.FloatTensor,
-        eta: float = 0.0,
-        use_clipped_model_output: bool = False,
+        generator: Optional[torch.Generator] = None,
     ) -> Tuple[torch.FloatTensor, Optional[dict]]:
-        """
-        Predict the sample at the previous timestep by reversing the DDIM process.
+        """Predict the sample for the previous timestep using DDPM reverse process.
+
         Args:
-            model_output: Direct output from learned diffusion model
-            timestep: Current discrete timestep
-            sample: Current instance of sample being created
-            eta: Parameter between 0 and 1, controlling the stochasticity (0 = DDIM, 1 = DDPM)
-            use_clipped_model_output: Whether to use clipped model output
+            model_output: Model prediction (ε_θ or x_0 depending on prediction_type)
+            timestep: Current timestep in the diffusion chain
+            sample: Current noisy sample x_t
+            generator: Optional RNG for reproducibility
+
+        Returns:
+            torch.FloatTensor: Sample at previous timestep x_{t-1}
         """
-        # Get index of current timestep
+        # Get index for current timestep
         step_index = (self.timesteps == timestep).nonzero().item()
         prev_timestep = 0 if step_index == len(self.timesteps) - 1 else self.timesteps[step_index + 1]
 
-        # Get alphas for current and previous timestep
-        alpha_prod_t = self.alphas_cumprod[timestep]
-        alpha_prod_t_prev = self.alphas_cumprod[prev_timestep] if prev_timestep >= 0 else torch.tensor(1.0)
+        # Get alpha values for current and previous timestep
+        alpha = self.alphas[timestep]
+        alpha_prev = self.alphas[prev_timestep] if prev_timestep >= 0 else torch.tensor(1.0)
 
-        # For numerical stability
-        alpha_prod_t = torch.clamp(alpha_prod_t, min=1e-7)
-        alpha_prod_t_prev = torch.clamp(alpha_prod_t_prev, min=1e-7)
+        alpha_cumprod = self.alphas_cumprod[timestep]
+        alpha_cumprod_prev = self.alphas_cumprod[prev_timestep] if prev_timestep >= 0 else torch.tensor(1.0)
 
-        # Predict x_0
+        beta = 1 - alpha
+
+        # Predict x_0 based on prediction type
         if self.prediction_type == "epsilon":
-            pred_x0 = (sample - torch.sqrt(1 - alpha_prod_t) * model_output) / torch.sqrt(alpha_prod_t)
-        elif self.prediction_type == "sample":
+            # Use noise prediction to estimate x_0
+            pred_x0 = (sample - torch.sqrt(1 - alpha_cumprod) * model_output) / torch.sqrt(alpha_cumprod)
+        else:  # prediction_type == "sample"
             pred_x0 = model_output
 
-        # Clip predicted x0 if needed
         if self.clip_sample:
             pred_x0 = torch.clamp(pred_x0, -1, 1)
 
-        # Get direction pointing to x_t
-        if alpha_prod_t_prev == 0:
-            dir_xt = torch.zeros_like(model_output)
-        else:
-            dir_xt = torch.sqrt(1 - alpha_prod_t_prev - eta**2 * (1 - alpha_prod_t)) * model_output
+        # Calculate mean for reverse process
+        # μ_t = (√ᾱ_{t-1}β_t)/(1-ᾱ_t) * x_0 + (√α_t(1-ᾱ_{t-1}))/(1-ᾱ_t) * x_t
+        coef1 = torch.sqrt(alpha_cumprod_prev) * beta / (1 - alpha_cumprod)
+        coef2 = torch.sqrt(alpha) * (1 - alpha_cumprod_prev) / (1 - alpha_cumprod)
+        pred_mean = coef1 * pred_x0 + coef2 * sample
 
-        # Random noise for stochasticity
-        if eta > 0:
-            noise = torch.randn_like(model_output)
-            variance = eta * torch.sqrt((1 - alpha_prod_t_prev) / (1 - alpha_prod_t)) * torch.sqrt(1 - alpha_prod_t / alpha_prod_t_prev)
-        else:
-            noise = 0
-            variance = 0
+        # Calculate variance
+        if self.variance_type == "fixed_small":
+            # Simplified variant from the DDPM paper
+            variance = self.betas[timestep]
+        elif self.variance_type == "fixed_large":
+            # Original formulation from the DDPM paper
+            variance = self.posterior_variance[timestep]
+        else:  # variance_type == "learned"
+            # Model predicts log variance
+            variance = torch.exp(model_output[1])
 
-        # Compute the previous sample
-        prev_sample = torch.sqrt(alpha_prod_t_prev) * pred_x0 + dir_xt + variance * noise
+        # Add noise for reverse process
+        noise = torch.randn(
+            sample.shape, generator=generator, device=sample.device, dtype=sample.dtype
+        )
+
+        # Sample from reverse process
+        prev_sample = pred_mean + torch.sqrt(variance) * noise
 
         return prev_sample
 
@@ -2181,17 +2540,23 @@ class DDIMScheduler:
         noise: torch.FloatTensor,
         timesteps: torch.IntTensor
     ) -> torch.FloatTensor:
-        """
-        Add noise to samples based on timesteps.
+        """Add noise to samples according to diffusion schedule.
+
+        Implements the forward process q(x_t|x_0).
+
         Args:
-            original_samples: Clean images
-            noise: Random noise
-            timesteps: Timesteps at which to add noise
+            original_samples: Clean images (x_0)
+            noise: Random noise (ε)
+            timesteps: Timesteps to add noise at
+
+        Returns:
+            torch.FloatTensor: Noisy samples x_t
         """
+        # Get α terms for specified timesteps
         sqrt_alpha_prod = self.sqrt_alphas_cumprod[timesteps]
         sqrt_one_minus_alpha_prod = self.sqrt_one_minus_alphas_cumprod[timesteps]
 
-        # Expand for broadcasting
+        # Prepare for broadcasting
         sqrt_alpha_prod = sqrt_alpha_prod.flatten()
         while len(sqrt_alpha_prod.shape) < len(original_samples.shape):
             sqrt_alpha_prod = sqrt_alpha_prod.unsqueeze(-1)
@@ -2200,8 +2565,43 @@ class DDIMScheduler:
         while len(sqrt_one_minus_alpha_prod.shape) < len(original_samples.shape):
             sqrt_one_minus_alpha_prod = sqrt_one_minus_alpha_prod.unsqueeze(-1)
 
+        # Apply forward diffusion formula
         noisy_samples = sqrt_alpha_prod * original_samples + sqrt_one_minus_alpha_prod * noise
         return noisy_samples
+
+    def get_velocity(
+        self,
+        sample: torch.FloatTensor,
+        noise: torch.FloatTensor,
+        timesteps: torch.IntTensor,
+    ) -> torch.FloatTensor:
+        """Calculate the velocity of the diffusion process.
+
+        Used in the probability flow ODE formulation.
+
+        Args:
+            sample: Input sample x_t
+            noise: Predicted noise ε_θ
+            timesteps: Current timesteps
+
+        Returns:
+            torch.FloatTensor: Velocity of the diffusion process
+        """
+        # Get alpha values
+        alpha_prod = self.alphas_cumprod[timesteps]
+        alpha_prod_prev = self.alphas_cumprod_prev[timesteps]
+        beta = 1 - alpha_prod
+
+        # Calculate predicted x_0
+        pred_x0 = (sample - torch.sqrt(beta) * noise) / torch.sqrt(alpha_prod)
+
+        # Calculate direction (velocity)
+        direction = torch.sqrt(1 - alpha_prod_prev) * noise
+
+        # Modify direction based on predicted x_0
+        velocity = direction - torch.sqrt(beta) * (sample - torch.sqrt(alpha_prod) * pred_x0) / torch.sqrt(1 - alpha_prod)
+
+        return velocity
 ```
 
 ### Note
