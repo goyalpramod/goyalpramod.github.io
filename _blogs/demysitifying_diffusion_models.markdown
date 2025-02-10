@@ -1134,38 +1134,39 @@ Now we have the mean, which can help us denoise the image. But we still need a t
 
 Our original objective was to create an approcimate conditional probability distribution using which we could train a neural network to reverse the diffusion process.
 
-$p_\theta(\mathbf{x}_{t-1}|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \boldsymbol{\mu}_\theta(\mathbf{x}_t, t), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$.
+$$p_\theta(\mathbf{x}_{t-1}\|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \boldsymbol{\mu}_\theta(\mathbf{x}_t, t), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)).$$
 
 We wish to train $\boldsymbol{\mu}_\theta$ to predict $\tilde{\boldsymbol{\mu}}_t = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t)$. Because $\mathbf{x}_t$ is available as input at training time.
 
 we can instead reparameterize the Gaussian noise term to make it predict $\boldsymbol{\epsilon}_t$ from the input $\mathbf{x}_t$ at time step $t$:
 
-$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t) = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))$
+$$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t) = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))$$
 
-Thus $\mathbf{x}_{t-1} = \mathcal{N}(\mathbf{x}_{t-1}; \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$
+Thus $$\mathbf{x}_{t-1} = \mathcal{N}(\mathbf{x}_{t-1}; \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)), \boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t))$$
 
 The loss term $L_t$ is parameterized to minimize the difference from $\tilde{\boldsymbol{\mu}}$:
 
-$L_t = \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)\|_2^2}\|\tilde{\boldsymbol{\mu}}_t(\mathbf{x}_t, \mathbf{x}_0) - \boldsymbol{\mu}_\theta(\mathbf{x}_t, t)\|^2\right]$
+$$L_t = \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta(\mathbf{x}_t, t)\|_2^2}\|\tilde{\boldsymbol{\mu}}_t(\mathbf{x}_t, \mathbf{x}_0) - \boldsymbol{\mu}_\theta(\mathbf{x}_t, t)\|^2\right]$$
 
 This scary looking equation is simply the Mean Squared Error for an [estimator](https://en.wikipedia.org/wiki/Mean_squared_error#Estimator)
 
 Also given as,
-$\text{MSE}(\hat{\theta}) = \mathbb{E}_{\theta}\left[(\hat{\theta} - \theta)^2\right]$
+$$\begin{align*}
+\text{MSE}(\hat{\theta}) &= \mathbb{E}_{\theta}\left[(\hat{\theta} - \theta)^2\right] \\
+&= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t) - \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))\|^2\right] \\
+&= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\|^2\right] \\
+&= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t, t)\|^2\right]
+\end{align*}$$
 
-$= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{1}{2\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_t) - \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))\|^2\right]$
-
-$= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t)\|^2\right]$
-
-$= \mathbb{E}_{\mathbf{x}_0,\boldsymbol{\epsilon}}\left[\frac{(1-\alpha_t)^2}{2\alpha_t(1-\bar{\alpha}_t)\|\boldsymbol{\Sigma}_\theta\|_2^2}\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t, t)\|^2\right]$
 
 ## Simplification
 
 Ho et al. in ["Denoising Diffusion Probabilistic Models"](https://arxiv.org/abs/2006.11239) found that training the diffusion model works better with a simplified objective that ignores the weighting term:
 
-$L_t^{\text{simple}} = \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)\|^2]$
-
-$= \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t,t)\|^2]$
+$$\begin{align*}
+L_t^{\text{simple}} &= \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\mathbf{x}_t,t)\|^2] \\
+&= \mathbb{E}_{t\sim[1,T],\mathbf{x}_0,\boldsymbol{\epsilon}_t}[\|\boldsymbol{\epsilon}_t - \boldsymbol{\epsilon}_\theta(\sqrt{\bar{\alpha}_t}\mathbf{x}_0 + \sqrt{1-\bar{\alpha}_t}\boldsymbol{\epsilon}_t,t)\|^2]
+\end{align*}$$
 
 The final simple objective is:
 
@@ -1250,9 +1251,9 @@ $$\nabla_{x_t}\log q(x_t,y) = \nabla_{x_t}\log q(x_t) + \nabla_{x_t}\log q(y|x_t
 This looks complex, but the idea is simple - we're combining:
 
 - How the image should evolve naturally ($\nabla_{x_t}\log q(x_t)$)
-- How it should change to better match our prompt ($\nabla_{x_t}\log q(y|x_t)$)
+- How it should change to better match our prompt ($\nabla_{x_t}\log q(y\|x_t)$)
 
-We can approximate this using a classifier $f_\phi(y|x_t)$:
+We can approximate this using a classifier $f_\phi(y\|x_t)$:
 
 $$\nabla_{x_t}\log q(x_t,y) \approx -\frac{1}{1-\bar{\alpha}_t}\epsilon_\theta(x_t,t) + \nabla_{x_t}\log f_\phi(y|x_t)$$
 
@@ -1312,12 +1313,12 @@ To understand the mathematics behind VAE lets begin by setting some conventions 
 - $x$ represents a real input data point (an image)
 - $z$ represents the latent space variables
 - $p(z)$: The prior - what we think z should look like before seeing any data
-- $p(x|z)$: The likelihood - how to generate data from the latent representation
-- $p(z|x)$: The posterior - given data, what's its latent representation?
+- $p(x\|z)$: The likelihood - how to generate data from the latent representation
+- $p(z\|x)$: The posterior - given data, what's its latent representation?
 
 The central idea is we have a latent space $z$ and when we sample a data point $x^*_i$ from it, we want it to be as close as possible to the original datapoint $x_i$
 
-This is represented mathematically as $p(z|x)$ (Think right to left: given x, we want to get z)
+This is represented mathematically as $p(z\|x)$ (Think right to left: given x, we want to get z)
 
 From Bayes' formula we can write:
 
@@ -1330,7 +1331,7 @@ $$p(x) = \int p(x|z)p(z)dz$$
 
 Unfortunately, this integral is computationally very expensive as we need to evaluate it over all possible configurations of latent variables.
 
-Hence instead of calculating $p(z|x)$ directly, we calculate an approximation $q_{\lambda}(z|x)$, parameterized by $\lambda$. For example, if $q$ were Gaussian, $\lambda$ would represent the mean and variance of the latent variables for each datapoint: $\lambda_{x_i} = (\mu_{x_i}, \sigma^2_{x_i})$.
+Hence instead of calculating $p(z\|x)$ directly, we calculate an approximation $q_{\lambda}(z\|x)$, parameterized by $\lambda$. For example, if $q$ were Gaussian, $\lambda$ would represent the mean and variance of the latent variables for each datapoint: $\lambda_{x_i} = (\mu_{x_i}, \sigma^2_{x_i})$.
 
 Now how do we know how close this approximation is to our original data distribution? That is where KL Divergence comes in.
 
@@ -1344,7 +1345,7 @@ We want to find a value of $\lambda$ that minimizes the difference between these
 
 $$q^*_{\lambda}(z|x) = \arg\min_{\lambda} KL(q_{\lambda}(z|x)||p(z|x))$$
 
-Sadly, even this is intractable (hard to compute) as we again have our $p(z|x)$ term in it.
+Sadly, even this is intractable (hard to compute) as we again have our $p(z\|x)$ term in it.
 
 So we introduce ELBO (Evidence Lower BOund), which provides us with a tractable way to optimize our model. ELBO represents the lower bound on the evidence (log probability) of our observed data. It is written as:
 
@@ -1377,8 +1378,8 @@ $$ELBO(\lambda) = E_q[\log p(x|z)] + E_q[\log p(z)] - E_q[\log q_{\lambda}(z|x)]
 Rearranging terms:
 $$ELBO(\lambda) = E_q[\log p(x|z)] - (E_q[\log q_{\lambda}(z|x)] - E_q[\log p(z)])$$
 
-The term in parentheses is exactly the KL divergence between $q_{\lambda}(z|x)$ and $p(z)$, giving us:
-$$ELBO(\lambda) = E_q[\log p(x|z)] - KL(q_{\lambda}(z|x)||p(z))$$
+The term in parentheses is exactly the KL divergence between $q_{\lambda}(z\|x)$ and $p(z)$, giving us:
+$$ELBO(\lambda) = E_q[\log p(x\|z)] - KL(q_{\lambda}(z|x)||p(z))$$
 
 Which is the same as our single-point ELBO formula.
 
@@ -1392,7 +1393,7 @@ There's a critical problem we haven't addressed yet. Remember our ELBO formula:
 
 $$ELBO_i(\theta,\phi) = E_{q_{\theta}(z|x_i)}[\log p_{\phi}(x_i|z)] - KL(q_{\theta}(z|x_i)||p(z))$$
 
-To optimize this, we need to calculate gradients through the entire process. However, sampling from $q_{\theta}(z|x_i)$ is a random operation, and we can't backpropagate through random sampling!
+To optimize this, we need to calculate gradients through the entire process. However, sampling from $q_{\theta}(z\|x_i)$ is a random operation, and we can't backpropagate through random sampling!
 
 ### The Problem
 
@@ -1439,12 +1440,12 @@ The key insight is that we can implement our probability distributions using neu
 1. **The Encoder Network (Inference Network)**
 
    - Takes input data $x$ and outputs parameters $\lambda$
-   - Implements our approximate posterior $q_{\theta}(z|x)$
+   - Implements our approximate posterior $q_{\theta}(z\|x)$
    - Parameters $\theta$ are the weights and biases of this network
 
 2. **The Decoder Network (Generative Network)**
    - Takes latent variables $z$ and reconstructs the data
-   - Implements our likelihood $p_{\phi}(x|z)$
+   - Implements our likelihood $p_{\phi}(x\|z)$
    - Parameters $\phi$ are the weights and biases of this network
 
 With these networks, we can rewrite our ELBO formula to include the network parameters:
@@ -1456,13 +1457,13 @@ $$Loss_i(\theta,\phi) = -ELBO_i(\theta,\phi)$$
 
 Let's break down what each term means in practice:
 
-1. **First Term**: $E_{q_{\theta}(z|x_i)}[\log p_{\phi}(x_i|z)]$
+1. **First Term**: $E_{q_{\theta}(z\|x_i)}[\log p_{\phi}(x_i\|z)]$
 
    - This is our reconstruction loss
    - How well can we reconstruct the input after encoding and decoding?
    - Think of it as "How close is the output to the input?"
 
-2. **Second Term**: $KL(q_{\theta}(z|x_i)||p(z))$
+2. **Second Term**: $KL(q_{\theta}(z\|x_i)\|\|p(z))$
    - This is our regularization term
    - Keeps our latent space well-behaved
    - Makes sure our encoded representations don't deviate too far from our prior
