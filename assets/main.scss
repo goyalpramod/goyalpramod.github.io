@@ -50,13 +50,54 @@ $heading-border-color: rgba(0, 0, 0, 0.1);  // Subtle border
   --code-background: #242424;   // Softer dark background for code
   --blockquote-background: #202020;
   --card-background: #242424;   // Slightly lighter than main background
-  --border-color: rgba(255, 255, 255, 0.1);
+  --border-color: rgba(255, 255, 255, 0.15);
   --scroll-thumb: rgba(255, 255, 255, 0.15);
   --scroll-thumb-hover: rgba(255, 255, 255, 0.25);
   --button-gradient: linear-gradient(145deg, #242424, #1f1f1f);
   --button-gradient-hover: linear-gradient(145deg, #282828, #222222);
   --toc-background: linear-gradient(145deg, #242424, #1f1f1f);
 }
+
+// Standardized styles for dark mode toggle, back to top, and TOC
+#dark-mode-toggle, .back-to-top, .toc-toggle {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: var(--background-color);
+  border: 1.5px solid var(--grey-color-light);
+  color: var(--text-color);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  &:hover {
+    transform: translateY(-2px);
+    border-color: var(--brand-color);
+    color: var(--brand-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:active {
+    transform: translateY(-1px);
+  }
+}
+
+// Dark mode specific overrides
+[data-theme="dark"] {
+  #dark-mode-toggle, .back-to-top, .toc-toggle {
+    background: var(--background-color);
+    border-color: var(--grey-color-light);
+    color: var(--text-color);
+    
+    &:hover {
+      background: var(--card-background);
+      border-color: var(--brand-color);
+      color: var(--brand-color);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+  }
+}
+
+
 
 .social-links {
   a {
@@ -266,7 +307,7 @@ p {
 }
 .site-header {
   background-color: var(--background-color) !important;
-  border-top: 3px solid #000000 !important;
+  border-top: 3px solid var(--brand-color) !important;
   border-bottom: 1px solid var(--grey-color-light) !important;
   border-bottom-color: var(--grey-color-light) !important;
   min-height: 40px;
@@ -514,7 +555,7 @@ body:not(.preload) * {
     background: var(--code-background) !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     overflow: hidden;  /* Changed from overflow-x: auto */
-    border: 1px solid #DEB887;  /* Added border to match the theme */
+    border: 1px solid var(--grey-color-light) !important;  /* Added border to match the theme */
     border-color: var(--grey-color-light) !important;
 
     div.highlight {
@@ -595,7 +636,7 @@ body:not(.preload) * {
   margin: 1.8rem 0;
   background: #f6f8fa !important;
   border-radius: 8px;
-  border: 1px solid #DEB887;
+  border: 1px solid var(--grey-color-light) !important;
   overflow: hidden;
 
   pre {
@@ -749,7 +790,7 @@ html, body, .page-content {
                 color: $brand-color !important;
                 transform: translateY(-3px);
                 background: linear-gradient(145deg, #fff8eb, #f5ebd9);
-                box-shadow: 0 5px 15px rgba(211, 84, 0, 0.15);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             }
             
             &:active {
@@ -1073,12 +1114,15 @@ article {
   &:hover {
     opacity: 1;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(var(--brand-color-rgb), 0.2);
+    border-color: var(--brand-color);
+    color: var(--brand-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     background: color-mix(in srgb, var(--brand-color) 10%, var(--background-color));
   }
   
   &:active {
     transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
   svg {
@@ -1115,7 +1159,7 @@ article {
 #dark-mode-toggle:hover {
   background: var(--button-gradient-hover);
   border-color: var(--brand-color);
-  transform: translateY(-2px);
+  transform: scale(1.05);
 }
 
 #dark-mode-toggle:active {
@@ -1166,8 +1210,7 @@ article {
   height: 3rem;
   border-radius: 50%;
   background: var(--button-gradient);
-  border: 2px solid #DEB887;
-  border-color: var(--grey-color-light);
+  border: 1px solid var(--grey-color-light) !important;
   color: var(--brand-color);
   display: flex;
   align-items: center;
@@ -1342,17 +1385,17 @@ article {
 }
 
 .toc-nav .active.toc-h1 {
-  background-color: rgba(211, 84, 0, 0.08);
+  background-color: rgba(0, 0, 0, 0.08);
   font-weight: 700;
 }
 
 .toc-nav .active.toc-h2 {
-  background-color: rgba(230, 126, 34, 0.08);
+  background-color: rgba(0, 0, 0, 0.08);
   font-weight: 600;
 }
 
 .toc-nav .active.toc-h3 {
-  background-color: rgba(139, 115, 85, 0.08);
+  background-color: rgba(0, 0, 0, 0.08);
   font-weight: 500;
 }
 
@@ -1504,7 +1547,7 @@ article {
   background: var(--button-gradient-hover);
   color: var(--brand-color);
   border-color: var(--brand-color);
-  transform: translateY(-2px);
+  transform: scale(1.05);
   box-shadow: 0 4px 12px rgba(211, 84, 0, 0.15);
 }
 
@@ -1760,10 +1803,9 @@ article {
   background: transparent;
 
   &:hover {
-    background: rgba(211, 84, 0, 0.05);
     opacity: 0.85;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(211, 84, 0, 0.08);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -1779,9 +1821,6 @@ article {
     }
   }
   
-  .view-all-posts:hover {
-    background: rgba(255, 107, 26, 0.1);
-  }
 }
 
 // Mobile responsiveness
