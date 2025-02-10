@@ -20,11 +20,10 @@ layout: default
       </section>
 
       <!-- Latest Blog Post Section -->
-      <!-- Latest Blog Post Section -->
       {% if site.blogs.size > 0 %}
       <section>
         <h2 class="section-title">Latest Post</h2>
-        {% assign latest_post = site.blogs | first %}
+        {% assign latest_post = site.blogs | sort: 'date' | reverse | first %}
         <div class="latest-post-card">
           <div class="post-meta">
             <div class="meta-left">
