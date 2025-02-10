@@ -244,7 +244,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-  font-size: clamp(2rem, 4vw + 1rem, 3.5rem);
+  font-size: clamp(2rem, calc(4vw + 1rem), 3.5rem);
   margin-bottom: 1.5rem;
   font-size: 2.3em;
   border-bottom: 2px solid $heading-border-color;  // Reduced from 3px
