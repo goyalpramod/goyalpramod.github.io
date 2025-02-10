@@ -280,7 +280,7 @@ Input Components
 
 - Noisy Latents: The noisy image we're trying to denoise
 - Prompt Embedding: Text information converted into a numerical representation
-- Time Step Embedding: Information about which denoising step we're on
+- Timestep Embedding: Information about which denoising step we're on
 
 The ResNet and Attention blocks work together in a complementary way to process this information:
 
@@ -288,7 +288,7 @@ The ResNet and Attention blocks work together in a complementary way to process 
 These blocks receive three inputs that are combined:
 
 1. The main feature path (coming from previous layers)
-2. The time step embedding
+2. The timestep embedding
 3. The residual skip connection (from earlier in the network)
 
 Inside a ResNet Block (pseudo-code):
@@ -368,7 +368,7 @@ The attention blocks are essential because they:
    - Skip connections preserve spatial information
 
 3. Controlled Generation
-   - Time step embeddings guide the denoising process
+   - Timestep embeddings guide the denoising process
    - Prompt embeddings guide the semantic content
    - Their combination enables precise control over the generation
 
@@ -414,7 +414,7 @@ Here's how it works:
    - This is done through transformer blocks, similar to what powers ChatGPT but adapted for images
 
 3. **Time and Prompt Integration**:
-   - The noise level (time step) is embedded directly into the sequence
+   - The noise level (timestep) is embedded directly into the sequence
    - Text prompts are also converted into embeddings and can influence how patches interact
    - This creates a unified way for the model to consider all the information at once
 
@@ -559,7 +559,7 @@ This greatly simplifies are training, which can be written as the above image.
 In summary:
 
 - **Original Artwork ($\mathbf{x}_0$)**: We start with a clean image from our dataset.
-- **Progressive Damage (t)**: We simulate different levels of damage by choosing a random time step t. It's like choosing how degraded we want our image to be.
+- **Progressive Damage (t)**: We simulate different levels of damage by choosing a random timestep t. It's like choosing how degraded we want our image to be.
 - **Adding Known Damage ($\mathbf{x}_t$)**: We add a specific amount of Gaussian noise to our image based on t. This is like deliberately damaging the artwork in a controlled way, where we know exactly what damage we added.
 - **Training the Restorer**: Our neural network (like our art restorer) looks at the damaged image and tries to identify what damage was added. The loss function $\|\epsilon - \epsilon_\theta(x_t,t)\|_2$ measures how well the network identified the damage.
 
@@ -993,7 +993,7 @@ As $t$ becomes larger. And eventually when $T \to \infty$ (This means as $T$ app
 
 Whilst eq 2 looks complex, it simply means. Given the original image $x_0$ all the values of $x_t$ from $t=1$ to $t=T$ are equal to, multiplication of the PDF from $t=1$ to $t=T$
 
-Let's talk about an interesting property - we can actually sample $x_t$ at any arbitrary time step (This is the "nice property"). This means we don't need to go through the diffusion process step by step to get to a specific noise level.
+Let's talk about an interesting property - we can actually sample $x_t$ at any arbitrary timestep (This is the "nice property"). This means we don't need to go through the diffusion process step by step to get to a specific noise level.
 
 First, let's understand something fundamental about normal distributions. Any normal distribution can be represented in the following form:
 
@@ -1236,7 +1236,7 @@ $$p_\theta(\mathbf{x}_{t-1}\|\mathbf{x}_t) = \mathcal{N}(\mathbf{x}_{t-1}; \bold
 
 We wish to train $\boldsymbol{\mu}_\theta$ to predict $\tilde{\boldsymbol{\mu}}_t$. Because $\mathbf{x}_t$ is available as input at training time.
 
-But through all our toil, we can reparameterize the Gaussian noise term to make it predict $\boldsymbol{\epsilon}_t$ from the input $\mathbf{x}_t$ at time step $t$:
+But through all our toil, we can reparameterize the Gaussian noise term to make it predict $\boldsymbol{\epsilon}_t$ from the input $\mathbf{x}_t$ at timestep $t$:
 
 $$\boldsymbol{\mu}_\theta(\mathbf{x}_t, t) = \frac{1}{\sqrt{\alpha_t}}(\mathbf{x}_t - \frac{1-\alpha_t}{\sqrt{1-\bar{\alpha}_t}}\boldsymbol{\epsilon}_\theta(\mathbf{x}_t, t))$$
 
@@ -1350,7 +1350,7 @@ This equation tells us the probability distribution of our noisy image $x_t$ giv
 
 $$\text{score}(x) = \nabla_x \log p(x)$$
 
-When we apply this to our forward diffusion process $q(x_t|x_0)$, we can derive our key equation. Let's do this step by step:
+When we apply this to our forward diffusion process $q(x_t\|x_0)$, we can derive our key equation. Let's do this step by step:
 
 1. First, let's write out the log probability for a Gaussian distribution:
 
