@@ -58,6 +58,12 @@ $heading-border-color: rgba(0, 0, 0, 0.1);  // Subtle border
   --toc-background: linear-gradient(145deg, #242424, #1f1f1f);
 }
 
+[data-theme="dark"] {
+  // Add for better text rendering in dark mode
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 // Standardized styles for dark mode toggle, back to top, and TOC
 #dark-mode-toggle, .back-to-top, .toc-toggle {
   width: 3rem;
@@ -307,7 +313,7 @@ p {
 }
 .site-header {
   background-color: var(--background-color) !important;
-  border-top: 3px solid var(--brand-color) !important;
+  border-top: none !important;
   border-bottom: 1px solid var(--grey-color-light) !important;
   border-bottom-color: var(--grey-color-light) !important;
   min-height: 40px;
@@ -1226,7 +1232,7 @@ article {
   color: var(--brand-color);
   border-color: var(--brand-color);
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(211, 84, 0, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); 
 }
 
 .toc-wrapper {
@@ -1548,7 +1554,7 @@ article {
   color: var(--brand-color);
   border-color: var(--brand-color);
   transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(211, 84, 0, 0.15);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15); 
 }
 
 .back-to-top:active {
