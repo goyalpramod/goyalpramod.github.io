@@ -1,7 +1,7 @@
 <!-- ---
 layout: blog
 title: "Demystifying Diffusion Models"
-date: 2025-02-3 12:00:00 +0530
+date: 2025-02-10 12:00:00 +0530
 categories: [CV, ML, Maths, Code]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
@@ -137,9 +137,9 @@ Also, I will proceed with the assumption you have an understanding of [CNNs](htt
 
 ![Image of simplified U-Net](/assets/blog_assets/demystifying_diffusion_models/11.webp)
 
-The encoder side does convolutions to extract features from images, then compresses them to only focus on the relevant parts.
+The encoder side does [convolutions](https://medium.com/towards-data-science/types-of-convolutions-in-deep-learning-717013397f4d) to extract features from images, then compresses them to only focus on the relevant parts.
 
-The decoder then does transpose convolutions to decode these extracted parts back into the original image size.
+The decoder then does [transpose convolutions](https://towardsdatascience.com/understand-transposed-convolutions-and-build-your-own-transposed-convolution-layer-from-scratch-4f5d97b2967/) to decode these extracted parts back into the original image size.
 
 To understand it in our context, think instead of segmenting objects, we are segmenting the noise. Trying to find out the particular places where noise is present.
 
@@ -469,7 +469,7 @@ That scary looking equation basically says if we have an image $X_{t-1}$ we can 
 
 So now we have a single image, and we are able to add noise to it.
 
-> **Note**: A simple method I use to keep in mind is whenever an equation like $p(A|B)$ is present, it simply means think right to left. Given B, what can be A.
+> **Note**: A simple method I use to keep in mind is whenever an equation like p(A\|B) is present, it simply means think right to left. Given B, what can be A.
 
 What we want to do is, the reverse process. Take noise and get an image out of it.
 
@@ -563,7 +563,7 @@ In summary:
 - **Original Artwork ($\mathbf{x}_0$)**: We start with a clean image from our dataset.
 - **Progressive Damage (t)**: We simulate different levels of damage by choosing a random time step t. It's like choosing how degraded we want our image to be.
 - **Adding Known Damage ($\mathbf{x}_t$)**: We add a specific amount of Gaussian noise to our image based on t. This is like deliberately damaging the artwork in a controlled way, where we know exactly what damage we added.
-- **Training the Restorer**: Our neural network (like our art restorer) looks at the damaged image and tries to identify what damage was added. The loss function $|\epsilon - \epsilon_\theta(x_t,t)|_2$ measures how well the network identified the damage.
+- **Training the Restorer**: Our neural network (like our art restorer) looks at the damaged image and tries to identify what damage was added. The loss function $\|\epsilon - \epsilon_\theta(x_t,t)\|_2$ measures how well the network identified the damage.
 
 This process is efficient because:
 
@@ -949,9 +949,9 @@ This part was heavily influenced by the following works
 
 As the above works were way too hard to understand. The following 3 videos really helped me out understand them
 
-- [Diffusion Models From Scratch | Score-Based Generative Models Explained | Math Explained](https://www.youtube.com/watch?v=B4oHJpEJBAA)
-- [Diffusion Models | Paper Explanation | Math Explained](https://www.youtube.com/watch?v=HoKDTa5jHvg)
-- [Denoising Diffusion Probabilistic Models | DDPM Explained](https://www.youtube.com/watch?v=H45lF4sUgiE&t=1583s)
+- [Diffusion Models From Scratch \| Score-Based Generative Models Explained \| Math Explained](https://www.youtube.com/watch?v=B4oHJpEJBAA)
+- [Diffusion Models \| Paper Explanation \| Math Explained](https://www.youtube.com/watch?v=HoKDTa5jHvg)
+- [Denoising Diffusion Probabilistic Models \| DDPM Explained](https://www.youtube.com/watch?v=H45lF4sUgiE&t=1583s)
 
 As is the nature of Understanding Stable Diffusion, it is going to be mathematics heavy. I have added an [Misc & References](#misc--references) at the bottom where you can find guides to each mathematical ideas, explained as simply as possible.
 
@@ -970,10 +970,10 @@ There are many reasons we choose Gaussian noise, but it's mainly due to the prop
 
 Now let us look at the big scary forward diffusion equation and understand what is going on
 
-$$q(x_t|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I}) \tag{1}$$
-$$q(x_{1:T}|x_0) = \prod_{t=1}^T q(x_t|x_{t-1}) \tag{2}$$
+$$q(x_t\|x_{t-1}) = \mathcal{N}(x_t; \sqrt{1-\beta_t}x_{t-1}, \beta_t\mathbf{I}) \tag{1}$$
+$$q(x_{1:T}\|x_0) = \prod_{t=1}^T q(x_t\|x_{t-1}) \tag{2}$$
 
-$q(x_t|x_{t-1})$ means that given that I know $q(x_{t-1})$ what is the probability of $q(x_t)$ This is also knows as [bayes theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem).
+$q(x_t\|x_{t-1})$ means that given that I know $q(x_{t-1})$ what is the probability of $q(x_t)$. This is also known as [bayes theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem).
 
 To simplify it, think of it as. Given $q(x_0)$ (for value of $t$ = 1) what is the value of $q(x_1)$.
 
@@ -1033,7 +1033,7 @@ This makes our implementation much more efficient as we can directly jump to any
 
 Now what we want to do is take a noisy image $x_t$ and get the original image $x_0$ from it. And to do that we need to do a reverse diffusion process.
 
-Essentially we want to sample from $q(x_{t-1}|x_t)$, Which is quite tough as there can be millions of noisy images for actual images. To combat this we create an approximation (why do they work and how do they work in a minute) $p_\theta$ to approximate these conditional probabilities in order to run the _reverse diffusion process_.
+Essentially we want to sample from $q(x_{t-1}\|x_t)$, Which is quite tough as there can be millions of noisy images for actual images. To combat this we create an approximation (why do they work and how do they work in a minute) $p_\theta$ to approximate these conditional probabilities in order to run the _reverse diffusion process_.
 
 Which can be represented as
 $$p_\theta(x_{t-1}|x_t) = \mathcal{N}(x_{t-1}; \mu_\theta(x_t,t), \Sigma_\theta(x_t,t))$$
@@ -1387,7 +1387,6 @@ Which is the same as our single-point ELBO formula.
 ![Image of super special artist](/assets/blog_assets/demystifying_diffusion_models/42.webp)
 
 > Image taken from ["From Autoencoder to Beta-VAE by Lillian Weng"](https://lilianweng.github.io/posts/2018-08-12-vae/#reparameterization-trick)
-> ]
 
 There's a critical problem we haven't addressed yet. Remember our ELBO formula:
 
@@ -1521,7 +1520,7 @@ Here's a curated list of papers that shaped the field of diffusion models, arran
 
 ### Guidance and Control
 
-[**CLASSIFIER-FREE DIFFUSION GUIDANCE**](https://arxiv.org/pdf/2207.12598) (2022)
+[**Classifier-Free Diffusion Guidance**](https://arxiv.org/pdf/2207.12598) (2022)
 
 - Solved the need for separate classifiers in guided diffusion
 - Key innovation: Using the difference between conditional and unconditional generations for guidance
@@ -1541,7 +1540,7 @@ Here's a curated list of papers that shaped the field of diffusion models, arran
 - Key innovation: Connected noise-conditional score networks with diffusion
 - Impact: Provided theoretical foundations for understanding diffusion models
 
-[**SCORE-BASED GENERATIVE MODELING THROUGH STOCHASTIC DIFFERENTIAL EQUATIONS**](https://arxiv.org/pdf/2011.13456) (2020)
+[**Score-based Generative Modeling Through Stochastic Differential Equations**](https://arxiv.org/pdf/2011.13456) (2020)
 
 - Unified score-based models and diffusion models
 - Key innovation: Continuous-time formulation of generative modeling
