@@ -1624,7 +1624,7 @@ article {
   display: flex;
   align-items: flex-start;
   gap: 2rem;
-  margin-bottom: 3rem;
+  margin-bottom: 4rem;  
 
   .about-content {
     flex: 1;
@@ -1648,16 +1648,23 @@ article {
   }
 }
 
-// Portrait styles
 .portrait-container {
   flex-shrink: 0;
   width: 300px;
   height: 300px;
   border-radius: 12px;
-  margin-top: var(--portrait-margin, 5rem);
+  margin-top: var(--portrait-margin, 0rem);
   position: relative;
   background: transparent;
   transition: transform 0.3s ease;
+
+  @media screen and (max-width: 768px) {
+    width: 100%;         // Take full width of parent
+    height: 350px;       // Taller height to show more content
+    margin: 0 auto;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+  }
 
   &:hover {
     transform: translateY(-5px);
@@ -1672,14 +1679,38 @@ article {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center 20%;
   border-radius: 12px;
   display: block;
   position: relative;
+
+  @media screen and (max-width: 768px) {
+    object-position: center 0%;  // Move face up in mobile view
+  }
+}
+
+.about-section {
+  @media screen and (max-width: 768px) {
+    flex-direction: column-reverse;
+    align-items: center;
+    gap: 1rem;         // Reduced gap for mobile
+    margin-top: 0.5rem; // Less top margin on mobile
+  }
+}
+
+.about-section {
+  @media screen and (max-width: 768px) {
+    padding: 0 1rem;  // Add some padding
+    
+    .portrait-container {
+      margin-bottom: 1.5rem;  // Add space between image and text
+    }
+  }
 }
 
 .wave-hand {
   position: absolute;
-  top: -40px;
+  top: 5px;  // Move it above the container without affecting layout
   right: 50px;
   font-size: 24px;
   animation: popAndWave 4s infinite;
@@ -1687,8 +1718,8 @@ article {
   display: none;
 
   @media screen and (max-width: 768px) {
-    top: -15px;  // Adjusted for mobile
-    right: 30px; // Slightly adjusted horizontal position for mobile
+    top: -15px;  // Slightly adjusted for mobile
+    right: 30px;
   }
 }
 
