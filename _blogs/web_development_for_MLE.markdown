@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: blog
 title: "Web development for MLE"
 date: 2025-02-9 12:00:00 +0530
@@ -27,15 +27,18 @@ Build a web application that allows users to upload images and apply aesthetic s
 ## Essential Resources
 
 1. **Modern JavaScript & TypeScript**
+
    - [javascript.info](https://javascript.info/) - Comprehensive modern JavaScript tutorial
    - [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/) - In-depth TypeScript guide
 
 2. **React & Modern Web Development**
+
    - [React Dev](https://react.dev/) - Official React documentation
    - [Josh Comeau's Blog](https://www.joshwcomeau.com/) - Modern React patterns and CSS
    - [Patterns.dev](https://www.patterns.dev/) - Modern web architecture patterns
 
 3. **WebGL & Shaders**
+
    - [WebGL Fundamentals](https://webglfundamentals.org/) - Essential WebGL concepts
    - [Book of Shaders](https://thebookofshaders.com/) - GLSL shader programming
 
@@ -189,16 +192,77 @@ Build a web application that allows users to upload images and apply aesthetic s
 - Deployment checklist
 - Performance benchmarking
 
-## Daily Progress Template
+## Note
+
+It's not like I am starting from absolute scratch, I have created this roadmap specifically tailored to me given my
+previous experience with HTML, CSS and JS.
+
+Additionally I have been working as an SDE for quite some time now, So I have experience with docker, CI/CD, pipelines etc
+
+As well as, I have done backend development using fast-api and Django in the past.
+
+## Daily Progress
+
+### Day 1
+
+Learning resource -> javascript.info
+
+**Introduction**
+
+- JS is a safe language, that runs on the browser engine.
+- There are specifications and manuals which are specified in [ECMA](https://ecma-international.org/publications-and-standards/standards/ecma-262/). These are the rules and guidelines of using JS. There is also [MDN docs](https://developer.mozilla.org/en-US/docs/Web/JavaScript) which has extensive documentation on js.
+- We can access the developer console by pressing F12. This is mainly used while debugging your js code.
+
+**JS Fundamentals**
+
+> Text inside quote blocks indicate summary taken from section of the book directly, this is just for my own quick reference. I will recommend reading the book itself to get a better idea of what is going on.
+
+> - We can use a `<script>` tag to add JavaScript code to a page.
+
+> - The type and language attributes are not required.
+
+> - A script in an external file can be inserted with `<script src="path/to/script.js"></script>`.
+
+- The naming of variable is mostly similar to python, one of the difference being that Camel Case is used widely instead of snake case.
+
+> - `let` – is a modern variable declaration.
+
+> - `var` – is an old-school variable declaration. Normally we don’t use it at all, but we’ll cover subtle differences from let in the chapter The old "var", just in case you need them.
+
+> - `const` – is like let, but the value of the variable can’t be changed.
+
+> There are 8 basic data types in JavaScript.
+
+> Seven primitive data types:
+
+> - number for numbers of any kind: integer or floating-point, integers are limited by ±(253-1).
+> - bigint for integer numbers of arbitrary length.
+> - string for strings. A string may have zero or more characters, there’s no separate single-character type.
+> - boolean for true/false.
+> - null for unknown values – a standalone type that has a single value null.
+> - undefined for unassigned values – a standalone type that has a single value undefined.
+> - symbol for unique identifiers.
+
+> And one non-primitive data type:
+
+> object for more complex data structures.
+
+> The typeof operator allows us to see which type is stored in a variable.
+
+> Usually used as typeof x, but typeof(x) is also possible.
+
+> Returns a string with the name of the type, like "string".
+
+> For null returns "object" – this is an error in the language, it’s not actually an object.
 
 ```typescript
 // Daily learning summary
 interface DayProgress {
-  date: string;
-  topics: string[];
-  resources: string[];
-  challenges: string[];
-  solutions: string[];
+  date: "13/02/25";
+  topics: string["introduction to JS", "IDE", "Manuals and Specifications", "Developer console", "JS Fundamentals along with Syntax"];
+  resources: string["javascript.info",];
+  challenges: string["1.Show an alert"];
+  solutions: string["1.Use alert inside a script"];
   nextSteps: string[];
 }
-```
+``` -->
