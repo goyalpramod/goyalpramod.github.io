@@ -1,8 +1,8 @@
 ---
 layout: blog
 title: "Web development for MLE"
-date: 2025-01-3 12:00:00 +0530
-categories: [personal, technology]
+date: 2025-02-10 12:00:00 +0530
+categories: [personal, technology, learning, webd]
 image: assets/cover_images/img5.webp
 ---
 
@@ -29,14 +29,13 @@ Build a web application that allows users to upload images and apply aesthetic s
 1. **Modern JavaScript & TypeScript**
    - [javascript.info](https://javascript.info/) - Comprehensive modern JavaScript tutorial
    - [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/) - In-depth TypeScript guide
-2. **React & Modern Web Development**
 
+2. **React & Modern Web Development**
    - [React Dev](https://react.dev/) - Official React documentation
    - [Josh Comeau's Blog](https://www.joshwcomeau.com/) - Modern React patterns and CSS
    - [Patterns.dev](https://www.patterns.dev/) - Modern web architecture patterns
 
 3. **WebGL & Shaders**
-
    - [WebGL Fundamentals](https://webglfundamentals.org/) - Essential WebGL concepts
    - [Book of Shaders](https://thebookofshaders.com/) - GLSL shader programming
 
