@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: "Web development for MLE"
-date: 2025-02-10 12:00:00 +0530
+date: 2025-02-9 12:00:00 +0530
 categories: [personal, technology, learning, webd]
 image: assets/cover_images/img5.webp
 ---
