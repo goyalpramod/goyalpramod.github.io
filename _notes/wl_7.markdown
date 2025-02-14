@@ -11,3 +11,7 @@ Day 4 ->
 - I have mostly messed up my daily notes, but not giving up. Back again 
 - Today I mostly spent in meetings
 - I started learning webd yEHHHHHHHHH, GONNA CRACK THIS SHIT TOO THEN I BE MAKING THEM PRETTY WEBSITES I ALWAYS WANTED 
+
+Day 5 ->
+
+- Today was day 2 of 15 days to learning web development
