@@ -255,6 +255,7 @@ Learning resource -> javascript.info
 
 > For null returns "object" – this is an error in the language, it’s not actually an object.
 
+
 ```typescript
 // Daily learning summary
 interface DayProgress {
@@ -265,4 +266,23 @@ interface DayProgress {
   solutions: string["1.Use alert inside a script"];
   nextSteps: string[];
 }
-``` -->
+```
+
+
+### Day 2
+
+**Continuing JS fundamentals**
+
+>  The difference is that AND returns the first falsy value while OR returns the first truthy one.
+- We can use labels to get out of nested for loops
+- you can append an input with `+` for type conversion 
+- The `nullish coalescing operator ??` is a boolean type check in js just for null/undefined 
+- Full summary of JS Fundamentals [here](https://javascript.info/javascript-specials)
+
+**Code quality**
+
+
+
+React 
+
+Started react from [here](https://react.dev/learn/tutorial-tic-tac-toe#setup-for-the-tutorial) -->
