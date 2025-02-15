@@ -285,4 +285,38 @@ interface DayProgress {
 
 React 
 
-Started react from [here](https://react.dev/learn/tutorial-tic-tac-toe#setup-for-the-tutorial) -->
+Started react from [here](https://react.dev/learn/tutorial-tic-tac-toe#setup-for-the-tutorial)
+
+## Day 3 
+
+**Objects**
+
+>Functions that are stored in object properties are called “methods”.
+>Methods allow objects to “act” like object.doSomething().
+>Methods can reference the object as this.
+>The value of this is defined at run-time.
+>
+>When a function is declared, it may use this, but that this has no value until the function is called.
+>A function can be copied between objects.
+>When a function is called in the “method” syntax: object.method(), the value of this during the call is object.
+>Please note that arrow functions are special: they have no this. When this is accessed inside an arrow function, it is taken from outside.
+
+- This is just like self in python. Mostly, new is a type of constructor.
+
+>The optional chaining ?. syntax has three forms:
+>
+>obj?.prop – returns obj.prop if obj exists, otherwise undefined.
+>obj?.[prop] – returns obj[prop] if obj exists, otherwise undefined.
+>obj.method?.() – calls obj.method() if obj.method exists, otherwise returns undefined.
+>As we can see, all of them are straightforward and simple to use. The ?. checks the left part for null/undefined and allows the evaluation to proceed if it’s not so.
+>
+>A chain of ?. allows to safely access nested properties.
+>
+>Still, we should apply ?. carefully, only where it’s acceptable, according to our code logic, that the left part doesn’t exist. So that it won’t hide programming errors from us, if they occur.
+>
+
+- Completed Objects: the basics
+- Starting with Data types
+
+**Data types**
+ -->
