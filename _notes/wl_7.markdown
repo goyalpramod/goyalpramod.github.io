@@ -16,3 +16,9 @@ Day 5 ->
 
 - Today was day 2 of 15 days to learning web development
 - I completed js fundamentals, looked up react, also studied transposed and 1x1 convolutions
+
+Day 6 -> 
+
+- I am almost done with the ai agents blog 
+- I also studied more about web development
+- Given spare time I learnt a bit more about CV 
