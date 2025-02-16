@@ -26,7 +26,7 @@ But if you are anything like me, you hate abstraction layers which add needless 
 
 First we would build the building blocks, Using which. We will build different AI agents for particular use cases (Nothing like one shoe fits all)
 
-If you would like an introduction to LLMs themselves, I will recommend the below two sources. 
+If you would like an introduction to LLMs themselves, I will recommend the below two sources.
 
 - [A hackers guide to language models by Jeremy Howard](https://www.youtube.com/watch?v=jkrNMKz9pWU)
 - [Intro to LLMs by Andrej Karpathy](https://www.youtube.com/watch?v=zjkBMFhNj_g)
@@ -92,17 +92,30 @@ If these are too hard to remember, just replace yourself with the agent you are 
 
 ## Models
 
-{insert images}
+![Image of super special artist](/assets/blog_assets/ai_agents/5.webp)
 
-Models or Large Language Models are our thinking machines, which take our prompts/instructions/guidance. Some tools and perform the action we want it to.
+> Image taken from Anthropic's [blog](https://www.anthropic.com/research/building-effective-agents) on Agents
+
+Large Language Models are our thinking machines, which take our prompts/instructions/guidance/tools and perform the action we want it to.
 
 You can think of the LLM as the CPU, doing all the thinking and performing all the actions based on tools available to it.
 
-{insert image of the karpathy talk}
+![Image of super special artist](/assets/blog_assets/ai_agents/1.webp)
+
+> Image taken from [Andrej's Intro to LLMs](https://www.youtube.com/watch?v=zjkBMFhNj_g) video
+
+For inference we have a plethora of options available to us
+
+from company hosted like [openai](), [anthropic](), [google]() etc
+to self hosted like [llama](), [qwen](), [deepseek]()
+
+You can use the one needed for your usecase, there are specialized models available in [HuggingFace]() as well like [SQL LLMs](), [code LLMs](), [Multi-lingual LLMs]()
+
+If you are going with an API provider, beside internal testing you can check the benchmarks of it's performance in [livebench]() & [llmanalysis]()
+
+For self-hosting there are multiple things to take care of like model size (this determines the kind of GPU you will be using), inference code {add more stuff}
 
 ## Tools
-
-{insert images}
 
 This has a needlessly complex name, tools are just functions.
 
@@ -110,15 +123,37 @@ Yep that's it, they are functions that we define the input & output to. These fu
 
 You can think of it as someone reading a users request, see the available functions to him, putting the values to it and giving it to the computer to compute it. It then takes the output computed and responds to the user.
 
-There are some best practices that need to be followed while creating functions for LLMs. They adhere to software development best practices like separation of concerns, principle of least principle, SOLID principles etc.
+There are some best practices that need to be followed while creating functions for LLMs. They adhere to software development best practices like [separation of concerns](), [principle of least principle](), [SOLID principles]() etc.
+
+This is a sample tool
+
+```python
+
+```
+
+In many libraries you will find them using `@tool` on top of functions. This is nothing but a python [decorator](). Let us create a simple one for ourselves
+
+```python
+
+```
 
 ## Memory
 
 There can be two kinds of in context, database memory
 
+Each model that we use comes with a context window (hopefuly in the future it becomes a thing of the past), that is the model is limited to etc
+
+To overcome this limitation you can store information in databases and retrieve them when required. {add more }
+
+There is a special kind of retrieval methodology known as RAG, lets talk more about it in the next section
+
 ## Retrieval Augmented Retrieval (RAG)
 
-No article on LLMs will be complete without talking about 
+No article on LLMs will be complete without talking about
+
+VectorDB
+Embedding models
+RAG methods, chunking, parsing etc
 
 ## Best Practices
 
@@ -141,11 +176,11 @@ https://huggingface.co/docs/smolagents/tutorials/building_good_agents
 
 ## Building an Agent
 
-{insert image of simple llm agent}
+![Image of super special artist](/assets/blog_assets/ai_agents/6.webp)
 
 We will start simple from setting up a simple LLM call that obeys a system prompt to a full blown multi-agent setup.
 
-The code here will be for educational purpose only, to see the whole code, visit this repo.
+The code here will be for educational purpose only, to see the whole code, visit this [repo](https://github.com/goyalpramod/paper_implementations/blob/main/AI_agents_from_first_principles.ipynb).
 
 ### LLM call
 
@@ -302,7 +337,7 @@ print(json.dumps(schema, indent=2))
 
 ```
 
-We can make the above function a bit more dummy proof for dumber models by modifying it as such 
+We can make the above function a bit more dummy proof for dumber models by modifying it as such
 
 ```python
 from typing import List, Union
@@ -339,7 +374,7 @@ def add_numbers(num_list: Union[List[int], str]) -> int:
     return sum(num_list)
 ```
 
-While we are at it, let's create an additional multiply_numbers tool too. 
+While we are at it, let's create an additional multiply_numbers tool too.
 
 ```python
 from typing import List, Union
@@ -438,7 +473,7 @@ for tool_call in response[0].tool_calls:
 # Assistant: add_numbers({'num_list': '[23,51,321]'})
 ```
 
-Now we would like our llms to take this response and send an output to the user. Let's do that. 
+Now we would like our llms to take this response and send an output to the user. Let's do that.
 
 ```python
 def run_agent(system_message, tools, messages):
@@ -535,7 +570,7 @@ while True:
 
 Let's first build a model (This is the pydantic model, I will be refering to these as models. And Large Language Models as LLMs)
 
-```python 
+```python
 class Agent(BaseModel):
     name: str = "Agent"
     llm: str = "gpt-4o-mini"
@@ -543,9 +578,9 @@ class Agent(BaseModel):
     tools: list = []
 ```
 
-Now we can modify the code we wrote earlier to use this model 
+Now we can modify the code we wrote earlier to use this model
 
-```python 
+```python
 def run_agent(agent, messages):
 
     num_init_messages = len(messages)
@@ -647,7 +682,9 @@ Great! But we did the handoff manually here – we want the agents themselves to
 """
 
 """
+
 ### Handoff Functions
+
 Now that agent can express the intent to make a handoff, we must make it actually happen. There's many ways to do this, but there's one particularly clean way.
 
 For the agent functions we've defined so far, like execute_refund or place_order they return a string, which will be provided to the model. What if instead, we return an Agent object to indicate which agent we want to transfer to? Like so:
@@ -726,7 +763,6 @@ def execute_tool_call(tool_call, tools, agent_name):
     return str(tools[name](**args))  # call corresponding function with provided arguments
 ```
 
-
 ## Popular Agentic systems
 
 The above is all the knowledge you require to build more complex agentic systems, let's explore a few of them. Solely using what we have learned so far.
@@ -735,17 +771,19 @@ Langgraph has a nice list of agentic systems in my opinion, you can check them o
 
 ### ReAct
 
-based on the original [ReAct paper](https://arxiv.org/abs/2210.03629)
+![Image of super special artist](/assets/blog_assets/ai_agents/4.webp)
 
-```python 
+> Image taken from the [ReAct paper](https://arxiv.org/abs/2210.03629)
+
+```python
 def add_numbers(a: float, b: float) -> float:
     """
     Add two numbers together.
-    
+
     Args:
         a: First number
         b: Second number
-        
+
     Returns:
         The sum of a and b
     """
@@ -754,11 +792,11 @@ def add_numbers(a: float, b: float) -> float:
 def subtract_numbers(a: float, b: float) -> float:
     """
     Subtract b from a.
-    
+
     Args:
         a: First number
         b: Second number
-        
+
     Returns:
         The result of a - b
     """
@@ -767,11 +805,11 @@ def subtract_numbers(a: float, b: float) -> float:
 def multiply_numbers(a: float, b: float) -> float:
     """
     Multiply two numbers together.
-    
+
     Args:
         a: First number
         b: Second number
-        
+
     Returns:
         The product of a and b
     """
@@ -780,14 +818,14 @@ def multiply_numbers(a: float, b: float) -> float:
 def divide_numbers(a: float, b: float) -> float:
     """
     Divide a by b.
-    
+
     Args:
         a: First number (dividend)
         b: Second number (divisor)
-        
+
     Returns:
         The result of a / b
-        
+
     Raises:
         ValueError: If b is zero
     """
@@ -836,24 +874,24 @@ messages = [{
 
 response = run_agent(react_agent, messages)
 
-# ReActMath: Thought: First, I need to calculate the sum of 23 and 7. Then I will multiply the result by 3, and finally, I will subtract 15 from that product. I'll break this down into steps for clarity. 
+# ReActMath: Thought: First, I need to calculate the sum of 23 and 7. Then I will multiply the result by 3, and finally, I will subtract 15 from that product. I'll break this down into steps for clarity.
 
-# Action: I will first add 23 and 7. 
+# Action: I will first add 23 and 7.
 # functions.add_numbers({ a: 23, b: 7 })
 
 # Observation: Let's perform the addition.
 # ReActMath: add_numbers({'a': 23, 'b': 7})
-# ReActMath: Thought: The sum of 23 and 7 is 30. Now, I will multiply this result by 3. 
+# ReActMath: Thought: The sum of 23 and 7 is 30. Now, I will multiply this result by 3.
 
-# Action: I will multiply 30 by 3. 
-# functions.multiply_numbers({ a: 30, b: 3 }) 
+# Action: I will multiply 30 by 3.
+# functions.multiply_numbers({ a: 30, b: 3 })
 
 # Observation: Let's perform the multiplication.
 # ReActMath: multiply_numbers({'a': 30, 'b': 3})
-# ReActMath: Thought: The product of 30 and 3 is 90. Now, I need to subtract 15 from this result. 
+# ReActMath: Thought: The product of 30 and 3 is 90. Now, I need to subtract 15 from this result.
 
-# Action: I will subtract 15 from 90. 
-# functions.subtract_numbers({ a: 90, b: 15 }) 
+# Action: I will subtract 15 from 90.
+# functions.subtract_numbers({ a: 90, b: 15 })
 
 # Observation: Let's perform the subtraction.
 # ReActMath: subtract_numbers({'a': 90, 'b': 15})
@@ -863,6 +901,10 @@ response = run_agent(react_agent, messages)
 ```
 
 ### Agentic RAG
+
+![Image of super special artist](/assets/blog_assets/ai_agents/3.webp)
+
+> Image taken from langgraph [docs](https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_agentic_rag/)
 
 ```python
 import requests
@@ -912,20 +954,20 @@ def search_context(query: str):
 def check_relevance(context: List[str]) -> bool:
     """
     Tool function to check if retrieved context is relevant using an LLM.
-    
+
     Args:
         context: List of context strings to evaluate
-        
+
     Returns:
         bool: True if context is relevant, False otherwise
     """
     if not context:
         return False
-        
-    system_message = """You are a relevance checking assistant. 
+
+    system_message = """You are a relevance checking assistant.
     Evaluate if the given context is relevant and substantial enough to answer questions.
     Return only 'true' or 'false'."""
-    
+
     prompt = f"""Evaluate if this context is relevant and substantial (contains meaningful information):
 
     Context: {context}
@@ -936,7 +978,7 @@ def check_relevance(context: List[str]) -> bool:
         content=prompt,
         system_message=system_message
     )
-    
+
     # Get the last message which contains the LLM's response
     result = messages[-1].content.lower().strip()
     return result == 'true'
@@ -944,30 +986,30 @@ def check_relevance(context: List[str]) -> bool:
 def rewrite_query(query: str, context: List[str]) -> str:
     """
     Tool function to rewrite a query based on context using an LLM.
-    
+
     Args:
         query: Original query to rewrite
         context: List of context strings to use for rewriting
-        
+
     Returns:
         str: Rewritten query incorporating context
     """
     system_message = """You are a query rewriting assistant.
     Your task is to rewrite the original query to incorporate relevant context.
     Maintain the original intent while making it more specific based on the context."""
-    
+
     prompt = f"""Original Query: {query}
 
 Available Context: {context}
 
-Rewrite the query to be more specific using the context. 
+Rewrite the query to be more specific using the context.
 Maintain the original intent but make it more precise."""
 
     messages = run_llm(
         content=prompt,
         system_message=system_message
     )
-    
+
     # Get the last message which contains the rewritten query
     return messages[-1].content.strip()
 
@@ -1000,7 +1042,7 @@ def run_rag_agent(agent, messages):
             messages=[{"role": "system", "content": agent.system_message}] + messages,
             tools=tool_schemas,
         )
-        
+
         # Get and append the assistant's message
         message = response.choices[0].message
         messages.append({
@@ -1018,7 +1060,7 @@ def run_rag_agent(agent, messages):
         # Handle tool calls
         for tool_call in message.tool_calls:
             result = execute_tool_call(tool_call, tools, agent.name)
-            
+
             messages.append({
                 "role": "tool",
                 "tool_call_id": tool_call.id,
@@ -1054,6 +1096,10 @@ while True:
 ```
 
 ### Supervisor + Workers
+
+![Image of super special artist](/assets/blog_assets/ai_agents/2.webp)
+
+> Image taken from langgraph [docs](https://langchain-ai.github.io/langgraph/tutorials/multi_agent/agent_supervisor/)
 
 ```python
 # Math Genius Tools
@@ -1181,12 +1227,12 @@ if __name__ == "__main__":
             if user_input.lower() in ['quit', 'exit', 'bye']:
                 print("Goodbye!")
                 break
-                
+
             messages.append({"role": "user", "content": user_input})
             response = run_full_turn(agent, messages)
             agent = response.agent
             messages.extend(response.messages)
-            
+
         except Exception as e:
             print(f"Error: {str(e)}")
             print("Resetting conversation...")
@@ -1201,10 +1247,9 @@ if __name__ == "__main__":
 - Cost
 - Self hosting & Inference
 - Streaming and UX notes
-- Security 
+- Security
 
 ## References
-
 
 - [OpenAI blog](https://cookbook.openai.com/examples/orchestrating_agents)
 - [Lil'log's blog on prompt engineering](https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/)
@@ -1214,6 +1259,4 @@ if __name__ == "__main__":
 - [HF blog on smolagents](https://huggingface.co/blog/smolagents)
 - Meme at top taken from [dilbert](https://www.reddit.com/r/ProgrammerHumor/comments/1dckq74/soundsfamiliar/)
 
-
-
-Here smolagents argue that using code rather than JSON is better, so let's try that out as well, so we come full circle.  -->
+Here smolagents argue that using code rather than JSON is better, so let's try that out as well, so we come full circle. -->
