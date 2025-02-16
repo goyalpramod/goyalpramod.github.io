@@ -3,7 +3,7 @@ layout: blog
 title: "AI Agents from First Principles"
 date: 2025-02-15 12:00:00 +0530
 categories: [ML, Agents, Code]
-image: assets\blog_assets\ai_agents\meme.webp
+image: assets/blog_assets/ai_agents/meme.webp
 ---
 
 If you exist  between the time period of late 2024 to 2027 (my prediction of when this tech will become saturated and stable), And do not live under a rock. You have heard of AI agents.
