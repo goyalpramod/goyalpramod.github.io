@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: blog
 title: "AI Agents from First Principles"
 date: 2025-02-15 12:00:00 +0530
@@ -6,9 +6,9 @@ categories: [ML, Agents, Code]
 image: assets\blog_assets\ai_agents\meme.webp
 ---
 
-If you exist between the time period of late 2024 to 2027 (my prediction of when this tech will become saturated and stable), And do not live under a rock. You have heard of AI agents.
+If you exist  between the time period of late 2024 to 2027 (my prediction of when this tech will become saturated and stable), And do not live under a rock. You have heard of AI agents.
 
-For the general layman an AI agent is basically a magic genie whom you tell a task and it just gets it done
+For the general layman an AI agent is basically a magic genie whom you tell a task and it just gets it done.
 
 > "Hey AI Agent (let's call her Aya) Book my tickets from Dubai to London"\
 > "Hey Aya, give me a summary of all the points discussed in the meeting and then implement everything suggested by Steve"\
@@ -88,7 +88,7 @@ Input:  <input>["hello", 42, "pizza", 2, 5]</input>
 Output: [42,2,5]
 ```
 
-If these are too hard to remember, just replace yourself with the agent you are trying to code and think are the instructions given to you simple and complete enough to help you complete the task, if not. Reiterate.
+If these are too hard to remember, just replace yourself with the agent and think, "are the given instructions, simple and complete enough to help you complete the task?", if not. Reiterate.
 
 ## Models
 
@@ -104,75 +104,487 @@ You can think of the LLM as the CPU, doing all the thinking and performing all t
 
 > Image taken from [Andrej's Intro to LLMs](https://www.youtube.com/watch?v=zjkBMFhNj_g) video
 
-For inference we have a plethora of options available to us
+For inference, your choice boils down to API providers or self-hosted models. This decision impacts your development speed, costs, and control over the model's behavior.
 
-from company hosted like [openai](), [anthropic](), [google]() etc
-to self hosted like [llama](), [qwen](), [deepseek]()
+**API providers** ([OpenAI](https://openai.com/), [Anthropic](https://www.anthropic.com/), [Google](https://gemini.google.com/?hl=en-IN)) handle the infrastructure and updates, giving you immediate access to state-of-the-art models. While this means *higher per-token costs* and less control, it lets you focus on building your application rather than managing infrastructure. Use these when rapid development and minimal maintenance overhead are priorities.
 
-You can use the one needed for your usecase, there are specialized models available in [HuggingFace]() as well like [SQL LLMs](), [code LLMs](), [Multi-lingual LLMs]()
+**Self-hosting** open-source models ([Llama](https://huggingface.co/meta-llama), [Qwen](https://huggingface.co/Qwen), [Deepseek](https://huggingface.co/deepseek-ai)) gives you complete control over inference and costs. The trade-off is managing infrastructure and optimization yourself. Your primary constraint here is model size - it directly determines your hardware requirements and inference speed. A 7B parameter model might run on a consumer GPU, but a 70B model needs serious hardware or optimization techniques like quantization and sharding.
 
-If you are going with an API provider, beside internal testing you can check the benchmarks of it's performance in [livebench]() & [llmanalysis]()
+For specific tasks, you might not need large general-purpose models. Specialized models from HuggingFace (for [SQL](https://huggingface.co/defog/llama-3-sqlcoder-8b), [code generation](https://huggingface.co/codellama/CodeLlama-34b-hf), or [multilingual](https://huggingface.co/CohereForAI/aya-101) tasks) often perform better while requiring fewer resources. Check benchmark platforms like [Livebench](https://livebench.ai/#/) and [LLMAnalysis](https://artificialanalysis.ai/leaderboards/models) for real-world performance metrics before deciding.
 
-For self-hosting there are multiple things to take care of like model size (this determines the kind of GPU you will be using), inference code {add more stuff}
+Self-hosting requires thinking about inference optimization and deployment. This includes quantization, continuous batching, and GPU memory management. Your deployment strategy needs to consider throughput requirements, scaling needs, and system reliability. Tools like [vLLM](https://github.com/vllm-project/vllm) can help manage these complexities, but you'll need to handle integration and maintenance.
 
 ## Tools
 
-This has a needlessly complex name, tools are just functions.
+This has a needlessly complex name - tools are just functions.
 
-Yep that's it, they are functions that we define the input & output to. These functions are then provided to an LLM as a schema, the model then inserts the inputs to these functions from the user query.
+Yes, that's it - they are functions with defined inputs and outputs. These functions are provided to an LLM as a schema, and the model extracts input values from user queries to call these functions.
 
-You can think of it as someone reading a users request, see the available functions to him, putting the values to it and giving it to the computer to compute it. It then takes the output computed and responds to the user.
+Think of it as someone reading a user's request, identifying available functions, extracting the right values, and passing them to compute. The model then takes the computed output and formulates a response.
 
-There are some best practices that need to be followed while creating functions for LLMs. They adhere to software development best practices like [separation of concerns](), [principle of least principle](), [SOLID principles]() etc.
+Creating functions for LLMs should follow software development best practices like [Separation of Concerns](https://en.wikipedia.org/wiki/Separation_of_concerns), [Principle of least astonishment](https://en.wikipedia.org/wiki/Principle_of_least_astonishment#:~:text=In%20user%20interface%20design%20and,not%20astonish%20or%20surprise%20users.), and [SOLID principles](https://en.wikipedia.org/wiki/SOLID).
 
-This is a sample tool
-
-```python
-
-```
-
-In many libraries you will find them using `@tool` on top of functions. This is nothing but a python [decorator](). Let us create a simple one for ourselves
+Here's a sample tool:
 
 ```python
-
+def get_weather(city: str, date: str = None) -> dict:
+    """
+    Gets weather information for a specific city and date.
+    
+    Args:
+        city: Name of the city
+        date: Date in YYYY-MM-DD format, defaults to today
+    
+    Returns:
+        dict: Weather information including temperature and conditions
+    """
+    # Implementation here
+    return {
+        "temperature": 25,
+        "conditions": "sunny",
+        "humidity": 60
+    }
 ```
+
+In many libraries you will find them using `@tool` on top of functions. This is just a Python [decorator](https://realpython.com/primer-on-python-decorators/) that adds metadata. Let's create a simple one:
+
+```python
+from functools import wraps
+from typing import Callable, Dict
+import inspect
+
+def tool(func: Callable) -> Callable:
+    """
+    Decorator that converts a function into an LLM tool by adding metadata.
+    
+    Args:
+        func: Function to convert into a tool
+        
+    Returns:
+        Callable: Decorated function with metadata
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    
+    # Add function metadata
+    wrapper.is_tool = True
+    wrapper.description = func.__doc__
+    wrapper.parameters = inspect.signature(func).parameters
+    
+    return wrapper
+
+# Usage example
+@tool
+def calculate_area(length: float, width: float) -> float:
+    """Calculate area of a rectangle."""
+    return length * width
+
+# Let's see what the decorator added
+print("Is tool:", calculate_area.is_tool) # Is tool: True
+print("Description:", calculate_area.description) # Description: Calculate area of a rectangle.
+print("Parameters:", calculate_area.parameters) # Parameters: <Signature (length: float, width: float) -> float>
+print("Result:", calculate_area(5, 3)) # result: 15
+```
+
+The decorator doesn't modify how the function works - it simply passes through all calls to the original function while adding extra attributes. These attributes (is_tool, description, parameters) help the LLM understand:
+
+- That this function is available as a tool
+- What the function does (from the docstring)
+- What parameters it expects (from the signature)
+
+This metadata is then used to create the function schema that we send to the LLM.
 
 ## Memory
 
-There can be two kinds of in context, database memory
+Memory in LLM agents can be handled in two ways - through context window or external databases.
 
-Each model that we use comes with a context window (hopefuly in the future it becomes a thing of the past), that is the model is limited to etc
+The context window is the model's working memory - it's what the model can "see" during a conversation. Each model has a fixed context window (Claude has 200k tokens, GPT-4 has 128k tokens). This limits how much information the model can process in one go. Think of this as the model's short-term memory.
 
-To overcome this limitation you can store information in databases and retrieve them when required. {add more }
+For long-term memory, we use databases. This could be as simple as storing conversation history in a SQL database or as complex as storing embeddings in a vector database. The key is to retrieve only relevant information when needed, rather than trying to stuff everything into the context window.
 
-There is a special kind of retrieval methodology known as RAG, lets talk more about it in the next section
+Here's a basic example of implementing memory:
 
-## Retrieval Augmented Retrieval (RAG)
+```python
+class AgentMemory:
+    def __init__(self):
+        """Initialize memory storage"""
+        self.conversations = []  # Short-term memory
+        self.db = Database()    # Long-term memory
+    
+    def add_to_memory(self, message: str, role: str):
+        """Add a new message to memory"""
+        # Keep last N messages in context
+        self.conversations.append({
+            "role": role,
+            "content": message,
+            "timestamp": datetime.now()
+        })
+        
+        # Store in long-term memory
+        self.db.store(message, role)
+    
+    def get_relevant_context(self, query: str) -> List[str]:
+        """Retrieve relevant information from long-term memory"""
+        return self.db.search(query)
 
-No article on LLMs will be complete without talking about
+    def get_context_window(self) -> List[dict]:
+        """Get recent conversations for context window"""
+        return self.conversations[-10:]  # Last 10 messages
+```
 
-VectorDB
-Embedding models
-RAG methods, chunking, parsing etc
+Memory becomes crucial when your agent needs to:
 
-## Best Practices
+- Remember past conversations
+- Learn from previous interactions
+- Maintain consistent context over long sessions
+- Access knowledge that won't fit in the context window
 
-The best practices for building an agent is the same as the best practices for building any ML application
+The effectiveness of memory often depends on your retrieval strategy. Simple memory might just load the last few messages, while advanced implementations might use embedding-based similarity search to find relevant past interactions. Which is popularly known as RAG, lets talk about that next.
 
-- Have clear evaluation criteria sets
-- Start simple
-- Only add complexity when and if required
-- Minimize LLM calls wherever possible
+## Retrieval Augmented Generation (RAG)
 
-"""
-The main guideline is: Reduce the number of LLM calls as much as you can.
+RAG improves LLM responses by providing relevant context from your data. Unlike fine-tuning, RAG lets you update your knowledge base without retraining the model. Let's break down the key components.
 
-This leads to a few takeaways:
+### Embedding Models
 
-Whenever possible, group 2 tools in one, like in our example of the two APIs.
-Whenever possible, logic should be based on deterministic functions rather than agentic decisions.
-"""
-https://huggingface.co/docs/smolagents/tutorials/building_good_agents
+Embedding models are neural networks that convert text into numerical vectors - imagine converting a sentence into a list of numbers while preserving its meaning. These vectors allow us to measure semantic similarity between texts using mathematical operations like cosine similarity.
+
+Some examples are:
+- [BGE](https://huggingface.co/BAAI/bge-large-en-v1.5)
+- [OpenAI Embeddings](https://platform.openai.com/docs/guides/embeddings)
+- [Jina embeddings](https://huggingface.co/jinaai/jina-embeddings-v2-base-en)
+
+You can compare the latest best embedding model by going to the [mteb leaderboard](https://huggingface.co/spaces/mteb/leaderboard).
+
+### Vector Databases
+
+Vector databases are specialized databases that efficiently store and search through embeddings using algorithms like Approximate Nearest Neighbors (ANN). They solve the problem of finding similar vectors in high-dimensional spaces quickly.
+
+Popular options with their strengths:
+- [Qdrant](https://qdrant.tech/): Rust-based, excellent for production deployments
+- [Weaviate](https://weaviate.io/): GraphQL-native, good for multi-modal data
+- [Pinecone](https://www.pinecone.io/): Fully managed, automatic scaling
+- [Chroma](https://www.trychroma.com/): Python-native, perfect for development
+- [Milvus](https://milvus.io/): Cloud-native, handles billions of vectors
+
+Here's a basic RAG implementation:
+
+```python
+from sentence_transformers import SentenceTransformer
+from qdrant_client import QdrantClient
+from typing import List, Dict
+
+class RAGSystem:
+    def __init__(self):
+        # Initialize embedding model
+        self.embedder = SentenceTransformer('BAAI/bge-large-en-v1.5')
+        
+        # Initialize vector store
+        self.qdrant = QdrantClient("localhost", port=6333)
+        
+    def add_documents(self, documents: List[str]):
+        # Create embeddings
+        embeddings = self.embedder.encode(documents)
+        
+        # Store in vector DB
+        self.qdrant.upload_collection(
+            collection_name="knowledge_base",
+            vectors=embeddings,
+            payload=documents
+        )
+    
+    def retrieve(self, query: str, k: int = 3) -> List[str]:
+        # Get query embedding
+        query_embedding = self.embedder.encode(query)
+        
+        # Search similar documents
+        results = self.qdrant.search(
+            collection_name="knowledge_base",
+            query_vector=query_embedding,
+            limit=k
+        )
+        return [hit.payload for hit in results]
+```
+
+### Document Processing
+
+Before embedding, documents need processing. Here are the key steps with implementations:
+
+```python
+def chunk_text(text: str, chunk_size: int = 500):
+    """
+    Split text into smaller chunks while preserving sentence boundaries
+    """
+    sentences = text.split('. ')
+    chunks = []
+    current_chunk = []
+    current_length = 0
+    
+    for sentence in sentences:
+        if current_length + len(sentence) > chunk_size:
+            chunks.append(' '.join(current_chunk))
+            current_chunk = [sentence]
+            current_length = len(sentence)
+        else:
+            current_chunk.append(sentence)
+            current_length += len(sentence)
+            
+    return chunks
+
+def clean_text(text: str) -> str:
+    """
+    Standardize text format and remove noise
+    """
+    # Remove extra whitespace
+    text = ' '.join(text.split())
+    # Remove special characters
+    text = re.sub(r'[^\w\s.,!?]', '', text)
+    return text
+```
+
+### RAG Strategies/Optimization/Evaluation
+
+Different RAG approaches for different needs:
+
+**Basic RAG**: Single retrieval-injection cycle
+
+- Best for: Simple queries, quick implementation
+- Limitation: Context window size
+
+
+**Iterative RAG**: Multiple retrieval rounds
+
+- Best for: Complex queries, follow-up questions
+- Limitation: Higher latency, more expensive
+
+
+**Hybrid RAG**: Combined search methods
+
+- Best for: Large diverse datasets
+- Limitation: Complex implementation
+
+
+**Re-ranker RAG**: Two-stage retrieval
+
+- Best for: High accuracy requirements
+- Limitation: Higher compute costs
+
+
+
+**Performance Optimization**
+Critical optimizations for production:
+
+- Caching: Store frequent query results
+- Batching: Process embeddings in groups
+- Filtering: Use metadata before semantic search
+- Index Optimization: Implement HNSW algorithms
+- Query Preprocessing: Rewrite queries for better retrieval
+
+**Evaluation Metrics**
+Monitor these metrics for RAG performance:
+
+- Retrieval Precision: Relevance of retrieved contexts
+- Answer Correctness: Accuracy of generated responses
+- Latency: Response time per query
+- Cost: Tokens used per response
+
+Consider checking out [trulens](https://www.trulens.org/) and [DeepEval](https://github.com/confident-ai/deepeval).
+
+**Common failure patterns:**
+
+- Hallucination from irrelevant context
+- Missing key information due to poor chunking
+- High latency from inefficient retrieval
+
+We can dive deeper into each of these topics, I will recommend the following two blogs [Pinecone engineering blogs](https://www.pinecone.io/blog/) & [Qdrant engineering blogs](https://qdrant.tech/blog/)
+
+## Best Practices for AI Agents
+
+Building AI agents follows the same engineering principles as any ML system, but with some unique considerations. Let's break down the key practices.
+
+### Core Guidelines
+
+Your agent's complexity should match your needs, not the other way around. Start with a simple system that barely works, then iterate based on actual bottlenecks. The most common mistake is over-engineering before understanding the real requirements.
+
+The most critical metric is LLM calls - they impact both latency and costs. As pointed out in the [smolagents guide](https://huggingface.co/docs/smolagents/tutorials/building_good_agents), minimize LLM calls by:
+
+- Combining related tools into single functions
+- Using deterministic logic over LLM-based decisions
+- Caching responses for similar queries
+
+Here's how this looks in practice:
+
+```python
+# Bad: Multiple LLM calls
+def process_order(order_details):
+    # First LLM call to validate
+    validated = llm.validate(order_details)
+    if not validated:
+        return "Invalid order"
+        
+    # Second LLM call to format
+    formatted = llm.format(order_details)
+    
+    # Third LLM call to process
+    return llm.process(formatted)
+
+# Good: Single LLM call
+def process_order(order_details):
+    # Validate with regular code
+    if not is_valid_order(order_details):
+        return "Invalid order"
+        
+    # Format with template
+    formatted = ORDER_TEMPLATE.format(**order_details)
+    
+    # Single LLM call
+    return llm.process(formatted)
+```
+
+### Evaluation Framework
+
+Set up clear metrics before building:
+
+1. Task Success Rate: Can your agent complete the assigned tasks?
+2. Response Quality: Are the responses accurate and relevant?
+3. Operational Metrics: Latency, cost per request, error rates
+4. Safety Metrics: Rate of harmful or inappropriate responses
+
+### Development Workflow
+
+**Start Simple**
+
+- Build a basic agent that handles the core task
+- Use minimal tools and straightforward prompts
+- Test with real scenarios, not just ideal cases
+
+**Measure Everything**
+
+- Log all interactions and their outcomes
+- Track token usage and response times
+- Monitor error patterns and edge cases
+
+HuggingFace has a nice [blog](https://huggingface.co/docs/smolagents/en/tutorials/inspect_runs) on using OpenTelemetry for inspecting runs.
+
+**Iterate Intelligently**
+
+- Add complexity only when metrics show need
+- A/B test prompt changes and tool additions
+- Document why each feature was added
+
+**Optimize Systematically**
+
+- Cache frequent queries and their results
+- Batch similar operations when possible
+- Use cheaper models for simpler tasks
+
+### Common Pitfalls
+
+**Over-relying on LLMs**
+
+Instead of:
+```python
+def validate_email(email):
+    response = llm.call("Is this a valid email: " + email)
+    return "valid" in response.lower()
+```
+
+Do this:
+```python
+import re
+
+def validate_email(email):
+    pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+    return bool(re.match(pattern, email))
+```
+
+**Prompt Bloat**
+
+Bad:
+```python
+system_message = """You are an AI assistant that helps with tasks.
+You should be helpful, concise, and clear.
+Always format responses properly.
+Remember to be polite.
+Double check your answers.
+Consider edge cases.
+...50 more lines of instructions..."""
+```
+
+Good:
+```python
+system_message = """You are a task-focused AI assistant.
+Format: Generate concise, actionable responses.
+Priority: Accuracy and clarity."""
+```
+
+**Tool Proliferation**
+
+Instead of:
+```python
+tools = [
+    fetch_weather,
+    fetch_temperature,
+    fetch_humidity,
+    fetch_wind_speed,
+    fetch_precipitation
+]
+```
+
+Do this:
+```python
+tools = [
+    fetch_weather_data  # Returns complete weather info in one call
+]
+```
+
+**Testing Framework**
+
+```python
+class AgentTester:
+    def __init__(self, agent):
+        self.agent = agent
+        self.metrics = {
+            'success_rate': 0,
+            'response_time': [],
+            'token_usage': [],
+            'error_rate': 0
+        }
+    
+    def test_case(self, input_query, expected_output):
+        start_time = time.time()
+        try:
+            response = self.agent.run(input_query)
+            success = self.validate_response(response, expected_output)
+            self.metrics['success_rate'] += success
+            
+        except Exception as e:
+            self.metrics['error_rate'] += 1
+            
+        self.metrics['response_time'].append(time.time() - start_time)
+        
+    def validate_response(self, response, expected):
+        # Implement validation logic
+        pass
+        
+    def get_metrics_report(self):
+        return {
+            'avg_response_time': np.mean(self.metrics['response_time']),
+            'success_rate': self.metrics['success_rate'],
+            'error_rate': self.metrics['error_rate']
+        }
+```
+
+Anthropic has a nice [cookbook](https://github.com/anthropics/anthropic-cookbook/blob/main/patterns/agents/evaluator_optimizer.ipynb) on creating a testing framework.
+
+### Key Takeaways
+
+- **Minimize LLM Usage**: Each call costs time and money
+- **Start Simple**: Add complexity only when needed
+- **Measure Everything**: You can't improve what you don't measure
+- **Test Thoroughly**: Include edge cases and error scenarios
+- **Document Decisions**: Keep track of why each feature exists
 
 ## Building an Agent
 
@@ -182,46 +594,46 @@ We will start simple from setting up a simple LLM call that obeys a system promp
 
 The code here will be for educational purpose only, to see the whole code, visit this [repo](https://github.com/goyalpramod/paper_implementations/blob/main/AI_agents_from_first_principles.ipynb).
 
+The code in this section of the blog was heavily inspired from [OpenAI Cookbook](https://cookbook.openai.com/examples/orchestrating_agents)
+
 ### LLM call
 
 ```python
-def run_llm(content:str = None, messages:Optional[List[str]] = [], tool_schemas:Optional[List[str]] = [], system_message : str = "You are a helpful assistant."):
-  completion = client.chat.completions.create(
-    model="gpt-4o-mini",
-    messages=[
-        {"role": "system", "content": system_message},
-        {"role": "user","content": content,}]
-        + messages,
-    tools = tool_schemas,
-    ),
-    temperature = 0,
+def run_llm(content: str = None, messages: Optional[List[str]] = [], tool_schemas: Optional[List[str]] = [], system_message: str = "You are a helpful assistant."):
+    # Build base request parameters
+    request_params = {
+        "model": "gpt-4o-mini",
+        "messages": [
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": content}
+        ] + messages
+    }
 
+    # Only add tools parameter if tool_schemas is provided and non-empty
+    if tool_schemas:
+        request_params["tools"] = tool_schemas
 
-  response = completion.choices[0].message
-  messages.append(response)
+    # Make the API call with conditional parameters
+    completion = client.chat.completions.create(**request_params)
 
-  return messages
+    response = completion.choices[0].message
+    messages.append(response)
+
+    return messages
 ```
 
 I chose OpenAI as I had some credits lying around, you can do similar thing with any other api provider.
 
-Here there are 3 arguments\
+Here there are 4 arguments
 
 > content -> The user query/input.\
 > system_message -> What do you want the LLM to do.\
-> messages -> Past messages/conversation.
-> tools ->
-> temperature
+> messages -> Past messages/conversation.\
+> tool_schemas -> The structure of the tools
 
 Let's give it the same prompt that we made earlier and see how it works.
 
 ```python
-def none_tool():
-    """
-    does nothing
-    """
-    pass
-
 run_llm(
     content = """["apple", "pie", 42, 2, 13]""",
     system_message = """
@@ -231,8 +643,7 @@ run_llm(
 
     Input:  <input>["hello", 42, "pizza", 2, 5]</input>
     Output: [42,2,5]
-    """,
-    tools = [none_tool]
+    """
 )
 
 # [ChatCompletionMessage(content='[42, 2, 13]', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None)]
@@ -247,7 +658,6 @@ I mentioned earlier that Tools are nothing but functions, and these functions ar
 Let's create a utility function that takes another function and creates it's schema
 
 ```python
-
 def function_to_schema(func) -> dict:
     type_map = {
         str: "string",
@@ -298,9 +708,9 @@ def function_to_schema(func) -> dict:
 
 \_\_name\_\_ is a dunder/magic function, if you have never heard of them, read more about them [here](https://realpython.com/python-magic-methods/).
 
-A function that takes another function can be simplified using a decorator. That is what one usually sees in most libraries/framework "@tool".
+A function that takes another function can be simplified using a decorator. That is what one usually sees in most libraries/framework "@tool". Which is what we talked about in the beginning.
 
-Now let's create a Sum tool.
+Now let's create a sum tool.
 
 ```python
 def add_numbers(num_list:List[int]):
@@ -337,7 +747,7 @@ print(json.dumps(schema, indent=2))
 
 ```
 
-We can make the above function a bit more dummy proof for dumber models by modifying it as such
+We can make the above function a bit more dummy proof for dumber models by modifying it as such:
 
 ```python
 from typing import List, Union
@@ -568,7 +978,7 @@ while True:
 
 ### Agent(LLM call + Tools + Pydantic Model)
 
-Let's first build a model (This is the pydantic model, I will be refering to these as models. And Large Language Models as LLMs)
+Let's first build a model (This is the pydantic model, I will be referring to these as models. And Large Language Models as LLMs)
 
 ```python
 class Agent(BaseModel):
@@ -677,31 +1087,16 @@ response = run_agent(calculator_multiply, messages)  # Multiplication calculator
 # Assistant: The product of the numbers extracted from the input is 100.
 ```
 
-"""
-Great! But we did the handoff manually here – we want the agents themselves to decide when to perform a handoff. A simple, but surprisingly effective way to do this is by giving them a transfer_to_XXX function, where XXX is some agent. The model is smart enough to know to call this function when it makes sense to make a handoff!
-"""
+When building multi-agent systems, we want seamless transitions between agents based on the task requirements. The naive approach would be manual handoffs, but we can make this smarter.
 
-"""
+Instead of manually switching agents, we can create a handoff mechanism where agents decide themselves when to transfer control. Let's build this:
 
-### Handoff Functions
-
-Now that agent can express the intent to make a handoff, we must make it actually happen. There's many ways to do this, but there's one particularly clean way.
-
-For the agent functions we've defined so far, like execute_refund or place_order they return a string, which will be provided to the model. What if instead, we return an Agent object to indicate which agent we want to transfer to? Like so:
-"""
-"""
-We can then update our code to check the return type of a function response, and if it's an Agent, update the agent in use! Additionally, now run_full_turn will need to return the latest agent in use in case there are handoffs. (We can do this in a Response class to keep things neat.)
-"""
 
 ```python
 class Response(BaseModel):
     agent: Optional[Agent]
     messages: list
 ```
-
-"""
-Now for the updated run_full_turn:
-"""
 
 ```python
 def run_agent(agent, messages):
@@ -1240,23 +1635,32 @@ if __name__ == "__main__":
             agent = supervisor_agent
 ```
 
-## Important notes
+## Conclusion
 
-- Evaluation
-- Tracing & logging
-- Cost
-- Self hosting & Inference
-- Streaming and UX notes
-- Security
+Now you have all the knowledge required to build complex agentic workflows using pure python. 
+
+Mind you, frameworks like langchain are still extremely useful (I use them in my day job daily) but you still need to understand the underlying idea and technology behind what you are doing.
+
+There are many things that we have not discussed like token usage optimization, error recovery strategies, Security best practices etc. I hope the reader can explore about them using the links provided in references.
+
+Hope you had fun reading this. Thank you!!
+
+Cheers :)
+
+## Ways to help out
+
+- **Share**: Consider clicking on any of the links below to share this blog, It reaches more people and they get to learn something new. Which make's me happy :), also. Consider tagging me from my socials.
+- **Translate**: This blog is written in english, but there are a lot of people who do not speak english. I will be really glad if you are willing to translate this work in the language you prefer. (Consider raising a PR and I will attach your translation at the top)
+- **Corrections & Feedback**: I am human, and I too can err. If you find I have made any mistakes, again feel free to raise a PR. Or contact me through my socials.
+
 
 ## References
 
 - [OpenAI blog](https://cookbook.openai.com/examples/orchestrating_agents)
 - [Lil'log's blog on prompt engineering](https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/)
 - [Anthropic's blog on building effective agents](https://www.anthropic.com/research/building-effective-agents)
+- [Chip's Blog on Agents](https://huyenchip.com/2025/01/07/agents.html)
 - [Core code for Swarm](https://github.com/openai/swarm/blob/main/swarm/core.py)
 - [HF docs on building agents](https://huggingface.co/docs/smolagents/tutorials/building_good_agents)
 - [HF blog on smolagents](https://huggingface.co/blog/smolagents)
 - Meme at top taken from [dilbert](https://www.reddit.com/r/ProgrammerHumor/comments/1dckq74/soundsfamiliar/)
-
-Here smolagents argue that using code rather than JSON is better, so let's try that out as well, so we come full circle. -->
