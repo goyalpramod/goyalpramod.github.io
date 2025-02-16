@@ -735,6 +735,8 @@ Langgraph has a nice list of agentic systems in my opinion, you can check them o
 
 ### ReAct
 
+based on the original [ReAct paper](https://arxiv.org/abs/2210.03629)
+
 ```python 
 def add_numbers(a: float, b: float) -> float:
     """
@@ -885,7 +887,7 @@ class DocumentStore:
         if content:
             paragraphs = content.find_all('p')
             self.documents = [p.text for p in paragraphs if len(p.text.split()) > 20]
-            
+
         embeddings = self.embedder.encode(self.documents)
         self.index = faiss.IndexFlatL2(self.dimension)
         self.index.add(np.array(embeddings).astype('float32'))
@@ -908,13 +910,66 @@ def search_context(query: str):
     return doc_store.search(query)
 
 def check_relevance(context: List[str]) -> bool:
-    """Tool function to check if retrieved context is relevant"""
-    # Basic relevance check - can be improved
-    return len(context) > 0 and any(len(doc.split()) > 20 for doc in context)
+    """
+    Tool function to check if retrieved context is relevant using an LLM.
+    
+    Args:
+        context: List of context strings to evaluate
+        
+    Returns:
+        bool: True if context is relevant, False otherwise
+    """
+    if not context:
+        return False
+        
+    system_message = """You are a relevance checking assistant. 
+    Evaluate if the given context is relevant and substantial enough to answer questions.
+    Return only 'true' or 'false'."""
+    
+    prompt = f"""Evaluate if this context is relevant and substantial (contains meaningful information):
 
-def rewrite_query(query: str, context: List[str]):
-    """Tool function to rewrite query based on context"""
-    return f"Based on the following context: {context[:1]}, answer: {query}"
+    Context: {context}
+
+    Return only 'true' or 'false'."""
+
+    messages = run_llm(
+        content=prompt,
+        system_message=system_message
+    )
+    
+    # Get the last message which contains the LLM's response
+    result = messages[-1].content.lower().strip()
+    return result == 'true'
+
+def rewrite_query(query: str, context: List[str]) -> str:
+    """
+    Tool function to rewrite a query based on context using an LLM.
+    
+    Args:
+        query: Original query to rewrite
+        context: List of context strings to use for rewriting
+        
+    Returns:
+        str: Rewritten query incorporating context
+    """
+    system_message = """You are a query rewriting assistant.
+    Your task is to rewrite the original query to incorporate relevant context.
+    Maintain the original intent while making it more specific based on the context."""
+    
+    prompt = f"""Original Query: {query}
+
+Available Context: {context}
+
+Rewrite the query to be more specific using the context. 
+Maintain the original intent but make it more precise."""
+
+    messages = run_llm(
+        content=prompt,
+        system_message=system_message
+    )
+    
+    # Get the last message which contains the rewritten query
+    return messages[-1].content.strip()
 
 rag_agent = Agent(
     name="RAG Agent",
@@ -924,10 +979,10 @@ rag_agent = Agent(
     3. Check the relevance of retrieved documents
     4. Either rewrite the query or generate an answer
     5. Always cite your sources from the context
-    
+
     Be explicit about each step you're taking.""",
     tools=[retrieve_documents, search_context, check_relevance, rewrite_query],
-    model="gpt-3.5-turbo"
+    llm="gpt-4o-mini"
 )
 
 def run_rag_agent(agent, messages):
@@ -935,36 +990,39 @@ def run_rag_agent(agent, messages):
     messages = messages.copy()
 
     while True:
-        # Convert to string messages
-        formatted_messages = [{
-            "role": msg["role"],
-            "content": str(msg["content"]) if msg.get("content") is not None else None
-        } for msg in ([{"role": "system", "content": agent.system_message}] + messages)]
+        # Get tool schemas and tool map
+        tool_schemas = [function_to_schema(tool) for tool in agent.tools]
+        tools = {tool.__name__: tool for tool in agent.tools}
 
-        # Get completion
+        # Make API call with system message and history
         response = client.chat.completions.create(
-            model=agent.model,
-            messages=formatted_messages,
-            tools=[function_to_schema(tool) for tool in agent.tools],
+            model=agent.llm,
+            messages=[{"role": "system", "content": agent.system_message}] + messages,
+            tools=tool_schemas,
         )
+        
+        # Get and append the assistant's message
         message = response.choices[0].message
-        messages.append(message)
+        messages.append({
+            "role": "assistant",
+            "content": message.content,
+            "tool_calls": message.tool_calls if hasattr(message, "tool_calls") else None
+        })
 
         if message.content:
             print(f"{agent.name}:", message.content)
 
-        if not message.tool_calls:
+        if not hasattr(message, "tool_calls") or not message.tool_calls:
             break
 
-        # Handle tool calls according to workflow
+        # Handle tool calls
         for tool_call in message.tool_calls:
-            result = execute_tool_call(tool_call, {tool.__name__: tool for tool in agent.tools}, agent.name)
+            result = execute_tool_call(tool_call, tools, agent.name)
             
-            # Add tool result to messages
             messages.append({
                 "role": "tool",
                 "tool_call_id": tool_call.id,
-                "content": str(result)
+                "content": str(result),
             })
 
     return messages[num_init_messages:]
@@ -975,7 +1033,7 @@ messages = []
 # First, index a document
 url = "https://en.wikipedia.org/wiki/Alan_Turing"
 messages.append({
-    "role": "user", 
+    "role": "user",
     "content": f"Please retrieve and index this document: {url}"
 })
 
@@ -983,155 +1041,157 @@ while True:
     try:
         response = run_rag_agent(rag_agent, messages)
         messages.extend(response)
-        
+
         user_input = input("\nUser (type 'quit' to exit): ")
         if user_input.lower() == 'quit':
             break
-            
+
         messages.append({"role": "user", "content": user_input})
-        
+
     except Exception as e:
         print(f"Error occurred: {e}")
+        break
 ```
 
 ### Supervisor + Workers
 
 ```python
-from typing import List, Union
-import ast
+# Math Genius Tools
+def solve_equation(equation: str) -> str:
+    """
+    Solves mathematical equations.
+    Args:
+        equation: str - A mathematical equation to solve
+            e.g. "2x + 5 = 13" or "integrate(x^2)"
+    Returns:
+        str: The solution to the equation
+    """
+    # In a real implementation, this would use a math solving library
+    return f"Solution for equation: {equation}"
 
-def add_numbers(num_list: Union[List[int], str]) -> int:
-    """Function for adding numbers (using our previous implementation)"""
-    if isinstance(num_list, str):
+def perform_statistics(data: str) -> str:
+    """
+    Performs statistical analysis on given data.
+    Args:
+        data: str - Data in format "[1,2,3,4]" or "1,2,3,4"
+    Returns:
+        str: Statistical analysis including mean, median, mode, std dev
+    """
+    # In a real implementation, this would use numpy/pandas
+    return f"Statistical analysis of: {data}"
+
+# Code Writer Tools
+def generate_code(specification: str, language: str) -> str:
+    """
+    Generates code based on specifications.
+    Args:
+        specification: str - Description of what the code should do
+        language: str - Programming language to use
+    Returns:
+        str: Generated code
+    """
+    return f"Generated {language} code for: {specification}"
+
+def review_code(code: str) -> str:
+    """
+    Reviews code for best practices and potential issues.
+    Args:
+        code: str - Code to review
+    Returns:
+        str: Code review comments
+    """
+    return f"Code review for: {code}"
+
+def transfer_to_math_genius():
+    """Transfer to math genius agent for complex calculations."""
+    return math_genius_agent
+
+def transfer_to_code_writer():
+    """Transfer to code writer agent for programming tasks."""
+    return code_writer_agent
+
+def transfer_to_supervisor():
+    """Transfer back to supervisor agent."""
+    return supervisor_agent
+
+# Agent Definitions
+math_genius_agent = Agent(
+    name="Math Genius",
+    llm="gpt-4o",
+    system_message=(
+        "You are a mathematical genius capable of solving complex equations "
+        "and performing advanced statistical analysis. Always show your work "
+        "step by step. If a task is outside your mathematical expertise, "
+        "transfer back to the supervisor."
+    ),
+    tools=[solve_equation, perform_statistics, transfer_to_supervisor]
+)
+
+code_writer_agent = Agent(
+    name="Code Writer",
+    llm="gpt-4o",
+    system_message=(
+        "You are an expert programmer capable of writing efficient, clean code "
+        "and providing detailed code reviews. Always explain your code and "
+        "include comments. If a task is outside your programming expertise, "
+        "transfer back to the supervisor."
+    ),
+    tools=[generate_code, review_code, transfer_to_supervisor]
+)
+
+supervisor_agent = Agent(
+    name="Supervisor",
+    llm="gpt-4o",
+    system_message=(
+        "You are a supervisor agent responsible for delegating tasks to specialized agents. "
+        "For mathematical problems, delegate to the Math Genius. "
+        "For programming tasks, delegate to the Code Writer. "
+        "Ensure all responses are complete and coordinate between agents when needed."
+    ),
+    tools=[transfer_to_math_genius, transfer_to_code_writer]
+)
+
+# Example usage
+def process_request(user_input: str):
+    """
+    Process user request through the multi-agent system.
+    Args:
+        user_input: str - User's question or request
+    Returns:
+        List of messages containing the conversation
+    """
+    messages = [{"role": "user", "content": user_input}]
+    response = run_full_turn(supervisor_agent, messages)
+    return response.messages
+
+# Interactive testing loop
+if __name__ == "__main__":
+    print("Welcome to the Multi-Agent System!")
+    print("You can interact with a supervisor who will delegate to either:")
+    print("1. Math Genius - for mathematical problems")
+    print("2. Code Writer - for programming tasks")
+    print("Type 'exit', 'quit', or 'bye' to end the conversation\n")
+
+    agent = supervisor_agent
+    messages = []
+
+    while True:
         try:
-            cleaned_str = num_list.strip()
-            if cleaned_str.startswith('[') and cleaned_str.endswith(']'):
-                items = cleaned_str[1:-1].split(',')
-                processed_list = []
-                for item in items:
-                    try:
-                        if item.strip().isdigit():
-                            processed_list.append(int(item.strip()))
-                    except ValueError:
-                        continue
-                num_list = processed_list
-            else:
-                raise ValueError("Input must be enclosed in square brackets")
+            user_input = input("User: ")
+            if user_input.lower() in ['quit', 'exit', 'bye']:
+                print("Goodbye!")
+                break
+                
+            messages.append({"role": "user", "content": user_input})
+            response = run_full_turn(agent, messages)
+            agent = response.agent
+            messages.extend(response.messages)
+            
         except Exception as e:
-            raise ValueError(f"Invalid input string format: {e}")
-
-    numbers = [x for x in num_list if isinstance(x, int)]
-    if not numbers:
-        raise ValueError("No valid integers found in the input")
-    return sum(numbers)
-
-def multiply_numbers(num_list: Union[List[int], str]) -> int:
-    """Function for multiplying numbers"""
-    if isinstance(num_list, str):
-        try:
-            cleaned_str = num_list.strip()
-            if cleaned_str.startswith('[') and cleaned_str.endswith(']'):
-                items = cleaned_str[1:-1].split(',')
-                processed_list = []
-                for item in items:
-                    try:
-                        if item.strip().isdigit():
-                            processed_list.append(int(item.strip()))
-                    except ValueError:
-                        continue
-                num_list = processed_list
-            else:
-                raise ValueError("Input must be enclosed in square brackets")
-        except Exception as e:
-            raise ValueError(f"Invalid input string format: {e}")
-
-    numbers = [x for x in num_list if isinstance(x, int)]
-    if not numbers:
-        raise ValueError("No valid integers found in the input")
-    from functools import reduce
-    from operator import mul
-    return reduce(mul, numbers)
-
-def transfer_to_addition():
-    """Transfer to addition calculator"""
-    return addition_agent
-
-def transfer_to_multiplication():
-    """Transfer to multiplication calculator"""
-    return multiplication_agent
-
-def transfer_to_triage():
-    """Transfer back to main calculator triage"""
-    return calculator_triage_agent
-
-calculator_triage_agent = Agent(
-    name="Calculator Triage",
-    system_message=(
-        "You are a calculator assistant. "
-        "Introduce yourself briefly. "
-        "Determine if the user wants to add or multiply numbers. "
-        "Direct them to the appropriate calculator agent. "
-        "Look for keywords like 'add', 'sum', 'multiply', 'product' in their query."
-    ),
-    tools=[transfer_to_addition, transfer_to_multiplication],
-    model="gpt-3.5-turbo"  # or your preferred model
-)
-
-addition_agent = Agent(
-    name="Addition Calculator",
-    system_message=(
-        "You are an addition calculator. "
-        "Extract and sum only the numbers from any input, ignoring non-numeric values. "
-        "Always format numbers as a proper list before processing. "
-        "Example: Input: 'calculate 1, hello, 2, world, 3' → Process as [1,2,3] → Output: 6"
-    ),
-    tools=[add_numbers, transfer_to_triage],
-    model="gpt-3.5-turbo"
-)
-
-multiplication_agent = Agent(
-    name="Multiplication Calculator",
-    system_message=(
-        "You are a multiplication calculator. "
-        "Extract and multiply only the numbers from any input, ignoring non-numeric values. "
-        "Always format numbers as a proper list before processing. "
-        "Example: Input: 'calculate 2, hello, 3, world, 4' → Process as [2,3,4] → Output: 24"
-    ),
-    tools=[multiply_numbers, transfer_to_triage],
-    model="gpt-3.5-turbo"
-)
-
-def run_full_turn(agent, messages):
-    class Response:
-        def __init__(self, agent, messages):
-            self.agent = agent
-            self.messages = messages
-
-    new_messages = run_agent(agent, messages)
-    
-    # Check for agent transfers in the last message
-    last_message = new_messages[-1] if new_messages else None
-    if last_message and last_message.get("content"):
-        if "transfer_to_addition" in last_message["content"]:
-            return Response(addition_agent, new_messages)
-        elif "transfer_to_multiplication" in last_message["content"]:
-            return Response(multiplication_agent, new_messages)
-        elif "transfer_to_triage" in last_message["content"]:
-            return Response(calculator_triage_agent, new_messages)
-    
-    return Response(agent, new_messages)
-
-# Main loop
-agent = calculator_triage_agent
-messages = []
-
-while True:
-    user = input("User: ")
-    messages.append({"role": "user", "content": user})
-
-    response = run_full_turn(agent, messages)
-    agent = response.agent
-    messages.extend(response.messages)
+            print(f"Error: {str(e)}")
+            print("Resetting conversation...")
+            messages = []
+            agent = supervisor_agent
 ```
 
 ## Important notes
@@ -1141,6 +1201,7 @@ while True:
 - Cost
 - Self hosting & Inference
 - Streaming and UX notes
+- Security 
 
 ## References
 
