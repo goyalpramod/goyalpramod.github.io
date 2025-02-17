@@ -301,7 +301,7 @@ Started react from [here](https://react.dev/learn/tutorial-tic-tac-toe#setup-for
 >When a function is called in the “method” syntax: object.method(), the value of this during the call is object.
 >Please note that arrow functions are special: they have no this. When this is accessed inside an arrow function, it is taken from outside.
 
-- This is just like self in python. Mostly, new is a type of constructor.
+- `this` is just like self in python. Mostly, new is a type of constructor.
 
 >The optional chaining ?. syntax has three forms:
 >
@@ -362,4 +362,52 @@ It’s possible to extract data from nested arrays/objects, for that the left si
 > So, a function can do a useful job by itself and also carry a bunch of other functionality in properties.
 
 ## Day 5
+
+I learned about the following topics. But I have a feeling they aren't really helpful in webd. But rather very specific JS things. 
+Future will tell if I am correct as I build projects. 
+
+> Scheduling: setTimeout and setInterval
+> Decorators and forwarding, call/apply
+> Function binding
+> Arrow functions revisited
+
+> arrows functions have no this, it takes it from outside. (whichever scope comes first)
+
+> Arrow functions:
+> 
+> Do not have this
+> Do not have arguments
+> Can’t be called with new
+> They also don’t have super, but we didn’t study it yet. We will on the chapter Class inheritance
+
+
+> In JavaScript, all objects have a hidden [[Prototype]] property that’s either another object or null.
+> We can use obj.__proto__ to access it (a historical getter/setter, there are other ways, to be covered soon).
+> The object referenced by [[Prototype]] is called a “prototype”.
+> If we want to read a property of obj or call a method, and it doesn’t exist, then JavaScript tries to find it in the prototype.
+> Write/delete operations act directly on the object, they don’t use the prototype (assuming it’s a data property, not a setter).
+> If we call obj.method(), and the method is taken from the prototype, this still references obj. So methods always work with the current object even if they are inherited.
+> The for..in loop iterates over both its own and its inherited properties. All other key/value-getting methods only operate on the object itself.
+
+
+> The basic class syntax looks like this:
+> 
+> class MyClass {
+>   prop = value; // property
+> 
+>   constructor(...) { // constructor
+>     // ...
+>   }
+> 
+>   method(...) {} // method
+> 
+>   get something(...) {} // getter method
+>   set something(...) {} // setter method
+> 
+>   [Symbol.iterator]() {} // method with computed name (symbol here)
+>   // ...
+> }
+> MyClass is technically a function (the one that we provide as constructor), while methods, getters and setters are written to MyClass.prototype.
+> 
+> In the next chapters we’ll learn more about classes, including inheritance and other features.
  -->

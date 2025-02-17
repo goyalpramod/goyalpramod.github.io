@@ -24,6 +24,8 @@ image: [add image]
   - [Timeline and family tree](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) [DONE]
   - [A Brief History of Large Language Models](https://medium.com/@bradneysmith/98a1320e7650) [DONE]
 
+{I believe the below can be clubbed together in one blog called. A very technical deep dive into LLMs, Section being, CUDA, training, inference}
+
 - CUDA & optimising GPUs
 
   - [Understanding triton](https://isamu-website.medium.com/understanding-the-triton-tutorials-part-1-6191b59ba4c)
@@ -37,6 +39,7 @@ image: [add image]
   - [GPU puzzles](https://github.com/srush/GPU-Puzzles)
 
 - Superfast inference with vLLMs, triton etc/ quantization
+  
   - [Fast lora implementation](https://github.dev/unslothai/unsloth)
   - [Code for different optimization from unsloth](https://github.com/unslothai/unsloth/tree/main/unsloth/kernels)
   - [4 bit flux](https://github.com/HighCWu/flux-4bit/blob/main/model.py)
