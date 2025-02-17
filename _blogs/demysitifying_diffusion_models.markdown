@@ -2812,6 +2812,11 @@ I.e How does the metrics work? Few of the popular one's are [Fréchet inception 
   ](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/stable-diffusion-scratch).These class materials from harvard were pretty nice and I consulted them a few times
 - [Stat Quest](https://www.youtube.com/c/joshstarmer). One of the best places to learn statistics.
 - [Blog on Bayesian Statistics](https://statswithr.github.io/book/the-basics-of-bayesian-statistics.html).
+- [Article on LoRA training SDXL](https://huggingface.co/blog/sdxl_lora_advanced_script).
+- [Fast inference of Flux](https://modal.com/docs/examples/flux).
+- [Blog explaining optimizations of SD during inference](https://www.felixsanz.dev/articles/ultimate-guide-to-optimizing-stable-diffusion-xl#conclusion).
+- [Distributed inference of Flux](https://huggingface2.notion.site/How-to-split-Flux-transformer-and-run-inference-aa1583ad23ce47a78589a79bb9309ab0).
+- [Lexica art](https://lexica.art/) one of my favourite places for inspiration.
 
 ## How to help out
 
