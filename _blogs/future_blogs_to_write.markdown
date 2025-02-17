@@ -32,6 +32,8 @@ image: [add image]
   - [Blog series on CUDA by maharish](https://maharshi.bearblog.dev/blog/)
   - [Beating cuBLASS blog](https://salykova.github.io/)
   - [Lectures on CUDA and GPU stuff](https://www.youtube.com/@GPUMODE/videos)
+  - [Cuda tutorial videos](https://www.youtube.com/playlist?list=PLzn6LN6WhlN06hIOA_ge6SrgdeSiuf9Tb)
+  - [GPU puzzles](https://github.com/srush/GPU-Puzzles)
 
 - Superfast inference with vLLMs, triton etc/ quantization
   - [Fast lora implementation](https://github.dev/unslothai/unsloth)
@@ -53,8 +55,15 @@ image: [add image]
   - [Efficient training guide by HF](https://huggingface.co/docs/transformers/en/perf_train_gpu_one)
   - [Reduce memory usage hf guide](https://huggingface.co/docs/diffusers/main/en/optimization/memory)
   - [Performance and scalability by hf](https://huggingface.co/docs/transformers/v4.19.4/en/performance)
-  -  
+  - [Optimization for llama](https://atscaleconference.com/videos/faster-than-fast-networking-and-communication-optimizations-for-llama-3/)
+  - [TorchTitan](https://github.com/pytorch/torchtitan)
+  - [Technical conferences on sharded training ](https://www.youtube.com/@scaleconference/videos) 
 - Guide for distributed training and training multiple GPUs
+  - [Distributed inference](https://huggingface.co/docs/diffusers/main/en/training/distributed_inference#model-sharding)
+  - [Meta blog on sharded training](https://engineering.fb.com/2021/07/15/open-source/fsdp/)
+  - [Making deep learning go brrrr](https://horace.io/brrr_intro.html)
+  - [A guide on good usage of non_blocking and pin_memory() in PyTorch](https://pytorch.org/tutorials/intermediate/pinmem_nonblock.html)
+  - [Automatic Mixed Precision examples](https://pytorch.org/docs/stable/notes/amp_examples.html)
 
 - A guide to hacking LLMs
 
@@ -65,6 +74,7 @@ image: [add image]
 - How do video gen models work
 
 - unsupervised learning and RL, the dark horse of ML
+  - [RL training of gaming agents](https://diamond-wm.github.io/)
 
 - An MLE's guide to WEB DEVELOPMENT 
   
@@ -73,4 +83,10 @@ image: [add image]
 IDK read to figure out 
  - [The paradox of diffusion distillation](https://sander.ai/2024/02/28/paradox.html) -> more blogs on diffusion by this guy
  - [Good blogs, some may be useful](https://mccormickml.com/)
+  - [Timeline for AI](https://nhlocal.github.io/AiTimeline/#2024) 
+- [All of sebastians blogs](https://magazine.sebastianraschka.com/archive?sort=top)
+- [idk](https://jakevdp.github.io/blog/2013/04/15/code-golf-in-python-sudoku/)
+- [Build your own x](https://github.com/codecrafters-io/build-your-own-x)
+- [Neetcode](https://neetcode.io/)
+- 
 - -->
