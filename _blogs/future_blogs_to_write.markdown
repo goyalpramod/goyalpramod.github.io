@@ -20,9 +20,9 @@ image: [add image]
   - [The transformer family v2.0](https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/)
   - [Llama from scratch](https://blog.briankitano.com/llama-from-scratch/)
   - [Understanding large language models](https://magazine.sebastianraschka.com/p/understanding-large-language-models)
-  - [Timeline and family tree](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/)
   - [GPT in 60 lines](https://jaykmody.com/blog/gpt-from-scratch)
-  - [A Brief History of Large Language Models](https://medium.com/@bradneysmith/98a1320e7650)
+  - [Timeline and family tree](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) [DONE]
+  - [A Brief History of Large Language Models](https://medium.com/@bradneysmith/98a1320e7650) [DONE]
 
 - CUDA & optimising GPUs
 
@@ -59,6 +59,7 @@ image: [add image]
   - [Optimization for llama](https://atscaleconference.com/videos/faster-than-fast-networking-and-communication-optimizations-for-llama-3/)
   - [TorchTitan](https://github.com/pytorch/torchtitan)
   - [Technical conferences on sharded training ](https://www.youtube.com/@scaleconference/videos)
+  - [HF blog on quantization](https://huggingface.co/blog/4bit-transformers-bitsandbytes)
 - Guide for distributed training and training multiple GPUs
 
   - [Distributed inference](https://huggingface.co/docs/diffusers/main/en/training/distributed_inference#model-sharding)
