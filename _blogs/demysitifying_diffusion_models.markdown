@@ -2817,6 +2817,7 @@ I.e How does the metrics work? Few of the popular one's are [Fréchet inception 
 - [Blog explaining optimizations of SD during inference](https://www.felixsanz.dev/articles/ultimate-guide-to-optimizing-stable-diffusion-xl#conclusion).
 - [Distributed inference of Flux](https://huggingface2.notion.site/How-to-split-Flux-transformer-and-run-inference-aa1583ad23ce47a78589a79bb9309ab0).
 - [Lexica art](https://lexica.art/) one of my favourite places for inspiration.
+- [Sander Dieleman](https://sander.ai/posts/) a gem for diffusion models.
 
 ## How to help out
 
