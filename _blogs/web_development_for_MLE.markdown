@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: blog
 title: "Web development for MLE"
 date: 2025-02-9 12:00:00 +0530
@@ -362,4 +362,4 @@ It’s possible to extract data from nested arrays/objects, for that the left si
 > So, a function can do a useful job by itself and also carry a bunch of other functionality in properties.
 
 ## Day 5
-
+ -->
