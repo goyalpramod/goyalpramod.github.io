@@ -410,4 +410,7 @@ Future will tell if I am correct as I build projects.
 > MyClass is technically a function (the one that we provide as constructor), while methods, getters and setters are written to MyClass.prototype.
 > 
 > In the next chapters we’ll learn more about classes, including inheritance and other features.
- -->
+
+## Day 6
+
+- I finished studying about classes in js. I wish to wrap JS as soon as possible so I can start building stuff asap. -->

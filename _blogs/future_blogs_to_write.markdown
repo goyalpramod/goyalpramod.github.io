@@ -113,4 +113,78 @@ IDK read to figure out
 - [Build your own x](https://github.com/codecrafters-io/build-your-own-x)
 - [Neetcode](https://neetcode.io/)
 - [Umar's videos on various topics](https://www.youtube.com/@umarjamilai/videos)
+
+Books reading list and order 
+
+```
+This is excellent information! Given your ambitious projects and significant time commitment, let me create a comprehensive reading plan.
+
+Phase 1: Deep Learning & PyTorch Foundations (8-10 weeks)
+1. "Understanding Deep Learning" by Prince (4-5 weeks)
+   - Focus: Modern implementation + theory
+   - Priority chapters: Neural networks, optimization, and advanced architectures
+   - Concurrent with PyTorch documentation for implementation
+
+2. "Deep Learning with PyTorch" (2-3 weeks)
+   - Use as reference while implementing concepts from Prince's book
+   - Focus on custom extensions and advanced features
+   - Skip basic tutorials you're already familiar with
+
+3. "Mathematics for Machine Learning" (2 weeks)
+   - Focus on optimization chapters
+   - Reference while implementing gradient descent variants
+
+Phase 2: LLM Focus (6-8 weeks)
+1. "Build a Large Language Model" (3-4 weeks)
+   - Core focus for your 2B LLM project
+   - Implement while reading
+
+2. "Dive into Deep Learning" (3-4 weeks)
+   - Focus on transformer chapters
+   - Attention mechanisms
+   - Modern architectures
+
+Phase 3: Systems & Optimization (8-10 weeks)
+1. Professional CUDA C Programming (4-5 weeks)
+   - Essential for kernel optimization
+   - Focus on practical exercises
+   - Concurrent with small PyTorch kernel implementations
+
+2. "Programming Massively Parallel Processors" (2-3 weeks)
+   - Focus on memory hierarchy
+   - Optimization techniques
+   - Skip redundant CUDA basics
+
+3. "Parallel Programming Concepts" (2 weeks)
+   - Reference for distributed training
+   - Focus on scaling strategies
+
+Optional/Reference Materials:
+- "Alice's Adventures in a differentiable wonderland"
+   - Use as supplementary reading for intuition
+- Goodfellow's "Deep Learning"
+   - Reference for theoretical depth when needed
+
+Project Integration Timeline:
+1. Weeks 1-10: Build basic LLM while studying foundations
+2. Weeks 11-18: Scale to 2B parameters, integrate VLM components
+3. Weeks 19-28: Optimize kernels, implement custom CUDA operations
+4. Weeks 29-32: Work on quantization and efficiency (llama.cpp style)
+
+Additional Resources to Consider:
+1. HuggingFace documentation
+2. PyTorch Internals documentation
+3. NVIDIA's CUDA documentation
+4. llama.cpp GitHub repository
+
+Would you like me to break down any specific phase in more detail or suggest specific projects to implement while reading these books?
+```
+ 
+1. MML
+2. DL with PyTorch + Dive into DL (in parallel)
+3. Understanding DL
+4. Build a LLM
+5. Professional C CUDA programming 
+6. PMPP
+7. PPC
 - -->
