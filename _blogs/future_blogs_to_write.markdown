@@ -21,6 +21,8 @@ image: [add image]
   - [Llama from scratch](https://blog.briankitano.com/llama-from-scratch/)
   - [Understanding large language models](https://magazine.sebastianraschka.com/p/understanding-large-language-models)
   - [GPT in 60 lines](https://jaykmody.com/blog/gpt-from-scratch)
+  - [LLM Playbook](https://cyrilzakka.github.io/llm-playbook/index.html)
+  - [Harvard slides on transformers to LLM](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/transformers)
   - [Timeline and family tree](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) [DONE]
   - [A Brief History of Large Language Models](https://medium.com/@bradneysmith/98a1320e7650) [DONE]
 
@@ -113,6 +115,8 @@ IDK read to figure out
 - [Build your own x](https://github.com/codecrafters-io/build-your-own-x)
 - [Neetcode](https://neetcode.io/)
 - [Umar's videos on various topics](https://www.youtube.com/@umarjamilai/videos)
+- [Implementation of the most popular papers](https://nn.labml.ai/)
+- [karpathy's blogs on various topics](https://karpathy.github.io/2019/04/25/recipe/)
 
 Books reading list and order 
 
