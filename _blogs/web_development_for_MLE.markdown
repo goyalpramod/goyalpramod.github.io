@@ -413,4 +413,67 @@ Future will tell if I am correct as I build projects.
 
 ## Day 6
 
-- I finished studying about classes in js. I wish to wrap JS as soon as possible so I can start building stuff asap. -->
+- I finished studying about classes in js. I wish to wrap JS as soon as possible so I can start building stuff asap.
+
+## Day 7
+
+> The async keyword before a function has two effects:
+> 
+> Makes it always return a promise.
+> Allows await to be used in it.
+> The await keyword before a promise makes JavaScript wait until that promise settles, and then:
+> 
+> If it’s an error, an exception is generated — same as if throw error were called at that very place.
+> Otherwise, it returns the result.
+> Together they provide a great framework to write asynchronous code that is easy to both read and write.
+> 
+> With async/await we rarely need to write promise.then/catch, but we still shouldn’t forget that they are based on promises, because sometimes (e.g. in the outermost scope) we have to use these methods. Also Promise.all is nice when we are waiting for many tasks simultaneously.
+>
+> Proxy is a wrapper around an object, that forwards operations on it to the object, optionally trapping some of them.
+
+>It can wrap any kind of object, including classes and functions.
+>
+>The syntax is:
+>
+>let proxy = new Proxy(target, {
+>  /* traps */
+>});
+>…Then we should use proxy everywhere instead of target. A proxy doesn’t have its own properties or methods. It traps an operation if the trap is provided, otherwise forwards it to target object.
+>
+>We can trap:
+>
+>Reading (get), writing (set), deleting (deleteProperty) a property (even a non-existing one).
+>Calling a function (apply trap).
+>The new operator (construct trap).
+>Many other operations (the full list is at the beginning of the article and in the docs).
+>That allows us to create “virtual” properties and methods, implement default values, observable objects, function decorators and so much more.
+>
+>We can also wrap an object multiple times in different proxies, decorating it with various aspects of functionality.
+>
+>The Reflect API is designed to complement Proxy. For any Proxy trap, there’s a Reflect call with same arguments. We should use those to forward calls to target objects.
+>
+>Proxies have some limitations:
+>
+>Built-in objects have “internal slots”, access to those can’t be proxied. See the workaround above.
+>The same holds true for private class fields, as they are internally implemented using slots. So proxied method calls must have the target object as this to access them.
+>Object equality tests === can’t be intercepted.
+>Performance: benchmarks depend on an engine, but generally accessing a property using a simplest proxy takes a few times longer. In practice that only matters for some “bottleneck” objects though.
+
+>Currying is a transform that makes f(a,b,c) callable as f(a)(b)(c). 
+
+>DOM specification
+>Describes the document structure, manipulations, and events, see https://dom.spec.whatwg.org.
+>CSSOM specification
+>Describes stylesheets and style rules, manipulations with them, and their binding to documents, see https://www.w3.org/TR/cssom-1/.
+>HTML specification
+>Describes the HTML language (e.g. tags) and also the BOM (browser object model) – various browser functions: setTimeout, alert, location and so on, see https://html.spec.whatwg.org. It takes the DOM specification and extends it with many additional properties and methods.
+>Additionally, some classes are described separately at https://spec.whatwg.org/.
+>
+>Please note these links, as there’s so much to learn that it’s impossible to cover everything and remember it all.
+>
+>When you’d like to read about a property or a method, the Mozilla manual at https://developer.mozilla.org/en-US/ is also a nice resource, but the corresponding spec may be better: it’s more complex and longer to read, but will make your fundamental knowledge sound and complete.
+>
+>To find something, it’s often convenient to use an internet search “WHATWG [term]” or “MDN [term]”, e.g https://google.com?q=whatwg+localstorage, https://google.com?q=mdn+localstorage.
+>
+>Now, we’ll get down to learning the DOM, because the document plays the central role in the UI.
+- Started with ts as well. It do be simple honestly. -->
