@@ -537,6 +537,4 @@ Lab: Meta
 - MATH
 - BBH (Big Bench Hard)
 - HELM framework
-- Chain-of-thought evaluation
-
- -->
+- Chain-of-thought evaluation -->

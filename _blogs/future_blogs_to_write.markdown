@@ -25,6 +25,11 @@ image: [add image]
   - [Harvard slides on transformers to LLM](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/transformers)
   - [Timeline and family tree](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) [DONE]
   - [A Brief History of Large Language Models](https://medium.com/@bradneysmith/98a1320e7650) [DONE]
+  - [Deepseek stuff 1](https://www.youtube.com/watch?v=XMnxKGVnEUc)
+  - [Deepseek stuff 2](https://arxiv.org/pdf/2402.03300)
+  - [Deepseek stuff 3](https://yugeten.github.io/posts/2025/01/ppogrpo/)
+  - [Deepseek stuff 4](https://arxiv.org/pdf/2501.12948)
+  - [Deepseek stuff 5](https://newsletter.languagemodels.co/p/the-illustrated-deepseek-r1)
 
 {I believe the below can be clubbed together in one blog called. A very technical deep dive into LLMs, Section being, CUDA, training, inference}
 
