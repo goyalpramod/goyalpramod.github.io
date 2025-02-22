@@ -24,3 +24,14 @@ image: assets/cover_images/img4.webp
 ## Day 4 -> 
 
 - Spent significant time understanding webd, dimension repo, also started out with the KLD video.
+
+## Day 5 -> 
+
+- Went out with friends
+- Studied webd
+
+## Day 6 -> 
+
+- Studied webd 
+- Build stuff using React
+- Started with youtube video explaining cross-entropy 

@@ -101,7 +101,9 @@ Monthly (30th or 31st): Spend 30-60 min think if you were able to achieve everyt
 
 My first million\
 Lex Friedman\
-Founder
+Founder \
+Diary of A CEO \
+All out
 
 ## ML Blogs:
 
@@ -112,6 +114,7 @@ Founder
 - colah
 - jay alammar
 - count bayesie
+- chip huyen
 
 ## Content to write about
 
