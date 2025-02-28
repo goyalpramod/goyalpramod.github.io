@@ -9,3 +9,9 @@ image: assets/cover_images/img4.webp
 Day 4 
 
 Got done with webd, time to build stuff
+
+Day 5 
+
+Got company registration done 
+Cleaned wp and wrote down schedule for the next month 
+Fixed youtube video
