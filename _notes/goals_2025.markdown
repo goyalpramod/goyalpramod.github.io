@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: note
 title: "Goals 2025"
 last_modified_at: 2024-12-19 12:00:00 +0530
@@ -115,6 +115,8 @@ All out
 - jay alammar
 - count bayesie
 - chip huyen
+- Daniel han tweets, posts, unsloth etc 
+- Umar jamil's videos
 
 ## Content to write about
 
@@ -132,7 +134,17 @@ All out
 12. AI agents from first principles
 13. DL for Dummies
 14. ML maths for Dummies
-16. NLP from zero to one 
-17. CV from zero to one 
-18. RL from zero to one
-15. finish tech reports of qwen, deepseek, llama etc -->
+15. NLP from zero to one
+16. CV from zero to one
+17. RL from zero to one
+18. finish tech reports of qwen, deepseek, llama etc
+
+Order of reading books
+
+1. MML
+2. DL with PyTorch + Dive into DL (in parallel)
+3. Understanding DL
+4. Build a LLM
+5. Professional C CUDA programming
+6. PMPP
+7. PPC
