@@ -323,3 +323,6 @@ The tendency to act even when doing nothing would be better. Humans feel compell
 
 ### Confirmation Bias
 Seeking information that confirms existing beliefs while avoiding contradictory evidence. Scientific methods counter this by explicitly looking for disconfirmation.
+
+
+FIX THIS LATER
