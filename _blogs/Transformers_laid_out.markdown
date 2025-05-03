@@ -165,7 +165,7 @@ First calulate Q,K,V Matrix
 
 ![Image of calculating Q,K,V matrix](/assets/transformers_laid_out/9.png)
 
-Second calulate the attention scores
+Second calculate the attention scores
 
 ![Image of calculating attention scores using matrix](/assets/transformers_laid_out/10.png)
 
@@ -188,14 +188,14 @@ Here is a summary of everything that is going on
 Let us now understand why this even works:\
 Forget about multi-head attention, attention blocks and all the JARGON.
 
-Imagine you are in point A and want to go to B in a huge city.\
-Do you think there is only one path to go their? of course not, there are thousands of way to reach that point.
+Imagine you are at point A and want to go to B in a huge city.\
+Do you think there is only one path to go there? Of course not, there are thousands of way to reach that point.
 
 But you will never know the best path, till you have tried a lot of them. More the better.
 
 Hence a single matrix multiplication does not get you the best representation of query and key\
 Multiple queries can be made, multiple keys can be done for each of these query\
-That is the reason we do so many matrix multiplication to try and get the best key for a query that is relevant to the question asked by the user
+That is the reason we do so many matrix multiplications - to try and get the best key for a query that is relevant to the question asked by the user
 
 ![Image of different representation for different words](/assets/transformers_laid_out/SA.png)
 
@@ -264,11 +264,11 @@ There are other alternatives as well, Normalizing the integer encoding, binary e
 
 ### Sinusoidal Encoding
 
-One of the encoding method that satisfies all our conditions is using **sinusoidal functions**. As done in the paper.
+One of the encoding methods that satisfies all our conditions is using **sinusoidal functions**, as done in the paper.
 
 But why use cosine alternatively if sine satisfies all the conditions?
 
-Well sine does not satisfy all, but most conditions. Our need for a linear relation is not satisfied by sine and hence we need cosine for it as well. Here let me present a simple proof which has been taken from [here](https://blog.timodenk.com/linear-relationships-in-the-transformers-positional-encoding/)
+In reality, sine alone doesn't satisfy all our requirements. While it meets most conditions, it fails to establish the linear relationship we need. Adding cosine functions complements sine's limitations, creating a complete positional encoding system. Let me present a simple proof from [here](https://blog.timodenk.com/linear-relationships-in-the-transformers-positional-encoding/)
 
 Consider a sequence of sine and cosine pairs, each associated with a frequency $\omega_i$. Our goal is to find a linear transformation matrix $\mathbf{M}$ that can shift these sinusoidal functions by a fixed offset $k$:
 
@@ -319,7 +319,7 @@ $$
 \mathbf{M}_k = \begin{bmatrix} \cos(\omega_i k) & \sin(\omega_i k) \\ -\sin(\omega_i k) & \cos(\omega_i k) \end{bmatrix}
 $$
 
-Now that we understand what is PE and why we use sine and cos. Let us understand how it works.
+Now that we understand what PE is and why we use sine and cosine functions, let us understand how it works.​​​​​​​​​​​​​​​​
 
 $$PE_{(pos,2i)} = \sin\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
 $$PE_{(pos,2i+1)} = \cos\left(\frac{pos}{10000^{2i/d_{model}}}\right)$$
@@ -343,7 +343,7 @@ Code to generate [here](https://machinelearningmastery.com/a-gentle-introduction
 
 ![Image of positional encoding for 512 dimension and n = 10000](/assets/transformers_laid_out/PE5.webp)
 
-Imagine it as such, each index on the y axis represents a word, and everything corresponding on the x axis to that index. Is it's positional encoding.
+Imagine it as such: each index on the y axis represents a word, and everything corresponding on the x axis to that index is its positional encoding.​​​​​​​​​​​​​​​​
 
 ## Understanding The Encoder and Decoder Block
 
@@ -356,7 +356,7 @@ A single transformer can have multiple encoder, as well as decoder blocks.
 ### Encoder
 Let's start with the encoder part first.
 
-it consists for multiple encoders, and each encoder block consists of the following parts:
+It consists of multiple encoders, and each encoder block consists of the following parts:
 
 - Multi-head Attention
 - Residual connection
@@ -386,7 +386,7 @@ Batch normalization is the method where the mean and standard deviation of an en
 ![Image of layer normalization](/assets/transformers_laid_out/Layer_norm.png)
 (image taken from this [stackexchange](https://stats.stackexchange.com/questions/474440/why-do-transformers-use-layer-norm-instead-of-batch-norm))
 
-In Layer normalization instead of focusing on the entire batch, all the features of a single instance is focused on.
+In Layer normalization, instead of focusing on the entire batch, all the features of a single instance are focused on.​​​​​​​​​​​​​​​​
 
 Think of it like this, we take each word from a sentence, and normalize that word.
 
@@ -394,7 +394,7 @@ To get a better grasp, consider reading this [blog](https://www.pinecone.io/lear
 
 ### Feed Forward network
 
-The Feed Forward network (FFN) is added to introduce non-linearity and complexity to the model. While the attention mechanism is great at capturing relationships between different positions in  the sequence, It is inherently still a linear operation (as mentioned earlier).\
+The Feed Forward network (FFN) is added to introduce non-linearity and complexity to the model. While the attention mechanism is great at capturing relationships between different positions in the sequence, It is inherently still a linear operation (as mentioned earlier).\
 The FFN adds non-linearity through its activation functions (typically ReLU), allowing the model to learn more complex patterns and transformations that pure attention alone cannot capture.
 
 
@@ -403,7 +403,7 @@ Without the FFN, transformers would be severely limited in their ability to lear
 
 ### Decoder Block
 
-The output of the encoder is fed each decoder block as the data processes as Key and Value matrix. The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input.
+The output of the encoder is fed into each decoder block as Key and Value matrices during data processing.​​​​​​​​​​​​​​​​ The decoder block is auto-regressive. Meaning it outputs one after the other and takes its own output as an input.
 
 ![Image of a transformer](/assets/transformers_laid_out/16.png)
 
@@ -420,9 +420,9 @@ That is all the high level understanding you need to have, to be able to write a
 
 ### Final linear & Softmax layer
 
-The decoder gives out a vector of numbers (floating point generally), Which is sent to a linear layer.
+The decoder gives out a vector of numbers (floating point generally), which is sent to a linear layer.
 
-The linear layer outputs the score for each word in the vocabulary(the amount of unique words in the training dataset)
+The linear layer outputs the score for each word in the vocabulary (the amount of unique words in the training dataset)
 
 Which is then sent to the softmax layer, which converts these scores into probabilities. And the word with the highest probability is given out. (This is usually the case, sometimes we can set it so that we get the 2nd most probable word, or the 3rd most and so on)
 
@@ -448,7 +448,7 @@ Hence they have an encoder section and a decoder section. They pass around infor
 This section usually talks about the work done previously in the field, known issues and what people have used to fix them.
 One very important thing for us to understand to keep in mind is.
 
-"Keeping track of distant information". Transformers are amazing for multitude of reasons but one key one is that they can remember distant relations.
+"Keeping track of distant information". Transformers are amazing for a multitude of reasons, but one key advantage is that they can remember distant relations.​​​​​​​​​​​​​​​​
 
 Solutions like RNNs and LSTMs lose the contextual meaning as the sentence gets longer. But transformers do not run into such problem. (A problem tho, hopefully none existent when you read it is. The context window length. This fixes how much information the transformer can see)
 
@@ -1857,13 +1857,13 @@ losses = train_transformer(
 
 ## Misc & Further Reading
 
-Here are some resources and more information that can help you out in your journey which I could not decide where to put
+Here are some resources and more information that can help you out in your journey which I could not decide where to put:
 
 [What is torch.nn really?](https://pytorch.org/tutorials/beginner/nn_tutorial.html)\
 [Neural networks by 3Blue1Brown](https://www.3blue1brown.com/topics/neural-networks)
 
-Congratulations on completing this tutorial/lesson/blog, however, you see it. By nature of human curiosity, you must have a few questions now.
-Feel free to create issues in github for those questions, and I will add any questions that I feel most beginners would have here.
+Congratulations on completing this tutorial/lesson/blog, however you see it. By nature of human curiosity, you must have a few questions now.
+Feel free to create issues on GitHub for those questions, and I will add any questions that I feel most beginners would have here.
 
 Cheers,
 Pramod
