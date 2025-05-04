@@ -6,7 +6,7 @@ categories: [lifestyle, self-help, growth]
 image: assets/cover_images/img4.webp
 ---
 
-Recently I watch a [video](https://www.youtube.com/watch?v=H_XMqRhLhic) and [Michael](https://en.wikipedia.org/wiki/Michael_Seibel) said that "people do not change much over the years", I believe that is not entirely true. Perhaps the core being of a person doesn't change. But we all go through changes through out life. This is an attempt to document how I have changed over the years.
+Recently I watched a [video](https://www.youtube.com/watch?v=H_XMqRhLhic) and [Michael](https://en.wikipedia.org/wiki/Michael_Seibel) said that "people do not change much over the years", I believe that is not entirely true. Perhaps the core being of a person doesn't change. But we all go through changes throughout life. This is an attempt to document how I have changed over the years.
 
 ## 21
 
