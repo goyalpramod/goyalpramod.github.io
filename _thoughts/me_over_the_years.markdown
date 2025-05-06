@@ -49,7 +49,7 @@ I believe goals are a big part of how I live every moment. So here are a few
 
 ##### My Faults
 
-This is start to feel condescending hahaha, Well maybe that is a few flaws that I know about myself right now. 
+This is start to feel condescending hahaha, Well maybe that is a few flaws that I know about myself right now.
 
 Things I am trying to improve about myself:
 
@@ -57,4 +57,4 @@ Things I am trying to improve about myself:
 - Working on my people skill
 - Improving my focus
 
-I am aware that I am man with many "wrongs" I am still trying to figure them out and work on them slowly. I hope the next time I read this, I have achieved a few of the things that I wanted to. 
+I am aware that I am man with many "wrongs" I am still trying to figure them out and work on them slowly. I hope the next time I read this, I have achieved a few of the things that I wanted to.

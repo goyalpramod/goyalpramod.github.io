@@ -1,9 +1,20 @@
 <!-- ---
 layout: note
-title: "Why are we afraid to love"
-last_modified_at: 2024-12-18 12:00:00 +0530
-categories: [lifestyle, self-help, love]
+title: "On Being"
+last_modified_at: 2024-03-15 12:00:00 +0530
+categories: [lifestyle, self-help, growth]
 ---
+
+[A WORK IN PROGRESS] "When did I start chasing happiness, instead of being happy"
+
+
+## Why are we along 
+
+We all wish for company, but push the company away
+
+
+## Why are we afraid to love
+
 
 "In the ideal world there exists only one being, and when put on earth that is split into a man and a female. Most of life is finding that other half of you. And that is love" - plato {correct this as this is not the exact quote}
 
@@ -43,5 +54,4 @@ And that is when the inevitable happens
 # The first heartbreak
 
 
-Better to hurt than be hurt. 
--->
+Better to hurt than be hurt.  -->

@@ -1,7 +1,7 @@
 <!-- ---
 layout: blog
 title: "Evolution of LLMs"
-date: 2025-02-12 12:00:00 +0530
+date: 2025-05-05 12:00:00 +0530
 categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
@@ -21,7 +21,12 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 
 ## How this blog is structured
 
-Year wise innovation, for each specific model. Link to special implementation, as many share such ideas. Only model specific innovation in it's section. 
+First I would like to describe the basic difference between different LLM architectures, I.e Encoder Only, Decoder Only and Encoder-Decoder models. Then we will have a look at a short AI timeline over the years. 
+Where we will see what architectural innovation, computational breakthrough, training optimization was discovered over the years and how it affected LLMs and their benchmarks. 
+
+Finally and most importantly we will dive deep into the technical understanding and implementation of these different techniques. Some of them being Flash Attention, KV-Caching, GRPO etc.  -->
+
+<!-- Year wise innovation, for each specific model. Link to special implementation, as many share such ideas. Only model specific innovation in it's section. 
 
 below each model, link to the next model if you interested. 
 
@@ -31,7 +36,16 @@ We will categorize each model according to the following properties: Family, Pre
 Family represents what original foundation model the specific model is extending, extension describes what the model is adding to the one it is deriving from, Date is when the model was firts published, Number of parameters of the pretrained model, Corpus is what data sources the model was pre-trained or fine-tuned on, License describes how the model can be legally used, and Lab lists the institution that published the model.
 """ {TAKEN FROM THE BLOG MENTIONED ABOVE}
 
-Only included os models, so no claude3.5, gpt 4 etc even though we love em
+Only included os models, so no claude3.5, gpt 4 etc even though we love em -->
+
+<!-- 
+### Decoder only models 
+
+[IMAAGE_OF_TRANSFORMER_DECODER]
+
+### Encoder only models
+
+[IMAAGE_OF_TRANSFORMER_ENCODER]
 
 ## A short introduction to how LLMs are trained & inferenced
 
@@ -41,9 +55,6 @@ A paper on pretraining [paper](https://arxiv.org/pdf/2003.08271)
 
 [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0)
 
-### Encoder only models 
-
-### Decoder only models 
 
 ### Pretraining  
 
@@ -51,9 +62,11 @@ A paper on pretraining [paper](https://arxiv.org/pdf/2003.08271)
 
 USE THIS [PAPER](https://arxiv.org/pdf/2106.04554) 
 
-## 2017: The Foundation Year
+## The AI timeline 
 
-### Early Activation Functions
+### 2017: The Foundation Year
+
+#### Early Activation Functions
 
 - GELU (Gaussian Error Linear Unit)
 - Swish/SiLU
@@ -61,9 +74,9 @@ USE THIS [PAPER](https://arxiv.org/pdf/2106.04554)
 
 Glove, word2vec?
 
-## 2018: BERT and Early Innovations
+### 2018: BERT and Early Innovations
 
-### BERT's Architecture
+#### BERT's Architecture
 
 - Bidirectional encoder
 - WordPiece tokenization
@@ -85,7 +98,7 @@ Lab:Google
 """
 
 
-### GPT-1
+#### GPT-1
 
 - Unidirectional decoder
 - BPE tokenization
@@ -106,15 +119,15 @@ License: N/A
 Lab: OpenAI
 """
 
-### Training Innovations
+#### Training Innovations
 
 - Warm-up learning rate schedules
 - Adam optimizer variants
 - Gradient clipping strategies
 
-## 2019: Scaling and Efficiency
+### 2019: Scaling and Efficiency
 
-### GPT-2
+#### GPT-2
 
 """
 Link: https://huggingface.co/docs/transformers/model_doc/gpt2
@@ -130,7 +143,7 @@ License: Open, Modified MIT license
 Lab: OpenAI
 """
 
-### RoBERTa
+#### RoBERTa
 
 - Dynamic masking
 - Removed NSP
@@ -151,7 +164,7 @@ License: N/A
 Lab: UW/Google
 """
 
-### DistilBERT and Model Compression
+#### DistilBERT and Model Compression
 
 - Knowledge distillation techniques
 - Parameter sharing
@@ -172,13 +185,13 @@ License: Open, Apache-2.0
 Lab: Huggingface
 """
 
-### ALBERT
+#### ALBERT
 
 - Cross-layer parameter sharing
 - Factorized embedding parameterization
 - Sentence ordering prediction
 
-### AlphaFold
+#### AlphaFold
 
 """
 Link: https://github.com/deepmind/alphafold
@@ -194,7 +207,7 @@ License: the code is open sourced, with Apache-2.0
 Lab: Deepmind
 """
 
-### BART
+#### BART
 
 """
 Link: https://huggingface.co/docs/transformers/model_doc/bart
@@ -210,16 +223,16 @@ License: Open, Apache-2.0
 Lab:Facebook
 """
 
-## 2020: The Scale Revolution
+### 2020: The Scale Revolution
 
-### GPT-3
+#### GPT-3
 
 - In-context learning
 - Few-shot capabilities
 - Scaling laws discovery
 - Batch size scaling
 
-### T5
+#### T5
 
 - Encoder-decoder architecture
 - Unified text-to-text framework
@@ -240,16 +253,16 @@ License: Open, Apache-2.0
 Lab: Google
 """
 
-### Architecture Innovations
+#### Architecture Innovations
 
 - Sparse Transformers
 - Reformer
 - Longformer
 - Linear attention mechanisms
 
-## 2021: Instruction Tuning and Alignment
+### 2021: Instruction Tuning and Alignment
 
-### InstructGPT
+#### InstructGPT
 
 - RLHF pipeline [blog on the topic](https://huggingface.co/blog/rlhf) & [blog 2](https://wandb.ai/ayush-thakur/RLHF/reports/Understanding-Reinforcement-Learning-from-Human-Feedback-RLHF-Part-1--VmlldzoyODk5MTIx)
 - PPO implementation
@@ -270,7 +283,7 @@ License: Closed source, Accessible through API
 Lab: OpenAI
 """
 
-### PaLM
+#### PaLM
 
 - Pathways system
 - Scaled dot product attention
@@ -291,16 +304,16 @@ License: Closed source, Accessible through API
 Lab: Google
 """
 
-### Training Innovations
+#### Training Innovations
 
 - Chain-of-thought prompting
 - Constitutional AI principles
 - SFT (Supervised Fine-Tuning)
 - Mixture of Experts (MoE)
 
-## 2022: Democratization
+### 2022: Democratization
 
-### BLOOM
+#### BLOOM
 
 - Multilingual pre-training
 - Carbon footprint considerations
@@ -321,14 +334,14 @@ Lab: Big Science/Huggingface
 License: Open, but need to follow restrictions in Attachment A, BigScience RAIL License v1.0
 """
 
-### OPT
+#### OPT
 
 - Reproducible training
 - Open source weights
 - Training dynamics study
 - Cost analysis
 
-### Chinchilla
+#### Chinchilla
 
 """
 Link: https://arxiv.org/abs/2203.15556
@@ -344,23 +357,23 @@ License: Closed source.
 Lab: Deepmind
 """
 
-### Architectural Improvements
+#### Architectural Improvements
 
 - Flash Attention
 - Rotary embeddings
 - Grouped-query attention
 - ALiBi position encoding
 
-## 2023: Multi-Modal and Reasoning
+### 2023: Multi-Modal and Reasoning
 
-### GPT-4
+#### GPT-4
 
 - Multi-modal encoders
 - System prompting
 - Advanced reasoning capabilities
 - Tool use
 
-### LLaMA
+#### LLaMA
 
 - Efficient scaling
 - Flash Attention-2
@@ -381,13 +394,13 @@ License: Limited, Non-commercial bespoke license
 Lab: Meta
 """
 
-### LLaMA 2
+#### LLaMA 2
 
-### MamBa
+#### MamBa
 
 
 
-### Alpaca
+#### Alpaca
     """
     Link: https://github.com/tatsu-lab/stanford_alpaca
     Family: LLaMA
@@ -402,7 +415,7 @@ Lab: Meta
     Lab: Stanford
     """
 
-### Training Advances
+#### Training Advances
 
 - Direct Preference Optimization (DPO)
 - Constitutional AI implementation
@@ -419,23 +432,26 @@ Lab: Meta
 {LLaVA? https://llava-vl.github.io/}
 
 {Do I include VLMs? Where?}
-## 2024: Efficiency and Performance
 
-### Gemma
+### 2024: Efficiency and Performance
+
+#### MordernBert
+
+#### Gemma
 
 - Efficient attention mechanisms
 - Advanced position embeddings
 - Improved tokenization
 - Memory efficient training
 
-### Claude 3
+#### Claude 3
 
 - Multi-modal understanding
 - Tool use capabilities
 - Advanced reasoning
 - Constitutional AI improvements
 
-### LLaMA 3
+#### LLaMA 3
 
 {add quen and deepseek}
 
@@ -471,7 +487,7 @@ Lab: Meta
 
 ### Training Methods
 
-#### Pre-training Objectives
+### Pre-training Objectives
 
 - MLM (Masked Language Modeling)
 - CLM (Causal Language Modeling)
@@ -479,7 +495,7 @@ Lab: Meta
 - RTD (Replaced Token Detection)
 - Prefix Language Modeling
 
-#### Fine-tuning Strategies
+### Fine-tuning Strategies
 
 - Instruction tuning
 - RLHF pipeline
@@ -487,7 +503,7 @@ Lab: Meta
 - LoRA and QLoRA
 - Parameter efficient fine-tuning
 
-#### Optimization Techniques
+### Optimization Techniques
 
 - Adam variants
 - Learning rate schedules
@@ -497,7 +513,7 @@ Lab: Meta
 
 ### Efficiency Innovations
 
-#### Model Compression
+### Model Compression
 
 - Quantization (INT4/8)
 - Pruning techniques
@@ -505,7 +521,7 @@ Lab: Meta
 - Low-rank adaptation
 - Sparse inference
 
-#### Memory Optimization
+### Memory Optimization
 
 - Gradient checkpointing
 - Activation recomputation
@@ -515,7 +531,7 @@ Lab: Meta
 
 ### Evaluation Framework
 
-#### Language Understanding
+### Language Understanding
 
 - GLUE and SuperGLUE
 - MMLU
@@ -523,7 +539,7 @@ Lab: Meta
 - TruthfulQA
 - GSM8K
 
-#### Safety and Alignment
+### Safety and Alignment
 
 - TruthfulQA
 - Anthropic's Constitutional AI eval
@@ -531,10 +547,294 @@ Lab: Meta
 - HONEST framework
 - Safety benchmarks
 
-#### Reasoning and Capabilities
+### Reasoning and Capabilities
 
 - HumanEval
 - MATH
 - BBH (Big Bench Hard)
 - HELM framework
-- Chain-of-thought evaluation -->
+- Chain-of-thought evaluation
+
+### 2025 
+
+
+#### Llama 4 
+
+#### Qwen
+
+
+(there were some amazing developments on tts, video gen, image gen etc but all of those for a different video)
+
+### 2018: Early Adopters
+
+#### Hardware Innovations
+- **NVIDIA Tesla V100** (NVIDIA)
+  - Specialized for AI training workloads with tensor cores
+  - Enabled training of larger language models
+
+### 2019: Scaling and Efficiency
+
+#### Notable Model Releases
+- **XLNet** (Google/CMU)
+  - Permutation-based training approach
+  - Surpassed BERT on multiple benchmarks
+
+- **Megatron** (NVIDIA)
+  - Model parallelism for efficient large model training
+
+#### Training Innovations
+- **Sparse Attention Patterns** (OpenAI)
+  - Reduced computational complexity for long sequences
+
+## 2020: Scale Revolution
+
+#### Notable Model Releases
+- **Meena** (Google)
+  - Specialized conversational model
+  - 2.6B parameters
+
+- **Turing-NLG** (Microsoft)
+  - 17B parameters
+  - Advanced natural language generation
+
+- **Pangu-α** (Huawei)
+  - 200B parameters
+  - Chinese language model
+
+#### Hardware Advancements
+- **TPU v3** (Google)
+  - Enhanced matrix multiplication acceleration
+
+#### Training Methodologies
+- **ZeRO (Zero Redundancy Optimizer)** (Microsoft)
+  - Memory optimization for distributed training
+
+### 2021: Instruction Tuning and Alignment
+
+#### Notable Model Releases
+- **Jurassic-1** (AI21 Labs)
+  - 178B parameters
+  - Language understanding with specialized abilities
+
+- **CPM-2** (Baidu)
+  - Chinese pre-trained model
+  - Multilingual capabilities
+
+- **HyperCLOVA** (Naver)
+  - 204B parameters
+  - Korean language model
+
+- **T0** (BigScience)
+  - Zero-shot capabilities through multi-task prompted training
+
+#### Hardware Advancements
+- **SambaNova DataScale** (SambaNova)
+  - Specialized AI accelerator architecture
+  - Alternative to traditional GPU-based training
+
+#### Architectural Innovations
+- **Switch Transformer** (Google)
+  - Mixture of experts approach
+  - Trillion parameter models
+
+### 2022: Democratization
+
+#### Notable Model Releases
+- **Galactica** (Meta)
+  - Scientific knowledge model
+  - 120B parameters
+
+- **Anthropic Claude 1** (Anthropic)
+  - Initial release focusing on helpfulness and harmlessness
+
+- **GLaM** (Google)
+  - Mixture of experts model
+  - 1.2 trillion parameters (sparsely activated)
+
+- **ERNIE 3.0** (Baidu)
+  - Enhanced knowledge integration
+  - Multilingual capabilities
+
+#### Hardware Advancements
+- **Cerebras CS-2** (Cerebras)
+  - Wafer-scale engine for AI computation
+  - Alternative architecture for AI training
+
+#### Training Methodologies
+- **FLAN (Fine-tuned LAnguage Net)** (Google)
+  - Instruction tuning across multiple tasks
+  - Improved zero-shot performance
+
+#### Benchmark Developments
+- **HELM (Holistic Evaluation of Language Models)** (Stanford)
+  - Comprehensive benchmark suite for LLMs
+  - Standardized evaluation metrics
+
+### 2023: Multi-Modal and Reasoning
+
+#### Notable Model Releases
+- **PaLM 2** (Google)
+  - Improved multilingual capabilities
+  - Enhanced reasoning
+
+- **LAION-5B** (LAION)
+  - Large-scale image-text dataset
+  - Enabled better multimodal training
+
+- **Vicuna** (LMSYS)
+  - Fine-tuned LLaMA
+  - Open-source conversational agent
+
+- **Alpaca** (Stanford)
+  - Instruction-tuned LLaMA
+  - Efficient fine-tuning approach
+
+- **Yi** (01.AI)
+  - Bilingual Chinese-English model
+  - 34B parameters
+
+- **MPT** (MosaicML)
+  - Open-source model with commercial usage rights
+  - Efficient training techniques
+
+#### Hardware Advancements
+- **Graphcore IPU** (Graphcore)
+  - Intelligent Processing Unit
+  - Alternative architecture for AI computation
+
+#### Training Methodologies
+- **LIMA (Less Is More for Alignment)** (Meta)
+  - Demonstrated efficiency of small high-quality datasets
+  - 1,000 examples for alignment
+
+- **UL2 (Unified Language Learner)** (Google)
+  - Unified approach to pre-training
+  - Combined multiple objectives
+
+#### Architectural Innovations
+- **Mamba** (Albert Gu & Tri Dao)
+  - State space model for sequence modeling
+  - Linear scaling with sequence length
+
+### 2024: Efficiency and Performance
+
+#### Notable Model Releases
+- **Claude 3** models (Anthropic)
+  - Opus, Sonnet, and Haiku variants
+  - Improved reasoning and multimodal capabilities
+
+- **phi-1/phi-2/phi-3** (Microsoft)
+  - Small but powerful models
+  - High performance with limited training data
+
+- **Command** (Cohere)
+  - Enterprise-focused model
+  - Multilingual capabilities
+
+- **Falcon 2** (TII)
+  - Improved performance over original Falcon
+  - Open licensing
+
+- **Jamba** (AI Alliance)
+  - Open mixture of experts model
+  - 32B parameters
+
+- **OpenAI o1** (OpenAI)
+  - First specialized reasoning model
+  - Advanced mathematical problem-solving
+
+#### Hardware Advancements
+- **Groq LPU** (Groq)
+  - Language Processing Unit
+  - Record-breaking inference speeds
+
+#### Training Methodologies
+- **RSO (Reinforced Self-training with Online feedback)** (DeepMind)
+  - Self-improvement through AI evaluation
+  - Reduced human annotation needs
+
+- **SPIN (Self-Played Improvement Narration)** (Anthropic)
+  - Self-correction capabilities
+  - Improved factual accuracy
+
+#### Benchmark Developments
+- **ORCA Bench** (Microsoft)
+  - Advanced reasoning evaluation
+  - Complex problem-solving assessment
+
+### 2025: Reasoning and Compression
+
+#### Notable Model Releases
+- **DeepSeek-MoE** (DeepSeek)
+  - Mixture of experts architecture
+  - Efficient scaling
+
+- **Grok** (xAI)
+  - Open-source model
+  - 314B parameters
+
+- **Pixtral** (Mistral AI)
+  - Multimodal capabilities
+  - 12B parameters
+
+- **Qwen2** (Alibaba)
+  - Multilingual capabilities
+  - 72B parameters
+
+#### Hardware Advancements
+- **Gaudi3** (Intel)
+  - AI accelerator for deep learning
+  - Alternative to NVIDIA for training
+
+- **Tensor Streaming Processors** (Cerebras)
+  - Memory-centric architecture
+  - Optimized for LLM workloads
+
+#### Training Methodologies
+- **SSL-RL (Self-Supervised Learning with Reinforcement)** (Google)
+  - Combined approach for more efficient training
+  - Reduced need for human labels
+
+- **iPOPE (Iterative Pairwise Online Preference Elicitation)** (Apple)
+  - Advanced alignment technique
+  - Efficient preference learning
+
+#### Benchmark Developments
+- **ARC-AGI** (DeepMind)
+  - Advanced Reasoning Challenge
+  - Complex problem-solving assessment
+
+- **Frontier Math Benchmark** (Various)
+  - Advanced mathematical reasoning evaluation
+  - Complex mathematical problem-solving
+
+Training data over the years
+
+### Optimization Breakthroughs
+
+
+### Architectural Breakthroughs 
+
+
+### Training Breakthroughs
+
+
+Consider adding these categories:
+
+Tokenization Evolution: BPE → SentencePiece → Tokenizer efficiency
+Training Data Evolution: From BookCorpus to web-scale datasets
+Inference Optimization: KV caching, speculative decoding, etc.
+
+
+
+
+Visual Elements
+
+Add performance charts showing scaling laws
+Include architecture diagrams for key innovations
+Create a "family tree" showing model lineage
+
+NOTES TO SELF 
+
+- Add a note for hardware, not in the scope of this blog but should not be ignored 
+- Quick note about benchmark, Not hear to explain these but these are the major ones that are used mostly.  -->
