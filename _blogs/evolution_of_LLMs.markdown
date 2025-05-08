@@ -17,68 +17,86 @@ The landscape of language models has evolved dramatically since the introduction
 
 From attention mechanisms to constitutional AI, we'll dive deep into the code, math, and ideas that revolutionized NLP.
 
-The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here]().
+ Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
 
 ## How this blog is structured
 
-First I would like to describe the basic difference between different LLM architectures, I.e Encoder Only, Decoder Only and Encoder-Decoder models. Then we will have a look at a short AI timeline over the years.
-Where we will see what architectural innovation, computational breakthrough, training optimization was discovered over the years and how it affected LLMs and their benchmarks.
+First we would begin with a short to the transformers (Most LLM structure begin this way), then go sequentially how they are trained and infererenced. To lay a groundwork, on top of which we can build.
+
+After which we will have a look at a short AI timeline over the years, going year by year seeing the most influential work that shaped that and future years of LLMs.
+
+Where we will see what architectural innovation, computational breakthrough, training optimization that were invented over the years and how it affected LLMs and their benchmarks.
 
 Finally and most importantly we will dive deep into the technical understanding and implementation of these different techniques. Some of them being Flash Attention, KV-Caching, GRPO etc.  
 
-Year wise innovation, for each specific model. Link to special implementation, as many share such ideas. Only model specific innovation in it's section.
 
-below each model, link to the next model if you interested.
+Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). Over here I will just give quick intro and links to some ground breaking innovations.
 
-"""
-We will categorize each model according to the following properties: Family, Pretraining Architecture, Pretraining or Fine-tuning Task, Extension, Application, Date (of first known publication), Number of Parameters, Corpus, License, and Lab.
-
-Family represents what original foundation model the specific model is extending, extension describes what the model is adding to the one it is deriving from, Date is when the model was firts published, Number of parameters of the pretrained model, Corpus is what data sources the model was pre-trained or fine-tuned on, License describes how the model can be legally used, and Lab lists the institution that published the model.
-""" {TAKEN FROM THE BLOG MENTIONED ABOVE}
-
-Only included os models, so no claude3.5, gpt 4 etc even though we love em
+> NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them in the timeline. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
 
 
-NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them in the timeline. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
-
-Also there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog. Over here I will just give quick intro and links to some ground breaking innovations.
-
-### Decoder only models
-
-[IMAAGE_OF_TRANSFORMER_DECODER]
-
-### Encoder only models
-
-[IMAAGE_OF_TRANSFORMER_ENCODER]
-
-## A short introduction to how LLMs are trained & inferenced
+## A short introduction to LLMs
 
 This part is highly influenced by this [video](https://www.youtube.com/watch?v=7xTGNNLPyMI) by andrej karpathy
 
 A paper on pretraining [paper](https://arxiv.org/pdf/2003.08271)
 
-[Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0)
 
+### Architecture
 
-### Pretraining
+We will be skipping over the internal details about the transformers model (you can read more about it in my previous blog), I will proceed with the assumption that you have a very deep level understanding of atleast the transformer model. Having that that let us proceed. 
 
-[CHECK IF COHERE RELEASED ANYTHING SIGNIFICANT, AND IF ANTHROPIC HAD ANY PAPERS]
+As we can see the original transformer has two parts, an Encoder and a Decoder. And as is known, it was initially made for the sole purpose of Machine Translation. 
 
-USE THIS [PAPER](https://arxiv.org/pdf/2106.04554)
+But over the years they have been used for a plethora of tasks from 
+- Question Answering 
+- Summarization 
+- Tagging 
+- Classification 
+
+And many more. 
+
+LLMs consist of architectures which are solely based on the Encoder like Bert 
+
+[ADD_IMAGE_OF_BERT]
+
+LLMs consist of architectures which are solely based on the Decoder like gpt-1 
+
+[ADD_IMAGE_OF_GPT1]
+
+There are LLMs which use the good ol Encoder Decoder layer together too like T5
+
+[WITH_IMAGE]
+
+One thing to be mindful of is, that the development of LLMs have been done on the transformers. There was no radical shift, only gradual and slow incremental changes. As you read more about them you will understand them better.
+
+In crux you only need to understand the basic Transformer architecture to understand most if not all LLMs.
+
+### Training
+
+As I mentioned there are 3 kinds of architectures when it comes to LLM, hence there is a different way of training each. Even though they share few similarities. Each has a different objective. Let us begin by first understanding the most popular LLM architecture, that being the decoder only architecture. 
+
+#### Decoder Only 
+
+#### Encoder Only 
+
+#### Encoder Decoder
+
+### Inference
+
 
 ## The AI timeline
+
+This is a very short timeline of the most influential work, to read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
+
+The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline.
 
 ### 2017: The Foundation Year
 
 #### Early Activation Functions
 
-- GELU (Gaussian Error Linear Unit) [NOT 2017]
 - Swish/SiLU
-- Comparison with ReLU and ELU [NOT 2017]
 
-"""Here are the recommended headings for the 2017 section of your timeline:
-
-### 2017: The Foundation Year
 
 #### The Transformer Architecture
 - Multi-head attention mechanism
@@ -107,9 +125,6 @@ USE THIS [PAPER](https://arxiv.org/pdf/2106.04554)
 - TPU v2 acceleration
 - Gradient accumulation techniques
 - Large-batch training methods
-
-These headings better reflect the significant developments that actually occurred in 2017, with the Transformer architecture being the most important breakthrough of that year.
-"""
 
 ### 2018: BERT and Early Innovations
 
