@@ -10,6 +10,7 @@ Evolution of LLMs
 
   - [Flash Attention Blog](https://gordicaleksa.medium.com/eli5-flash-attention-5c44017022ad)
   - [Flash Attention 3](https://tridao.me/blog/2024/flash3/)
+  - https://github.com/bkitano/llama-from-scratch
   - [Mamba](https://tridao.me/blog/)
   - [Paper on fine-tuning](https://arxiv.org/abs/2408.13296v1)
   - [Scaling laws](https://arxiv.org/pdf/2001.08361)
