@@ -33,7 +33,7 @@ Evolution of LLMs
   - [Llama 3 from scratch](https://github.com/naklecha/llama3-from-scratch)
   - [Foundations of Large Language Models](https://arxiv.org/abs/2501.09223)
   - [GPT 2 in 2 hours](https://github.com/jingyaogong/minimind/)
-  - [Things we learned about LLMs in 2024](https://simonwillison.net/2024/Dec/31/llms-in-2024/)
+  - [Things we learned about LLMs in 2024](https://simonwil lison.net/2024/Dec/31/llms-in-2024/)
   - [Book on LLMs](https://cyrilzakka.github.io/llm-playbook/SUMMARY.html)
 
 
