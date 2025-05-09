@@ -74,15 +74,90 @@ In crux you only need to understand the basic Transformer architecture to unders
 
 ### Training
 
-As I mentioned there are 3 kinds of architectures when it comes to LLM, hence there is a different way of training each. Even though they share few similarities. Each has a different objective. Let us begin by first understanding the most popular LLM architecture, that being the decoder only architecture. 
+As I mentioned there are 3 kinds of architectures when it comes to LLM, hence there is a different way of training each. Even though they share few similarities. Each has a different objective. Let us begin by first understanding the most popular LLM architecture, that being the decoder only architecture.
 
-#### Decoder Only 
+#### Decoder Only
 
-#### Encoder Only 
+##### Pretraining
+
+**Step 1: Data Collection**
+
+We know Decoder based LLMs are able to answer a variety of answer to questions about science, food, mathematics, facts etc. That is because they have been trained on a huge plethora of the data. 
+
+So the first step is to collect the said data. One important thing to keep in mind is that these models are able to answer based on what they have seen. They are not performing any kind of reasoning. It is given a distribution, what is the most likely token that is to appear. 
+
+So if you want a coding LLM you will collect a lot of code related data from publically available places like github. 
+
+If you want a cooking LLM you will collected a lot of recipes and so on. 
+
+Most general purpose LLMs are trained on data collected from various sources, hence they are able to answer a lot of question. 
+
+A lot of filtering steps also goes behind it
+
+"
+Garbage in, garbage out
+"
+
+Most of the internet when crawled has data which looks something like this 
+
+```html
+<html>
+{add shit}
+</html>
+```
+
+Hence it needs to be processed into a more human readable form, You can imagine how humongous of a task it must be to clean huge datasets with GBs of data. 
+
+Now there are other filterning that also needs to be done, How do you take care of profanity? What about fake news and so on
+
+**Step 2: Tokenization**
+
+{maybe talk about vocabulary and token length}
+
+When we talked about transformers, we skipped talking about tokenization, but as it is a vital piece of LLM training. We shall spend some time talking about it here. 
+
+Sentence level tokenization 
+
+My first question was, why do we need to break down words. Why not give the entire sentence. Heck why not give the whole paragraph as an input. 
+
+While in practice it can be done, it is not wise. Because if we go back to our basic principle about LLMs. 
+
+"They are next token predictors"
+
+So in given any large enough paragraph or even an essay. The likelihood of a sentence repeating is very low. So if we think it in terms of machines, if we transform each sentence into a token, we will have a vocabular with a lot of numbers, which do not relate to each other at all. So we can never predict what sentence will come after any given sentence. 
+
+Word level tokenization 
+
+A simple work around this seems to be, well why not just tokenize the words, instead of sentences. Because in any large enough paragraph or essay. Words repeat and they follow a logical sequence of what is to appear next. For example 
+
+"Water is ___", if you gave me this sentence word by word, I will assume the next word is wet. Whereas if you gave me a sentence 
+
+"Water is wet, This is a debatable topic." I will have no clue what can be said after this sentence, Maybe someone raises a point, maybe someone says something else. 
+
+So word level helps us retain the logical sequence, and words have meanings to them too. But there is still one big issue. There can be millions of words, some have way higher representation in usual text and some are highly unlikely to occur in common place. 
+
+There are words which are commonplace in one industry and rare in another. 
+
+So we will have a huge vocabulary. 
+
+If you think for a moment we may come to the conclusion that, why not use character level tokenization to solve this problem, this will reduce the vocabulary drastically. 
+
+Here the problem would lie in the fact that characters by themselves do not hold much meaning (atleast in the english lexicon)
+
+**Step 3: Training the network**
+
+##### Fine-Tuning
+
+#### Encoder Only
+
+Now let's understand how a usual Encoder is trained, We will talk about BERT here 
 
 #### Encoder Decoder
 
+Now let's do the same for T5
+
 ### Inference
+
 
 
 ## The AI timeline
@@ -91,44 +166,64 @@ This is a very short timeline of the most influential work, to read about more a
 
 The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline.
 
+[Write the name of the creators and labs]
+
 ### 2017: The Foundation Year
 
-#### Early Activation Functions
+#### Attention is all you need
 
-- Swish/SiLU
+[paper](https://arxiv.org/abs/1706.03762)
 
+The foundational paper on transformers is released, some of the key ideas introduced include
 
-#### The Transformer Architecture
+- Scaled dot-product attention
 - Multi-head attention mechanism
 - Positional encodings
 - Layer normalization
-- Feed-forward networks
-- Encoder-decoder structure
-
-#### Swish Activation Function
-- Self-gated activation (x·sigmoid(βx))
-- Smooth alternative to ReLU
-- Discovered through neural architecture search
-
-#### Attention Mechanisms
-- Scaled dot-product attention
-- Multi-head attention
-- Self-attention
 - Masked attention for autoregressive models
 
-#### Key Papers and Implementations
-- "Attention Is All You Need" (Vaswani et al.)
-- "Searching for Activation Functions" (Ramachandran et al.)
-- Tensor2Tensor library
+We have talked deeply about each of these topics previously and I implore you to check that part out [here]()
 
-#### Hardware and Training Innovations
-- TPU v2 acceleration
-- Gradient accumulation techniques
-- Large-batch training methods
+#### Deep reinforcement learning from human preferences
+
+[paper](https://arxiv.org/abs/1706.03741)
+
+The RLHF paper 
+
+#### Proximal Policy Optimization Algorithms
+
+[paper](https://arxiv.org/abs/1707.06347)
+
 
 ### 2018: BERT and Early Innovations
 
-#### BERT's Architecture
+#### GPT-1
+
+[paper](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
+[blog](https://openai.com/index/language-unsupervised/)
+
+- Unidirectional decoder
+- BPE tokenization
+- Zero-shot capabilities
+- Language modeling objective
+
+"""
+Link: https://huggingface.co/docs/transformers/model_doc/openai-gpt
+Family: GPT
+Pretraining Architecture: Decoder
+Pretraining Task: LM
+Extension:
+Application: Text generation, but adaptable to many other NLP tasks when fine tuned.
+Date (of first known publication): 06/2018
+Num. Params:117M
+Corpus: Unsupervised Pretraining on BookCorpus dataset. Supervised Finetuning on several task-specific datasets including SNLI, RACE, Quora…
+License: N/A
+Lab: OpenAI
+"""
+
+#### BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
+
+[paper](https://arxiv.org/abs/1810.04805)
 
 - Bidirectional encoder
 - WordPiece tokenization
@@ -150,41 +245,12 @@ Lab:Google
 """
 
 
-#### GPT-1
-
-- Unidirectional decoder
-- BPE tokenization
-- Zero-shot capabilities
-- Language modeling objective
-
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/openai-gpt
-Family: GPT
-Pretraining Architecture: Decoder
-Pretraining Task: LM
-Extension:
-Application: Text generation, but adaptable to many other NLP tasks when fine tuned.
-Date (of first known publication): 06/2018
-Num. Params:117M
-Corpus: Unsupervised Pretraining on BookCorpus dataset. Supervised Finetuning on several task-specific datasets including SNLI, RACE, Quora…
-License: N/A
-Lab: OpenAI
-"""
-
-#### Hardware Innovations
-- **NVIDIA Tesla V100** (NVIDIA)
-  - Specialized for AI training workloads with tensor cores
-  - Enabled training of larger language models
-
-#### Training Innovations
-
-- Warm-up learning rate schedules
-- Adam optimizer variants
-- Gradient clipping strategies
-
 ### 2019: Scaling and Efficiency
 
 #### GPT-2
+
+[blog](https://openai.com/index/better-language-models/)
+[paper](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
 
 """
 Link: https://huggingface.co/docs/transformers/model_doc/gpt2
@@ -242,27 +308,6 @@ License: Open, Apache-2.0
 Lab: Huggingface
 """
 
-#### ALBERT
-
-- Cross-layer parameter sharing
-- Factorized embedding parameterization
-- Sentence ordering prediction
-
-#### AlphaFold
-
-"""
-Link: https://github.com/deepmind/alphafold
-Family: SE(3) Transformer
-Pretraining Architecture: Encoder
-Pretraining Task: Protein folding prediction of BERT using parameter sharing, which is much more efficient given the same number of parameters
-Extension: The original Alphafold used a BERT-style Transformer. The details of Alphafold’s Transformer are not known, but it is believed it is an extension of the SE(3)-Tranformer, a 3-D equivariant Transformer
-Application: Protein folding
-Date (of first known publication): 09/2019
-Num. Params:b12M, Large = 18M, XLarge = 60M*
-Corpus: Same as BERT
-License: the code is open sourced, with Apache-2.0
-Lab: Deepmind
-"""
 
 #### BART
 
@@ -293,22 +338,17 @@ Lab:Facebook
   - Reduced computational complexity for long sequences
 
 
-"""
-Clarification Needed
-
-AlphaFold: The original AlphaFold was indeed presented at CASP13 in December 2018 as noted in Wikipedia: "In December 2018, DeepMind's AlphaFold placed first in the overall rankings of the 13th Critical Assessment of Techniques for Protein Structure Prediction (CASP)." Wikipedia While it used deep learning techniques, it wasn't specifically based on the SE(3)-Transformer architecture. The more advanced transformer-based version (AlphaFold 2) was released later in 2020.
-
-The "SE(3)-Transformer" architecture was incorporated into later versions of AlphaFold, particularly AlphaFold 2 which was released in 2020. The original 2019 AlphaFold used convolutional neural networks rather than transformers as mentioned in this article: "one of the major differences between AlphaFold 1 and AlphaFold 2 is that the former used concurrent neural networks (CNNs) and the new version uses Transformers." 
-"""
-
 ### 2020: The Scale Revolution
 
 #### GPT-3
+
+[paper](https://arxiv.org/abs/2005.14165)
 
 - In-context learning
 - Few-shot capabilities
 - Scaling laws discovery
 - Batch size scaling
+
 
 #### T5
 
@@ -331,91 +371,43 @@ License: Open, Apache-2.0
 Lab: Google
 """
 
-#### Architecture Innovations
 
-- Sparse Transformers
-- Reformer
-- Longformer
-- Linear attention mechanisms
+#### Sparse Transformers
 
 
-#### Notable Model Releases
-- **Meena** (Google)
-  - Specialized conversational model
-  - 2.6B parameters
-
-- **Turing-NLG** (Microsoft)
-  - 17B parameters
-  - Advanced natural language generation
-
-- **Pangu-α** (Huawei)
-  - 200B parameters
-  - Chinese language model
-
-#### Hardware Advancements
-- **TPU v3** (Google)
-  - Enhanced matrix multiplication acceleration
 
 #### Training Methodologies
 - **ZeRO (Zero Redundancy Optimizer)** (Microsoft)
   - Memory optimization for distributed training
 
-"""
-Your 2020 section is quite accurate, but I can provide a few important additions and clarifications:
 
-### GPT-3 Release Date and Impact
 
-GPT-3 was officially announced on May 28, 2020 as noted in Wikipedia: "On May 28, 2020, an arXiv preprint by a group of 31 engineers and researchers at OpenAI described the achievement and development of GPT-3, a third-generation 'state-of-the-art language model'."
 
-You correctly highlight its key innovations:
-- In-context learning
-- Few-shot capabilities
-- Scaling laws discovery
-- Batch size scaling
 
-### T5 Publication Timeline
+#### ELECTRA
+ 
+Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
 
-While T5 was first presented in a preprint in October 2019, it gained significant attention and influence in 2020. One clarification - T5 was published on arXiv in October 2019, but was officially presented at a major conference in 2020, which is why it's often associated with both years.
 
-### Additional Notable Models from 2020
+#### Switch Transformer
 
-You might want to add:
+Google's early mixture-of-experts approach that demonstrated trillion-parameter scale was possible
 
-1. **ELECTRA** - Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
 
-2. **BART (Facebook/Meta)** - While introduced in 2019, BART became more prominent in 2020 as it was integrated into various applications
+#### Scaling Laws
 
-3. **Switch Transformer** - Google's early mixture-of-experts approach that demonstrated trillion-parameter scale was possible
+OpenAI's publication on the mathematical relationships between model size, dataset size, and computational budget demonstrated predictable patterns for improving performance This was part of the GPT-3 research which showed "that scaling up language models greatly improves task-agnostic, few-shot performance."
 
-### Additional Training Innovation
-
-**Scaling Laws** - OpenAI's publication on the mathematical relationships between model size, dataset size, and computational budget demonstrated predictable patterns for improving performance This was part of the GPT-3 research which showed "that scaling up language models greatly improves task-agnostic, few-shot performance."
-
-Overall, your 2020 section captures most of the major developments, with these additions providing a more complete picture of this transformative year in LLM development.
-"""
 
 ### 2021: Instruction Tuning and Alignment
 
-#### InstructGPT
+#### Dall-e
 
-- RLHF pipeline [blog on the topic](https://huggingface.co/blog/rlhf) & [blog 2](https://wandb.ai/ayush-thakur/RLHF/reports/Understanding-Reinforcement-Learning-from-Human-Feedback-RLHF-Part-1--VmlldzoyODk5MTIx)
-- PPO implementation
-- Human feedback collection
-- Alignment techniques
 
-"""
-Link: https://github.com/openai/following-instructions-human-feedback
-Family: GPT
-Pretraining Architecture: Decoder
-Pretraining Task: LM
-Extension: GPTInstruct starts off with a pretrained GPT3 model and adds reward modeling through reinforcement learning after a supervised finetuning
-Application: Knowledge-intensive dialog or language tasks
-Date (of first known publication): 01/2022
-Num. Params: Same as GPT3
-Corpus: Same as GPT3 for pretraining, but finetuned and optimized using labeler data and prompts
-License: Closed source, Accessible through API
-Lab: OpenAI
-"""
+#### LoRA
+
+[paper](https://arxiv.org/abs/2106.09685)
+
 
 #### PaLM
 
@@ -438,46 +430,6 @@ License: Closed source, Accessible through API
 Lab: Google
 """
 
-#### Training Innovations
-
-- Chain-of-thought prompting
-- Constitutional AI principles
-- SFT (Supervised Fine-Tuning)
-- Mixture of Experts (MoE)
-
-
-#### Notable Model Releases
-- **Jurassic-1** (AI21 Labs)
-  - 178B parameters
-  - Language understanding with specialized abilities
-
-- **CPM-2** (Baidu)
-  - Chinese pre-trained model
-  - Multilingual capabilities
-
-- **HyperCLOVA** (Naver)
-  - 204B parameters
-  - Korean language model
-
-- **T0** (BigScience)
-  - Zero-shot capabilities through multi-task prompted training
-
-#### Hardware Advancements
-- **SambaNova DataScale** (SambaNova)
-  - Specialized AI accelerator architecture
-  - Alternative to traditional GPU-based training
-
-#### Architectural Innovations
-- **Switch Transformer** (Google)
-  - Mixture of experts approach
-  - Trillion parameter models
-
-"""
-Let me check the accuracy of your 2021 section and look for any important additions.
-
-Your 2021 section is generally accurate, but there are a few important additions that would enhance the completeness of your timeline. 
-
-### Models You're Missing
 
 **Gopher (DeepMind)**
 - 280B parameter model released in December 2021 DeepMind introduced this model as a "280 billion parameter model" that was "evaluated on 152 diverse tasks, achieving state-of-the-art performance across the majority."
@@ -490,34 +442,60 @@ Your 2021 section is generally accurate, but there are a few important additions
 - Demonstrated advanced distributed training techniques
 - Applied significant hardware optimization for large-scale training
 
-**GLaM (Google)**
-- Mixture of Experts approach with 1.2 trillion parameters (sparsely activated)
-- Data-efficient alternative to dense models
-- Demonstrated competitive performance with significantly less computational cost
 
-### Additional Technical Innovations
 
-**Chinchilla Scaling Laws**
+### 2022: Democratization
+
+
+#### Chinchilla
+
+[paper](https://arxiv.org/abs/2203.15556)
 While the Chinchilla model itself wasn't released until 2022, the research behind it began in 2021, establishing important scaling principles that:
 - Showed optimal token-to-parameter ratios should be approximately 20:1 This research found that "we need around 20 text tokens per parameter" for optimal training.
 - Demonstrated many existing models were significantly undertrained
 - Influenced the training methodology of subsequent models
 
-**Training Data Quality**
-- Improved data cleaning and filtering techniques
-- Development of specialized corpora like The Pile
-- Increased focus on dataset curation rather than just scale
-
-### Other Significant Developments
-
-- **Constitutional AI research** began to take shape, though formal paper publications would come later
-- **Increased focus on safety and alignment** through careful supervision and filtering
-- **Multi-modal foundations** were being laid, though primarily text-focused models dominated 2021
-
-Your section does a good job covering the key developments around instruction tuning and alignment techniques (particularly RLHF and PPO), but these additions would provide a more comprehensive view of the LLM landscape in 2021.
+"""
+Link: https://arxiv.org/abs/2203.15556
+Family: GPT
+Pretraining Architecture: Decoder
+Pretraining Task: LM
+Extension: Same as Gopher but with optimizations to reduce model size and therefore training/inference time with equal or superior performance
+Application: Same as Gopher/GPT3
+Date (of first known publication): 03/2022
+Num. Params:70B
+Corpus: Massive Text
+License: Closed source.
+Lab: Deepmind
 """
 
-### 2022: Democratization
+
+#### Chain-of-thought prompting
+
+[paper](https://arxiv.org/abs/2201.11903)
+
+
+
+#### InstructGPT
+
+- RLHF pipeline [blog on the topic](https://huggingface.co/blog/rlhf) & [blog 2](https://wandb.ai/ayush-thakur/RLHF/reports/Understanding-Reinforcement-Learning-from-Human-Feedback-RLHF-Part-1--VmlldzoyODk5MTIx)
+- PPO implementation
+- Human feedback collection
+- Alignment techniques
+
+"""
+Link: https://github.com/openai/following-instructions-human-feedback
+Family: GPT
+Pretraining Architecture: Decoder
+Pretraining Task: LM
+Extension: GPTInstruct starts off with a pretrained GPT3 model and adds reward modeling through reinforcement learning after a supervised finetuning
+Application: Knowledge-intensive dialog or language tasks
+Date (of first known publication): 01/2022
+Num. Params: Same as GPT3
+Corpus: Same as GPT3 for pretraining, but finetuned and optimized using labeler data and prompts
+License: Closed source, Accessible through API
+Lab: OpenAI
+"""
 
 #### BLOOM
 
@@ -540,80 +518,26 @@ Lab: Big Science/Huggingface
 License: Open, but need to follow restrictions in Attachment A, BigScience RAIL License v1.0
 """
 
-#### OPT
 
-- Reproducible training
-- Open source weights
-- Training dynamics study
-- Cost analysis
-
-#### Chinchilla
-
-"""
-Link: https://arxiv.org/abs/2203.15556
-Family: GPT
-Pretraining Architecture: Decoder
-Pretraining Task: LM
-Extension: Same as Gopher but with optimizations to reduce model size and therefore training/inference time with equal or superior performance
-Application: Same as Gopher/GPT3
-Date (of first known publication): 03/2022
-Num. Params:70B
-Corpus: Massive Text
-License: Closed source.
-Lab: Deepmind
-"""
-
-#### Architectural Improvements
-
-- Flash Attention
-- Rotary embeddings
-- Grouped-query attention
-- ALiBi position encoding
+#### Flash Attention
+#### Rotary embeddings
 
 
-#### Notable Model Releases
-- **Galactica** (Meta)
-  - Scientific knowledge model
-  - 120B parameters
+
+#### Grouped-query attention
+#### ALiBi position encoding
+
 
 - **Anthropic Claude 1** (Anthropic)
   - Initial release focusing on helpfulness and harmlessness
 
-- **GLaM** (Google)
-  - Mixture of experts model
-  - 1.2 trillion parameters (sparsely activated)
+#### FLAN (Fine-tuned LAnguage Net) (Google)
+- Instruction tuning across multiple tasks
+- Improved zero-shot performance
 
-- **ERNIE 3.0** (Baidu)
-  - Enhanced knowledge integration
-  - Multilingual capabilities
-
-#### Hardware Advancements
-- **Cerebras CS-2** (Cerebras)
-  - Wafer-scale engine for AI computation
-  - Alternative architecture for AI training
-
-#### Training Methodologies
-- **FLAN (Fine-tuned LAnguage Net)** (Google)
-  - Instruction tuning across multiple tasks
-  - Improved zero-shot performance
-
-#### Benchmark Developments
-- **HELM (Holistic Evaluation of Language Models)** (Stanford)
-  - Comprehensive benchmark suite for LLMs
-  - Standardized evaluation metrics
-
-"""
-I'll verify your 2022 section and check for any missing developments.
-
-Your 2022 section is largely accurate, but there are some important additions to include, particularly regarding multimodal models and text-to-image systems that emerged as significant developments that year.
-
-### Multimodal Models to Add
-
-**Flamingo (DeepMind)**
-- Released in April 2022 as a "family of Visual Language Models (VLM)" designed for few-shot learning with visual inputs
-- Pioneered visual-language integration capabilities
-- Demonstrated strong few-shot learning in multimodal space
-- Set benchmarks for vision-language tasks
+#### HELM (Holistic Evaluation of Language Models)** (Stanford)
+  Comprehensive benchmark suite for LLMs
+  Standardized evaluation metrics
 
 **DALL-E 2 (OpenAI)**
 - Released in April 2022
@@ -627,45 +551,7 @@ Your 2022 section is largely accurate, but there are some important additions to
 - Democratized access to high-quality image generation
 - Trained on LAION-5B dataset
 
-### Additional LLM Developments
-
-**Sparrow (DeepMind)**
-- Dialogue-optimized model built from Chinchilla
-- Emphasized safety and helpful responses
-- Incorporated reinforcement learning from human feedback
-- Used rule-based constraints to guide model behavior
-
-**Unified-IO (Allen Institute)**
-- Multi-task, multi-modal model
-- Demonstrated shared representations across vision and language tasks
-- Single architecture for diverse AI tasks
-
-### Technical Innovations Worth Adding
-
-**Efficient Attention Mechanisms**
-- Improved computational efficiency for long context processing
-- Reduced memory requirements for large model inference
-- Enhanced throughput for deployed models
-
-**Quantization Advances**
-- Post-training quantization techniques for model compression
-- Reduced inference costs while maintaining performance
-- Enabled deployment on consumer hardware
-
-### Community and Ecosystem Developments
-
-**HuggingFace Hub Growth**
-- Expanded repository of pre-trained models
-- Democratized access to fine-tuning and deployment tools
-- Created standard interfaces for model sharing
-
-**Ethical AI Guidelines**
-- Expanded frameworks for responsible AI deployment
-- Increased focus on documentation and transparency
-- Development of tools for bias detection and mitigation
-
-These additions would provide a more comprehensive view of the 2022 AI landscape, particularly highlighting the emergence of multimodal capabilities and open-source developments that significantly shaped the field.
-"""
+#### GPTQ
 
 ### 2023: Multi-Modal and Reasoning
 
