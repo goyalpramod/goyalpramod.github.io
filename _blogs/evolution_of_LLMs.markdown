@@ -220,6 +220,10 @@ License: N/A
 Lab: OpenAI
 """
 
+#### Sentencepiece
+
+[paper](https://arxiv.org/abs/1808.06226)
+
 #### BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
 [paper](https://arxiv.org/abs/1810.04805)
@@ -266,6 +270,8 @@ Lab: OpenAI
 
 #### RoBERTa
 
+[paper](https://arxiv.org/abs/1907.11692)
+
 - Dynamic masking
 - Removed NSP
 - Larger batch sizes
@@ -286,6 +292,8 @@ Lab: UW/Google
 """
 
 #### DistilBERT and Model Compression
+
+[paper](https://arxiv.org/abs/1910.01108)
 
 - Knowledge distillation techniques
 - Parameter sharing
@@ -308,6 +316,8 @@ Lab: Huggingface
 
 #### BART
 
+[paper](https://arxiv.org/abs/1910.13461)
+
 """
 Link: https://huggingface.co/docs/transformers/model_doc/bart
 Family: BERT for encoder, GPT for Decoder
@@ -322,22 +332,38 @@ License: Open, Apache-2.0
 Lab:Facebook
 """
 
-#### Notable Model Releases
+#### XLNet
 
-- **XLNet** (Google/CMU)
+[paper](https://arxiv.org/abs/1906.08237)
 
-  - Permutation-based training approach
-  - Surpassed BERT on multiple benchmarks
+- Permutation-based training approach
+- Surpassed BERT on multiple benchmarks
 
-- **Megatron** (NVIDIA)
-  - Model parallelism for efficient large model training
+#### Megatron
 
-#### Training Innovations
+[paper](https://arxiv.org/abs/1909.08053)
 
-- **Sparse Attention Patterns** (OpenAI)
-  - Reduced computational complexity for long sequences
+- Model parallelism for efficient large model training
+
+#### Sparse Attention Patterns
+
+[paper](https://arxiv.org/abs/1904.10509)
+
+- Reduced computational complexity for long sequences
 
 ### 2020: The Scale Revolution
+
+#### Reformer: The Efficient Transformer
+
+[paper](https://arxiv.org/abs/2001.04451)
+
+#### Longformer: The Long-Document Transformer
+
+[paper](https://arxiv.org/abs/2004.05150)
+
+#### GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding
+
+[paper](https://arxiv.org/abs/2006.16668)
 
 #### Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
 
@@ -362,6 +388,8 @@ Lab:Facebook
 
 #### T5
 
+[paper](https://arxiv.org/abs/1910.10683)
+
 - Encoder-decoder architecture
 - Unified text-to-text framework
 - Span corruption
@@ -381,26 +409,47 @@ License: Open, Apache-2.0
 Lab: Google
 """
 
-#### Sparse Transformers
+#### Measuring Massive Multitask Language Understanding
 
-#### Training Methodologies
+[paper](https://arxiv.org/abs/2009.03300)
 
-- **ZeRO (Zero Redundancy Optimizer)** (Microsoft)
-  - Memory optimization for distributed training
+#### ZeRO (Zero Redundancy Optimizer)
+
+[paper](https://arxiv.org/abs/1910.02054)
+
+- Memory optimization for distributed training
 
 #### ELECTRA
+
+[paper](https://arxiv.org/abs/2003.10555)
 
 Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
 
 #### Switch Transformer
 
+[paper](https://arxiv.org/abs/2101.03961)
+
 Google's early mixture-of-experts approach that demonstrated trillion-parameter scale was possible
 
 #### Scaling Laws
 
+[paper](https://arxiv.org/abs/2001.08361)
+
 OpenAI's publication on the mathematical relationships between model size, dataset size, and computational budget demonstrated predictable patterns for improving performance This was part of the GPT-3 research which showed "that scaling up language models greatly improves task-agnostic, few-shot performance."
 
 ### 2021: Instruction Tuning and Alignment
+
+#### RoFormer: Enhanced Transformer with Rotary Position Embedding
+
+[paper](https://arxiv.org/abs/2104.09864)
+
+#### Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM
+
+[paper](https://arxiv.org/abs/2104.04473)
+
+#### Transcending Scaling Laws with 0.1% Extra Compute
+
+[paper](https://arxiv.org/abs/2210.11399)
 
 #### Improving language models by retrieving from trillions of tokens
 
@@ -415,6 +464,14 @@ Briefly talk about
 
 Briefly talk about
 
+#### FSDP
+
+[paper](https://arxiv.org/abs/2304.11277)
+
+#### HumanEval
+
+[paper](Evaluating Large Language Models Trained on Code)
+
 #### LoRA
 
 [paper](https://arxiv.org/abs/2106.09685)
@@ -424,6 +481,8 @@ Briefly talk about
 [paper](https://arxiv.org/abs/2212.10560)
 
 #### PaLM
+
+[paper](PaLM: Scaling Language Modeling with Pathways)
 
 - Pathways system
 - Scaled dot product attention
@@ -444,13 +503,17 @@ License: Closed source, Accessible through API
 Lab: Google
 """
 
-**Gopher (DeepMind)**
+#### Gopher (DeepMind)
+
+[paper](https://arxiv.org/abs/2112.11446)
 
 - 280B parameter model released in December 2021 DeepMind introduced this model as a "280 billion parameter model" that was "evaluated on 152 diverse tasks, achieving state-of-the-art performance across the majority."
 - Demonstrated significant scaling benefits in reading comprehension and fact-checking
 - Represented a major advancement in model scale from DeepMind
 
-**Megatron-Turing NLG (Microsoft & NVIDIA)**
+#### Megatron-Turing NLG
+
+[paper](https://arxiv.org/abs/2201.11990)
 
 - 530B parameter model announced in October 2021
 - Combined Microsoft's Turing and NVIDIA's Megatron technologies
@@ -496,6 +559,8 @@ Lab: Deepmind
 
 #### InstructGPT
 
+[paper](https://arxiv.org/abs/2203.02155)
+
 - RLHF pipeline [blog on the topic](https://huggingface.co/blog/rlhf) & [blog 2](https://wandb.ai/ayush-thakur/RLHF/reports/Understanding-Reinforcement-Learning-from-Human-Feedback-RLHF-Part-1--VmlldzoyODk5MTIx)
 - PPO implementation
 - Human feedback collection
@@ -517,6 +582,8 @@ Lab: OpenAI
 
 #### BLOOM
 
+[paper](https://arxiv.org/abs/2211.05100)
+
 - Multilingual pre-training
 - Carbon footprint considerations
 - Distributed training
@@ -536,35 +603,56 @@ Lab: Big Science/Huggingface
 License: Open, but need to follow restrictions in Attachment A, BigScience RAIL License v1.0
 """
 
+#### Emergent Abilities of Large Language Models
+
+[paper](https://arxiv.org/abs/2206.07682)
+
 #### Flash Attention
 
-#### Rotary embeddings
+[paper](https://arxiv.org/abs/2205.14135)
 
 #### Grouped-query attention
 
+[paper](https://arxiv.org/abs/2305.13245)
+
 #### ALiBi position encoding
 
-- **Anthropic Claude 1** (Anthropic)
-  - Initial release focusing on helpfulness and harmlessness
+[paper](https://arxiv.org/abs/2108.12409)
+
+#### DeepSpeed Inference: Enabling Efficient Inference of Transformer Models at Unprecedented Scale
+
+[paper](https://arxiv.org/abs/2207.00032)
+
+#### Claude 1
+
+- Initial release focusing on helpfulness and harmlessness
 
 #### FLAN (Fine-tuned LAnguage Net) (Google)
+
+[paper](https://arxiv.org/abs/2109.01652)
 
 - Instruction tuning across multiple tasks
 - Improved zero-shot performance
 
-#### HELM (Holistic Evaluation of Language Models)\*\* (Stanford)
+#### Red Teaming Language Models with Language Models
+
+[paper](https://arxiv.org/abs/2202.03286)
+
+#### HELM (Holistic Evaluation of Language Models)
+
+[paper](https://arxiv.org/abs/2211.09110)
 
 Comprehensive benchmark suite for LLMs
 Standardized evaluation metrics
 
-**DALL-E 2 (OpenAI)**
+#### DALL-E 2 (OpenAI)
 
 - Released in April 2022
 - Significant improvement over original DALL-E
 - Demonstrated remarkably detailed text-to-image generation
 - Maintained controlled access with gradual rollout
 
-**Stable Diffusion (Stability AI)**
+#### Stable Diffusion (Stability AI)
 
 - Released in August 2022 as "a deep learning, text-to-image model" that became "the premier product of Stability AI"
 - Open-source alternative to DALL-E 2
@@ -573,11 +661,25 @@ Standardized evaluation metrics
 
 #### GPTQ
 
+[paper](https://arxiv.org/abs/2210.17323)
+
 #### Beyond the Imitation Game: Quantifying and extrapolating the capabilities of language models
 
 [paper](https://arxiv.org/abs/2206.04615)
 
 ### 2023: Multi-Modal and Reasoning
+
+#### Efficient Memory Management for Large Language Model Serving with PagedAttention
+
+[paper](https://arxiv.org/abs/2309.06180)
+
+#### QLoRA: Efficient Finetuning of Quantized LLMs
+
+[paper](https://arxiv.org/abs/2305.14314)
+
+#### Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models: A Critical Review and Assessment
+
+[paper](https://arxiv.org/abs/2312.12148)
 
 #### FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning
 
@@ -595,7 +697,6 @@ Standardized evaluation metrics
 
 [paper](https://arxiv.org/abs/2305.16291)
 
-
 #### Universal and Transferable Adversarial Attacks on Aligned Language Models
 
 [paper](https://arxiv.org/abs/2307.15043)
@@ -603,6 +704,10 @@ Standardized evaluation metrics
 #### Towards Monosemanticity: Decomposing Language Models With Dictionary Learning
 
 [paper](https://www.anthropic.com/research/towards-monosemanticity-decomposing-language-models-with-dictionary-learning)
+
+#### Tree of Thoughts: Deliberate Problem Solving with Large Language Models
+
+[paper](https://arxiv.org/abs/2305.10601)
 
 #### Mpt
 
@@ -618,12 +723,20 @@ Standardized evaluation metrics
 
 #### GPT-4
 
+[paper](https://arxiv.org/abs/2303.08774)
+
 - Multi-modal encoders
 - System prompting
 - Advanced reasoning capabilities
 - Tool use
 
+#### Mistral 7b
+
+[paper](https://arxiv.org/abs/2310.06825)
+
 #### LLaMA
+
+[paper](https://arxiv.org/abs/2302.13971)
 
 - Efficient scaling
 - Flash Attention-2
@@ -643,6 +756,8 @@ Corpus: English CommonCrawl + C4 + Github + Wikipedia + Gutenberg and Books3 + A
 License: Limited, Non-commercial bespoke license
 Lab: Meta
 """
+
+#### Mixtral 8x7B
 
 #### LLaMA 2
 
@@ -668,78 +783,69 @@ Lab: Meta
 
 [paper](https://arxiv.org/abs/2305.18290)
 
-#### Constitutional AI implementation
-
 #### Constitutional AI
 
 [blog](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback)
 
-#### Continued pre-training
+#### PaLM 2
 
-#### Notable Model Releases
+[paper](https://arxiv.org/abs/2305.10403)
 
-- **PaLM 2** (Google)
+- Improved multilingual capabilities
+- Enhanced reasoning
 
-  - Improved multilingual capabilities
-  - Enhanced reasoning
+#### LAION-5B\*\* (LAION)
 
-- **LAION-5B** (LAION)
-  - Large-scale image-text dataset
-  - Enabled better multimodal training
+[paper](https://arxiv.org/abs/2210.08402)
 
-[Both of the below can be clubbed together]
+- Large-scale image-text dataset
+- Enabled better multimodal training
 
-- **Vicuna** (LMSYS)
-  - Fine-tuned LLaMA
-  - Open-source conversational agent
-- **Alpaca** (Stanford)
-  - Instruction-tuned LLaMA
-  - Efficient fine-tuning approach
+#### Vicuna\*\* (LMSYS)
 
-#### Training Methodologies
+- Fine-tuned LLaMA
+- Open-source conversational agent
 
-- **LIMA (Less Is More for Alignment)** (Meta)
-  - Demonstrated efficiency of small high-quality datasets
-  - 1,000 examples for alignment
+#### Alpaca (Stanford)
 
-#### Architectural Innovations
+- Instruction-tuned LLaMA
+- Efficient fine-tuning approach
 
-- **Mamba** (Albert Gu & Tri Dao)
-  - State space model for sequence modeling
-  - Linear scaling with sequence length
+#### LIMA (Less Is More for Alignment
 
-**LLaVA (Visual Instruction Tuning)**
+[paper](https://arxiv.org/abs/2305.11206)
+
+Demonstrated efficiency of small high-quality datasets
+1,000 examples for alignment
+
+#### Mamba
+
+[paper](https://arxiv.org/abs/2312.00752)
+
+- State space model for sequence modeling
+- Linear scaling with sequence length
+
+#### LLaVA (Visual Instruction Tuning)
+
+[paper](https://arxiv.org/abs/2304.08485)
 
 - Released in April 2023 LLaVA was among the first vision-language models created using visual instruction tuning
 - Combined vision encoders with language models
 - Pioneered efficient visual instruction tuning
 - Set foundation for open-source multimodal models
 
-**Claude 1/Claude 2 (Anthropic)**
+#### Claude 1/Claude 2 (Anthropic)
 
 - Released in March 2023 (Claude 1) and July 2023 (Claude 2)
 - Focused on constitutional AI approach
 - Enhanced safety and alignment
 - Specialized in long-form content generation
 
-**Gemini (Google)**
+#### Gemini (Google)
 
 - Announced initially in May 2023, fully released in December Described as "a family of multimodal large language models developed by Google DeepMind, and the successor to LaMDA and PaLM 2"
 - Designed from the ground up as a multimodal model
 - Positioned as Google's answer to GPT-4
-
-**Mistral 7B (Mistral AI)**
-
-- Released in September 2023
-- Demonstrated exceptional performance for model size
-- Open weights with permissive license
-- Achieved near-Llama 13B performance with only 7B parameters
-
-**Phi-1 (Microsoft)**
-
-- Small (1.3B parameter) but remarkably capable model
-- Demonstrated efficiency of specialized training data
-- Focused on code and mathematical reasoning
 
 #### Toy Models of Superposition
 
@@ -749,25 +855,7 @@ Lab: Meta
 
 [blog](https://research.google/blog/minerva-solving-quantitative-reasoning-problems-with-language-models/)
 
-**Long Context Windows**
-
-- Significant extensions beyond previous 2-4K token limits
-- Novel approaches to efficient attention for long sequences
-- Enabled processing of much longer documents
-
-**Mixture of Experts Improvements**
-
-- Enhanced routing algorithms
-- More efficient training and inference
-- Reduced communication overhead
-
 {IG qwen and deepseek come here}
-
-{Add mistral as well}
-
-{interLM? https://huggingface.co/internlm}
-
-{LLaVA? https://llava-vl.github.io/}
 
 {Do I include VLMs? Where?}
 
@@ -789,12 +877,16 @@ Lab: Meta
 
 #### Gemma
 
+[paper](Gemma: Open Models Based on Gemini Research and Technology)
+
 - Efficient attention mechanisms
 - Advanced position embeddings
 - Improved tokenization
 - Memory efficient training
 
 #### Claude 3
+
+[Technical Report](https://www-cdn.anthropic.com/de8ba9b01c9ab7cbabf5c33b80b7bbc618857627/Model_Card_Claude_3.pdf)
 
 - Multi-modal understanding
 - Tool use capabilities
@@ -803,10 +895,12 @@ Lab: Meta
 
 #### LLaMA 3
 
+[paper](https://arxiv.org/abs/2407.21783)
+
 {add quen and deepseek}
 
-
 #### Claude 3
+
 Opus, Sonnet, and Haiku variants
 Improved reasoning and multimodal capabilities
 
@@ -816,18 +910,19 @@ Small but powerful models
 High performance with limited training data
 
 #### OpenAI o1
+
 First specialized reasoning model
 Advanced mathematical problem-solving
 
-
 #### RSO (Reinforced Self-training with Online feedback)
 
-  - Self-improvement through AI evaluation
-  - Reduced human annotation needs
+- Self-improvement through AI evaluation
+- Reduced human annotation needs
 
 #### SPIN (Self-Played Improvement Narration)
-  - Self-correction capabilities
-  - Improved factual accuracy
+
+- Self-correction capabilities
+- Improved factual accuracy
 
 #### DBRX
 
@@ -915,164 +1010,29 @@ Advanced mathematical problem-solving
 
 (there were some amazing developments on tts, video gen, image gen etc but all of those for a different video)
 
-#### Notable Model Releases
+#### Grok
 
-- **DeepSeek-MoE** (DeepSeek)
+- Open-source model
+- 314B parameters
 
-  - Mixture of experts architecture
-  - Efficient scaling
+#### Pixtral
 
-- **Grok** (xAI)
+[paper](https://arxiv.org/abs/2410.07073)
 
-  - Open-source model
-  - 314B parameters
+- Multimodal capabilities
+- 12B parameters
 
-- **Pixtral** (Mistral AI)
+#### Qwen2
 
-  - Multimodal capabilities
-  - 12B parameters
+[paper]()
 
-- **Qwen2** (Alibaba)
-  - Multilingual capabilities
-  - 72B parameters
+- Multilingual capabilities
+- 72B parameters
 
 #### phi
 
-#### Training Methodologies
+[paper]()
 
-- **SSL-RL (Self-Supervised Learning with Reinforcement)** (Google)
-
-  - Combined approach for more efficient training
-  - Reduced need for human labels
-
-- **iPOPE (Iterative Pairwise Online Preference Elicitation)** (Apple)
-  - Advanced alignment technique
-  - Efficient preference learning
-
-#### Benchmark Developments
-
-- **ARC-AGI** (DeepMind)
-
-  - Advanced Reasoning Challenge
-  - Complex problem-solving assessment
-
-- **Frontier Math Benchmark** (Various)
-  - Advanced mathematical reasoning evaluation
-  - Complex mathematical problem-solving
-
-## Technical Deep Dives
-
-### Training data over the years
-
-### Optimization Breakthroughs
-
-### Architectural Breakthroughs
-
-### Training Breakthroughs
-
-Consider adding these categories:
-
-Tokenization Evolution: BPE → SentencePiece → Tokenizer efficiency
-Training Data Evolution: From BookCorpus to web-scale datasets
-Inference Optimization: KV caching, speculative decoding, etc.
-
-### Architecture Components
-
-#### MOE
-
-#### Attention Mechanisms
-
-- Vanilla attention
-- Multi-head attention
-- Cross-attention
-- Flash attention variants
-- Sparse attention patterns
-
-#### Position Embeddings
-
-- Absolute
-- Relative
-- Rotary (RoPE)
-- ALiBi
-- T5 relative bias
-
-#### Normalization and Residuals
-
-- Layer normalization
-- RMSNorm
-- Pre-LN vs Post-LN
-- Residual connections
-- Skip connections
-
-### Training Methods
-
-### Pre-training Objectives
-
-- MLM (Masked Language Modeling)
-- CLM (Causal Language Modeling)
-- Span corruption
-- RTD (Replaced Token Detection)
-- Prefix Language Modeling
-
-### Fine-tuning Strategies
-
-- Instruction tuning
-- RLHF pipeline
-- DPO (Direct Preference Optimization)
-- LoRA and QLoRA
-- Parameter efficient fine-tuning
-
-### Optimization Techniques
-
-- Adam variants
-- Learning rate schedules
-- Gradient accumulation
-- Mixed precision training
-- ZeRO optimizer stages
-
-### Efficiency Innovations
-
-### Model Compression
-
-- Quantization (INT4/8)
-- Pruning techniques
-- Knowledge distillation
-- Low-rank adaptation
-- Sparse inference
-
-### Memory Optimization
-
-- Gradient checkpointing
-- Activation recomputation
-- Memory efficient attention
-- Selective activation storage
-- CPU offloading
-
-### Evaluation Framework
-
-### Language Understanding
-
-- GLUE and SuperGLUE
-- MMLU
-- BIG-bench
-- TruthfulQA
-- GSM8K
-
-### Safety and Alignment
-
-- TruthfulQA
-- Anthropic's Constitutional AI eval
-- Bias and toxicity metrics
-- HONEST framework
-- Safety benchmarks
-
-### Reasoning and Capabilities
-
-- HumanEval
-- MATH
-- BBH (Big Bench Hard)
-- HELM framework
-- Chain-of-thought evaluation
 
 Visual Elements
 
