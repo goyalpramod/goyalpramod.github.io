@@ -17,7 +17,7 @@ The landscape of language models has evolved dramatically since the introduction
 
 From attention mechanisms to constitutional AI, we'll dive deep into the code, math, and ideas that revolutionized NLP.
 
- Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
+Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
 
 ## How this blog is structured
 
@@ -194,6 +194,9 @@ The RLHF paper
 
 [paper](https://arxiv.org/abs/1707.06347)
 
+#### Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer
+
+[paper](https://arxiv.org/abs/1701.06538)
 
 ### 2018: BERT and Early Innovations
 
@@ -349,6 +352,9 @@ Lab:Facebook
 - Scaling laws discovery
 - Batch size scaling
 
+#### Rethinking Attention with Performers
+
+[paper](https://arxiv.org/abs/2009.14794v4)
 
 #### T5
 
@@ -401,7 +407,12 @@ OpenAI's publication on the mathematical relationships between model size, datas
 
 ### 2021: Instruction Tuning and Alignment
 
+#### CLIP
+https://openai.com/index/clip/
+Briefly talk about 
+
 #### Dall-e
+Briefly talk about
 
 
 #### LoRA
@@ -588,7 +599,6 @@ Lab: Meta
 #### MamBa
 
 
-
 #### Alpaca
     """
     Link: https://github.com/tatsu-lab/stanford_alpaca
@@ -604,12 +614,20 @@ Lab: Meta
     Lab: Stanford
     """
 
-#### Training Advances
 
-- Direct Preference Optimization (DPO)
-- Constitutional AI implementation
-- Medprompt fine-tuning
-- Continued pre-training
+#### Direct Preference Optimization (DPO)
+
+[paper](https://arxiv.org/abs/2305.18290)
+
+#### Constitutional AI implementation
+
+
+#### Constitutional AI
+
+[blog](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback)
+
+
+#### Continued pre-training
 
 
 #### Notable Model Releases
@@ -621,47 +639,26 @@ Lab: Meta
   - Large-scale image-text dataset
   - Enabled better multimodal training
 
+[Both of the below can be clubbed together]
 - **Vicuna** (LMSYS)
   - Fine-tuned LLaMA
   - Open-source conversational agent
-
 - **Alpaca** (Stanford)
   - Instruction-tuned LLaMA
   - Efficient fine-tuning approach
 
-- **Yi** (01.AI)
-  - Bilingual Chinese-English model
-  - 34B parameters
-
-- **MPT** (MosaicML)
-  - Open-source model with commercial usage rights
-  - Efficient training techniques
-
-#### Hardware Advancements
-- **Graphcore IPU** (Graphcore)
-  - Intelligent Processing Unit
-  - Alternative architecture for AI computation
 
 #### Training Methodologies
 - **LIMA (Less Is More for Alignment)** (Meta)
   - Demonstrated efficiency of small high-quality datasets
   - 1,000 examples for alignment
 
-- **UL2 (Unified Language Learner)** (Google)
-  - Unified approach to pre-training
-  - Combined multiple objectives
 
 #### Architectural Innovations
 - **Mamba** (Albert Gu & Tri Dao)
   - State space model for sequence modeling
   - Linear scaling with sequence length
 
-"""
-I'll research and verify your 2023 section with the latest information.
-
-Your 2023 section is quite good, but there are a few important models and developments to add for a more comprehensive picture:
-
-### Multimodal Models to Add
 
 **LLaVA (Visual Instruction Tuning)**
 - Released in April 2023 LLaVA was among the first vision-language models created using visual instruction tuning
@@ -680,7 +677,6 @@ Your 2023 section is quite good, but there are a few important models and develo
 - Designed from the ground up as a multimodal model
 - Positioned as Google's answer to GPT-4
 
-### Additional LLM Developments
 
 **Mistral 7B (Mistral AI)**
 - Released in September 2023
@@ -693,7 +689,14 @@ Your 2023 section is quite good, but there are a few important models and develo
 - Demonstrated efficiency of specialized training data
 - Focused on code and mathematical reasoning
 
-### Technical Innovations to Highlight
+#### Toy Models of Superposition
+
+
+[blog](https://transformer-circuits.pub/2022/toy_model/index.html)
+
+#### Minerva
+
+[blog](https://research.google/blog/minerva-solving-quantitative-reasoning-problems-with-language-models/)
 
 **Long Context Windows**
 - Significant extensions beyond previous 2-4K token limits
@@ -705,20 +708,6 @@ Your 2023 section is quite good, but there are a few important models and develo
 - More efficient training and inference
 - Reduced communication overhead
 
-### Ecosystem Developments
-
-**Open Source Ecosystem Growth**
-- HuggingFace growing as central repository
-- Emergence of specialized fine-tuning frameworks
-- Improved quantization and deployment tools
-
-**Hardware Optimizations**
-- Specialized kernels for transformer operations
-- Improved memory bandwidth utilization
-- Novel architectures optimized for inference
-
-The key theme for 2023 was the mainstreaming of multimodal capabilities and the explosive growth of the open-source LLM ecosystem through models like Mistral and the proliferation of Llama derivatives. The year saw significant progress in making models more efficient in both training and inference, with particular emphasis on long-context handling and multimodal integration.
-"""
 
 {IG qwen and deepseek come here}
 
@@ -763,26 +752,11 @@ The key theme for 2023 was the mainstreaming of multimodal capabilities and the 
   - Small but powerful models
   - High performance with limited training data
 
-- **Command** (Cohere)
-  - Enterprise-focused model
-  - Multilingual capabilities
-
-- **Falcon 2** (TII)
-  - Improved performance over original Falcon
-  - Open licensing
-
-- **Jamba** (AI Alliance)
-  - Open mixture of experts model
-  - 32B parameters
 
 - **OpenAI o1** (OpenAI)
   - First specialized reasoning model
   - Advanced mathematical problem-solving
 
-#### Hardware Advancements
-- **Groq LPU** (Groq)
-  - Language Processing Unit
-  - Record-breaking inference speeds
 
 #### Training Methodologies
 - **RSO (Reinforced Self-training with Online feedback)** (DeepMind)
@@ -793,17 +767,7 @@ The key theme for 2023 was the mainstreaming of multimodal capabilities and the 
   - Self-correction capabilities
   - Improved factual accuracy
 
-#### Benchmark Developments
-- **ORCA Bench** (Microsoft)
-  - Advanced reasoning evaluation
-  - Complex problem-solving assessment
 
-"""
-I'll search for the latest information to verify and enhance your 2024 section.
-
-Your 2024 section has good coverage, but I'll help enhance it with additional models and developments based on my research.
-
-### Models to Add or Update
 
 **Qwen 2.5 (Alibaba)**
 - Released in September 2024 as "the latest addition to the Qwen family," which the developers called "the largest opensource release in history"
@@ -829,7 +793,6 @@ Your 2024 section has good coverage, but I'll help enhance it with additional mo
 - Designed to compete with OpenAI's o1
 - Significantly faster inference than o1
 
-### Architectural Advances
 
 **Transformer Hybrids**
 - Mixed attention mechanisms for efficiency and quality
@@ -865,8 +828,6 @@ Your 2024 section has good coverage, but I'll help enhance it with additional mo
 - Vision-language improvements
 - Function calling enhancements
 
-2024 has seen a remarkable convergence in model capabilities with many companies releasing models that rival or surpass previous leaders, as "LLMs around 10B params converge to GPT-3.5 performance, and LLMs around 100B and larger converge to GPT-4 scores" while focusing on specialization, efficiency, and multimodal capabilities as the main differentiators.
-"""
 
 ### 2025
 
@@ -880,9 +841,6 @@ Your 2024 section has good coverage, but I'll help enhance it with additional mo
 (there were some amazing developments on tts, video gen, image gen etc but all of those for a different video)
 
 
-
-
-### 2025: Reasoning and Compression
 
 #### Notable Model Releases
 - **DeepSeek-MoE** (DeepSeek)
@@ -903,14 +861,6 @@ Your 2024 section has good coverage, but I'll help enhance it with additional mo
 
 #### phi
 
-#### Hardware Advancements
-- **Gaudi3** (Intel)
-  - AI accelerator for deep learning
-  - Alternative to NVIDIA for training
-
-- **Tensor Streaming Processors** (Cerebras)
-  - Memory-centric architecture
-  - Optimized for LLM workloads
 
 #### Training Methodologies
 - **SSL-RL (Self-Supervised Learning with Reinforcement)** (Google)
