@@ -27,13 +27,11 @@ After which we will have a look at a short AI timeline over the years, going yea
 
 Where we will see what architectural innovation, computational breakthrough, training optimization that were invented over the years and how it affected LLMs and their benchmarks.
 
-Finally and most importantly we will dive deep into the technical understanding and implementation of these different techniques. Some of them being Flash Attention, KV-Caching, GRPO etc.  
-
+Finally and most importantly we will dive deep into the technical understanding and implementation of these different techniques. Some of them being Flash Attention, KV-Caching, GRPO etc.
 
 Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). Over here I will just give quick intro and links to some ground breaking innovations.
 
 > NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them in the timeline. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
-
 
 ## A short introduction to LLMs
 
@@ -41,26 +39,26 @@ This part is highly influenced by this [video](https://www.youtube.com/watch?v=7
 
 A paper on pretraining [paper](https://arxiv.org/pdf/2003.08271)
 
-
 ### Architecture
 
-We will be skipping over the internal details about the transformers model (you can read more about it in my previous blog), I will proceed with the assumption that you have a very deep level understanding of atleast the transformer model. Having that that let us proceed. 
+We will be skipping over the internal details about the transformers model (you can read more about it in my previous blog), I will proceed with the assumption that you have a very deep level understanding of atleast the transformer model. Having that that let us proceed.
 
-As we can see the original transformer has two parts, an Encoder and a Decoder. And as is known, it was initially made for the sole purpose of Machine Translation. 
+As we can see the original transformer has two parts, an Encoder and a Decoder. And as is known, it was initially made for the sole purpose of Machine Translation.
 
-But over the years they have been used for a plethora of tasks from 
-- Question Answering 
-- Summarization 
-- Tagging 
-- Classification 
+But over the years they have been used for a plethora of tasks from
 
-And many more. 
+- Question Answering
+- Summarization
+- Tagging
+- Classification
 
-LLMs consist of architectures which are solely based on the Encoder like Bert 
+And many more.
+
+LLMs consist of architectures which are solely based on the Encoder like Bert
 
 [ADD_IMAGE_OF_BERT]
 
-LLMs consist of architectures which are solely based on the Decoder like gpt-1 
+LLMs consist of architectures which are solely based on the Decoder like gpt-1
 
 [ADD_IMAGE_OF_GPT1]
 
@@ -82,15 +80,15 @@ As I mentioned there are 3 kinds of architectures when it comes to LLM, hence th
 
 **Step 1: Data Collection**
 
-We know Decoder based LLMs are able to answer a variety of answer to questions about science, food, mathematics, facts etc. That is because they have been trained on a huge plethora of the data. 
+We know Decoder based LLMs are able to answer a variety of answer to questions about science, food, mathematics, facts etc. That is because they have been trained on a huge plethora of the data.
 
-So the first step is to collect the said data. One important thing to keep in mind is that these models are able to answer based on what they have seen. They are not performing any kind of reasoning. It is given a distribution, what is the most likely token that is to appear. 
+So the first step is to collect the said data. One important thing to keep in mind is that these models are able to answer based on what they have seen. They are not performing any kind of reasoning. It is given a distribution, what is the most likely token that is to appear.
 
-So if you want a coding LLM you will collect a lot of code related data from publically available places like github. 
+So if you want a coding LLM you will collect a lot of code related data from publically available places like github.
 
-If you want a cooking LLM you will collected a lot of recipes and so on. 
+If you want a cooking LLM you will collected a lot of recipes and so on.
 
-Most general purpose LLMs are trained on data collected from various sources, hence they are able to answer a lot of question. 
+Most general purpose LLMs are trained on data collected from various sources, hence they are able to answer a lot of question.
 
 A lot of filtering steps also goes behind it
 
@@ -98,15 +96,15 @@ A lot of filtering steps also goes behind it
 Garbage in, garbage out
 "
 
-Most of the internet when crawled has data which looks something like this 
+Most of the internet when crawled has data which looks something like this
 
 ```html
 <html>
-{add shit}
+  {add shit}
 </html>
 ```
 
-Hence it needs to be processed into a more human readable form, You can imagine how humongous of a task it must be to clean huge datasets with GBs of data. 
+Hence it needs to be processed into a more human readable form, You can imagine how humongous of a task it must be to clean huge datasets with GBs of data.
 
 Now there are other filterning that also needs to be done, How do you take care of profanity? What about fake news and so on
 
@@ -114,33 +112,33 @@ Now there are other filterning that also needs to be done, How do you take care 
 
 {maybe talk about vocabulary and token length}
 
-When we talked about transformers, we skipped talking about tokenization, but as it is a vital piece of LLM training. We shall spend some time talking about it here. 
+When we talked about transformers, we skipped talking about tokenization, but as it is a vital piece of LLM training. We shall spend some time talking about it here.
 
-Sentence level tokenization 
+Sentence level tokenization
 
-My first question was, why do we need to break down words. Why not give the entire sentence. Heck why not give the whole paragraph as an input. 
+My first question was, why do we need to break down words. Why not give the entire sentence. Heck why not give the whole paragraph as an input.
 
-While in practice it can be done, it is not wise. Because if we go back to our basic principle about LLMs. 
+While in practice it can be done, it is not wise. Because if we go back to our basic principle about LLMs.
 
 "They are next token predictors"
 
-So in given any large enough paragraph or even an essay. The likelihood of a sentence repeating is very low. So if we think it in terms of machines, if we transform each sentence into a token, we will have a vocabular with a lot of numbers, which do not relate to each other at all. So we can never predict what sentence will come after any given sentence. 
+So in given any large enough paragraph or even an essay. The likelihood of a sentence repeating is very low. So if we think it in terms of machines, if we transform each sentence into a token, we will have a vocabular with a lot of numbers, which do not relate to each other at all. So we can never predict what sentence will come after any given sentence.
 
-Word level tokenization 
+Word level tokenization
 
-A simple work around this seems to be, well why not just tokenize the words, instead of sentences. Because in any large enough paragraph or essay. Words repeat and they follow a logical sequence of what is to appear next. For example 
+A simple work around this seems to be, well why not just tokenize the words, instead of sentences. Because in any large enough paragraph or essay. Words repeat and they follow a logical sequence of what is to appear next. For example
 
-"Water is ___", if you gave me this sentence word by word, I will assume the next word is wet. Whereas if you gave me a sentence 
+"Water is \_\_\_", if you gave me this sentence word by word, I will assume the next word is wet. Whereas if you gave me a sentence
 
-"Water is wet, This is a debatable topic." I will have no clue what can be said after this sentence, Maybe someone raises a point, maybe someone says something else. 
+"Water is wet, This is a debatable topic." I will have no clue what can be said after this sentence, Maybe someone raises a point, maybe someone says something else.
 
-So word level helps us retain the logical sequence, and words have meanings to them too. But there is still one big issue. There can be millions of words, some have way higher representation in usual text and some are highly unlikely to occur in common place. 
+So word level helps us retain the logical sequence, and words have meanings to them too. But there is still one big issue. There can be millions of words, some have way higher representation in usual text and some are highly unlikely to occur in common place.
 
-There are words which are commonplace in one industry and rare in another. 
+There are words which are commonplace in one industry and rare in another.
 
-So we will have a huge vocabulary. 
+So we will have a huge vocabulary.
 
-If you think for a moment we may come to the conclusion that, why not use character level tokenization to solve this problem, this will reduce the vocabulary drastically. 
+If you think for a moment we may come to the conclusion that, why not use character level tokenization to solve this problem, this will reduce the vocabulary drastically.
 
 Here the problem would lie in the fact that characters by themselves do not hold much meaning (atleast in the english lexicon)
 
@@ -150,15 +148,13 @@ Here the problem would lie in the fact that characters by themselves do not hold
 
 #### Encoder Only
 
-Now let's understand how a usual Encoder is trained, We will talk about BERT here 
+Now let's understand how a usual Encoder is trained, We will talk about BERT here
 
 #### Encoder Decoder
 
 Now let's do the same for T5
 
 ### Inference
-
-
 
 ## The AI timeline
 
@@ -188,7 +184,7 @@ We have talked deeply about each of these topics previously and I implore you to
 
 [paper](https://arxiv.org/abs/1706.03741)
 
-The RLHF paper 
+The RLHF paper
 
 #### Proximal Policy Optimization Algorithms
 
@@ -246,7 +242,6 @@ Corpus:Toronto Book Corpus and Wikipedia (3.3B Tokens)
 License: Open, Apache-2.0
 Lab:Google
 """
-
 
 ### 2019: Scaling and Efficiency
 
@@ -311,7 +306,6 @@ License: Open, Apache-2.0
 Lab: Huggingface
 """
 
-
 #### BART
 
 """
@@ -329,7 +323,9 @@ Lab:Facebook
 """
 
 #### Notable Model Releases
+
 - **XLNet** (Google/CMU)
+
   - Permutation-based training approach
   - Surpassed BERT on multiple benchmarks
 
@@ -337,11 +333,19 @@ Lab:Facebook
   - Model parallelism for efficient large model training
 
 #### Training Innovations
+
 - **Sparse Attention Patterns** (OpenAI)
   - Reduced computational complexity for long sequences
 
-
 ### 2020: The Scale Revolution
+
+#### Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
+
+[paper](https://arxiv.org/abs/2005.11401)
+
+#### Big Bird: Transformers for Longer Sequences
+
+[paper](https://arxiv.org/abs/2007.14062)
 
 #### GPT-3
 
@@ -377,48 +381,47 @@ License: Open, Apache-2.0
 Lab: Google
 """
 
-
 #### Sparse Transformers
 
-
-
 #### Training Methodologies
+
 - **ZeRO (Zero Redundancy Optimizer)** (Microsoft)
   - Memory optimization for distributed training
 
-
-
-
-
 #### ELECTRA
- 
-Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
 
+Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
 
 #### Switch Transformer
 
 Google's early mixture-of-experts approach that demonstrated trillion-parameter scale was possible
 
-
 #### Scaling Laws
 
 OpenAI's publication on the mathematical relationships between model size, dataset size, and computational budget demonstrated predictable patterns for improving performance This was part of the GPT-3 research which showed "that scaling up language models greatly improves task-agnostic, few-shot performance."
 
-
 ### 2021: Instruction Tuning and Alignment
 
-#### CLIP
-https://openai.com/index/clip/
-Briefly talk about 
+#### Improving language models by retrieving from trillions of tokens
 
-#### Dall-e
+[paper](https://arxiv.org/abs/2112.04426)
+
+#### CLIP
+
+https://openai.com/index/clip/
 Briefly talk about
 
+#### Dall-e
+
+Briefly talk about
 
 #### LoRA
 
 [paper](https://arxiv.org/abs/2106.09685)
 
+#### Self-Instruct: Aligning Language Models with Self-Generated Instructions
+
+[paper](https://arxiv.org/abs/2212.10560)
 
 #### PaLM
 
@@ -441,27 +444,34 @@ License: Closed source, Accessible through API
 Lab: Google
 """
 
-
 **Gopher (DeepMind)**
+
 - 280B parameter model released in December 2021 DeepMind introduced this model as a "280 billion parameter model" that was "evaluated on 152 diverse tasks, achieving state-of-the-art performance across the majority."
 - Demonstrated significant scaling benefits in reading comprehension and fact-checking
 - Represented a major advancement in model scale from DeepMind
 
 **Megatron-Turing NLG (Microsoft & NVIDIA)**
+
 - 530B parameter model announced in October 2021
 - Combined Microsoft's Turing and NVIDIA's Megatron technologies
 - Demonstrated advanced distributed training techniques
 - Applied significant hardware optimization for large-scale training
 
-
-
 ### 2022: Democratization
 
+#### EFFICIENTLY SCALING TRANSFORMER INFERENCE
+
+[paper](https://arxiv.org/pdf/2211.05102)
+
+#### Fast Inference from Transformers via Speculative Decoding
+
+[paper](https://arxiv.org/abs/2211.17192)
 
 #### Chinchilla
 
 [paper](https://arxiv.org/abs/2203.15556)
 While the Chinchilla model itself wasn't released until 2022, the research behind it began in 2021, establishing important scaling principles that:
+
 - Showed optimal token-to-parameter ratios should be approximately 20:1 This research found that "we need around 20 text tokens per parameter" for optimal training.
 - Demonstrated many existing models were significantly undertrained
 - Influenced the training methodology of subsequent models
@@ -480,12 +490,9 @@ License: Closed source.
 Lab: Deepmind
 """
 
-
 #### Chain-of-thought prompting
 
 [paper](https://arxiv.org/abs/2201.11903)
-
-
 
 #### InstructGPT
 
@@ -529,34 +536,36 @@ Lab: Big Science/Huggingface
 License: Open, but need to follow restrictions in Attachment A, BigScience RAIL License v1.0
 """
 
-
 #### Flash Attention
+
 #### Rotary embeddings
 
-
-
 #### Grouped-query attention
-#### ALiBi position encoding
 
+#### ALiBi position encoding
 
 - **Anthropic Claude 1** (Anthropic)
   - Initial release focusing on helpfulness and harmlessness
 
 #### FLAN (Fine-tuned LAnguage Net) (Google)
+
 - Instruction tuning across multiple tasks
 - Improved zero-shot performance
 
-#### HELM (Holistic Evaluation of Language Models)** (Stanford)
-  Comprehensive benchmark suite for LLMs
-  Standardized evaluation metrics
+#### HELM (Holistic Evaluation of Language Models)\*\* (Stanford)
+
+Comprehensive benchmark suite for LLMs
+Standardized evaluation metrics
 
 **DALL-E 2 (OpenAI)**
+
 - Released in April 2022
 - Significant improvement over original DALL-E
 - Demonstrated remarkably detailed text-to-image generation
 - Maintained controlled access with gradual rollout
 
 **Stable Diffusion (Stability AI)**
+
 - Released in August 2022 as "a deep learning, text-to-image model" that became "the premier product of Stability AI"
 - Open-source alternative to DALL-E 2
 - Democratized access to high-quality image generation
@@ -564,7 +573,48 @@ License: Open, but need to follow restrictions in Attachment A, BigScience RAIL 
 
 #### GPTQ
 
+#### Beyond the Imitation Game: Quantifying and extrapolating the capabilities of language models
+
+[paper](https://arxiv.org/abs/2206.04615)
+
 ### 2023: Multi-Modal and Reasoning
+
+#### FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning
+
+[paper](https://arxiv.org/abs/2307.08691)
+
+#### AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration
+
+[paper](https://arxiv.org/abs/2306.00978)
+
+#### Generative Agents: Interactive Simulacra of Human Behavior
+
+[paper](https://arxiv.org/abs/2304.03442)
+
+#### Voyager: An Open-Ended Embodied Agent with Large Language Models
+
+[paper](https://arxiv.org/abs/2305.16291)
+
+
+#### Universal and Transferable Adversarial Attacks on Aligned Language Models
+
+[paper](https://arxiv.org/abs/2307.15043)
+
+#### Towards Monosemanticity: Decomposing Language Models With Dictionary Learning
+
+[paper](https://www.anthropic.com/research/towards-monosemanticity-decomposing-language-models-with-dictionary-learning)
+
+#### Mpt
+
+[blog](https://www.databricks.com/blog/mpt-7b)
+
+#### WizardLM: Empowering Large Language Models to Follow Complex Instructions
+
+[paper](https://arxiv.org/abs/2304.12244)
+
+#### DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales
+
+[paper](https://arxiv.org/abs/2308.01320)
 
 #### GPT-4
 
@@ -598,8 +648,8 @@ Lab: Meta
 
 #### MamBa
 
-
 #### Alpaca
+
     """
     Link: https://github.com/tatsu-lab/stanford_alpaca
     Family: LLaMA
@@ -614,24 +664,22 @@ Lab: Meta
     Lab: Stanford
     """
 
-
 #### Direct Preference Optimization (DPO)
 
 [paper](https://arxiv.org/abs/2305.18290)
 
 #### Constitutional AI implementation
 
-
 #### Constitutional AI
 
 [blog](https://www.anthropic.com/research/constitutional-ai-harmlessness-from-ai-feedback)
 
-
 #### Continued pre-training
 
-
 #### Notable Model Releases
+
 - **PaLM 2** (Google)
+
   - Improved multilingual capabilities
   - Enhanced reasoning
 
@@ -640,6 +688,7 @@ Lab: Meta
   - Enabled better multimodal training
 
 [Both of the below can be clubbed together]
+
 - **Vicuna** (LMSYS)
   - Fine-tuned LLaMA
   - Open-source conversational agent
@@ -647,50 +696,52 @@ Lab: Meta
   - Instruction-tuned LLaMA
   - Efficient fine-tuning approach
 
-
 #### Training Methodologies
+
 - **LIMA (Less Is More for Alignment)** (Meta)
   - Demonstrated efficiency of small high-quality datasets
   - 1,000 examples for alignment
 
-
 #### Architectural Innovations
+
 - **Mamba** (Albert Gu & Tri Dao)
   - State space model for sequence modeling
   - Linear scaling with sequence length
 
-
 **LLaVA (Visual Instruction Tuning)**
+
 - Released in April 2023 LLaVA was among the first vision-language models created using visual instruction tuning
 - Combined vision encoders with language models
 - Pioneered efficient visual instruction tuning
 - Set foundation for open-source multimodal models
 
 **Claude 1/Claude 2 (Anthropic)**
+
 - Released in March 2023 (Claude 1) and July 2023 (Claude 2)
 - Focused on constitutional AI approach
 - Enhanced safety and alignment
 - Specialized in long-form content generation
 
 **Gemini (Google)**
+
 - Announced initially in May 2023, fully released in December Described as "a family of multimodal large language models developed by Google DeepMind, and the successor to LaMDA and PaLM 2"
 - Designed from the ground up as a multimodal model
 - Positioned as Google's answer to GPT-4
 
-
 **Mistral 7B (Mistral AI)**
+
 - Released in September 2023
 - Demonstrated exceptional performance for model size
 - Open weights with permissive license
 - Achieved near-Llama 13B performance with only 7B parameters
 
 **Phi-1 (Microsoft)**
+
 - Small (1.3B parameter) but remarkably capable model
 - Demonstrated efficiency of specialized training data
 - Focused on code and mathematical reasoning
 
 #### Toy Models of Superposition
-
 
 [blog](https://transformer-circuits.pub/2022/toy_model/index.html)
 
@@ -699,18 +750,18 @@ Lab: Meta
 [blog](https://research.google/blog/minerva-solving-quantitative-reasoning-problems-with-language-models/)
 
 **Long Context Windows**
+
 - Significant extensions beyond previous 2-4K token limits
 - Novel approaches to efficient attention for long sequences
 - Enabled processing of much longer documents
 
 **Mixture of Experts Improvements**
+
 - Enhanced routing algorithms
 - More efficient training and inference
 - Reduced communication overhead
 
-
 {IG qwen and deepseek come here}
-
 
 {Add mistral as well}
 
@@ -722,7 +773,19 @@ Lab: Meta
 
 ### 2024: Efficiency and Performance
 
+#### Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference
+
+[paper](https://arxiv.org/abs/2403.04132)
+
+#### TinyLlama: An Open-Source Small Language Model
+
+[paper](https://arxiv.org/abs/2401.02385)
+
 #### MordernBert
+
+#### Jamba: A Hybrid Transformer-Mamba Language Model
+
+[paper](https://arxiv.org/abs/2403.19887)
 
 #### Gemma
 
@@ -743,63 +806,73 @@ Lab: Meta
 {add quen and deepseek}
 
 
-#### Notable Model Releases
-- **Claude 3** models (Anthropic)
-  - Opus, Sonnet, and Haiku variants
-  - Improved reasoning and multimodal capabilities
+#### Claude 3
+Opus, Sonnet, and Haiku variants
+Improved reasoning and multimodal capabilities
 
-- **phi-1/phi-2/phi-3** (Microsoft)
-  - Small but powerful models
-  - High performance with limited training data
+#### phi-1/phi-2/phi-3
+
+Small but powerful models
+High performance with limited training data
+
+#### OpenAI o1
+First specialized reasoning model
+Advanced mathematical problem-solving
 
 
-- **OpenAI o1** (OpenAI)
-  - First specialized reasoning model
-  - Advanced mathematical problem-solving
+#### RSO (Reinforced Self-training with Online feedback)
 
-
-#### Training Methodologies
-- **RSO (Reinforced Self-training with Online feedback)** (DeepMind)
   - Self-improvement through AI evaluation
   - Reduced human annotation needs
 
-- **SPIN (Self-Played Improvement Narration)** (Anthropic)
+#### SPIN (Self-Played Improvement Narration)
   - Self-correction capabilities
   - Improved factual accuracy
 
+#### DBRX
 
+[blog](https://www.databricks.com/blog/introducing-dbrx-new-state-art-open-llm)
 
-**Qwen 2.5 (Alibaba)**
+#### FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision
+
+[paper](https://arxiv.org/abs/2407.08608)
+
+#### Qwen 2.5 (Alibaba)
+
 - Released in September 2024 as "the latest addition to the Qwen family," which the developers called "the largest opensource release in history"
 - Specialized variants for coding and mathematics
 - Sizes ranging from 1.5B to 72B parameters
 - Strong multilingual capabilities
 
-**DeepSeek 2.5 (DeepSeek)**
+#### DeepSeek 2.5 (DeepSeek)
+
 - Released in September 2024 combining "DeepSeek-V2-Chat and DeepSeek-Coder-V2-Instruct" as an "upgraded version"
-- Competitive code generation capabilities 
+- Competitive code generation capabilities
 - Cost-effective alternative to larger models
 - 128K token context window
 
-**Claude 3.5 Sonnet (Anthropic)**
+#### Claude 3.5 Sonnet (Anthropic)
+
 - Released in October 2024 featuring improved performance "in undergraduate knowledge, graduate-level reasoning, general reasoning, and code generation"
 - Advanced reasoning and coding capabilities
 - Introduces Artifacts for interactive content creation
 - Significant improvements over Claude 3 Opus
 
-**DeepSeek-R1 (DeepSeek)**
+#### DeepSeek-R1 (DeepSeek)
+
 - Specialized reasoning model released in December 2024
 - Focus on mathematical and logical reasoning
 - Designed to compete with OpenAI's o1
 - Significantly faster inference than o1
 
-
 **Transformer Hybrids**
+
 - Mixed attention mechanisms for efficiency and quality
 - Integration of traditional transformers with newer architectures
 - Specialized routing for different types of reasoning
 
 **Attention Mechanism Innovations**
+
 - Further optimizations of Flash Attention
 - New formulations of efficient attention for long sequences
 - Retrieval-based augmentation for grounded responses
@@ -807,11 +880,13 @@ Lab: Meta
 ### Efficiency Improvements
 
 **Quantization Breakthroughs**
+
 - Advances in INT4/INT8 quantization with minimal quality loss
 - Hardware-aware optimizations for consumer devices
 - Specialized kernels for mobile deployment
 
 **Token Efficiency**
+
 - New tokenization strategies for multilingual support
 - Context compression techniques
 - Token-pruning methodologies for inference speedup
@@ -819,18 +894,18 @@ Lab: Meta
 ### Tooling and Ecosystem
 
 **Inference Optimization Frameworks**
+
 - vLLM and similar tools for high-throughput inference
 - Parallel decoding techniques
 - Specialized tools for multimodal deployment
 
 **Advanced API Capabilities**
+
 - Tool use standardization
 - Vision-language improvements
 - Function calling enhancements
 
-
 ### 2025
-
 
 #### Llama 4
 
@@ -840,18 +915,20 @@ Lab: Meta
 
 (there were some amazing developments on tts, video gen, image gen etc but all of those for a different video)
 
-
-
 #### Notable Model Releases
+
 - **DeepSeek-MoE** (DeepSeek)
+
   - Mixture of experts architecture
   - Efficient scaling
 
 - **Grok** (xAI)
+
   - Open-source model
   - 314B parameters
 
 - **Pixtral** (Mistral AI)
+
   - Multimodal capabilities
   - 12B parameters
 
@@ -861,9 +938,10 @@ Lab: Meta
 
 #### phi
 
-
 #### Training Methodologies
+
 - **SSL-RL (Self-Supervised Learning with Reinforcement)** (Google)
+
   - Combined approach for more efficient training
   - Reduced need for human labels
 
@@ -872,7 +950,9 @@ Lab: Meta
   - Efficient preference learning
 
 #### Benchmark Developments
+
 - **ARC-AGI** (DeepMind)
+
   - Advanced Reasoning Challenge
   - Complex problem-solving assessment
 
@@ -880,19 +960,15 @@ Lab: Meta
   - Advanced mathematical reasoning evaluation
   - Complex mathematical problem-solving
 
-
 ## Technical Deep Dives
 
 ### Training data over the years
 
 ### Optimization Breakthroughs
 
-
 ### Architectural Breakthroughs
 
-
 ### Training Breakthroughs
-
 
 Consider adding these categories:
 
@@ -998,7 +1074,6 @@ Inference Optimization: KV caching, speculative decoding, etc.
 - HELM framework
 - Chain-of-thought evaluation
 
-
 Visual Elements
 
 Add performance charts showing scaling laws
@@ -1008,4 +1083,6 @@ Create a "family tree" showing model lineage
 NOTES TO SELF
 
 - Add a note for hardware, not in the scope of this blog but should not be ignored [DONE]
-- Quick note about benchmark, Not hear to explain these but these are the major ones that are used mostly.   -->
+- Quick note about benchmark, Not hear to explain these but these are the major ones that are used mostly.
+
+[blog](https://www.darioamodei.com/essay/machines-of-loving-grace) -->
