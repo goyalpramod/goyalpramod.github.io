@@ -166,11 +166,11 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 
 ## 2017: The Foundation Year
 
-### Attention is all you need
+### Transformer
 
-[paper](https://arxiv.org/abs/1706.03762)
+[Attention is all you need](https://arxiv.org/abs/1706.03762)
 
-The foundational paper on transformers is released, some of the key ideas introduced include
+The foundational paper on transformers , introduced some key ideas such as
 
 - Scaled dot-product attention
 - Multi-head attention mechanism
@@ -180,26 +180,625 @@ The foundational paper on transformers is released, some of the key ideas introd
 
 We have talked deeply about each of these topics previously and I implore you to check that part out [here]()
 
-### Deep reinforcement learning from human preferences
+### RLHF - Reinforcement Learning from Human Preferences
 
-[paper](https://arxiv.org/abs/1706.03741)
+[Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
 
-The RLHF paper
+As mind boggling as it sounds, the famed algorithm RLHF came out in 2017, the same year attention is all you need came out.
 
-### Proximal Policy Optimization Algorithms
+Let us understand the ideas put forth and why it was such a big deal.
 
-[paper](https://arxiv.org/abs/1707.06347)
+If you are new to RL, check it out in the [appendix]()
 
-### Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer
+<details>
+<summary>Quick Summary</summary>
+"""
+Quick Summary
 
-[paper](https://arxiv.org/abs/1701.06538)
+This 2017 paper presents a method for training reinforcement learning (RL) agents using human feedback instead of explicitly defined reward functions. Here's a high-level overview:
 
+The authors address a fundamental challenge in RL: for many complex tasks, designing appropriate reward functions is difficult or impossible. Instead of requiring engineers to craft these functions, they develop a system where:
+
+1. Humans compare short video clips of agent behavior (1-2 seconds)
+2. These comparisons train a reward predictor model
+3. The agent optimizes its policy using this learned reward function
+
+Key contributions:
+
+- They show this approach can solve complex RL tasks using feedback on less than 1% of the agent's interactions
+- This dramatically reduces the human oversight required, making it practical for state-of-the-art RL systems
+- They demonstrate training novel behaviors with just about an hour of human time
+- Their approach works across domains including Atari games and simulated robot locomotion
+
+The technique represents a significant advance in aligning AI systems with human preferences, addressing concerns about misalignment between AI objectives and human values. By having humans evaluate agent behavior directly, the system learns rewards that better capture what humans actually want.
+"""
+
+</details>
+
+**Problem** : Training a RL system requires researchers make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems
+
+[Add image below, left side simple puzzle, right side complex puzzle]
+
+**Solution** :
+
+"An alternative approach is to allow a human to provide feedback on our system’s current behavior
+and to use this feedback to define the task. In principle this fits within the paradigm of reinforcement
+learning, but using human feedback directly as a reward function is prohibitively expensive for RL
+systems that require hundreds or thousands of hours of experience."
+
+[Show image of a man sitting tirelessly through 1000 of hours of RL]
+
+"In summary, we desire a solution to sequential decision problems without a well-specified reward
+function that
+
+1. enables us to solve tasks for which we can only recognize the desired behavior, but not
+   necessarily demonstrate it,
+2. allows agents to be taught by non-expert users,
+3. scales to large problems, and
+4. is economical with user feedback"
+
+"
+We ask the human to
+compare short video clips of the agent’s behavior, rather than to supply an absolute numerical
+score. We found comparisons to be easier for humans to provide in some domains, while being
+equally useful for learning human preferences.
+Comparing short video clips is nearly as fast as
+comparing individual states
+"
+
+[ADD Image from the paper]
+
+[Add 2 image,
+
+1. Human only shown parts of the way the model solving the problem
+2. Only compares which approach is better
+   ]
+
+Now let us understand how a model, learns from these preferences. I.e the reward modeling
+
+"""
+**Reward Modeling in RLHF**
+
+
+Read the following blogs to understand these topics better then explain them 
+- https://huggingface.co/blog/rlhf
+- https://huyenchip.com/2023/05/02/rlhf.html
+
+The preference predictor model estimates the probability that a human would prefer trajectory segment σ¹ over σ²:
+
+$$
+\hat{P}\left[\sigma^{1} \succ \sigma^{2}\right]=\frac{\exp \sum \hat{r}\left(o_{t}^{1}, a_{t}^{1}\right)}{\exp \sum \hat{r}\left(o_{t}^{1}, a_{t}^{1}\right)+\exp \sum \hat{r}\left(o_{t}^{2}, a_{t}^{2}\right)}
+$$
+
+The reward function is trained using cross-entropy loss to match human preferences:
+
+$$
+\operatorname{loss}(\hat{r})=-\sum_{\left(\sigma^{1}, \sigma^{2}, \mu\right) \in D} \mu(1) \log \hat{P}\left[\sigma^{1} \succ \sigma^{2}\right]+\mu(2) \log \hat{P}\left[\sigma^{2} \succ \sigma^{1}\right]
+$$
+
+<details>
+<summary>Mathematical Notation</summary>
+
+- $\hat{P}\left[\sigma^{1} \succ \sigma^{2}\right]$: Predicted probability that trajectory segment $\sigma^{1}$ is preferred over trajectory segment $\sigma^{2}$
+- $\hat{r}$: The learned reward function
+- $o_{t}^{i}$: Observation at time $t$ in trajectory segment $i$
+- $a_{t}^{i}$: Action at time $t$ in trajectory segment $i$
+- $\sigma^{i}$: Trajectory segment $i$ (a sequence of observation-action pairs)
+- $\exp$: Exponential function
+- $\sum$: Summation over all timesteps in the trajectory segment
+- $\operatorname{loss}(\hat{r})$: Cross-entropy loss function for the reward model
+- $D$: Dataset of human preference comparisons
+- $\mu$: Distribution over $\{1,2\}$ indicating human preference
+- $\mu(1)$: Probability that human preferred segment 1
+- $\mu(2)$: Probability that human preferred segment 2
+- $\log$: Natural logarithm
+</details>
+""""
+"""
+Understanding the Reward Function Fitting Process
+
+Let me break down this section step by step, which explains how the researchers train their reward function from human preferences:
+
+1. The Preference-Predictor Model
+
+The authors interpret their reward function estimate r̂ as a preference predictor. Instead of directly modeling a reward function, they model the probability that a human would prefer one trajectory segment over another.
+
+2. The Mathematical Formulation (Equation 1)
+
+The equation P̂[σ¹ ≻ σ²] represents the predicted probability that a human would prefer trajectory segment σ¹ over segment σ².
+
+Breaking down the formula:
+- σ¹ and σ² are two different trajectory segments (short video clips of agent behavior)
+- o^i_t and a^i_t represent the observation and action at time t in trajectory i
+- r̂(o^i_t, a^i_t) is the estimated reward for that observation-action pair
+- The formula uses the softmax function (exponential normalization):
+
+P̂[σ¹ ≻ σ²] = exp(∑r̂(o¹_t, a¹_t)) / [exp(∑r̂(o¹_t, a¹_t)) + exp(∑r̂(o²_t, a²_t))]
+
+This means:
+1. Sum up all the predicted rewards along trajectory 1
+2. Sum up all the predicted rewards along trajectory 2
+3. Apply exponential function to both sums
+4. The probability of preferring trajectory 1 is the ratio of exp(sum1) to the total exp(sum1) + exp(sum2)
+
+3. The Loss Function
+
+The goal is to find parameters for r̂ that make its predictions match the actual human preferences:
+
+loss(r̂) = -∑ [μ(1)log P̂[σ¹ ≻ σ²] + μ(2)log P̂[σ² ≻ σ¹]]
+
+Where:
+- (σ¹, σ², μ) ∈ D means we're summing over all the comparison data in our dataset D
+- μ is a distribution over {1,2} indicating which segment the human preferred
+- If the human strictly preferred segment 1, then μ(1) = 1 and μ(2) = 0
+- If the human strictly preferred segment 2, then μ(1) = 0 and μ(2) = 1
+- If the human found them equal, then μ(1) = μ(2) = 0.5
+
+This is the standard cross-entropy loss function used in classification problems, measuring how well our predicted probabilities match the actual human judgments.
+
+4. The Bradley-Terry Model Connection
+
+This approach is based on the Bradley-Terry model, which is a statistical model for paired comparisons. It's similar to:
+
+1. The Elo rating system in chess: Players have ratings, and the difference in ratings predicts the probability of one player beating another.
+
+2. In this case: Trajectory segments have "ratings" (the sum of rewards), and the difference in ratings predicts the probability of a human preferring one segment over another.
+
+In essence, the reward function learns to assign higher values to states and actions that humans tend to prefer, creating a preference scale that can be used to guide the agent's behavior.
+"""
+
+
+The most important idea that we need to take forth from this paper is.
+
+We can use RLHF from non-expert humans for a fraction of cost by comparing stuff.
+
+Fun story: One time researchers tried to RL a helicopter and it started flying backwards
+
+### PPO: Proximal Policy Optimization
+
+[Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
+
+Read the following blogs to understand these topics better then explain them 
+- https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
+- http://www.scholarpedia.org/article/Policy_gradient_methods
+- https://spinningup.openai.com/en/latest/spinningup/rl_intro.html
+- https://jonathan-hui.medium.com/rl-policy-gradients-explained-9b13b688b146
+- https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9
+- http://www.incompleteideas.net/book/first/ebook/node43.html
+- https://cameronrwolfe.substack.com/p/proximal-policy-optimization-ppo
+- https://huggingface.co/blog/NormalUhr/rlhf-pipeline
+- https://iclr-blogposts.github.io/2024/blog/the-n-implementation-details-of-rlhf-with-ppo/
+
+- NOTE Explain the maths using baskets and fruits
+
+Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it(Atleast in the early days). 
+
+This is going to be math heavy so be prepared (Dw, I will guide you in each step)
+
+"""
+<details>
+<summary>Quick Summary</summary>
+I'll be your guide through this machine learning research paper, focusing on building intuition for the mathematical concepts while waiting for your specific questions to dive deeper.
+
+## High-Level Summary: Proximal Policy Optimization (PPO)
+
+This paper by John Schulman et al. from OpenAI introduces Proximal Policy Optimization (PPO), a family of policy gradient methods for reinforcement learning that achieves the reliability and data efficiency of Trust Region Policy Optimization (TRPO) while being much simpler to implement and more compatible with various neural network architectures.
+
+Key contributions:
+- A novel "clipped" surrogate objective function that provides a pessimistic estimate of policy performance
+- An algorithm that alternates between data collection and multiple epochs of optimization on the same data
+- Empirical validation showing PPO outperforms other online policy gradient methods across continuous control tasks and Atari games
+- A balance between sample complexity, implementation simplicity, and computation time
+
+The core innovation is their clipped probability ratio approach, which constrains policy updates without requiring the complex second-order optimization techniques used in TRPO. This makes PPO more practical while maintaining performance guarantees.
+
+Feel free to ask specific questions about any aspect of the paper, and I'm happy to explore the mathematical formulations, algorithm details, or empirical results in greater depth.
+</details>
+"""
+
+**Problem** """
+However, there is room for improvement in developing a method that is scalable (to
+large models and parallel implementations), data efficient, and robust (i.e., successful on a variety
+of problems without hyperparameter tuning). Q-learning (with function approximation) fails on
+many simple problems1 and is poorly understood, vanilla policy gradient methods have poor data
+effiency and robustness; and trust region policy optimization (TRPO) is relatively complicated,
+and is not compatible with architectures that include noise (such as dropout) or parameter sharing
+(between the policy and value function, or with auxiliary tasks).
+"""
+
+**Solution** """
+This paper seeks to improve the current state of affairs by introducing an algorithm that attains
+the data efficiency and reliable performance of TRPO, while using only first-order optimization.
+We propose a novel objective with clipped probability ratios, which forms a pessimistic estimate
+(i.e., lower bound) of the performance of the policy. To optimize policies, we alternate between
+sampling data from the policy and performing several epochs of optimization on the sampled **data**
+"""
+
+Policy Gradient Methods
+
+"""
+# Understanding Policy Gradient Methods
+
+Let me break down this section on policy gradient methods step by step:
+
+## Step 1: The Basic Idea
+Policy gradient methods are a family of reinforcement learning algorithms that directly optimize a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
+1. Collecting experience (state-action pairs and rewards) using the current policy
+2. Estimating the policy gradient (the direction that would improve the policy)
+3. Updating the policy parameters using this gradient
+
+## Step 2: The Gradient Estimator
+The core of policy gradient methods is the gradient estimator shown in equation (1). This formula tells us how to estimate the direction in which we should adjust our policy parameters to increase expected rewards:
+
+The gradient estimator ĝ is an empirical average of the product of two terms:
+- `∇θ log πθ(at|st)`: The gradient of the log probability of taking action at in state st
+- `Ât`: An estimate of the advantage function, which tells us how much better action at is compared to the average action in state st
+
+## Step 3: The Objective Function
+Equation (2) shows the policy gradient objective function LPG(θ). In practice, modern implementations use automatic differentiation to compute the gradient. They set up an objective function whose gradient is the policy gradient estimator, then let the automatic differentiation calculate the gradient.
+
+## Step 4: The Problem with Multiple Optimization Steps
+The authors point out an important issue: while it seems like a good idea to perform multiple optimization steps on the same batch of data (to get more out of each data collection), this approach often leads to destructively large policy updates. This happens because:
+1. The data was collected using an older version of the policy
+2. As the policy changes during optimization, the data becomes less representative of the current policy's behavior
+3. This mismatch can lead to overconfident and harmful updates
+
+This observation motivates the need for the "proximal" part of PPO, which constrains how much the policy can change during these multiple optimization steps.
+
+<details>
+<summary>Mathematical Notation</summary>
+
+- $\hat{g}$: Estimator of the policy gradient
+- $\mathbb{Ê}_t$: Empirical average over a finite batch of samples
+- $\nabla_\theta \log \pi_\theta(a_t|s_t)$: Gradient of the log probability of taking action $a_t$ in state $s_t$ under policy $\pi_\theta$
+- $\hat{A}_t$: Estimator of the advantage function at timestep $t$
+- $\pi_\theta$: A stochastic policy parameterized by $\theta$
+- $s_t$: State at timestep $t$
+- $a_t$: Action at timestep $t$
+- $L^{PG}(\theta)$: Policy gradient objective function
+- $\log$: Natural logarithm
+- $\theta$: Policy parameters
+</details>
+
+"""
+
+"""
+# Detailed Mathematical Analysis of Policy Gradient Methods
+
+Let me focus specifically on the mathematical details of the policy gradient formulation:
+
+## The Policy Gradient Estimator (Equation 1)
+
+$$\hat{g} = \mathbb{\hat{E}}_t\left[\nabla_\theta \log \pi_\theta(a_t|s_t)\hat{A}_t\right]$$
+
+Breaking this down mathematically:
+
+1. **Policy Parameterization**: $\pi_\theta(a_t|s_t)$ is a probability distribution over actions conditioned on the state, parameterized by $\theta$ (typically neural network weights). For each state $s_t$, it outputs a probability for each possible action $a_t$.
+
+2. **Log-Probability Gradient**: $\nabla_\theta \log \pi_\theta(a_t|s_t)$ computes the gradient of the log probability with respect to policy parameters $\theta$. This is a vector pointing in the direction that would increase the probability of taking action $a_t$ in state $s_t$.
+
+   - If $\pi_\theta$ is a Gaussian policy for continuous actions with mean $\mu_\theta(s_t)$ and standard deviation $\sigma_\theta(s_t)$, then:
+     $$\log \pi_\theta(a_t|s_t) = -\frac{(a_t - \mu_\theta(s_t))^2}{2\sigma_\theta(s_t)^2} - \log(\sigma_\theta(s_t)) - \frac{1}{2}\log(2\pi)$$
+     
+   - If $\pi_\theta$ is a categorical policy for discrete actions with probabilities $p_\theta(a|s_t)$ for each action $a$, then:
+     $$\log \pi_\theta(a_t|s_t) = \log(p_\theta(a_t|s_t))$$
+
+3. **Advantage Estimation**: $\hat{A}_t$ is an estimator of the advantage function, which represents how much better action $a_t$ is compared to the average action in state $s_t$. Mathematically:
+   $$\hat{A}_t \approx Q(s_t, a_t) - V(s_t)$$
+   
+   Where $Q(s_t, a_t)$ is the action-value function (expected return of taking action $a_t$ in state $s_t$) and $V(s_t)$ is the state-value function (expected return from state $s_t$).
+
+4. **Empirical Expectation**: $\mathbb{\hat{E}}_t[\cdot]$ indicates an empirical average over a batch of collected samples:
+   $$\mathbb{\hat{E}}_t[f(t)] = \frac{1}{T}\sum_{t=1}^T f(t)$$
+   
+   Where $T$ is the number of timesteps in the collected batch.
+
+## The Policy Gradient Objective (Equation 2)
+
+$$L^{PG}(\theta) = \mathbb{\hat{E}}_t\left[\log \pi_\theta(a_t|s_t)\hat{A}_t\right]$$
+
+This objective function is constructed so that its gradient with respect to $\theta$ equals the policy gradient estimator in Equation 1:
+
+$$\nabla_\theta L^{PG}(\theta) = \mathbb{\hat{E}}_t\left[\nabla_\theta \log \pi_\theta(a_t|s_t)\hat{A}_t\right] = \hat{g}$$
+
+The mathematical derivation works because:
+1. The advantage estimator $\hat{A}_t$ doesn't depend on $\theta$ (it's treated as a constant when differentiating)
+2. Therefore: $\nabla_\theta(\log \pi_\theta(a_t|s_t)\hat{A}_t) = \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot \hat{A}_t$
+3. The expectation operator and gradient operator can be exchanged (under mild conditions)
+
+## Implementation Detail
+
+When implementing this in practice with automatic differentiation frameworks (like TensorFlow or PyTorch), we:
+1. Compute $\hat{A}_t$ values for our collected batch of data
+2. Set up the objective function $L^{PG}(\theta)$ 
+3. Let the automatic differentiation compute the gradient
+4. Apply this gradient using a stochastic gradient ascent algorithm:
+   $$\theta_{new} = \theta_{old} + \alpha \cdot \hat{g}$$
+   Where $\alpha$ is the learning rate
+
+```
+<details>
+<summary>Mathematical Notation</summary>
+
+- $\hat{g}$: Estimator of the policy gradient
+- $\mathbb{\hat{E}}_t[\cdot]$: Empirical average over a finite batch of samples ($\frac{1}{T}\sum_{t=1}^T$)
+- $\nabla_\theta$: Gradient operator with respect to parameters $\theta$
+- $\log \pi_\theta(a_t|s_t)$: Log probability of taking action $a_t$ in state $s_t$ under policy $\pi_\theta$
+- $\hat{A}_t$: Estimator of the advantage function at timestep $t$
+- $\pi_\theta$: A stochastic policy parameterized by $\theta$
+- $s_t$: State at timestep $t$
+- $a_t$: Action at timestep $t$
+- $L^{PG}(\theta)$: Policy gradient objective function
+- $Q(s_t, a_t)$: Action-value function
+- $V(s_t)$: State-value function
+- $\theta$: Policy parameters
+- $\alpha$: Learning rate for gradient ascent
+</details>
+```
+"""
+
+TRPO 
+
+"""
+# Detailed Mathematical Analysis of Trust Region Methods
+
+Let me focus specifically on the mathematical formulation of Trust Region Policy Optimization (TRPO):
+
+## The TRPO Objective (Equations 3-4)
+
+The TRPO algorithm formulates policy optimization as a constrained optimization problem:
+
+$$
+\begin{align}
+\text{maximize}_\theta \quad & \mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right] \quad \quad (3)\\
+\text{subject to} \quad & \mathbb{\hat{E}}_t[\text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]] \leq \delta \quad (4)
+\end{align}
+$$
+
+Breaking this down mathematically:
+
+1. **Probability Ratio**: The term $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ is the ratio of probabilities under the new policy $\pi_\theta$ versus the old policy $\pi_{\theta_{old}}$. This ratio:
+   - Equals 1 when the policies assign equal probability to the action
+   - Is greater than 1 when the new policy makes the action more likely
+   - Is less than 1 when the new policy makes the action less likely
+
+2. **Surrogate Objective**: The objective $\mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right]$ can be understood as:
+   - When $\hat{A}_t > 0$ (good actions), increase their probability (maximize ratio)
+   - When $\hat{A}_t < 0$ (bad actions), decrease their probability (minimize ratio)
+
+3. **KL Divergence Constraint**: The term $\text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]$ measures the difference between the old and new policy distributions. For two distributions $P$ and $Q$, the KL divergence is defined as:
+   $$\text{KL}[P||Q] = \mathbb{E}_{x \sim P}\left[\log\frac{P(x)}{Q(x)}\right]$$
+   
+   - For continuous action spaces with Gaussian policies:
+     $$\text{KL}[\mathcal{N}(\mu_1,\Sigma_1)||\mathcal{N}(\mu_2,\Sigma_2)] = \frac{1}{2}\left[\log\frac{|\Sigma_2|}{|\Sigma_1|} + \text{Tr}(\Sigma_2^{-1}\Sigma_1) + (\mu_2-\mu_1)^T\Sigma_2^{-1}(\mu_2-\mu_1) - d\right]$$
+     where $d$ is the dimension of the action space.
+   
+   - For discrete action spaces:
+     $$\text{KL}[P||Q] = \sum_{a} P(a) \log\frac{P(a)}{Q(a)}$$
+
+4. **Constraint Parameter $\delta$**: This hyperparameter controls how much the policy is allowed to change in a single update. Typically small values (e.g., 0.01-0.05) are used.
+
+## The Penalized Version (Equation 5)
+
+Instead of using a hard constraint, the theory also supports a penalized objective:
+
+$$\text{maximize}_\theta \mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t - \beta \text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]\right] \quad (5)$$
+
+This reformulates the constrained optimization as an unconstrained one:
+
+1. **Penalty Coefficient $\beta$**: This parameter balances between maximizing the surrogate objective and minimizing the KL divergence.
+   - Large $\beta$: Conservative updates that change the policy very little
+   - Small $\beta$: Aggressive updates that may significantly change the policy
+
+2. **Mathematical Equivalence**: Under certain conditions, for any constraint $\delta$ in equation (4), there exists a $\beta$ in equation (5) that gives the same solution.
+
+3. **Practical Challenge**: The paper notes that finding a single value of $\beta$ that works well across different problems (or even at different stages of the same problem) is difficult, which is why TRPO uses the constrained formulation instead.
+
+4. **Mathematical Insight**: The paper mentions that a surrogate objective using the max KL (rather than mean KL) forms a lower bound (pessimistic estimate) on policy performance. This theoretical foundation justifies the constraint-based approach.
+
+## Implementation Details
+
+When solving this constrained optimization problem:
+
+1. TRPO applies a linear approximation to the objective:
+   $$\mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right] \approx \mathbb{\hat{E}}_t\left[\hat{A}_t\right] + \mathbb{\hat{E}}_t\left[\frac{\partial}{\partial \theta}\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\bigg|_{\theta=\theta_{old}}\right]^T(\theta - \theta_{old})$$
+
+2. And a quadratic approximation to the constraint:
+   $$\mathbb{\hat{E}}_t[\text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]] \approx \frac{1}{2}(\theta - \theta_{old})^T H (\theta - \theta_{old})$$
+   where $H$ is the Hessian of the KL divergence with respect to $\theta$.
+
+3. The conjugate gradient algorithm is then used to efficiently solve this approximated problem.
+
+```
+<details>
+<summary>Mathematical Notation</summary>
+
+- $\pi_\theta(a_t|s_t)$: Probability of taking action $a_t$ in state $s_t$ under policy with parameters $\theta$
+- $\pi_{\theta_{old}}(a_t|s_t)$: Probability under previous policy parameters
+- $\theta_{old}$: Vector of policy parameters before the update
+- $\hat{A}_t$: Advantage function estimator at timestep $t$
+- $\mathbb{\hat{E}}_t[\cdot]$: Empirical average over collected samples
+- $\text{KL}[P||Q]$: Kullback-Leibler divergence between distributions $P$ and $Q$
+- $\delta$: Constraint parameter limiting the size of policy update
+- $\beta$: Coefficient for KL penalty in the unconstrained formulation
+- $\pi_{\theta_{old}}(\cdot|s_t)$: Complete action distribution under old policy for state $s_t$
+- $\pi_\theta(\cdot|s_t)$: Complete action distribution under new policy for state $s_t$
+- $H$: Hessian matrix of the KL divergence with respect to policy parameters
+</details>
+```
+"""
+
+Clipped Surogate Objective 
+
+"""
+# Detailed Mathematical Analysis of Clipped Surrogate Objective
+
+Let me focus on the mathematical details of the Clipped Surrogate Objective, which is the core innovation of PPO:
+
+## The Probability Ratio and CPI Objective
+
+First, the paper defines a probability ratio:
+
+$$r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$$
+
+This ratio measures how the probability of taking action $a_t$ in state $s_t$ changes under the new policy $\pi_\theta$ compared to the old policy $\pi_{\theta_{old}}$. An important property is that $r(\theta_{old}) = 1$, since at $\theta = \theta_{old}$, the policies are identical.
+
+The Conservative Policy Iteration (CPI) objective from previous work is defined as:
+
+$$L^{CPI}(\theta) = \mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right] = \mathbb{\hat{E}}_t\left[r_t(\theta)\hat{A}_t\right] \quad (6)$$
+
+This objective encourages:
+- Increasing probability (making $r_t(\theta) > 1$) for actions with positive advantage ($\hat{A}_t > 0$)
+- Decreasing probability (making $r_t(\theta) < 1$) for actions with negative advantage ($\hat{A}_t < 0$)
+
+## The Clipped Surrogate Objective (Equation 7)
+
+The key innovation of PPO is the clipped surrogate objective:
+
+$$L^{CLIP}(\theta) = \mathbb{\hat{E}}_t\left[\min(r_t(\theta)\hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t)\right] \quad (7)$$
+
+Breaking this down mathematically:
+
+1. **Clipping Function**: The function $\text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)$ constrains the probability ratio to the interval $[1-\epsilon, 1+\epsilon]$:
+   $$\text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) = \begin{cases}
+   1-\epsilon & \text{if } r_t(\theta) < 1-\epsilon \\
+   r_t(\theta) & \text{if } 1-\epsilon \leq r_t(\theta) \leq 1+\epsilon \\
+   1+\epsilon & \text{if } r_t(\theta) > 1+\epsilon
+   \end{cases}$$
+
+2. **The Minimum Operation**: The $\min$ operation in the objective creates a pessimistic estimate by taking the lower of two values:
+   - The original surrogate objective $r_t(\theta)\hat{A}_t$
+   - The clipped surrogate objective $\text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t$
+
+3. **Case Analysis Based on Advantage Sign**:
+   
+   When $\hat{A}_t > 0$ (positive advantage):
+   - The original objective $r_t(\theta)\hat{A}_t$ increases monotonically with $r_t(\theta)$
+   - The clipped objective is constant at $(1+\epsilon)\hat{A}_t$ when $r_t(\theta) > 1+\epsilon$
+   - Taking the minimum means we optimize $r_t(\theta)\hat{A}_t$ only when $r_t(\theta) \leq 1+\epsilon$
+   - Beyond that, there's no incentive to increase $r_t(\theta)$ further
+   
+   When $\hat{A}_t < 0$ (negative advantage):
+   - The original objective $r_t(\theta)\hat{A}_t$ decreases monotonically with $r_t(\theta)$
+   - The clipped objective is constant at $(1-\epsilon)\hat{A}_t$ when $r_t(\theta) < 1-\epsilon$
+   - Taking the minimum means we optimize $r_t(\theta)\hat{A}_t$ only when $r_t(\theta) \geq 1-\epsilon$
+   - Below that, there's no incentive to decrease $r_t(\theta)$ further
+
+4. **Mathematical Properties**:
+   - First-order equivalence: $L^{CLIP}(\theta) = L^{CPI}(\theta)$ to first order around $\theta_{old}$ (i.e., at $r = 1$)
+   - Explicit constraint: Unlike TRPO, the constraint is built directly into the objective function
+   - Lower bound: $L^{CLIP}$ serves as a pessimistic bound (lower bound) on $L^{CPI}$
+   - Automatic penalty: The clipping automatically penalizes large policy changes without requiring complex constrained optimization
+
+5. **Hyperparameter $\epsilon$**: Controls the clipping threshold, typically set to a small value like 0.2. This determines how much the policy is allowed to change in a single update.
+
+## Graphical Interpretation (Figure 1)
+
+The paper includes graphs showing the behavior of a single term in $L^{CLIP}$ as a function of the probability ratio $r$:
+
+1. For positive advantages ($\hat{A}_t > 0$):
+   - The function increases linearly with $r$ until $r = 1+\epsilon$
+   - After that, it plateaus, removing any incentive to increase $r$ beyond $1+\epsilon$
+   
+2. For negative advantages ($\hat{A}_t < 0$):
+   - The function decreases linearly with $r$ until $r = 1-\epsilon$
+   - Below that, it plateaus, removing any incentive to decrease $r$ below $1-\epsilon$
+
+The red circle at $r = 1$ in both plots represents the starting point of optimization (the previous policy).
+
+## Lower Bound Property (Figure 2)
+
+Figure 2 (mentioned in the text) shows that $L^{CLIP}$ forms a lower bound on $L^{CPI}$, effectively penalizing large policy updates. This approximates the trust region method of TRPO but uses only first-order optimization.
+
+
+<details>
+<summary>Mathematical Notation</summary>
+
+- $r_t(\theta)$: Probability ratio $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ at timestep $t$
+- $\pi_\theta(a_t|s_t)$: Probability of action $a_t$ in state $s_t$ under policy with parameters $\theta$
+- $\pi_{\theta_{old}}(a_t|s_t)$: Same probability under previous policy parameters
+- $\theta_{old}$: Policy parameters before the update
+- $\hat{A}_t$: Advantage function estimator at timestep $t$
+- $\mathbb{\hat{E}}_t[\cdot]$: Empirical average over collected samples
+- $L^{CPI}(\theta)$: Conservative Policy Iteration objective
+- $L^{CLIP}(\theta)$: Clipped surrogate objective
+- $\text{clip}(x,a,b)$: Function that clips $x$ to be within the interval $[a,b]$
+- $\epsilon$: Clipping hyperparameter (typically 0.2)
+- $\min(a,b)$: Function returning the minimum of $a$ and $b$
+</details>
+"""
+
+### MOE : Mixture Of Experts 
+
+[This came out in JAn so it should technically be at the top]
+
+Another explosive paper, In 2017. Talk about being a crazy year right. Well to be perfectly honest MOE was actually introduced in 1990 in this [paper]()
+
+[Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538)
+
+
+blogs 
+- https://huggingface.co/blog/moe
+- https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mixture-of-experts
+
+<details>
+<summary>
+Quick Summary
+</summary>
+# Brief Summary of "Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer"
+
+This 2017 paper by Shazeer et al. introduces a novel approach to dramatically increase neural network capacity without proportionally increasing computational costs. The core innovation is the Sparsely-Gated Mixture-of-Experts (MoE) layer, which contains thousands of feed-forward neural networks (experts), with a trainable gating network that selectively activates only a small subset of experts for each input example.
+
+Key highlights:
+- The authors achieve over 1000x improvements in model capacity while maintaining computational efficiency
+- Their approach addresses several challenges of conditional computation, including GPU utilization and load balancing
+- When applied to language modeling and machine translation tasks, their MoE models significantly outperform state-of-the-art models with lower computational cost
+- Their largest model contains up to 137 billion parameters and demonstrates continued performance improvements with increased capacity
+
+This paper represents a significant advancement in scaling neural networks efficiently, presaging some of the techniques that would later become important in very large language models.
+
+Is there a specific aspect of this paper you'd like to explore further?
+</details>
+
+**Problem** 
+"""
+The capacity of a neural network to absorb information is limited by its number of
+parameters.
+"""
+
+**Solution**
+"""
+Conditional computation, where parts of the network are active on a
+per-example basis, has been proposed in theory as a way of dramatically increasing model capacity without a proportional increase in computation.
+"""
+
+[Visualize the solution as taking a bunch of students, then training each to be really good at one topic. Add a disclaimer that this is just for intuition. In reality it has been observed that MoE models focus more on tokens rather than man-made concepts]
+
+Understanding the Gating Network
+
+[completely understand 2.1 and write that down]
+
+ADDRESSING PERFORMANCE CHALLENGES [TALK_ABOUT_THESE_AS_WELL]
+
+Load balancing loss,understand and explain that too
+
+We are deviating a bit from what the paper proposed and moving into the future on how MoE is actually used. 
 ## 2018: BERT and Early Innovations
+
+### Universal Language Model Fine-tuning for Text Classification
+
+[paper](https://arxiv.org/pdf/1801.06146)
+
+#### Deep contextualized word representations
+
+[Paper](https://arxiv.org/abs/1802.05365)
 
 ### GPT-1
 
 [paper](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
 [blog](https://openai.com/index/language-unsupervised/)
+
+This was the beginning of the era we live in now
 
 - Unidirectional decoder
 - BPE tokenization
@@ -219,6 +818,14 @@ Corpus: Unsupervised Pretraining on BookCorpus dataset. Supervised Finetuning on
 License: N/A
 Lab: OpenAI
 """
+
+"""
+Our system works in two stages; first we train a transformer model on a very large amount of data in an unsupervised manner—using language modeling as a training signal—then we fine-tune this model on much smaller supervised datasets to help it solve specific tasks.
+"""
+
+Training a GPT
+
+Semi-supervised Sequence Learning
 
 ### Sentencepiece
 
@@ -561,6 +1168,8 @@ Lab: Deepmind
 
 [paper](https://arxiv.org/abs/2203.02155)
 
+https://openai.com/index/instruction-following/
+
 - RLHF pipeline [blog on the topic](https://huggingface.co/blog/rlhf) & [blog 2](https://wandb.ai/ayush-thakur/RLHF/reports/Understanding-Reinforcement-Learning-from-Human-Feedback-RLHF-Part-1--VmlldzoyODk5MTIx)
 - PPO implementation
 - Human feedback collection
@@ -811,7 +1420,7 @@ Lab: Meta
 - Instruction-tuned LLaMA
 - Efficient fine-tuning approach
 
-### LIMA 
+### LIMA
 
 [paper](https://arxiv.org/abs/2305.11206)
 
@@ -834,14 +1443,14 @@ Demonstrated efficiency of small high-quality datasets
 - Pioneered efficient visual instruction tuning
 - Set foundation for open-source multimodal models
 
-### Claude 1/Claude 2 
+### Claude 1/Claude 2
 
 - Released in March 2023 (Claude 1) and July 2023 (Claude 2)
 - Focused on constitutional AI approach
 - Enhanced safety and alignment
 - Specialized in long-form content generation
 
-### Gemini 
+### Gemini
 
 - Announced initially in May 2023, fully released in December Described as "a family of multimodal large language models developed by Google DeepMind, and the successor to LaMDA and PaLM 2"
 - Designed from the ground up as a multimodal model
@@ -960,7 +1569,6 @@ Advanced mathematical problem-solving
 - Designed to compete with OpenAI's o1
 - Significantly faster inference than o1
 
-
 ### vLLM[], DeepSpeed
 
 ## 2025
@@ -996,7 +1604,6 @@ Advanced mathematical problem-solving
 
 [paper]()
 
-
 Visual Elements
 
 Add performance charts showing scaling laws
@@ -1007,5 +1614,7 @@ NOTES TO SELF
 
 - Add a note for hardware, not in the scope of this blog but should not be ignored [DONE]
 - Quick note about benchmark, Not hear to explain these but these are the major ones that are used mostly.
+- Train a hand drawn sketch LORA in flux dev for images
+- Add a reference section in the end which redirects to the papers, Like latex reference and stuff.
 
 [blog](https://www.darioamodei.com/essay/machines-of-loving-grace) -->
