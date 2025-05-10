@@ -180,6 +180,10 @@ The foundational paper on transformers , introduced some key ideas such as
 
 We have talked deeply about each of these topics previously and I implore you to check that part out [here]()
 
+**Training a Transformer**
+
+This is one topic that we didnt talk about extensively so let's go over it, because that is where the true beauty of GPT lies. How to train over huge amounts of data.
+
 ### RLHF - Reinforcement Learning from Human Preferences
 
 [Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
@@ -827,13 +831,137 @@ Training a GPT
 
 Semi-supervised Sequence Learning
 
+<details>
+<summary>
+Quick Summary
+</summary>
+
+# Improving Language Understanding by Generative Pre-Training: A Brief Summary
+
+This seminal 2018 paper from OpenAI researchers (Radford, Narasimhan, Salimans, and Sutskever) introduces a powerful semi-supervised approach to natural language understanding that combines unsupervised pre-training with supervised fine-tuning.
+
+The key innovation lies in training a large transformer-based language model on unlabeled text data, then leveraging the learned representations by fine-tuning this model on specific downstream tasks. This approach addresses a fundamental challenge in NLP: the scarcity of labeled data for various language understanding tasks.
+
+The authors demonstrate that their method significantly outperforms task-specific architectures across 9 out of 12 NLP tasks, including natural language inference, question answering, semantic similarity, and text classification. Notable improvements include:
+- 8.9% on commonsense reasoning (Stories Cloze Test)
+- 5.7% on question answering (RACE)
+- 1.5% on textual entailment (MultiNLI)
+
+This approach minimizes task-specific architecture modifications by using "task-aware input transformations," which convert structured inputs into a sequence format compatible with the pre-trained model.
+
+This paper laid important groundwork for later transformer-based language models, demonstrating that generative pre-training on unlabeled data could significantly improve performance on downstream language understanding tasks.
+
+What aspects of this paper would you like me to explore in more detail?
+</details>
+
+**Problem**
+
+"""
+The ability to learn effectively from raw text is crucial to alleviating the dependence on supervised
+learning in natural language processing (NLP). Most deep learning methods require substantial
+amounts of manually labeled data, which restricts their applicability in many domains that suffer
+from a dearth of annotated resources 
+"""
+
+**Solution**
+
+"""
+
+"""
+
+blog - https://towardsdatascience.com/understanding-the-evolution-of-gpt-part-1-an-in-depth-look-at-gpt-1-and-what-inspired-it-b7388a32e87d/#:~:text=GPT%2D1%20is%20the%20first,standard%20procedure%20for%20NLP%20tasks.
+
+
+
+Unsupervised pre-training
+
+Supervised fine-tuning
+
+Model Specification 
+
+"""
+Model specifications Our model largely follows the original transformer work [62]. We trained a
+12-layer decoder-only transformer with masked self-attention heads (768 dimensional states and 12
+attention heads). For the position-wise feed-forward networks, we used 3072 dimensional inner states.
+We used the Adam optimization scheme [27] with a max learning rate of 2.5e-4. The learning rate
+was increased linearly from zero over the first 2000 updates and annealed to 0 using a cosine schedule.
+We train for 100 epochs on minibatches of 64 randomly sampled, contiguous sequences of 512 tokens.
+Since layernorm [2] is used extensively throughout the model, a simple weight initialization of
+N(0, 0.02) was sufficient. We used a bytepair encoding (BPE) vocabulary with 40,000 merges [53]
+and residual, embedding, and attention dropouts with a rate of 0.1 for regularization. We also
+employed a modified version of L2 regularization proposed in [37], with w = 0.01 on all non bias or
+gain weights. For the activation function, we used the Gaussian Error Linear Unit (GELU) [18]. We
+used learned position embeddings instead of the sinusoidal version proposed in the original work.
+We use the ftfy library2
+to clean the raw text in BooksCorpus, standardize some punctuation and
+whitespace, and use the spaCy tokenizer.3
+
+"""
+
 ### Sentencepiece
 
+https://huggingface.co/docs/transformers/en/tokenizer_summary
+
+https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/
+
+Wordpiece 
+
+Unigram 
+
+BPE https://arxiv.org/abs/1508.07909
+
 [paper](https://arxiv.org/abs/1808.06226)
+
+<details>
+<summary>
+Quick Summary
+</summary>
+
+"""
+I'll be happy to serve as your guide through the machine learning research paper you've shared, adapting my explanations to your questions while helping you build stronger mathematical intuition.
+
+# Brief Summary of "SentencePiece"
+
+This paper introduces SentencePiece, an open-source subword tokenizer and detokenizer designed specifically for neural text processing, including Neural Machine Translation (NMT). The key innovation of SentencePiece is that it can train subword models directly from raw sentences without requiring pre-tokenization, enabling truly end-to-end and language-independent text processing.
+
+The authors highlight several important features:
+
+1. It implements two subword segmentation algorithms: byte-pair encoding (BPE) and unigram language model
+2. It provides lossless tokenization that preserves all information needed to reconstruct the original text
+3. The model is fully self-contained, ensuring reproducibility across implementations
+4. It offers efficient training and segmentation algorithms
+5. It includes library APIs for on-the-fly processing
+
+They validate their approach through experiments on English-Japanese translation, showing comparable accuracy to systems that use pre-tokenization, while being significantly faster for non-segmented languages like Japanese.
+
+I'm ready to discuss any specific aspects of the paper you'd like to explore in more detail.
+"""
+</details>
+
+**Problem** Tough to make NMT language independent 
+
+**Solution**
+
+"""
+SentencePiece comprises four main components:
+Normalizer, Trainer, Encoder, and Decoder.
+Normalizer is a module to normalize semanticallyequivalent Unicode characters into canonical
+forms. Trainer trains the subword segmentation
+model from the normalized corpus. We specify a
+type of subword model as the parameter of Trainer.
+Encoder internally executes Normalizer to normalize the input text and tokenizes it into a subword sequence with the subword model trained by
+Trainer. Decoder converts the subword sequence
+into the normalized tex
+"""
 
 #### BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
 [paper](https://arxiv.org/abs/1810.04805)
+
+https://jalammar.github.io/illustrated-bert/
+https://jalammar.github.io/a-visual-guide-to-using-bert-for-the-first-time/
+https://huggingface.co/blog/bert-101
+
 
 - Bidirectional encoder
 - WordPiece tokenization
@@ -854,9 +982,33 @@ License: Open, Apache-2.0
 Lab:Google
 """
 
+<details>
+<summary>
+Quick Summary
+
+I'll help you understand the BERT paper as requested. Let me provide a brief, high-level summary first.
+
+## Brief Summary of "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"
+
+This paper introduces BERT (Bidirectional Encoder Representations from Transformers), a groundbreaking language representation model that significantly advanced the state of natural language processing in 2018. The key innovation of BERT is its ability to pre-train deep bidirectional representations from unlabeled text, unlike previous models that were limited to unidirectional contexts (either left-to-right or right-to-left).
+
+BERT employs two novel pre-training tasks:
+1. **Masked Language Model (MLM)**: Randomly masks some percentage of input tokens and predicts those masked tokens
+2. **Next Sentence Prediction (NSP)**: Predicts whether two sentences follow each other in original text
+
+These pre-training objectives allow BERT to create context-aware representations that capture information from both left and right contexts. After pre-training on large text corpora (BookCorpus and Wikipedia), BERT can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of NLP tasks without task-specific architecture modifications.
+
+The paper demonstrated significant improvements over previous methods on eleven NLP tasks, including the GLUE benchmark, SQuAD, and SWAG datasets.
+
+Is there a specific aspect of BERT that you'd like me to explain in more detail?
+</summary>
+</details>
+
 ## 2019: Scaling and Efficiency
 
 ### GPT-2
+
+https://jalammar.github.io/illustrated-gpt2/
 
 [blog](https://openai.com/index/better-language-models/)
 [paper](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
