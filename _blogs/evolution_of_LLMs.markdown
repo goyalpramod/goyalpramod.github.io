@@ -793,9 +793,84 @@ We are deviating a bit from what the paper proposed and moving into the future o
 
 [paper](https://arxiv.org/pdf/1801.06146)
 
-#### Deep contextualized word representations
+<details>
+<summary>
+Quick Summary
+</summary>
+"""
+# Summary of "Universal Language Model Fine-tuning for Text Classification"
 
-[Paper](https://arxiv.org/abs/1802.05365)
+This 2018 paper by Jeremy Howard and Sebastian Ruder introduces ULMFiT (Universal Language Model Fine-tuning), a method for transfer learning in NLP tasks. The authors present an approach that mirrors the success of transfer learning in computer vision by using a pre-trained language model and fine-tuning it for specific text classification tasks.
+
+Key contributions:
+1. A three-stage approach to transfer learning for NLP tasks:
+   - General-domain language model pretraining
+   - Target task language model fine-tuning
+   - Target task classifier fine-tuning
+
+2. Novel fine-tuning techniques to prevent catastrophic forgetting:
+   - Discriminative fine-tuning (using different learning rates for different layers)
+   - Slanted triangular learning rates (a specific learning rate schedule)
+   - Gradual unfreezing (progressively unfreezing layers from last to first)
+
+3. State-of-the-art results on six text classification datasets with significant error reductions (18-24%)
+
+4. Impressive sample efficiency - with just 100 labeled examples, the method matches the performance of training from scratch with 10-100x more data
+
+The paper demonstrates that effective transfer learning is possible in NLP without task-specific modifications or architecture changes, using a standard 3-layer LSTM model with careful fine-tuning techniques.
+
+Is there a particular aspect of the paper you'd like me to explain in more detail?
+"""
+"""
+Inductive transfer learning has greatly impacted computer vision, but existing approaches in NLP still require task-specific
+modifications and training from scratch.
+We propose Universal Language Model
+Fine-tuning (ULMFiT), an effective transfer learning method that can be applied to
+any task in NLP, and introduce techniques
+that are key for fine-tuning a language
+model.
+"""
+
+</details>
+
+#### ElMO: Embeddings from Language Models
+
+[Deep contextualized word representations](https://arxiv.org/abs/1802.05365)
+
+https://pythonandml.github.io/dlbook/content/word_embeddings/elmo.html
+
+<details>
+<summary>
+Quick Summary
+</summary>
+# Brief Summary of "Deep contextualized word representations"
+
+This paper introduces ELMo (Embeddings from Language Models), a new approach to creating word representations that capture both complex word characteristics (syntax and semantics) and how those characteristics change across different contexts (addressing polysemy). Unlike traditional word embeddings that assign a single vector per word, ELMo derives representations from a bidirectional language model (biLM) pre-trained on a large text corpus.
+
+The key innovation is that ELMo representations are deep - they're a function of all internal layers of the biLM, not just the final layer. The authors show that different layers capture different linguistic properties (lower layers capture syntax, higher layers capture semantics). By learning task-specific weightings of these layers, models can access both types of information simultaneously.
+
+The authors demonstrate that adding ELMo to existing models significantly improves performance across six diverse NLP tasks, including question answering, textual entailment, sentiment analysis, and named entity recognition - achieving state-of-the-art results in all cases, with relative error reductions ranging from 6-20%.
+
+Is there a specific aspect of this paper you'd like me to elaborate on?
+</details>
+
+**Problem**
+
+learning high quality representations can be challenging. They should ideally
+model both (1) complex characteristics of word
+use (e.g., syntax and semantics), and (2) how these
+uses vary across linguistic contexts (i.e., to model
+polysemy).
+
+**Solution**
+
+"""
+Our representations differ from traditional word
+type embeddings in that each token is assigned a
+representation that is a function of the entire input
+sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus.
+"""
+
 
 ### GPT-1
 
@@ -1004,6 +1079,19 @@ Is there a specific aspect of BERT that you'd like me to explain in more detail?
 </summary>
 </details>
 
+This paper wasn't trying to find a problem then solve it per say. It is more of an innovation 
+
+"""
+BERT is designed to pretrain deep bidirectional representations from
+unlabeled text by jointly conditioning on both
+left and right context in all layers. As a result, the pre-trained BERT model can be finetuned with just one additional output layer
+to create state-of-the-art models for a wide
+range of tasks, such as question answering and
+language inference, without substan
+"""
+
+
+
 ## 2019: Scaling and Efficiency
 
 ### GPT-2
@@ -1027,7 +1115,59 @@ License: Open, Modified MIT license
 Lab: OpenAI
 """
 
+<details>
+<summary>
+Quick Summary
+</summary>
+
+# Summary of "Language Models are Unsupervised Multitask Learners"
+
+This 2019 paper by Radford et al. (OpenAI) introduces GPT-2, a large-scale language model that demonstrates impressive zero-shot learning capabilities across multiple NLP tasks. The key insight of this paper is that language models trained on sufficiently large and diverse datasets naturally acquire the ability to perform various language tasks without explicit supervision.
+
+Key contributions:
+1. Introduction of WebText - a high-quality web dataset created by scraping outbound links from Reddit with at least 3 karma
+2. Development of GPT-2, a Transformer-based language model with 1.5 billion parameters
+3. Demonstration that a single unsupervised language model can perform multiple NLP tasks without task-specific training
+4. Evidence that model performance scales in a log-linear fashion with model size
+
+The paper shows that GPT-2 achieves state-of-the-art results on 7 out of 8 tested language modeling datasets in a zero-shot setting. It also demonstrates promising zero-shot performance on tasks like reading comprehension, summarization, translation, and question answering without any task-specific fine-tuning.
+
+This work represents a significant step toward building more general NLP systems that can learn to perform tasks from naturally occurring demonstrations in text, rather than requiring task-specific datasets and architectures for each application.
+</details>
+"""
+Common Crawl. Trinh & Le (2018)’s best results were
+achieved using a small subsample of Common Crawl which
+included only documents most similar to their target dataset,
+the Winograd Schema Challenge. While this is a pragmatic
+approach to improve performance on a specific task, we
+want to avoid making assumptions about the tasks to be
+performed ahead of time.
+Instead, we created a new web scrape which emphasizes
+document quality. To do this we only scraped web pages
+which have been curated/filtered by humans. Manually
+filtering a full web scrape would be exceptionally expensive
+so as a starting point, we scraped all outbound links from
+Reddit, a social media platform, which received at least 3
+karma. This can be thought of as a heuristic indicator for
+whether other users found the link interesting, educational,
+or just funny.
+The resulting dataset, WebText, contains the text subset
+of these 45 million links. To extract the text from HTML
+responses we use a combination of the Dragnet (Peters &
+Lecocq, 2013) and Newspaper1
+content extractors. All results presented in this paper use a preliminary version of
+WebText which does not include links created after Dec
+2017 and which after de-duplication and some heuristic
+based cleaning contains slightly over 8 million documents
+for a total of 40 GB of text. We removed all Wikipedia
+documents from WebText since it is a common data source
+for other datasets and could complicate analysis due to over
+"""
+
+
 ### RoBERTa
+
+
 
 [paper](https://arxiv.org/abs/1907.11692)
 
@@ -1035,6 +1175,34 @@ Lab: OpenAI
 - Removed NSP
 - Larger batch sizes
 - Extended training
+
+<details>
+<summary>
+Quick Summary
+</summary>
+
+# Summary of "RoBERTa: A Robustly Optimized BERT Pretraining Approach"
+
+This 2019 paper by Liu et al. from Facebook AI presents RoBERTa (Robustly Optimized BERT Pretraining Approach), which demonstrates that BERT was significantly undertrained and can achieve state-of-the-art performance with careful optimization choices.
+
+Key contributions:
+
+1. The paper identifies several critical design decisions that significantly improve BERT's performance:
+   - Training the model longer with larger batches over more data
+   - Removing the Next Sentence Prediction (NSP) objective
+   - Training on longer sequences
+   - Dynamically changing the masking pattern applied to training data
+
+2. The researchers collect a larger dataset (including a new CC-NEWS corpus) to better control for training set size effects.
+
+3. Through extensive experimentation, they show that when properly optimized, BERT's masked language modeling objective is competitive with newer approaches like XLNet.
+
+4. RoBERTa achieves state-of-the-art results on GLUE, RACE, and SQuAD benchmarks without multi-task fine-tuning for GLUE or additional data for SQuAD.
+
+The authors emphasize that seemingly mundane training decisions (like batch size, training time, and dataset size) can have as much impact on final performance as architectural innovations. This raises important questions about the source of improvements in recent NLP models and highlights the need for careful replication studies.
+
+The paper is particularly notable for its thorough empirical analysis of training hyperparameters and careful ablation studies showing the contribution of each modification to overall performance.
+</details>
 
 """
 Link: https://huggingface.co/docs/transformers/model_doc/roberta
