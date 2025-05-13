@@ -1218,6 +1218,50 @@ License: N/A
 Lab: UW/Google
 """
 
+"""
+Language model pretraining has led to significant performance gains but careful comparison between different approaches is challenging. Training is computationally expensive, often done on private datasets of different
+sizes, and, as we will show, hyperparameter
+choices have significant impact on the final results. We present a replication study of BERT
+pretraining (Devlin et al.
+, 2019) that carefully
+measures the impact of many key hyperparameters and training data size. We find that BERT
+was significantly undertrained, and can match
+or exceed the performance of every model
+published after it. Our best model achieves
+state-of-the-art results on GLUE, RACE and
+SQuAD. These results highlight the importance of previously overlooked design choices,
+and raise questions about the source of recently reported improvements. We release our
+models and code.
+
+"""
+
+"""
+In summary, the contributions of this paper
+are: (1) We present a set of important BERT design choices and training strategies and introduce 2
+It is possible that these other methods could also improve
+with more tuning. We leave this exploration to future work.
+alternatives that lead to better downstream task
+performance; (2) We use a novel dataset, CCNEWS, and confirm that using more data for pretraining further improves performance on downstream tasks; (3) Our training improvements show
+that masked language model pretraining, under
+the right design choices, is competitive with all
+other recently published methods. We release our
+model, pretraining and fine-tuning code implemented in PyTorch (Paszke et al., 2017).
+"""
+"""
+8Large batch training can improve training efficiency even
+without large scale parallel hardware through gradient accumulation, whereby gradients from multiple mini-batches
+are accumulated locally before each optimization step. T
+"""
+
+https://kozodoi.me/blog/20210219/gradient-accumulation
+https://aman.ai/primers/ai/grad-accum-checkpoint/
+https://blog.dailydoseofds.com/p/gradient-accumulation-increase-batch
+https://www.mindspore.cn/tutorials/experts/en/r2.2/optimize/gradient_accumulation.html
+
+**Problem**
+
+**Solution**
+
 ### DistilBERT and Model Compression
 
 [paper](https://arxiv.org/abs/1910.01108)
@@ -1240,6 +1284,44 @@ Corpus: Same as BERT
 License: Open, Apache-2.0
 Lab: Huggingface
 """
+<details>
+<summary>
+Quick Summary
+</summary>
+"""
+# Summary of "DistilBERT: A Distilled Version of BERT"
+
+This 2020 paper by Sanh et al. from Hugging Face introduces DistilBERT, a smaller, faster version of BERT created through knowledge distillation. The authors address the growing concern that state-of-the-art NLP models are becoming increasingly large and computationally expensive, limiting their practical deployment, especially on edge devices.
+
+Key contributions:
+
+1. They create a distilled version of BERT that retains 97% of its language understanding capabilities while being 40% smaller and 60% faster at inference time.
+
+2. DistilBERT is built using knowledge distillation during the pre-training phase (rather than task-specific distillation), using a triple loss function that combines:
+   - The standard masked language modeling loss
+   - A distillation loss using the teacher's soft target probabilities 
+   - A cosine embedding loss to align the directions of the student and teacher hidden states
+
+3. The student model (DistilBERT) uses the same architecture as BERT but with half the number of layers, and is initialized by taking every other layer from the teacher model.
+
+4. The authors demonstrate that DistilBERT performs well across various NLP tasks:
+   - On GLUE benchmark tasks, it retains 97% of BERT-base's performance
+   - On IMDb sentiment classification, it achieves 92.82% accuracy (vs. 93.46% for BERT-base)
+   - On SQuAD question answering, it reaches 85.8 F1 (vs. 88.5 for BERT-base)
+
+5. They also show that DistilBERT can run effectively on mobile devices, with a model size of 207 MB and 71% faster inference time than BERT on an iPhone 7 Plus.
+
+This work demonstrates that through careful distillation, smaller and more efficient models can be created without significant loss in performance, making state-of-the-art NLP more accessible for resource-constrained applications.
+"""
+</details>
+
+https://blog.roboflow.com/what-is-knowledge-distillation/
+https://datasciencedojo.com/blog/understanding-knowledge-distillation/
+https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html
+https://huggingface.co/blog/Kseniase/kd
+https://medium.com/huggingface/distilbert-8cf3380435b5
+
+
 
 ### BART
 
@@ -1259,12 +1341,66 @@ License: Open, Apache-2.0
 Lab:Facebook
 """
 
+<details>
+
+<summary>
+Quick Summary
+</summary>
+"""
+# BART: A Brief Summary
+
+The paper introduces BART (Bidirectional and Auto-Regressive Transformers), a denoising autoencoder for pretraining sequence-to-sequence models. BART works in two stages:
+
+1. It first corrupts text with various noising functions (like token masking, deletion, text infilling, sentence shuffling)
+2. Then it learns to reconstruct the original text
+
+BART combines the bidirectional encoding approach of BERT with the autoregressive generation capabilities of GPT. This architecture makes it particularly effective for both text generation and comprehension tasks. The authors evaluate various noising approaches and find that randomly shuffling sentences combined with a novel text infilling scheme (replacing spans with mask tokens) works best.
+
+In experiments, BART achieves strong performance across multiple NLP tasks:
+- Matching RoBERTa on classification tasks like GLUE and SQuAD
+- Achieving new state-of-the-art results on summarization tasks (with up to 6 ROUGE point improvements)
+- Showing effectiveness for dialogue, question answering, and even machine translation
+
+The paper presents a thorough ablation study comparing BART to other pretraining approaches and demonstrates its versatility as a general-purpose language model.
+
+Would you like me to explain any specific aspect of the BART model in more detail?
+"""
+</details>
+
+"""
+We present BART, a denoising autoencoder
+for pretraining sequence-to-sequence models.
+BART is trained by (1) corrupting text with an
+arbitrary noising function, and (2) learning a
+model to reconstruct the original text. It uses
+a standard Tranformer-based neural machine
+translation architecture which, despite its simplicity, can be seen as generalizing BERT (due
+to the bidirectional encoder), GPT (with the
+left-to-right decoder), and many other more recent pretraining schemes. We evaluate a number of noising approaches, finding the best performance by both randomly shuffling the order of the original sentences and using a novel
+in-filling scheme, where spans of text are replaced with a single mask token. BART is
+particularly effective when fine tuned for text
+generation but also works well for comprehension tasks. It matches the performance of
+RoBERTa with comparable training resources
+on GLUE and SQuAD, achieves new stateof-the-art results on a range of abstractive dialogue, question answering, and summarization tasks, with gains of up to 6 ROUGE.
+BART also provides a 1.1 BLEU increase over
+a back-translation system for machine translation, with only target language pretraining
+"""
+
+
+
 ### XLNet
 
 [paper](https://arxiv.org/abs/1906.08237)
 
 - Permutation-based training approach
 - Surpassed BERT on multiple benchmarks
+
+<details>
+<summary>
+
+</summary>
+
+</details>
 
 ### Megatron
 
