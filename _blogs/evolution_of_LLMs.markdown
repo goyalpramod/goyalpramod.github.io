@@ -1622,21 +1622,99 @@ The authors show that Reformer achieves comparable performance to standard Trans
 I'm ready to discuss any specific aspects of the paper you'd like to explore further. For example, we could delve into how LSH attention works, understand the mathematics behind reversible residual networks, or examine the experimental results.
 </details>
 
+https://www.youtube.com/watch?app=desktop&v=i4H0kjxrias&t=0s&ab_channel=YannicKilcher
+
+https://www.pinecone.io/learn/series/faiss/locality-sensitive-hashing/
+https://jaketae.github.io/study/lsh/
+
 ### Longformer: The Long-Document Transformer
 
 [paper](https://arxiv.org/abs/2004.05150)
+
+<details>
+
+<summary>
+Quick Summary
+</summary>
+
+# Longformer: The Long-Document Transformer - Summary
+
+Thank you for sharing this research paper! Let me provide a high-level summary before we dive into any specific questions you might have.
+
+The Longformer paper addresses a key limitation of traditional Transformer models: their quadratic computational complexity with respect to sequence length, which makes processing long documents prohibitively expensive. The authors introduce a novel attention mechanism that scales linearly with sequence length, enabling the processing of documents with thousands of tokens.
+
+## Key innovations:
+
+1. **Attention mechanism**: Longformer uses a combination of:
+   - **Sliding window attention**: Each token attends to a fixed window of surrounding tokens
+   - **Dilated sliding window**: Increases receptive field without increasing computation by adding gaps between attended tokens
+   - **Global attention**: Task-specific tokens (like [CLS] or question tokens in QA) can attend to the entire sequence
+
+2. **Efficient implementation**: Custom CUDA kernels enable processing sequences of up to 32K characters
+
+3. **Performance**: Longformer achieves:
+   - State-of-the-art results on character-level language modeling (text8 and enwik8)
+   - Outperforms RoBERTa on long document tasks
+   - Sets new state-of-the-art results on WikiHop and TriviaQA
+
+4. **Longformer-Encoder-Decoder (LED)**: A variant for sequence-to-sequence tasks like summarization
+
+The paper demonstrates both the theoretical and practical advantages of this approach across multiple tasks including classification, question answering, and coreference resolution.
+
+Would you like me to elaborate on any particular aspect of the paper, such as the mathematics behind the attention mechanism, the implementation details, or the experimental results?
+
+</details>
+
+
 
 ### GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding
 
 [paper](https://arxiv.org/abs/2006.16668)
 
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+
 ### Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
 
 [paper](https://arxiv.org/abs/2005.11401)
 
+<details>
+
+<summary>Quick Summary</summary>
+# Retrieval-Augmented Generation (RAG) for Knowledge-Intensive NLP Tasks
+
+This paper introduces RAG (Retrieval-Augmented Generation), a hybrid model architecture that combines the strengths of parametric memory (knowledge stored in neural network parameters) and non-parametric memory (knowledge stored in an external database that can be retrieved).
+
+The key innovation is a framework where:
+1. A retriever component fetches relevant passages from a large corpus (Wikipedia)
+2. A generator component (BART) uses both the input query and retrieved passages to produce outputs
+3. The entire pipeline is trained end-to-end, treating the retrieved documents as latent variables
+
+The authors explore two model variants:
+- RAG-Sequence: uses the same retrieved document for generating the entire output sequence
+- RAG-Token: can use different documents for generating different tokens in the output
+
+They evaluate RAG on knowledge-intensive tasks including open-domain QA, fact verification, and knowledge-grounded generation, achieving state-of-the-art results on several benchmarks. One particularly interesting aspect is that RAG's non-parametric memory can be easily updated (by changing the retrieval corpus) without retraining the model.
+
+Is there a specific aspect of the paper you'd like to explore in more detail?
+</details>
+
 ### Big Bird: Transformers for Longer Sequences
 
 [paper](https://arxiv.org/abs/2007.14062)
+
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
 
 ### GPT-3
 
@@ -1647,9 +1725,25 @@ I'm ready to discuss any specific aspects of the paper you'd like to explore fur
 - Scaling laws discovery
 - Batch size scaling
 
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+
 ### Rethinking Attention with Performers
 
 [paper](https://arxiv.org/abs/2009.14794v4)
+
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
 
 ### T5
 
@@ -1674,9 +1768,25 @@ License: Open, Apache-2.0
 Lab: Google
 """
 
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+
 ### Measuring Massive Multitask Language Understanding
 
 [paper](https://arxiv.org/abs/2009.03300)
+
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
 
 ### ZeRO (Zero Redundancy Optimizer)
 
@@ -1684,11 +1794,45 @@ Lab: Google
 
 - Memory optimization for distributed training
 
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+
 ### ELECTRA
 
 [paper](https://arxiv.org/abs/2003.10555)
 
 Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
+
+
+<details>
+
+<summary>Quick Summary</summary>
+
+# ELECTRA: A Brief Overview
+
+You've shared the ELECTRA paper, which introduces an innovative pre-training approach for language models. Here's a high-level summary:
+
+ELECTRA presents a more efficient alternative to masked language modeling (MLM) pre-training methods like BERT. Instead of masking tokens and training a model to predict the original ones, ELECTRA proposes "replaced token detection" - a discriminative task where:
+
+1. A small generator model replaces some tokens with plausible alternatives
+2. A discriminator model (ELECTRA) learns to distinguish between original and replaced tokens
+
+The key advantages of this approach are:
+- It's more computationally efficient since the model learns from all input tokens rather than just the 15% that are masked
+- It achieves better downstream performance given the same compute budget
+- It works particularly well for smaller models, enabling high-quality language models to be trained on a single GPU
+
+The authors demonstrate ELECTRA's efficiency by showing it outperforms BERT, GPT, and other models when controlling for compute. For example, ELECTRA-Small trained on one GPU for 4 days outperforms GPT (trained with 30x more compute) on the GLUE benchmark.
+
+I'm happy to explore any specific aspects of the paper that interest you, such as the model architecture, training methodology, experimental results, or the mathematical formulations of the approach.
+
+</details>
+
 
 ### Switch Transformer
 
@@ -1696,11 +1840,27 @@ Google's model that used a discriminative approach instead of masked language mo
 
 Google's early mixture-of-experts approach that demonstrated trillion-parameter scale was possible
 
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+
 ### Scaling Laws
 
 [paper](https://arxiv.org/abs/2001.08361)
 
 OpenAI's publication on the mathematical relationships between model size, dataset size, and computational budget demonstrated predictable patterns for improving performance This was part of the GPT-3 research which showed "that scaling up language models greatly improves task-agnostic, few-shot performance."
+
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
 
 ## 2021: Instruction Tuning and Alignment
 
