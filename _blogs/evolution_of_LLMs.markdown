@@ -2460,4 +2460,5 @@ NOTES TO SELF
 [blog](https://www.darioamodei.com/essay/machines-of-loving-grace)
 
 ### Some Honorable blogs and mentions that I believe you should definitely check out:
+https://magazine.sebastianraschka.com/p/understanding-large-language-models 
 -  -->

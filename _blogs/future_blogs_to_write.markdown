@@ -20,9 +20,9 @@ Evolution of LLMs
   - [LLM from scratch](https://bclarkson-code.com/posts/llm-from-scratch-scalar-autograd/post.html)
   - [The transformer family v2.0](https://lilianweng.github.io/posts/2023-01-27-the-transformer-family-v2/)
   - [Llama from scratch](https://blog.briankitano.com/llama-from-scratch/)
-  - [Understanding large language models](https://magazine.sebastianraschka.com/p/understanding-large-language-models)
+  - [Understanding large language models](https://magazine.sebastianraschka.com/p/understanding-large-language-models)  [DONE]
   - [GPT in 60 lines](https://jaykmody.com/blog/gpt-from-scratch)
-  - [LLM Playbook](https://cyrilzakka.github.io/llm-playbook/index.html)
+  - [LLM Playbook](https://cyrilzakka.github.io/llm-playbook/index.html)  [DONE]
   - [Harvard slides on transformers to LLM](https://scholar.harvard.edu/binxuw/classes/machine-learning-scratch/materials/transformers)
   - [Timeline and family tree](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) [DONE]
   - [A Brief History of Large Language Models](https://medium.com/@bradneysmith/98a1320e7650) [DONE]
@@ -35,7 +35,6 @@ Evolution of LLMs
   - [Foundations of Large Language Models](https://arxiv.org/abs/2501.09223)
   - [GPT 2 in 2 hours](https://github.com/jingyaogong/minimind/)
   - [Things we learned about LLMs in 2024](https://simonwil lison.net/2024/Dec/31/llms-in-2024/)
-  - [Book on LLMs](https://cyrilzakka.github.io/llm-playbook/SUMMARY.html)
 
 
 Reasoning models
