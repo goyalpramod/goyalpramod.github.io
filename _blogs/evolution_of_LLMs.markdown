@@ -1671,6 +1671,7 @@ Would you like me to elaborate on any particular aspect of the paper, such as th
 
 [paper](https://arxiv.org/abs/2006.16668)
 
+https://www.youtube.com/watch?v=1VdEw_mGjFk&ab_channel=YannicKilcher
 
 <details>
 
@@ -1735,8 +1736,55 @@ Is there a specific aspect of the paper you'd like to explore in more detail?
 
 <summary>Quick Summary</summary>
 
+# Big Bird: Transformers for Longer Sequences - Summary
+
+The paper introduces BigBird, a sparse attention mechanism for transformer models that reduces the quadratic dependency on sequence length to linear, enabling the processing of sequences up to 8x longer than previously possible with similar hardware.
+
+## Key Innovations:
+
+BigBird's sparse attention mechanism consists of three main components:
+1. **Global tokens** - A set of g tokens that attend to all parts of the sequence
+2. **Window attention** - All tokens attend to a set of w local neighboring tokens
+3. **Random attention** - All tokens attend to a set of r random tokens
+
+## Theoretical Contributions:
+
+The authors provide theoretical guarantees for BigBird, showing that:
+1. It's a universal approximator of sequence functions
+2. It's Turing complete, preserving the expressive properties of full attention models
+3. Their theoretical analysis reveals the benefits of global tokens for maintaining expressivity
+
+## Experimental Results:
+
+BigBird shows significant improvements in tasks requiring longer contexts:
+1. **Question Answering** - Achieves state-of-the-art results on various datasets (HotpotQA, Natural Questions, TriviaQA, WikiHop)
+2. **Document Summarization** - Outperforms previous methods on long document summarization tasks (Arxiv, PubMed, BigPatent)
+3. **Genomics Applications** - Novel application to DNA sequences, improving performance on promoter region prediction (99.9% F1) and chromatin profile prediction
+
+## Technical Details:
+
+- The paper addresses implementation details for efficiently computing the sparse attention on GPUs/TPUs through "blockification" of the attention pattern
+- The authors prove there's "no free lunch" - showing a natural task where sparse attention mechanisms require polynomially more layers compared to full attention
+- Their approach balances theoretical guarantees with practical efficiency
+
+Would you like me to elaborate on any specific aspect of the paper, such as the mathematical formulation of the attention mechanism, the theoretical proofs, or the experimental setup?
+
 </details>
 
+**Problem** 
+
+"""
+Unfortunately, one of their core limitations is the
+quadratic dependency (mainly in terms of memory) on the sequence length due to
+their full attention mechanism.
+"""
+
+**Solution**
+
+"""
+, BIGBIRD, a sparse
+attention mechanism that reduces this quadratic dependency to linear
+"""
 
 ### GPT-3
 
@@ -1752,17 +1800,92 @@ Is there a specific aspect of the paper you'd like to explore in more detail?
 
 <summary>Quick Summary</summary>
 
+# Language Models are Few-Shot Learners: Summary and Analysis
+
+Thank you for sharing this groundbreaking research paper, which introduces GPT-3, a 175 billion parameter autoregressive language model. I'll provide a high-level summary of the key contributions and findings of this work.
+
+## Key Contributions
+
+This paper demonstrates how scaling up language models to unprecedented sizes (175B parameters, 10x larger than previous models) enables significant improvements in few-shot learning capabilities. The authors show that large language models can perform tasks with few or no examples through "in-context learning," where the model adapts to new tasks simply by being conditioned on examples in its prompt, without parameter updates.
+
+## Main Findings
+
+1. **Scaling Laws**: Performance on various tasks improves smoothly with model size, following predictable power-law scaling trends.
+
+2. **Few-Shot Learning**: GPT-3 can perform impressively on numerous tasks with just a few examples in the context, sometimes matching or approaching state-of-the-art fine-tuned models.
+
+3. **Zero-Shot and One-Shot**: Even with no examples (zero-shot) or just one example (one-shot), GPT-3 shows remarkable capabilities.
+
+4. **Versatility**: GPT-3 demonstrates strong performance across a wide range of NLP tasks including question answering, translation, common sense reasoning, reading comprehension, and more.
+
+5. **Emergent Abilities**: Certain capabilities like arithmetic, novel word usage, and unscrambling words emerge more strongly at the largest model sizes, suggesting qualitative improvements beyond simple scaling.
+
+## Key Results Across Task Categories
+
+- **Language Modeling**: Sets new SOTA on Penn Tree Bank perplexity (20.5)
+- **Cloze and Completion Tasks**: Substantial improvements on LAMBADA (86.4% accuracy)
+- **Question Answering**: Competitive with fine-tuned systems on TriviaQA (71.2%)
+- **Translation**: Approaches SOTA unsupervised NMT results
+- **Winograd-Style Tasks**: Strong performance (88.6% on Winograd, 77.7% on Winogrande)
+- **Common Sense Reasoning**: State-of-the-art on PIQA (82.8%)
+- **Reading Comprehension**: Strong results on CoQA (85.0 F1)
+- **SuperGLUE**: Competitive with fine-tuned BERT-Large
+
+## Limitations
+
+The authors transparently address several limitations:
+
+1. GPT-3 still struggles with some tasks requiring complex reasoning, bidirectional context, or specialized knowledge.
+
+2. The model shows some biases in gender, race, and religion reflective of its training data.
+
+3. Even at this scale, sample efficiency during pre-training is much less than human learning.
+
+4. Some tasks still show a large gap between few-shot performance and fine-tuned models.
+
+## Broader Impacts
+
+The paper discusses potential misuse concerns and ethics issues, including biases in the model and potential for generating misleading content. The authors conducted experiments showing that humans can distinguish GPT-3-generated news articles from human-written ones only at chance levels.
+
+## Significance
+
+This work represents a paradigm shift in how we think about language models - rather than fine-tuning smaller models for specific tasks, it suggests that scaling up models enables general in-context learning abilities that can be applied to many tasks without task-specific training.
+
+Would you like me to explore any specific aspect of this paper in more detail?
+
 </details>
+
+
 
 
 ### Rethinking Attention with Performers
 
 [paper](https://arxiv.org/abs/2009.14794v4)
 
+https://medium.com/analytics-vidhya/paper-explained-rethinking-attention-with-performers-b207f4bf4bc5
+
+https://www.youtube.com/watch?v=xJrKIPwVwGM&ab_channel=YannicKilcher
 
 <details>
 
 <summary>Quick Summary</summary>
+
+Thank you for sharing this fascinating paper! "Rethinking Attention with Performers" introduces an important innovation in the Transformer architecture domain.
+
+## High-Level Summary
+
+This 2021 ICLR paper introduces the Performer, a Transformer architecture that can estimate regular (softmax) attention with provable accuracy while achieving linear (rather than quadratic) space and time complexity. The key innovation is the FAVOR+ (Fast Attention Via positive Orthogonal Random features) mechanism, which enables efficient approximation of softmax attention kernels without assumptions about sparsity or low-rankness.
+
+The paper makes several key contributions:
+
+1. A new method for approximating softmax attention using positive orthogonal random features
+2. Linear-time complexity attention mechanism that's fully compatible with regular Transformers
+3. Strong theoretical guarantees on the quality of the approximation
+4. The ability to efficiently model kernelizable attention mechanisms beyond softmax
+
+The authors demonstrate the Performer's effectiveness on diverse tasks from pixel prediction to protein sequence modeling, showing competitive results with other efficient attention methods while enabling much longer sequence lengths.
+
+I'd be happy to dive deeper into any specific aspect of this paper that interests you - whether it's the theoretical underpinnings of the FAVOR+ mechanism, the positive random features approach, the orthogonality benefits, or the experimental results.
 
 </details>
 
@@ -1795,17 +1918,53 @@ Lab: Google
 
 <summary>Quick Summary</summary>
 
+# Brief Summary of "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer"
+
+This 2020 paper by Raffel et al. introduces the "Text-to-Text Transfer Transformer" (T5), a unified approach to transfer learning for NLP tasks. The authors convert all text-based language problems into a consistent text-to-text format, where both inputs and outputs are always text strings. This allows them to use the same model, loss function, and training procedure across diverse tasks.
+
+The paper presents a comprehensive empirical study examining various aspects of transfer learning for NLP, including:
+
+1. Model architectures
+2. Pre-training objectives
+3. Pre-training datasets
+4. Transfer approaches
+5. Scaling effects
+
+They introduce the "Colossal Clean Crawled Corpus" (C4), a massive dataset of cleaned web text for pre-training. By combining insights from their systematic study with scale (training models up to 11 billion parameters), they achieve state-of-the-art results on many NLP benchmarks including GLUE, SuperGLUE, SQuAD, and CNN/DailyMail summarization.
+
+The T5 approach demonstrates the effectiveness of a unified text-to-text framework for transfer learning across diverse NLP tasks, showing that with the right architecture and sufficient scale, a single approach can excel across the NLP landscape.
+
+Would you like me to explain any specific aspect of this paper in more detail?
+
 </details>
+
+https://cameronrwolfe.substack.com/p/t5-text-to-text-transformers-part
 
 
 ### Measuring Massive Multitask Language Understanding
-
+(benchmark)
 [paper](https://arxiv.org/abs/2009.03300)
 
 
 <details>
 
 <summary>Quick Summary</summary>
+
+# Summary of "Measuring Massive Multitask Language Understanding"
+
+This 2021 paper introduces a comprehensive benchmark for evaluating language models' multitask capabilities across 57 diverse subjects. The authors (Hendrycks et al.) created a test covering fields like STEM, humanities, social sciences, and professional domains at varying levels of difficulty, from elementary to advanced professional knowledge.
+
+The key findings show that while smaller models performed near random chance (25% on multiple-choice questions), the largest GPT-3 model (175B parameters) achieved 43.9% accuracy - significantly better than random but still far below expert-level performance (estimated at ~90%). Performance was notably lopsided across subjects, with calculation-heavy topics like physics and mathematics showing poor results, as did socially important subjects like law and morality.
+
+The research highlights several important insights about large language models circa 2021:
+1. Models struggled with procedural knowledge vs. declarative knowledge
+2. Models were often miscalibrated (not knowing when they don't know)
+3. Even the largest models failed to exhibit expert-level performance in any subject
+4. The benchmark required diverse world knowledge beyond commonsense reasoning
+
+This work provided an important evaluation framework showing that while large language models were beginning to demonstrate impressive capabilities, they still had fundamental limitations in their ability to learn and apply specialized knowledge.
+
+I'm happy to explore any specific aspects of this paper that interest you.
 
 </details>
 
@@ -2460,5 +2619,4 @@ NOTES TO SELF
 [blog](https://www.darioamodei.com/essay/machines-of-loving-grace)
 
 ### Some Honorable blogs and mentions that I believe you should definitely check out:
-https://magazine.sebastianraschka.com/p/understanding-large-language-models 
--  -->
+https://magazine.sebastianraschka.com/p/understanding-large-language-models  -->
