@@ -46,6 +46,8 @@ Reasoning models
   - [GRPO in a few lines](https://gist.github.com/willccbb/4676755236bb08cab5f4e54a0475d6fb)
   - https://x.com/deepseek_ai/status/1895279409185390655 
   - https://apidog.com/blog/deepseek-open-source-week/
+  - https://newsletter.languagemodels.co/p/the-illustrated-deepseek-r1
+  - 
 
 
 Fine-tune LLM
@@ -56,6 +58,7 @@ Fine-tune LLM
 CUDA & optimising GPUs
 
   - [Introduction to Cuda](https://www.pyspur.dev/blog/introduction_cuda_programming?s=08)
+  - https://github.com/srush/GPU-Puzzles
   - https://fkong.tech/posts/2023-04-23-triton-cuda/?s=08
   - [Understanding triton](https://isamu-website.medium.com/understanding-the-triton-tutorials-part-1-6191b59ba4c)
   - [Triton Documentation](https://triton-lang.org/main/getting-started/tutorials/01-vector-add.html#sphx-glr-getting-started-tutorials-01-vector-add-py)
