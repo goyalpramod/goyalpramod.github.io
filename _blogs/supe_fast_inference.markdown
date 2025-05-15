@@ -6,6 +6,8 @@ categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
 
+[Start with a GEMM, solve it using for loops and make it as efficient as possible]
+
 A few month's ago, I saw this [tweet](https://x.com/danielhanchen/status/1891194528931209644) by Daniel Han and it absolutely blew my mind. Not because of how much they were willing to offer, but because I couldn't solve any of the problems. That is when I decided, I will spend days and nights till 1 day I can confidently say I can solve each of those problems, and with ease. This Blog was originally me trying to solve them. But it evolved into more of a general guide into how to make your ML models more efficient. So we will role with that. 
 
 
@@ -100,6 +102,9 @@ https://liqimai.github.io/blog/Forward-Automatic-Differentiation/
 
 ### Reverse Mode Automatic Differentiation 
 
+### Broadcasting
+
+
 ### Dispatcher
 
 https://blog.ezyang.com/2020/09/lets-talk-about-the-pytorch-dispatcher/
@@ -120,6 +125,14 @@ https://horace.io/brrr_intro.html
 
 https://huggingface.co/docs/diffusers/en/optimization/fp16
 
+
+## Einsum
+
+https://rockt.ai/2018/04/30/einsum
+https://eli.thegreenplace.net/2025/understanding-numpys-einsum/
+https://ajcr.net/Basic-guide-to-einsum/
+https://ejenner.com/post/einsum/
+https://theaisummer.com/einsum-attention/
 
 ## The Questions, with their answers
  -->
