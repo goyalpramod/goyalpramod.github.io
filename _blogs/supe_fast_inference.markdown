@@ -135,4 +135,11 @@ https://ejenner.com/post/einsum/
 https://theaisummer.com/einsum-attention/
 
 ## The Questions, with their answers
+
+1. Convert nf4 / BnB 4bit to Triton
+2. Make FSDP2 work with QLoRA
+3. Remove graph breaks in torch.compile
+4. Help solve Unsloth issues!
+5. Memory Efficient Backprop
+
  -->
