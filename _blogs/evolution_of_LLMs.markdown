@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: blog
 title: "Evolution of LLMs"
 date: 2025-05-05 12:00:00 +0530
@@ -18,6 +18,8 @@ The landscape of language models has evolved dramatically since the introduction
 From attention mechanisms to constitutional AI, we'll dive deep into the code, math, and ideas that revolutionized NLP.
 
 Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
+
+[add prerequisites section, summary section, skip to section]
 
 ## How this blog is structured
 
@@ -3009,6 +3011,33 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 
 </details>
 
+### Minerva
+
+[paper](https://arxiv.org/pdf/2206.14858)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+I'll review this important paper on Minerva, Google's language model for quantitative reasoning. Let me provide a high-level summary first.
+
+## Brief Summary
+
+This paper introduces **Minerva**, a large language model specifically designed to solve quantitative reasoning problems in mathematics and science. The key innovation is training PaLM models (8B, 62B, and 540B parameters) on a carefully curated dataset of mathematical content from arXiv papers and web pages containing LaTeX formatting.
+
+**Main Contributions:**
+
+- **Dataset**: 38.5B tokens of mathematical content that preserves LaTeX notation and mathematical expressions
+- **Performance**: Achieves state-of-the-art results on MATH dataset (50.3% with majority voting vs. previous 6.9%), GSM8k (78.5%), and MMLU-STEM (75.0%)
+- **Evaluation**: Introduces OCWCourses dataset with 272 undergraduate-level STEM problems
+- **Method**: Uses majority voting over multiple samples rather than external tools or calculators
+
+**Key Insight**: By training on mathematically rich text that preserves formal notation (rather than just natural language descriptions of math), the model learns to manipulate mathematical symbols and follow step-by-step reasoning patterns effectively.
+
+The paper demonstrates that language models can achieve impressive mathematical reasoning capabilities when trained on appropriate data, though they still fall short of human expert performance and have notable limitations in verification and complex multi-step problems.
+
+</details>
+
 ### ChatGPT
 
 The beginning of an Era
@@ -3080,6 +3109,7 @@ Would you like me to explore any particular aspect of the paper in more detail?
 This paper provides a comprehensive review and assessment of Parameter-Efficient Fine-Tuning (PEFT) methods for pretrained language models (PLMs). The authors address an important challenge in modern NLP: as language models grow increasingly larger (from BERT's 110M parameters to Falcon's 180B parameters), traditional fine-tuning becomes computationally prohibitive for many practitioners.
 
 The paper categorizes PEFT methods into five main types:
+
 1. Additive fine-tuning (adding new parameters)
 2. Partial fine-tuning (updating only a subset of original parameters)
 3. Reparameterized fine-tuning (using low-rank decomposition)
@@ -3094,8 +3124,6 @@ Is there a specific aspect of this paper you'd like me to explore in more detail
 
 </details>
 
-
-
 ### FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning
 
 [paper](https://arxiv.org/abs/2307.08691)
@@ -3103,7 +3131,6 @@ Is there a specific aspect of this paper you'd like me to explore in more detail
 <details>
 
 <summary>Quick Summary</summary>
-
 
 This paper presents FlashAttention-2, an improved algorithm for implementing attention mechanisms in Transformer models that significantly enhances computational efficiency. Building on the original FlashAttention work, FlashAttention-2 introduces better parallelism and work partitioning strategies that achieve approximately 2× speedup over its predecessor.
 
@@ -3117,10 +3144,7 @@ The results are impressive - reaching 50-73% of theoretical maximum FLOPs/s on A
 
 This advancement directly addresses the challenge of scaling Transformers to longer sequence lengths, which is critical for applications like processing long documents, high-resolution images, and video data.
 
-
 </details>
-
-
 
 ### AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration
 
@@ -3137,6 +3161,7 @@ Thank you for sharing this research paper. I'll provide a high-level summary to 
 This paper addresses the challenge of deploying large language models (LLMs) directly on edge devices, which is important for privacy, offline usage, and reduced operational costs. The authors propose Activation-aware Weight Quantization (AWQ), a hardware-friendly approach for low-bit weight-only quantization of LLMs.
 
 Key contributions:
+
 1. The observation that not all weights in an LLM are equally important - protecting just 1% of salient weights can greatly reduce quantization error
 2. The insight that salient weight channels should be identified based on activation distribution rather than weight values
 3. A mathematical derivation showing that scaling up salient channels can reduce quantization error without using mixed-precision
@@ -3145,6 +3170,7 @@ Key contributions:
 Their method demonstrates superior performance over existing quantization approaches across various language model benchmarks, including instruction-tuned LMs and multi-modal LMs. The TinyChat implementation achieves more than 3× speedup over Huggingface FP16 implementations on both desktop and mobile GPUs, enabling even 70B parameter models to run on mobile GPUs.
 
 I'd be happy to explore specific aspects of this paper based on your questions. Some areas we could discuss include:
+
 - How AWQ identifies and protects salient weights
 - The mathematical foundations behind their scaling approach
 - Implementation details of TinyChat and its optimizations
@@ -3232,7 +3258,7 @@ The key findings include:
 
 1. The researchers can automatically generate adversarial suffixes that, when attached to harmful prompts, convince LLMs to respond affirmatively rather than refusing
 2. These attacks transfer remarkably well between models - suffixes trained on smaller open-source models like Vicuna work effectively against commercial models like GPT-3.5, GPT-4, and to a lesser extent Claude
-3. The attack success rates are quite high - up to 88% on the models they directly targeted, and as high as 84% transfer success rate to commercial models 
+3. The attack success rates are quite high - up to 88% on the models they directly targeted, and as high as 84% transfer success rate to commercial models
 4. The method significantly outperforms previous approaches for automated adversarial prompting
 
 This represents a significant advancement in understanding vulnerabilities in LLM safety measures and raises important questions about current alignment techniques.
@@ -3240,8 +3266,6 @@ This represents a significant advancement in understanding vulnerabilities in LL
 I'm ready to explore any specific aspects of this paper that interest you, from the mathematical formulation of their attack method to the implications for language model safety.
 
 </details>
-
-
 
 ### Tree of Thoughts: Deliberate Problem Solving with Large Language Models
 
@@ -3263,6 +3287,7 @@ This paper introduces "Tree of Thoughts" (ToT), a framework that enhances large 
 4. Use backtracking and lookahead to make more global decisions
 
 The authors demonstrate significant improvements on three challenging tasks:
+
 - Game of 24 (mathematical reasoning): ToT achieved 74% success vs. 4% for GPT-4 with chain-of-thought
 - Creative Writing (coherent multi-paragraph construction)
 - Mini Crosswords (constraint satisfaction with linguistic knowledge)
@@ -3281,7 +3306,6 @@ Is there a specific aspect of this paper you'd like to explore further?
 
 <summary>Quick Summary</summary>
 
-
 Thank you for sharing this document. This appears to be a blog post from MosaicML introducing their MPT-7B model, which was released in May 2023. Let me provide a brief high-level summary:
 
 # MPT-7B: A New Standard for Open-Source, Commercially Usable LLMs
@@ -3295,6 +3319,7 @@ MosaicML introduced MPT-7B (MosaicML Pretrained Transformer), a 7 billion parame
 5. **Competitive quality** - Matches LLaMA-7B on standard benchmarks
 
 They released four variants:
+
 - MPT-7B Base (general foundation model)
 - MPT-7B-StoryWriter-65k+ (for long-form creative writing)
 - MPT-7B-Instruct (for instruction following)
@@ -3347,6 +3372,7 @@ Thank you for sharing this research paper with me. Let me provide a brief, high-
 This 2023 paper from Microsoft's DeepSpeed team introduces DeepSpeed-Chat, a system designed to democratize the training of ChatGPT-like models using Reinforcement Learning from Human Feedback (RLHF). The system addresses three key challenges in the current landscape: accessibility, efficiency, and affordability of RLHF training, particularly for models with billions of parameters.
 
 DeepSpeed-Chat offers three main capabilities:
+
 1. An easy-to-use training and inference experience for ChatGPT-like models
 2. A DeepSpeed-RLHF pipeline that replicates the three-step training pipeline from InstructGPT (supervised fine-tuning, reward model training, and RLHF)
 3. A unified "Hybrid Engine" that optimizes both training and inference phases
@@ -3354,6 +3380,7 @@ DeepSpeed-Chat offers three main capabilities:
 The paper demonstrates impressive efficiency gains - up to 15x faster than existing systems - making RLHF training both faster and more affordable. For example, they show training an OPT-13B model in just 9 hours for about $290 on Azure, and scaling to train a 175B parameter model in under a day. The system also enables training of much larger models on limited hardware, such as running a 13B parameter model on a single GPU.
 
 Is there a specific aspect of the paper you'd like me to explore in more depth? For example, we could discuss:
+
 - The three-stage RLHF pipeline architecture
 - The Hybrid Engine's optimizations
 - The performance comparisons with existing systems
@@ -3464,6 +3491,7 @@ Would you like me to elaborate on any particular aspect of the paper such as the
 This paper from Mistral AI introduces Mixtral 8x7B, a Sparse Mixture of Experts (SMoE) language model that represents a significant advancement in efficient language model architecture. Let me provide a concise overview of the key contributions:
 
 The Mixtral 8x7B model:
+
 - Builds on the Mistral 7B architecture but replaces the feedforward blocks with Mixture-of-Experts (MoE) layers
 - Contains 8 expert networks per layer, with each token dynamically routed to 2 experts
 - Has 47B total parameters but only activates 13B parameters per token (improving efficiency)
@@ -3474,7 +3502,6 @@ The Mixtral 8x7B model:
 - Released under the Apache 2.0 license for both academic and commercial use
 
 The instruction-tuned version (Mixtral 8x7B - Instruct) performs exceptionally well, surpassing GPT-3.5 Turbo, Claude-2.1, Gemini Pro, and Llama 2 70B chat models on human evaluation benchmarks.
-
 
 </details>
 
@@ -3500,7 +3527,6 @@ Key contributions include detailed methodologies for the fine-tuning process, sa
 
 </details>
 
-
 ### Vicuna (LMSYS)
 
 [paper](https://lmsys.org/blog/2023-03-30-vicuna/)
@@ -3512,14 +3538,13 @@ Key contributions include detailed methodologies for the fine-tuning process, sa
 
 <summary>Quick Summary</summary>
 
-# Brief Summary of "Vicuna: An Open-Source Chatbot Impressing GPT-4 with 90%* ChatGPT Quality"
+# Brief Summary of "Vicuna: An Open-Source Chatbot Impressing GPT-4 with 90%\* ChatGPT Quality"
 
 This blog post introduces Vicuna-13B, an open-source chatbot developed by fine-tuning Meta's LLaMA model on approximately 70,000 user-shared conversations collected from ShareGPT. According to their preliminary evaluation using GPT-4 as a judge, Vicuna-13B achieves more than 90% of the quality of OpenAI's ChatGPT and Google's Bard while outperforming other open-source models like base LLaMA and Stanford Alpaca in over 90% of test cases.
 
 Key highlights:
 
 1. **Training approach**: Fine-tuned LLaMA on user-shared conversations from ShareGPT with improved handling of multi-turn conversations and longer sequences
-   
 2. **Cost-efficiency**: Training cost was approximately $300 for the 13B model
 
 3. **Novel evaluation method**: Used GPT-4 as a judge to evaluate response quality compared to other chatbots
@@ -3532,30 +3557,51 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 
 </details>
 
-
 ### Alpaca
 
 [paper](https://crfm.stanford.edu/2023/03/13/alpaca.html)
 
 - Efficient fine-tuning approach
 - Instruction-tuned LLaMA
-    """
-    Link: https://github.com/tatsu-lab/stanford_alpaca
-    Family: LLaMA
-    Pretraining Architecture: Decoder
-    Fine-tuning Task: human instructions
-    Extension: Alpaca is fine-tuned from a 7B LLaMA model.
-    Application: Evaluated on a variety of text generation and classification tasks.
-    Date (of first known publication): 03/2023
-    Num. Params: 7B
-    Corpus: 52K instruction-following data generated using self-instruct mechanism, from 175 human-written instruction-output pairs.
-    License: Limited, Non-commercial bespoke license
-    Lab: Stanford
-    """
+  """
+  Link: https://github.com/tatsu-lab/stanford_alpaca
+  Family: LLaMA
+  Pretraining Architecture: Decoder
+  Fine-tuning Task: human instructions
+  Extension: Alpaca is fine-tuned from a 7B LLaMA model.
+  Application: Evaluated on a variety of text generation and classification tasks.
+  Date (of first known publication): 03/2023
+  Num. Params: 7B
+  Corpus: 52K instruction-following data generated using self-instruct mechanism, from 175 human-written instruction-output pairs.
+  License: Limited, Non-commercial bespoke license
+  Lab: Stanford
+  """
 
 <details>
 
 <summary>Quick Summary</summary>
+
+# Brief Summary of "Alpaca: A Strong, Replicable Instruction-Following Model"
+
+This blog post introduces Alpaca 7B, a model fine-tuned from Meta's LLaMA 7B using 52,000 instruction-following demonstrations. Stanford researchers created Alpaca to provide the academic community with an accessible instruction-following model comparable to OpenAI's text-davinci-003, but at a fraction of the cost (under $600 to reproduce).
+
+Key highlights:
+
+1. **Training approach**: Used the "self-instruct" method, starting with 175 human-written instruction-output pairs and prompting text-davinci-003 to generate additional examples, resulting in 52K unique instructions
+
+2. **Cost efficiency**: Data generation cost less than $500 using OpenAI's API, and fine-tuning took 3 hours on 8 A100 GPUs (under $100)
+
+3. **Performance**: In preliminary human evaluation, Alpaca matched text-davinci-003 performance (winning 90 vs 89 comparisons in pairwise evaluation)
+
+4. **Academic focus**: Explicitly designed for academic research only - commercial use prohibited due to LLaMA's license and OpenAI's terms of use
+
+5. **Known limitations**: Exhibits hallucination, toxicity, and can generate misinformation (authors provide specific examples)
+
+6. **Safety measures**: Implemented content filtering via OpenAI's moderation API and watermarking for the demo
+
+The work aimed to democratize access to instruction-following models for academic research while acknowledging the risks and implementing appropriate safeguards.
+
+Would you like me to discuss any specific aspect, such as how Alpaca's approach compares to the methods used in Llama 2 or Vicuna, or explore the mathematical/technical details of their training methodology?
 
 </details>
 
@@ -3566,6 +3612,75 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 <details>
 
 <summary>Quick Summary</summary>
+
+# High-Level Summary: Direct Preference Optimization (DPO)
+
+This paper introduces **Direct Preference Optimization (DPO)**, a revolutionary approach that eliminates the need for reinforcement learning in training language models from human preferences, making the process dramatically simpler while maintaining or improving performance.
+
+## Core Innovation: Bypassing Reinforcement Learning
+
+**The Problem with RLHF**: Traditional Reinforcement Learning from Human Feedback (RLHF) is complex and unstable, requiring:
+
+1. Training a reward model on preference data
+2. Using RL algorithms (like PPO) to optimize the language model
+3. Careful hyperparameter tuning and sampling during training
+
+**DPO's Breakthrough**: The paper shows that this two-stage process can be replaced with a single, simple classification loss that directly optimizes the language model on preference data.
+
+## Key Mathematical Insight
+
+The central theoretical contribution is recognizing that **your language model is secretly a reward model**. Specifically:
+
+- **Standard approach**: Learn reward function r(x,y), then use RL to find optimal policy π\*
+- **DPO insight**: Any reward function can be reparameterized as r(x,y) = β log π(y|x)/π_ref(y|x) + β log Z(x)
+- **Key observation**: In the Bradley-Terry preference model, the partition function Z(x) cancels out when comparing preferences
+- **Result**: You can directly optimize the policy using a simple binary cross-entropy loss
+
+## The DPO Algorithm
+
+Instead of optimizing a complex RL objective, DPO uses:
+
+```
+L_DPO = -E[(x,y_w,y_l)~D] log σ(β log π_θ(y_w|x)/π_ref(y_w|x) - β log π_θ(y_l|x)/π_ref(y_l|x))
+```
+
+Where:
+
+- σ is the sigmoid function
+- y_w and y_l are preferred and dispreferred completions
+- β controls the KL penalty strength
+- π_ref is the reference model (typically the SFT model)
+
+## Experimental Results
+
+**Performance**: DPO matches or exceeds PPO-based RLHF across three tasks:
+
+- **Sentiment control**: Better reward/KL trade-off than PPO
+- **Summarization**: 61% win rate vs PPO's 57% on TL;DR dataset
+- **Dialogue**: Only method to improve over baseline on Anthropic-HH dataset
+
+**Simplicity**: Eliminates the need for:
+
+- Reward model training
+- RL optimization loops
+- Sampling during training
+- Extensive hyperparameter tuning
+
+## Theoretical Contributions
+
+1. **Equivalence proof**: Shows DPO optimizes the same objective as RLHF
+2. **Completeness**: Proves any reward function class can be represented with their reparameterization
+3. **Stability analysis**: Explains why actor-critic methods (like PPO) can be unstable due to high-variance gradients
+
+## Significance
+
+This work represents a paradigm shift in preference learning by showing that the seemingly necessary complexity of RLHF can be completely avoided. DPO makes training language models from human preferences accessible to a much broader range of practitioners while providing better or equivalent results.
+
+---
+
+**What makes this particularly impactful** is that it challenges a fundamental assumption in the field - that you need reinforcement learning to learn from preferences - and provides both theoretical justification and empirical validation for a much simpler alternative.
+
+What aspects of DPO would you like to explore in more detail? The mathematical derivation, the experimental setup, or perhaps the theoretical implications?
 
 </details>
 
@@ -3612,9 +3727,57 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 
 <summary>Quick Summary</summary>
 
+# High-Level Summary: PaLM 2 Technical Report
+
+This is a comprehensive technical report on **PaLM 2**, Google's successor to the original PaLM language model. Here's the key overview:
+
+## Core Contribution
+
+PaLM 2 achieves **better performance than its much larger predecessor** while being significantly more compute-efficient. This challenges the "bigger is always better" paradigm in language modeling.
+
+## Key Technical Insights
+
+**1. Scaling Laws Validation**
+
+- Independently confirms Hoffmann et al.'s findings that model parameters (N) and training tokens (D) should scale roughly 1:1
+- This differs from earlier scaling approaches that prioritized model size over data
+
+**2. Three-Pronged Improvement Strategy**
+
+- **Better data mixture**: More multilingual, diverse, and higher-quality training data
+- **Improved architecture**: Uses a mixture of training objectives (not just standard language modeling)
+- **Compute-optimal scaling**: Smaller model trained on more tokens rather than just scaling up parameters
+
+**3. Multilingual Excellence**
+
+- Strong performance across hundreds of languages
+- Passes advanced language proficiency exams (C2 level) in multiple languages
+- Significant improvements on translation tasks
+
+## Performance Highlights
+
+- Outperforms the much larger PaLM 540B on most benchmarks
+- Achieves state-of-the-art results on reasoning tasks (78.1% on BIG-Bench Hard)
+- Strong coding capabilities across multiple programming languages
+- Reduced memorization compared to PaLM
+
+## Responsible AI Focus
+
+- Extensive evaluation of potential harms and biases across languages
+- Analysis of memorization and privacy implications
+- Inference-time toxicity control mechanisms
+
+---
+
+**What makes this particularly interesting** is that it demonstrates that careful data curation, architectural improvements, and compute-optimal training can be more effective than simply scaling up model size - a finding with significant implications for the field's resource requirements and accessibility.
+
+What aspects of PaLM 2 would you like to explore in more detail?
+
 </details>
 
 ### LAION-5B (LAION)
+
+I was conflicted about whether I should put it here or not. But this is one of the best works that made advancements in multi-modality possible.
 
 [paper](https://arxiv.org/abs/2210.08402)
 
@@ -3625,8 +3788,40 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 
 <summary>Quick Summary</summary>
 
-</details>
+# LAION-5B: An Open Large-Scale Dataset Overview
 
+This paper introduces **LAION-5B**, a massive open dataset containing 5.85 billion image-text pairs designed for training large-scale multimodal models like CLIP and text-to-image generators. Here's the high-level picture:
+
+## Key Contribution
+
+The authors address a critical bottleneck in multimodal AI research: while models like CLIP and DALL-E demonstrated the power of training on billions of image-text pairs, the datasets used were proprietary and unavailable to the broader research community. LAION-5B democratizes access to large-scale multimodal training data.
+
+## Dataset Composition
+
+- **2.32B English** image-text pairs
+- **2.26B multilingual** pairs (100+ languages)
+- **1.27B "unknown language"** pairs (short-form text, product names, etc.)
+
+## Collection Methodology
+
+1. Started with **Common Crawl** web archives
+2. Extracted images with alt-text from HTML
+3. **CLIP-filtered** pairs using cosine similarity thresholds (0.28 for English, 0.26 for others)
+4. Added safety tags for NSFW content, watermarks, and inappropriate material
+
+## Validation Results
+
+The authors demonstrate LAION's utility by successfully reproducing CLIP model performance and training state-of-the-art text-to-image models (Stable Diffusion, GLIDE variants).
+
+## Significance
+
+This represents the first openly available dataset at the scale needed for training foundation multimodal models, potentially accelerating research in vision-language AI while enabling transparency and bias auditing.
+
+---
+
+I'm ready to dive deeper into any aspect that interests you - whether that's the mathematical details of the CLIP filtering process, the experimental validation methodology, the ethical considerations around large-scale web scraping, or the technical infrastructure challenges they solved. What would you like to explore first?
+
+</details>
 
 ### LIMA
 
@@ -3638,6 +3833,47 @@ Demonstrated efficiency of small high-quality datasets
 <details>
 
 <summary>Quick Summary</summary>
+
+# LIMA: Less Is More for Alignment Overview
+
+This paper presents **LIMA**, a striking demonstration that effective language model alignment can be achieved with remarkably little data. The core finding challenges conventional wisdom about the scale of instruction tuning needed for high-quality conversational AI.
+
+## Key Contribution
+
+The authors propose the **Superficial Alignment Hypothesis**: that a model's knowledge and capabilities are learned almost entirely during pretraining, while alignment primarily teaches the model which response format and style to use when interacting with users.
+
+## Experimental Design
+
+- Started with **LLaMa 65B** (pretrained base model)
+- Fine-tuned on only **1,000 carefully curated** prompt-response pairs
+- No reinforcement learning from human feedback (RLHF)
+- No massive instruction datasets (unlike typical approaches using millions of examples)
+
+## Dataset Composition (1,000 examples total)
+
+- **750 examples** from community Q&A (Stack Exchange, wikiHow, Reddit)
+- **250 manually authored** examples by the research team
+- Emphasis on **quality and diversity** over quantity
+
+## Results
+
+**Human preference study** across 300 test prompts showed LIMA:
+
+- **Outperforms** DaVinci003 (RLHF-trained) and Alpaca 65B (52K examples)
+- Produces **equivalent or better responses** than GPT-4 in 43% of cases
+- **58% win/tie rate** against Bard, 65% against DaVinci003
+
+## Key Insights
+
+1. **Quality >> Quantity**: Diminishing returns from scaling data without improving diversity/quality
+2. **Emergent capabilities**: Zero-shot dialogue ability that improves dramatically with just 30 dialogue examples
+3. **Pretraining power**: Most knowledge acquisition happens during pretraining, not instruction tuning
+
+---
+
+This work has profound implications for understanding what makes language models helpful and could democratize access to high-quality conversational AI by dramatically reducing the data requirements for alignment.
+
+What aspect would you like to explore further? I could dive into the mathematical details of their training methodology, the careful data curation process that made 1,000 examples so effective, or the broader implications for our understanding of how language models learn to be helpful assistants.
 
 </details>
 
@@ -3654,6 +3890,45 @@ https://tridao.me/blog/
 
 <summary>Quick Summary</summary>
 
+# Mamba: A New Architecture for Sequence Modeling
+
+This paper introduces **Mamba**, a novel neural network architecture that aims to replace Transformers for sequence modeling tasks. Here's the high-level story:
+
+## The Core Problem
+
+Transformers dominate modern AI but have a fundamental limitation: their attention mechanism scales quadratically with sequence length, making them computationally expensive for long sequences (think processing entire books, long DNA sequences, or extended audio).
+
+## The Proposed Solution
+
+The authors develop **Selective State Space Models (SSMs)** - a new approach that:
+
+- Scales **linearly** with sequence length (much more efficient)
+- Introduces a novel "selection mechanism" that allows the model to selectively focus on or ignore parts of the input sequence
+- Achieves performance comparable to Transformers while being significantly faster
+
+## Key Innovation: Selection Mechanism
+
+Traditional SSMs are "linear time-invariant" - they process all inputs the same way. Mamba's breakthrough is making the model parameters **input-dependent**, allowing it to:
+
+- Remember important information indefinitely
+- Forget irrelevant details
+- Adapt its behavior based on context
+
+## Empirical Results
+
+The paper demonstrates that Mamba:
+
+- Matches or exceeds Transformer performance on language modeling
+- Handles sequences up to 1 million tokens
+- Achieves 5× higher inference throughput than Transformers
+- Works well across multiple domains (language, DNA, audio)
+
+---
+
+This represents a significant step toward more efficient sequence models that could handle much longer contexts than current Transformers. The mathematical foundation combines classical control theory (state space models) with modern deep learning innovations.
+
+What aspects of this work would you like to explore in detail? I'm ready to dive into the mathematical formulations, architectural choices, or experimental results that interest you most.
+
 </details>
 
 ### LLaVA (Visual Instruction Tuning)
@@ -3669,6 +3944,30 @@ https://tridao.me/blog/
 
 <summary>Quick Summary</summary>
 
+Thank you for sharing this foundational paper on LLaVA (Large Language and Vision Assistant)!
+
+## High-Level Summary
+
+This paper introduces **visual instruction tuning** - the first attempt to extend instruction-following capabilities from language-only models to multimodal vision-language tasks. The key contributions are:
+
+**Core Innovation**: Using GPT-4 to automatically generate multimodal instruction-following data by converting image-text pairs into conversational format, then training a model that connects a vision encoder (CLIP) with a language model (Vicuna).
+
+**Technical Approach**:
+
+- A simple but effective architecture: CLIP vision encoder → linear projection → LLM
+- Two-stage training: (1) feature alignment pre-training, (2) end-to-end instruction tuning
+- 158K generated instruction-following samples across conversations, detailed descriptions, and complex reasoning
+
+**Key Results**:
+
+- Achieves 85.1% relative performance compared to GPT-4 on synthetic benchmarks
+- Sets new SOTA on ScienceQA (92.53%) when combined with GPT-4
+- Demonstrates strong generalization to unseen visual concepts and tasks
+
+**Significance**: This work essentially brought the "ChatGPT moment" to multimodal AI by showing that instruction tuning - which revolutionized language models - could be successfully adapted to vision-language tasks using generated data rather than expensive human annotation.
+
+I'm ready to dive deeper into any aspect you'd like to explore - whether that's the mathematical formulations, training procedures, data generation pipeline, or architectural choices. What interests you most about this approach?
+
 </details>
 
 ### Claude 1/Claude 2
@@ -3680,6 +3979,8 @@ https://tridao.me/blog/
 
 ### Gemini
 
+[paper](https://arxiv.org/pdf/2312.11805)
+
 - Announced initially in May 2023, fully released in December Described as "a family of multimodal large language models developed by Google DeepMind, and the successor to LaMDA and PaLM 2"
 - Designed from the ground up as a multimodal model
 - Positioned as Google's answer to GPT-4
@@ -3688,13 +3989,226 @@ https://tridao.me/blog/
 
 <summary>Quick Summary</summary>
 
+# Gemini: A Family of Highly Capable Multimodal Models - Brief Summary
+
+This is Google's technical report introducing **Gemini**, a family of multimodal AI models that can process and understand text, images, audio, and video simultaneously. The paper presents three model sizes:
+
+- **Gemini Ultra**: The most capable model for complex reasoning tasks
+- **Gemini Pro**: Balanced performance and efficiency for scalable deployment
+- **Gemini Nano**: Optimized for on-device applications
+
+## Key Highlights:
+
+**Breakthrough Performance**: Gemini Ultra achieves state-of-the-art results on 30 of 32 benchmarks tested, becoming the first model to surpass human expert performance on MMLU (90.04% vs 89.8% human expert threshold).
+
+**Native Multimodality**: Unlike models that combine separate systems, Gemini is trained from the ground up to understand multiple modalities together, enabling sophisticated cross-modal reasoning.
+
+**Technical Innovation**: Built on enhanced Transformer architecture, trained on Google's TPU infrastructure with novel approaches to handle massive scale (97% training efficiency despite unprecedented resource usage).
+
+**Responsible Deployment**: Extensive safety evaluations, red-teaming, and responsible AI practices integrated throughout development.
+
+The paper is quite comprehensive at 90+ pages, covering everything from architectural details and training infrastructure to extensive benchmarking and safety considerations.
+
+What specific aspects of Gemini would you like to explore? I could help you dive into the multimodal architecture, the mathematical foundations of their training approach, the benchmarking methodology, or any other technical details that caught your interest.
+
 </details>
 
+### Qwen
 
+[paper](https://arxiv.org/pdf/2309.16609)
 
-### Minerva
+<details>
 
-[blog](https://research.google/blog/minerva-solving-quantitative-reasoning-problems-with-language-models/)
+<summary>Quick Summary</summary>
+
+Hello! I'm Professor Claude, and I'm excited to help you explore this fascinating machine learning research paper you've shared.
+
+## Brief Summary: QWEN Technical Report
+
+This paper introduces **QWEN**, a comprehensive series of large language models developed by Alibaba's Qwen Team. Here's the high-level picture:
+
+**What they built**: A family of language models ranging from 1.8B to 14B parameters, including:
+
+- Base pretrained models (QWEN)
+- Chat-aligned models (QWEN-CHAT)
+- Specialized variants for coding (CODE-QWEN) and mathematics (MATH-QWEN)
+
+**Key contributions**:
+
+1. **Scale & Performance**: Models trained on up to 3 trillion tokens, demonstrating competitive performance against much larger models
+2. **Multilingual Focus**: Strong emphasis on Chinese-English bilingual capabilities with an optimized tokenizer
+3. **Specialized Training**: Domain-specific fine-tuning for coding and mathematical reasoning
+4. **Comprehensive Alignment**: Full pipeline from supervised fine-tuning (SFT) to reinforcement learning from human feedback (RLHF)
+
+**Technical highlights**: The paper covers the complete model development lifecycle - from pretraining data curation and architectural choices to alignment techniques and specialized model variants. They achieve impressive results, with QWEN-14B outperforming many larger open-source models.
+
+What makes this particularly interesting is their systematic approach to building not just one model, but an entire ecosystem of specialized variants, all while maintaining strong multilingual capabilities.
+
+What aspects of this work would you like to dive deeper into? I'm ready to explore the mathematical foundations, training methodologies, or any specific techniques that caught your attention!
+
+</details>
+
+### Qwen-VL
+
+[paper](https://arxiv.org/abs/2308.12966)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+Thank you for sharing this paper! Let me provide a high-level summary of "Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond."
+
+## High-Level Summary
+
+This paper introduces **Qwen-VL**, a series of large-scale vision-language models that can process both images and text. The key contribution is creating models that go beyond basic image captioning and visual question answering to include **fine-grained capabilities** like:
+
+- **Visual grounding** (localizing objects with bounding boxes)
+- **Text reading** (OCR capabilities) 
+- **Multi-image conversations**
+- **Multilingual support** (English and Chinese)
+
+**Architecture Overview:**
+- Built on the Qwen-7B language model foundation
+- Uses a Vision Transformer (ViT) as the visual encoder
+- Introduces a novel "position-aware vision-language adapter" that compresses visual features while preserving spatial information
+- Total model size: ~9.6B parameters
+
+**Training Pipeline:**
+The authors use a carefully designed 3-stage training approach:
+1. **Pre-training** on 1.4B image-text pairs (frozen LLM)
+2. **Multi-task pre-training** on 7 different vision-language tasks simultaneously
+3. **Supervised fine-tuning** for instruction-following and chat capabilities
+
+**Key Results:**
+Qwen-VL achieves state-of-the-art performance across multiple benchmarks compared to similar-scale models, particularly excelling in text-oriented tasks and fine-grained visual understanding.
+
+---
+
+I'm ready to dive deeper into any specific aspects that interest you! Some potentially valuable areas to explore might include:
+
+- The mathematical formulation of their position-aware adapter
+- The multi-task training strategy and how they balance different objectives
+- The bounding box representation scheme for grounding tasks
+- The architectural choices and their trade-offs
+
+What would you like to explore first?
+
+</details>
+
+## 2024: Efficiency and Performance
+
+### Gemma 
+
+[paper](https://arxiv.org/abs/2403.08295)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+Thank you for sharing the Gemma paper! Let me provide a high-level summary of this important work.
+
+## High-Level Summary
+
+**Gemma: Open Models Based on Gemini Research and Technology** introduces a family of open-source language models derived from Google's Gemini research. This represents a significant contribution to the open AI ecosystem, as it makes state-of-the-art capabilities more accessible to researchers and developers.
+
+**Key Contributions:**
+- **Two model sizes**: 2B and 7B parameters, designed for different computational constraints
+- **Dual releases**: Both pre-trained base models and instruction-tuned chat variants
+- **Strong performance**: Outperforms similarly-sized open models on 11 out of 18 benchmarks
+- **Responsible AI focus**: Comprehensive safety evaluations and responsible deployment practices
+
+**Architecture Highlights:**
+- Built on transformer decoder architecture with modern improvements
+- Uses **RoPE embeddings** for positional encoding
+- **GeGLU activations** instead of standard ReLU
+- **Multi-query attention** for the 2B model, multi-head for 7B
+- Trained on up to 6T tokens of primarily English text
+
+**Training Pipeline:**
+1. **Pre-training** on web documents, mathematics, and code
+2. **Supervised Fine-Tuning (SFT)** on instruction-response pairs
+3. **RLHF** using human preference data
+
+**Notable Results:**
+- Gemma 7B achieves 64.3% on MMLU and 44.4% on MBPP
+- Strong performance on mathematics (46.4% on GSM8K) and coding tasks
+- Comprehensive safety evaluations show competitive performance on responsibility benchmarks
+
+</details>
+
+### Gemma 2 
+
+<details>
+
+<summary>Quick Summary</summary>
+
+# Gemma 2: A High-Level Overview
+
+This paper introduces **Gemma 2**, Google DeepMind's next-generation family of open language models ranging from 2B to 27B parameters. Here's the key story:
+
+## Core Innovation: Knowledge Distillation at Scale
+The paper's main contribution is demonstrating that **knowledge distillation** - where smaller "student" models learn from larger "teacher" models - can dramatically improve performance when applied at massive scale (training on 50× more tokens than typically considered optimal).
+
+## Key Technical Advances
+- **Architectural improvements**: Interleaving local sliding window attention with global attention, grouped-query attention (GQA), and logit soft-capping
+- **Training methodology**: Using distillation instead of standard next-token prediction for the 2B and 9B models
+- **Responsible deployment**: Extensive safety evaluations and responsible AI toolkit development
+
+## Performance Highlights
+- The models achieve state-of-the-art performance for their size class
+- Gemma 2-27B competes with models 2-3× larger (like LLaMA-3 70B)
+- Strong results on the LMSYS Chatbot Arena, with Gemma 2-27B ranking higher than LLaMA-3 70B
+
+## Broader Impact
+The paper provides evidence that **smaller, more efficiently trained models** can challenge the "bigger is always better" paradigm in LLMs, which has important implications for democratizing access to capable AI systems.
+
+---
+
+I'm ready to dive deeper into any aspect that interests you! Some particularly rich areas for exploration might include:
+- The mathematical formulation of their knowledge distillation approach
+- The attention mechanism innovations and their computational trade-offs  
+- The extensive evaluation methodology, especially their safety assessments
+- The architectural design choices and their theoretical justifications
+
+What would you like to explore first?
+
+</details>
+
+### Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference
+
+[paper](https://arxiv.org/abs/2403.04132)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+Thank you for sharing this comprehensive paper on Chatbot Arena! Let me provide you with a high-level summary to get us started.
+
+## Paper Summary: "Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference"
+
+This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating Large Language Models (LLMs) through human preferences rather than traditional static benchmarks. Here are the key contributions:
+
+**Core Innovation**: The platform uses a "battle" format where users interact with two anonymous LLMs simultaneously, then vote for which response they prefer. This creates a live, dynamic evaluation system that captures real-world usage patterns.
+
+**Scale & Impact**: Since April 2023, they've collected over 240K votes from 90K+ users across 100+ languages, making it one of the most referenced LLM leaderboards in the field.
+
+**Mathematical Framework**: The paper employs sophisticated statistical methods to convert pairwise comparisons into reliable rankings:
+- **Bradley-Terry model** for estimating win probabilities 
+- **Active sampling algorithms** to efficiently select model pairs for comparison
+- **Confidence intervals** and anomaly detection for robust evaluation
+
+**Key Findings**:
+- Crowdsourced votes show high agreement (72-83%) with expert evaluations
+- The diverse, user-generated prompts effectively discriminate between model capabilities
+- Their ranking system provides statistically valid confidence intervals for model performance
+
+**Why It Matters**: This addresses critical limitations of static benchmarks (contamination, lack of human alignment, limited diversity) by creating a continuously updating, human-preference-based evaluation system that better reflects real-world LLM usage.
+
+</details>
+
+### TinyLlama: An Open-Source Small Language Model
+
+[paper](https://arxiv.org/abs/2401.02385)
 
 <details>
 
@@ -3702,31 +4216,26 @@ https://tridao.me/blog/
 
 </details>
 
-
-## 2024: Efficiency and Performance
-
-### Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference
-
-[paper](https://arxiv.org/abs/2403.04132)
-
-### TinyLlama: An Open-Source Small Language Model
-
-[paper](https://arxiv.org/abs/2401.02385)
-
 ### MordernBert
+
+[paper](https://arxiv.org/pdf/2412.13663)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
 
 ### Jamba: A Hybrid Transformer-Mamba Language Model
 
 [paper](https://arxiv.org/abs/2403.19887)
 
-### Gemma
+<details>
 
-[paper](Gemma: Open Models Based on Gemini Research and Technology)
+<summary>Quick Summary</summary>
 
-- Efficient attention mechanisms
-- Advanced position embeddings
-- Improved tokenization
-- Memory efficient training
+</details>
+
 
 ### Claude 3
 
@@ -3737,11 +4246,21 @@ https://tridao.me/blog/
 - Advanced reasoning
 - Constitutional AI improvements
 
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
 ### LLaMA 3
 
 [paper](https://arxiv.org/abs/2407.21783)
 
-{add quen and deepseek}
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
 
 ### Claude 3
 
@@ -3826,18 +4345,6 @@ Advanced mathematical problem-solving
 - Multimodal capabilities
 - 12B parameters
 
-### Qwen2
-
-[paper]()
-
-- Multilingual capabilities
-- 72B parameters
-
-### phi
-
-[paper]()
-
-Visual Elements
 
 Add performance charts showing scaling laws
 Include architecture diagrams for key innovations
@@ -3854,4 +4361,4 @@ NOTES TO SELF
 
 ### Some Honorable blogs and mentions that I believe you should definitely check out:
 
-https://magazine.sebastianraschka.com/p/understanding-large-language-models
+https://magazine.sebastianraschka.com/p/understanding-large-language-models -->
