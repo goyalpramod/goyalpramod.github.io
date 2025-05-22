@@ -4063,11 +4063,12 @@ Thank you for sharing this paper! Let me provide a high-level summary of "Qwen-V
 This paper introduces **Qwen-VL**, a series of large-scale vision-language models that can process both images and text. The key contribution is creating models that go beyond basic image captioning and visual question answering to include **fine-grained capabilities** like:
 
 - **Visual grounding** (localizing objects with bounding boxes)
-- **Text reading** (OCR capabilities) 
+- **Text reading** (OCR capabilities)
 - **Multi-image conversations**
 - **Multilingual support** (English and Chinese)
 
 **Architecture Overview:**
+
 - Built on the Qwen-7B language model foundation
 - Uses a Vision Transformer (ViT) as the visual encoder
 - Introduces a novel "position-aware vision-language adapter" that compresses visual features while preserving spatial information
@@ -4075,6 +4076,7 @@ This paper introduces **Qwen-VL**, a series of large-scale vision-language model
 
 **Training Pipeline:**
 The authors use a carefully designed 3-stage training approach:
+
 1. **Pre-training** on 1.4B image-text pairs (frozen LLM)
 2. **Multi-task pre-training** on 7 different vision-language tasks simultaneously
 3. **Supervised fine-tuning** for instruction-following and chat capabilities
@@ -4097,7 +4099,9 @@ What would you like to explore first?
 
 ## 2024: Efficiency and Performance
 
-### Gemma 
+It's June 2025 currently while I am writing this, and I cannot say for certain if the innovations mentioned in this and the next year will have huge impacts in the future, I just went with the papers and models that have caught "attention" in this time period. As well as ideas that I found unconventional and interesting.
+
+### Gemma
 
 [paper](https://arxiv.org/abs/2403.08295)
 
@@ -4112,12 +4116,14 @@ Thank you for sharing the Gemma paper! Let me provide a high-level summary of th
 **Gemma: Open Models Based on Gemini Research and Technology** introduces a family of open-source language models derived from Google's Gemini research. This represents a significant contribution to the open AI ecosystem, as it makes state-of-the-art capabilities more accessible to researchers and developers.
 
 **Key Contributions:**
+
 - **Two model sizes**: 2B and 7B parameters, designed for different computational constraints
 - **Dual releases**: Both pre-trained base models and instruction-tuned chat variants
 - **Strong performance**: Outperforms similarly-sized open models on 11 out of 18 benchmarks
 - **Responsible AI focus**: Comprehensive safety evaluations and responsible deployment practices
 
 **Architecture Highlights:**
+
 - Built on transformer decoder architecture with modern improvements
 - Uses **RoPE embeddings** for positional encoding
 - **GeGLU activations** instead of standard ReLU
@@ -4125,18 +4131,20 @@ Thank you for sharing the Gemma paper! Let me provide a high-level summary of th
 - Trained on up to 6T tokens of primarily English text
 
 **Training Pipeline:**
+
 1. **Pre-training** on web documents, mathematics, and code
 2. **Supervised Fine-Tuning (SFT)** on instruction-response pairs
 3. **RLHF** using human preference data
 
 **Notable Results:**
+
 - Gemma 7B achieves 64.3% on MMLU and 44.4% on MBPP
 - Strong performance on mathematics (46.4% on GSM8K) and coding tasks
 - Comprehensive safety evaluations show competitive performance on responsibility benchmarks
 
 </details>
 
-### Gemma 2 
+### Gemma 2
 
 <details>
 
@@ -4147,26 +4155,31 @@ Thank you for sharing the Gemma paper! Let me provide a high-level summary of th
 This paper introduces **Gemma 2**, Google DeepMind's next-generation family of open language models ranging from 2B to 27B parameters. Here's the key story:
 
 ## Core Innovation: Knowledge Distillation at Scale
+
 The paper's main contribution is demonstrating that **knowledge distillation** - where smaller "student" models learn from larger "teacher" models - can dramatically improve performance when applied at massive scale (training on 50× more tokens than typically considered optimal).
 
 ## Key Technical Advances
+
 - **Architectural improvements**: Interleaving local sliding window attention with global attention, grouped-query attention (GQA), and logit soft-capping
 - **Training methodology**: Using distillation instead of standard next-token prediction for the 2B and 9B models
 - **Responsible deployment**: Extensive safety evaluations and responsible AI toolkit development
 
 ## Performance Highlights
+
 - The models achieve state-of-the-art performance for their size class
 - Gemma 2-27B competes with models 2-3× larger (like LLaMA-3 70B)
 - Strong results on the LMSYS Chatbot Arena, with Gemma 2-27B ranking higher than LLaMA-3 70B
 
 ## Broader Impact
+
 The paper provides evidence that **smaller, more efficiently trained models** can challenge the "bigger is always better" paradigm in LLMs, which has important implications for democratizing access to capable AI systems.
 
 ---
 
 I'm ready to dive deeper into any aspect that interests you! Some particularly rich areas for exploration might include:
+
 - The mathematical formulation of their knowledge distillation approach
-- The attention mechanism innovations and their computational trade-offs  
+- The attention mechanism innovations and their computational trade-offs
 - The extensive evaluation methodology, especially their safety assessments
 - The architectural design choices and their theoretical justifications
 
@@ -4193,11 +4206,13 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 **Scale & Impact**: Since April 2023, they've collected over 240K votes from 90K+ users across 100+ languages, making it one of the most referenced LLM leaderboards in the field.
 
 **Mathematical Framework**: The paper employs sophisticated statistical methods to convert pairwise comparisons into reliable rankings:
-- **Bradley-Terry model** for estimating win probabilities 
+
+- **Bradley-Terry model** for estimating win probabilities
 - **Active sampling algorithms** to efficiently select model pairs for comparison
 - **Confidence intervals** and anomaly detection for robust evaluation
 
 **Key Findings**:
+
 - Crowdsourced votes show high agreement (72-83%) with expert evaluations
 - The diverse, user-generated prompts effectively discriminate between model capabilities
 - Their ranking system provides statistically valid confidence intervals for model performance
@@ -4214,6 +4229,23 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 
 <summary>Quick Summary</summary>
 
+# TinyLlama: A Compact Open-Source Language Model
+
+## High-Level Summary
+
+This paper presents **TinyLlama**, a remarkably compact 1.1B parameter language model that challenges conventional wisdom about the relationship between model size and performance. The key insight is exploring what happens when you train a small model on far more data than traditional scaling laws suggest - specifically training on up to 3 trillion tokens (later reduced to 2T in v1.1).
+
+**Core Contributions:**
+
+- **Architecture**: Built on Llama 2's foundation but optimized for efficiency with techniques like FlashAttention and grouped-query attention
+- **Training Strategy**: Demonstrates that smaller models can achieve competitive performance when trained on significantly more data than scaling laws recommend
+- **Multi-stage Training**: Introduces a three-phase approach (basic pretraining → domain-specific continual pretraining → cooldown) that creates specialized variants
+- **Performance**: Outperforms comparable models like OPT-1.3B and Pythia-1.4B across multiple benchmarks despite being smaller
+
+**Key Insight**: Rather than following compute-optimal scaling (Chinchilla scaling laws), they pursue _inference-optimal_ scaling - training smaller models longer to achieve better performance per parameter during deployment.
+
+The work is particularly valuable for democratizing language model research, enabling applications on resource-constrained devices, and providing a strong foundation for experimentation.
+
 </details>
 
 ### MordernBert
@@ -4223,6 +4255,29 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 <details>
 
 <summary>Quick Summary</summary>
+
+Thank you for sharing this excellent paper on ModernBERT! Let me provide you with a high-level summary to start.
+
+## High-Level Summary
+
+This paper introduces **ModernBERT**, a significant modernization of the classic BERT encoder architecture. The key insight is that while decoder-only models like GPT have seen tremendous advances, encoder-only models have remained largely stagnant since BERT's original release in 2019.
+
+**Core Contributions:**
+
+1. **Architectural Modernization**: Incorporates proven techniques from recent transformer research (RoPE positional embeddings, GeGLU activations, alternating local/global attention)
+2. **Scale & Data**: Trained on 2 trillion tokens with modern data mixtures including code
+3. **Hardware-Aware Design**: Optimized for inference efficiency on common GPUs
+4. **Long Context**: Native 8192 sequence length (vs BERT's 512)
+
+**Key Results:**
+
+- State-of-the-art performance across classification, retrieval, and code tasks
+- ~2x faster inference than previous long-context encoders
+- First encoder to beat DeBERTaV3 on GLUE since 2021
+- Strong performance on both single-vector and multi-vector retrieval
+
+**Why This Matters:**
+Encoders remain crucial for production systems doing retrieval, classification, and RAG pipelines where efficiency matters more than generation capability. ModernBERT shows there's still significant room for improvement in this "mature" architecture family.
 
 </details>
 
@@ -4235,7 +4290,6 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 <summary>Quick Summary</summary>
 
 </details>
-
 
 ### Claude 3
 
@@ -4344,7 +4398,6 @@ Advanced mathematical problem-solving
 
 - Multimodal capabilities
 - 12B parameters
-
 
 Add performance charts showing scaling laws
 Include architecture diagrams for key innovations
