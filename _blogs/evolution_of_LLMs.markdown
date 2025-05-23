@@ -6,11 +6,7 @@ categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
 
-## STILL A WORK IN PROGRESS, I MESSED UP THE PROD, PLEASE DONT READ 
-
-
-
-The landscape of language models has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we explore the
+The landscape of language models(LMs) has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we explore the
 
 - mathematical foundations
 - architectural innovations
@@ -20,10 +16,9 @@ We will talk about everything the code, math, and ideas that revolutionized NLP.
 
 Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
 
-
 ## How this blog is structured
 
-We will go year by year, going through the revolutionary ideas introduced by each paper. Here is a quick list of the years and the seminal papers 
+We will go year by year, going through the revolutionary ideas introduced by each paper. Here is a quick list of the years and the seminal papers
 
 <details>
 <summary markdown="span">2017</summary>
@@ -32,14 +27,12 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 </div>
 </details>
 
-
 <details>
 <summary markdown="span">2018</summary>
 <div markdown="1">
 []()
 </div>
 </details>
-
 
 <details>
 <summary markdown="span">2019</summary>
@@ -48,14 +41,12 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 </div>
 </details>
 
-
 <details>
 <summary markdown="span">2020</summary>
 <div markdown="1">
 []()
 </div>
 </details>
-
 
 <details>
 <summary markdown="span">2021</summary>
@@ -64,14 +55,12 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 </div>
 </details>
 
-
 <details>
 <summary markdown="span">2022</summary>
 <div markdown="1">
 []()
 </div>
 </details>
-
 
 <details>
 <summary markdown="span">2023</summary>
@@ -80,14 +69,12 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 </div>
 </details>
 
-
 <details>
 <summary markdown="span">2024</summary>
 <div markdown="1">
 []()
 </div>
 </details>
-
 
 <details>
 <summary markdown="span">2025</summary>
@@ -96,12 +83,9 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 </div>
 </details>
 
-</br>
-
 Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). Over here I will just give quick intro and links to some ground breaking innovations.
 
 > NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
-
 
 ## The AI timeline
 
@@ -144,27 +128,27 @@ Let us understand the ideas put forth and why it was such a big deal.
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
->This paper presents a method for training reinforcement learning (RL) agents using human feedback instead of explicitly refined reward functions. Here's a high-level overview:
+> This paper presents a method for training reinforcement learning (RL) agents using human feedback instead of explicitly refined reward functions. Here's a high-level overview:
 >
->The authors address a fundamental challenge in RL: for many complex tasks, designing appropriate reward functions is difficult or impossible. Instead of requiring engineers to craft these functions, they develop a system where:
+> The authors address a fundamental challenge in RL: for many complex tasks, designing appropriate reward functions is difficult or impossible. Instead of requiring engineers to craft these functions, they develop a system where:
 >
->1. Humans compare short video clips of agent behavior (1-2 seconds)
->2. These comparisons train a reward predictor model  
->3. The agent optimizes its policy using this learned reward function
+> 1.  Humans compare short video clips of agent behavior (1-2 seconds)
+> 2.  These comparisons train a reward predictor model
+> 3.  The agent optimizes its policy using this learned reward function
 >
->**Key contributions:**
+> **Key contributions:**
 >
->- They show this approach can solve complex RL tasks using feedback on less than 1% of the agent's interactions
->- This dramatically reduces the human oversight required, making it practical for state-of-the-art RL systems
->- They demonstrate training novel behaviors with just about an hour of human time
->- Their approach works across domains including Atari games and simulated robot locomotion
+> - They show this approach can solve complex RL tasks using feedback on less than 1% of the agent's interactions
+> - This dramatically reduces the human oversight required, making it practical for state-of-the-art RL systems
+> - They demonstrate training novel behaviors with just about an hour of human time
+> - Their approach works across domains including Atari games and simulated robot locomotion
 >
->The technique represents a significant advance in aligning AI systems with human preferences, addressing concerns about misalignment between AI objectives and human values. By having humans evaluate agent behavior directly, the system learns rewards that better capture what humans actually want.
+> The technique represents a significant advance in aligning AI systems with human preferences, addressing concerns about misalignment between AI objectives and human values. By having humans evaluate agent behavior directly, the system learns rewards that better capture what humans actually want.
 
 </div>
 </details>
-
-**Problem** : 
+<br/>
+**Problem** :
 
 | Training a RL system requires researchers make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems
 
@@ -228,7 +212,8 @@ $$
 $$
 
 <details>
-<summary>Mathematical Notation</summary>
+<summary markdown="span">Mathematical Notation</summary>
+<div markdown="1">
 
 - $\hat{P}\left[\sigma^{1} \succ \sigma^{2}\right]$: Predicted probability that trajectory segment $\sigma^{1}$ is preferred over trajectory segment $\sigma^{2}$
 - $\hat{r}$: The learned reward function
@@ -245,7 +230,7 @@ $$
 - $\log$: Natural logarithm
 </div>
 </details>
-""""
+<br/>"""
 """
 Understanding the Reward Function Fitting Process
 
@@ -335,9 +320,6 @@ This is going to be math heavy so be prepared (Dw, I will guide you in each step
 <details>
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-I'll be your guide through this machine learning research paper, focusing on building intuition for the mathematical concepts while waiting for your specific questions to dive deeper.
-
-## High-Level Summary: Proximal Policy Optimization (PPO)
 
 This paper by John Schulman et al. from OpenAI introduces Proximal Policy Optimization (PPO), a family of policy gradient methods for reinforcement learning that achieves the reliability and data efficiency of Trust Region Policy Optimization (TRPO) while being much simpler to implement and more compatible with various neural network architectures.
 
@@ -350,11 +332,9 @@ Key contributions:
 
 The core innovation is their clipped probability ratio approach, which constrains policy updates without requiring the complex second-order optimization techniques used in TRPO. This makes PPO more practical while maintaining performance guarantees.
 
-Feel free to ask specific questions about any aspect of the paper, and I'm happy to explore the mathematical formulations, algorithm details, or empirical results in greater depth.
-
 </div>
 </details>
-"""
+<br/>"""
 
 **Problem** """
 However, there is room for improvement in developing a method that is scalable (to
@@ -378,11 +358,11 @@ Policy Gradient Methods
 
 """
 
-# Understanding Policy Gradient Methods
+Understanding Policy Gradient Methods
 
 Let me break down this section on policy gradient methods step by step:
 
-## Step 1: The Basic Idea
+Step 1: The Basic Idea
 
 Policy gradient methods are a family of reinforcement learning algorithms that directly optimize a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
 
@@ -390,7 +370,7 @@ Policy gradient methods are a family of reinforcement learning algorithms that d
 2. Estimating the policy gradient (the direction that would improve the policy)
 3. Updating the policy parameters using this gradient
 
-## Step 2: The Gradient Estimator
+Step 2: The Gradient Estimator
 
 The core of policy gradient methods is the gradient estimator shown in equation (1). This formula tells us how to estimate the direction in which we should adjust our policy parameters to increase expected rewards:
 
@@ -399,11 +379,11 @@ The gradient estimator ĝ is an empirical average of the product of two terms:
 - `∇θ log πθ(at|st)`: The gradient of the log probability of taking action at in state st
 - `Ât`: An estimate of the advantage function, which tells us how much better action at is compared to the average action in state st
 
-## Step 3: The Objective Function
+Step 3: The Objective Function
 
 Equation (2) shows the policy gradient objective function LPG(θ). In practice, modern implementations use automatic differentiation to compute the gradient. They set up an objective function whose gradient is the policy gradient estimator, then let the automatic differentiation calculate the gradient.
 
-## Step 4: The Problem with Multiple Optimization Steps
+Step 4: The Problem with Multiple Optimization Steps
 
 The authors point out an important issue: while it seems like a good idea to perform multiple optimization steps on the same batch of data (to get more out of each data collection), this approach often leads to destructively large policy updates. This happens because:
 
@@ -414,7 +394,8 @@ The authors point out an important issue: while it seems like a good idea to per
 This observation motivates the need for the "proximal" part of PPO, which constrains how much the policy can change during these multiple optimization steps.
 
 <details>
-<summary>Mathematical Notation</summary>
+<summary markdown="span">Mathematical Notation</summary>
+<div markdown="1">
 
 - $\hat{g}$: Estimator of the policy gradient
 - $\mathbb{Ê}_t$: Empirical average over a finite batch of samples
@@ -428,16 +409,16 @@ This observation motivates the need for the "proximal" part of PPO, which constr
 - $\theta$: Policy parameters
 </div>
 </details>
-
+<br/>
 """
 
 """
 
-# Detailed Mathematical Analysis of Policy Gradient Methods
+Detailed Mathematical Analysis of Policy Gradient Methods
 
 Let me focus specifically on the mathematical details of the policy gradient formulation:
 
-## The Policy Gradient Estimator (Equation 1)
+The Policy Gradient Estimator (Equation 1)
 
 $$\hat{g} = \mathbb{\hat{E}}_t\left[\nabla_\theta \log \pi_\theta(a_t|s_t)\hat{A}_t\right]$$
 
@@ -462,7 +443,7 @@ Breaking this down mathematically:
 
    Where $T$ is the number of timesteps in the collected batch.
 
-## The Policy Gradient Objective (Equation 2)
+The Policy Gradient Objective (Equation 2)
 
 $$L^{PG}(\theta) = \mathbb{\hat{E}}_t\left[\log \pi_\theta(a_t|s_t)\hat{A}_t\right]$$
 
@@ -476,7 +457,7 @@ The mathematical derivation works because:
 2. Therefore: $\nabla_\theta(\log \pi_\theta(a_t|s_t)\hat{A}_t) = \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot \hat{A}_t$
 3. The expectation operator and gradient operator can be exchanged (under mild conditions)
 
-## Implementation Detail
+Implementation Detail
 
 When implementing this in practice with automatic differentiation frameworks (like TensorFlow or PyTorch), we:
 
@@ -487,9 +468,9 @@ When implementing this in practice with automatic differentiation frameworks (li
    $$\theta_{new} = \theta_{old} + \alpha \cdot \hat{g}$$
    Where $\alpha$ is the learning rate
 
-```
 <details>
-<summary>Mathematical Notation</summary>
+<summary markdown="span">Mathematical Notation</summary>
+<div markdown="1">
 
 - $\hat{g}$: Estimator of the policy gradient
 - $\mathbb{\hat{E}}_t[\cdot]$: Empirical average over a finite batch of samples ($\frac{1}{T}\sum_{t=1}^T$)
@@ -506,19 +487,18 @@ When implementing this in practice with automatic differentiation frameworks (li
 - $\alpha$: Learning rate for gradient ascent
 </div>
 </details>
-```
-
+<br/>
 """
 
 TRPO
 
 """
 
-# Detailed Mathematical Analysis of Trust Region Methods
+Detailed Mathematical Analysis of Trust Region Methods
 
 Let me focus specifically on the mathematical formulation of Trust Region Policy Optimization (TRPO):
 
-## The TRPO Objective (Equations 3-4)
+The TRPO Objective (Equations 3-4)
 
 The TRPO algorithm formulates policy optimization as a constrained optimization problem:
 
@@ -554,7 +534,7 @@ Breaking this down mathematically:
 
 4. **Constraint Parameter $\delta$**: This hyperparameter controls how much the policy is allowed to change in a single update. Typically small values (e.g., 0.01-0.05) are used.
 
-## The Penalized Version (Equation 5)
+The Penalized Version (Equation 5)
 
 Instead of using a hard constraint, the theory also supports a penalized objective:
 
@@ -573,7 +553,7 @@ This reformulates the constrained optimization as an unconstrained one:
 
 4. **Mathematical Insight**: The paper mentions that a surrogate objective using the max KL (rather than mean KL) forms a lower bound (pessimistic estimate) on policy performance. This theoretical foundation justifies the constraint-based approach.
 
-## Implementation Details
+Implementation Details
 
 When solving this constrained optimization problem:
 
@@ -586,9 +566,9 @@ When solving this constrained optimization problem:
 
 3. The conjugate gradient algorithm is then used to efficiently solve this approximated problem.
 
-```
 <details>
-<summary>Mathematical Notation</summary>
+<summary markdown="span">Mathematical Notation</summary>
+<div markdown="1">
 
 - $\pi_\theta(a_t|s_t)$: Probability of taking action $a_t$ in state $s_t$ under policy with parameters $\theta$
 - $\pi_{\theta_{old}}(a_t|s_t)$: Probability under previous policy parameters
@@ -603,7 +583,7 @@ When solving this constrained optimization problem:
 - $H$: Hessian matrix of the KL divergence with respect to policy parameters
 </div>
 </details>
-```
+<br/>
 
 """
 
@@ -611,11 +591,11 @@ Clipped Surogate Objective
 
 """
 
-# Detailed Mathematical Analysis of Clipped Surrogate Objective
+Detailed Mathematical Analysis of Clipped Surrogate Objective
 
 Let me focus on the mathematical details of the Clipped Surrogate Objective, which is the core innovation of PPO:
 
-## The Probability Ratio and CPI Objective
+The Probability Ratio and CPI Objective
 
 First, the paper defines a probability ratio:
 
@@ -632,7 +612,7 @@ This objective encourages:
 - Increasing probability (making $r_t(\theta) > 1$) for actions with positive advantage ($\hat{A}_t > 0$)
 - Decreasing probability (making $r_t(\theta) < 1$) for actions with negative advantage ($\hat{A}_t < 0$)
 
-## The Clipped Surrogate Objective (Equation 7)
+The Clipped Surrogate Objective (Equation 7)
 
 The key innovation of PPO is the clipped surrogate objective:
 
@@ -680,7 +660,7 @@ Breaking this down mathematically:
 
 5. **Hyperparameter $\epsilon$**: Controls the clipping threshold, typically set to a small value like 0.2. This determines how much the policy is allowed to change in a single update.
 
-## Graphical Interpretation (Figure 1)
+Graphical Interpretation (Figure 1)
 
 The paper includes graphs showing the behavior of a single term in $L^{CLIP}$ as a function of the probability ratio $r$:
 
@@ -693,12 +673,13 @@ The paper includes graphs showing the behavior of a single term in $L^{CLIP}$ as
 
 The red circle at $r = 1$ in both plots represents the starting point of optimization (the previous policy).
 
-## Lower Bound Property (Figure 2)
+Lower Bound Property (Figure 2)
 
 Figure 2 (mentioned in the text) shows that $L^{CLIP}$ forms a lower bound on $L^{CPI}$, effectively penalizing large policy updates. This approximates the trust region method of TRPO but uses only first-order optimization.
 
 <details>
-<summary>Mathematical Notation</summary>
+<summary markdown="span">Mathematical Notation</summary>
+<div markdown="1">
 
 - $r_t(\theta)$: Probability ratio $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ at timestep $t$
 - $\pi_\theta(a_t|s_t)$: Probability of action $a_t$ in state $s_t$ under policy with parameters $\theta$
@@ -713,7 +694,7 @@ Figure 2 (mentioned in the text) shows that $L^{CLIP}$ forms a lower bound on $L
 - $\min(a,b)$: Function returning the minimum of $a$ and $b$
 </div>
 </details>
-"""
+<br/>"""
 
 ### MOE : Mixture Of Experts
 
@@ -729,10 +710,8 @@ blogs
 - https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mixture-of-experts
 
 <details>
-<summary>
-Quick Summary
-</summary>
-# Brief Summary of "Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This 2017 paper by Shazeer et al. introduces a novel approach to dramatically increase neural network capacity without proportionally increasing computational costs. The core innovation is the Sparsely-Gated Mixture-of-Experts (MoE) layer, which contains thousands of feed-forward neural networks (experts), with a trainable gating network that selectively activates only a small subset of experts for each input example.
 
@@ -745,10 +724,9 @@ Key highlights:
 
 This paper represents a significant advancement in scaling neural networks efficiently, presaging some of the techniques that would later become important in very large language models.
 
-Is there a specific aspect of this paper you'd like to explore further?
-
 </div>
 </details>
+<br/>
 
 **Problem**
 """
@@ -781,11 +759,8 @@ We are deviating a bit from what the paper proposed and moving into the future o
 [paper](https://arxiv.org/pdf/1801.06146)
 
 <details>
-<summary>
-Quick Summary
-</summary>
-"""
-# Summary of "Universal Language Model Fine-tuning for Text Classification"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This 2018 paper by Jeremy Howard and Sebastian Ruder introduces ULMFiT (Universal Language Model Fine-tuning), a method for transfer learning in NLP tasks. The authors present an approach that mirrors the success of transfer learning in computer vision by using a pre-trained language model and fine-tuning it for specific text classification tasks.
 
@@ -809,8 +784,10 @@ Key contributions:
 
 The paper demonstrates that effective transfer learning is possible in NLP without task-specific modifications or architecture changes, using a standard 3-layer LSTM model with careful fine-tuning techniques.
 
-Is there a particular aspect of the paper you'd like me to explain in more detail?
-"""
+</div>
+</details>
+<br/>
+
 """
 Inductive transfer learning has greatly impacted computer vision, but existing approaches in NLP still require task-specific
 modifications and training from scratch.
@@ -821,20 +798,15 @@ that are key for fine-tuning a language
 model.
 """
 
-</div>
-</details>
-
-#### ElMO: Embeddings from Language Models
+### ElMO: Embeddings from Language Models
 
 [Deep contextualized word representations](https://arxiv.org/abs/1802.05365)
 
 https://pythonandml.github.io/dlbook/content/word_embeddings/elmo.html
 
 <details>
-<summary>
-Quick Summary
-</summary>
-# Brief Summary of "Deep contextualized word representations"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This paper introduces ELMo (Embeddings from Language Models), a new approach to creating word representations that capture both complex word characteristics (syntax and semantics) and how those characteristics change across different contexts (addressing polysemy). Unlike traditional word embeddings that assign a single vector per word, ELMo derives representations from a bidirectional language model (biLM) pre-trained on a large text corpus.
 
@@ -842,10 +814,9 @@ The key innovation is that ELMo representations are deep - they're a function of
 
 The authors demonstrate that adding ELMo to existing models significantly improves performance across six diverse NLP tasks, including question answering, textual entailment, sentiment analysis, and named entity recognition - achieving state-of-the-art results in all cases, with relative error reductions ranging from 6-20%.
 
-Is there a specific aspect of this paper you'd like me to elaborate on?
-
 </div>
 </details>
+<br/>
 
 **Problem**
 
@@ -899,11 +870,8 @@ Training a GPT
 Semi-supervised Sequence Learning
 
 <details>
-<summary>
-Quick Summary
-</summary>
-
-# Improving Language Understanding by Generative Pre-Training: A Brief Summary
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This seminal 2018 paper from OpenAI researchers (Radford, Narasimhan, Salimans, and Sutskever) introduces a powerful semi-supervised approach to natural language understanding that combines unsupervised pre-training with supervised fine-tuning.
 
@@ -919,10 +887,9 @@ This approach minimizes task-specific architecture modifications by using "task-
 
 This paper laid important groundwork for later transformer-based language models, demonstrating that generative pre-training on unlabeled data could significantly improve performance on downstream language understanding tasks.
 
-What aspects of this paper would you like me to explore in more detail?
-
 </div>
 </details>
+<br/>
 
 **Problem**
 
@@ -981,14 +948,8 @@ BPE https://arxiv.org/abs/1508.07909
 [paper](https://arxiv.org/abs/1808.06226)
 
 <details>
-<summary>
-Quick Summary
-</summary>
-
-"""
-I'll be happy to serve as your guide through the machine learning research paper you've shared, adapting my explanations to your questions while helping you build stronger mathematical intuition.
-
-# Brief Summary of "SentencePiece"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This paper introduces SentencePiece, an open-source subword tokenizer and detokenizer designed specifically for neural text processing, including Neural Machine Translation (NMT). The key innovation of SentencePiece is that it can train subword models directly from raw sentences without requiring pre-tokenization, enabling truly end-to-end and language-independent text processing.
 
@@ -1002,11 +963,9 @@ The authors highlight several important features:
 
 They validate their approach through experiments on English-Japanese translation, showing comparable accuracy to systems that use pre-tokenization, while being significantly faster for non-segmented languages like Japanese.
 
-I'm ready to discuss any specific aspects of the paper you'd like to explore in more detail.
-"""
-
 </div>
 </details>
+<br/>
 
 **Problem** Tough to make NMT language independent
 
@@ -1024,7 +983,7 @@ Trainer. Decoder converts the subword sequence
 into the normalized tex
 """
 
-#### BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
+### BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
 [paper](https://arxiv.org/abs/1810.04805)
 
@@ -1052,12 +1011,8 @@ Lab:Google
 """
 
 <details>
-<summary>
-Quick Summary
-
-I'll help you understand the BERT paper as requested. Let me provide a brief, high-level summary first.
-
-## Brief Summary of "BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This paper introduces BERT (Bidirectional Encoder Representations from Transformers), a groundbreaking language representation model that significantly advanced the state of natural language processing in 2018. The key innovation of BERT is its ability to pre-train deep bidirectional representations from unlabeled text, unlike previous models that were limited to unidirectional contexts (either left-to-right or right-to-left).
 
@@ -1070,12 +1025,9 @@ These pre-training objectives allow BERT to create context-aware representations
 
 The paper demonstrated significant improvements over previous methods on eleven NLP tasks, including the GLUE benchmark, SQuAD, and SWAG datasets.
 
-Is there a specific aspect of BERT that you'd like me to explain in more detail?
-
-</summary>
 </div>
 </details>
-
+<br/>
 This paper wasn't trying to find a problem then solve it per say. It is more of an innovation
 
 """
@@ -1111,11 +1063,8 @@ Lab: OpenAI
 """
 
 <details>
-<summary>
-Quick Summary
-</summary>
-
-# Summary of "Language Models are Unsupervised Multitask Learners"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This 2019 paper by Radford et al. (OpenAI) introduces GPT-2, a large-scale language model that demonstrates impressive zero-shot learning capabilities across multiple NLP tasks. The key insight of this paper is that language models trained on sufficiently large and diverse datasets naturally acquire the ability to perform various language tasks without explicit supervision.
 
@@ -1132,7 +1081,7 @@ This work represents a significant step toward building more general NLP systems
 
 </div>
 </details>
-"""
+<br/>"""
 Common Crawl. Trinh & Le (2018)’s best results were
 achieved using a small subsample of Common Crawl which
 included only documents most similar to their target dataset,
@@ -1172,11 +1121,8 @@ for other datasets and could complicate analysis due to over
 - Extended training
 
 <details>
-<summary>
-Quick Summary
-</summary>
-
-# Summary of "RoBERTa: A Robustly Optimized BERT Pretraining Approach"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This 2019 paper by Liu et al. from Facebook AI presents RoBERTa (Robustly Optimized BERT Pretraining Approach), which demonstrates that BERT was significantly undertrained and can achieve state-of-the-art performance with careful optimization choices.
 
@@ -1201,7 +1147,7 @@ The paper is particularly notable for its thorough empirical analysis of trainin
 
 </div>
 </details>
-
+<br/>
 """
 Link: https://huggingface.co/docs/transformers/model_doc/roberta
 Family: BERT
@@ -1284,12 +1230,8 @@ Lab: Huggingface
 """
 
 <details>
-<summary>
-Quick Summary
-</summary>
-"""
-# Summary of "DistilBERT: A Distilled Version of BERT"
-
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 This 2020 paper by Sanh et al. from Hugging Face introduces DistilBERT, a smaller, faster version of BERT created through knowledge distillation. The authors address the growing concern that state-of-the-art NLP models are becoming increasingly large and computationally expensive, limiting their practical deployment, especially on edge devices.
 
 Key contributions:
@@ -1313,11 +1255,10 @@ Key contributions:
 5. They also show that DistilBERT can run effectively on mobile devices, with a model size of 207 MB and 71% faster inference time than BERT on an iPhone 7 Plus.
 
 This work demonstrates that through careful distillation, smaller and more efficient models can be created without significant loss in performance, making state-of-the-art NLP more accessible for resource-constrained applications.
-"""
 
 </div>
 </details>
-
+<br/>
 https://blog.roboflow.com/what-is-knowledge-distillation/
 https://datasciencedojo.com/blog/understanding-knowledge-distillation/
 https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html
@@ -1344,12 +1285,8 @@ Lab:Facebook
 
 <details>
 
-<summary>
-Quick Summary
-</summary>
-"""
-# BART: A Brief Summary
-
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 The paper introduces BART (Bidirectional and Auto-Regressive Transformers), a denoising autoencoder for pretraining sequence-to-sequence models. BART works in two stages:
 
 1. It first corrupts text with various noising functions (like token masking, deletion, text infilling, sentence shuffling)
@@ -1365,12 +1302,9 @@ In experiments, BART achieves strong performance across multiple NLP tasks:
 
 The paper presents a thorough ablation study comparing BART to other pretraining approaches and demonstrates its versatility as a general-purpose language model.
 
-Would you like me to explain any specific aspect of the BART model in more detail?
-"""
-
 </div>
 </details>
-
+<br/>
 """
 We present BART, a denoising autoencoder
 for pretraining sequence-to-sequence models.
@@ -1398,12 +1332,9 @@ a back-translation system for machine translation, with only target language pre
 - Surpassed BERT on multiple benchmarks
 
 <details>
-<summary>
-Quick Summary
-</summary>
-# XLNet: A Summary of Permutation-Based Pretraining
-
-Based on the paper you've shared, XLNet is a novel approach to pretraining language models that combines the advantages of both autoregressive (AR) language models like GPT and autoencoding (AE) models like BERT, while avoiding their limitations.
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+XLNet is a novel approach to pretraining language models that combines the advantages of both autoregressive (AR) language models like GPT and autoencoding (AE) models like BERT, while avoiding their limitations.
 
 The key innovation of XLNet is its **permutation language modeling objective**. Rather than using a fixed left-to-right order like traditional autoregressive models, XLNet maximizes the expected log likelihood over all possible permutations of the factorization order for a sequence. This allows each token to effectively see context from both directions while maintaining the autoregressive property.
 
@@ -1420,11 +1351,9 @@ Key architectural components include:
 
 In empirical evaluations, XLNet outperforms BERT on 20 tasks including question answering, natural language inference, sentiment analysis, and document ranking, often by substantial margins.
 
-Would you like me to explore any specific aspects of the architecture, the permutation language modeling approach, or the experimental results in more detail?
-
 </div>
 </details>
-
+<br/>
 """
 With the capability of modeling bidirectional contexts, denoising autoencoding
 based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive language modeling. However, relying on corrupting the input with masks, BERT neglects dependency between the masked positions
@@ -1442,11 +1371,11 @@ inference, sentiment analysis, and document ranking.1
 
 """
 
-# BERT's Limitations According to XLNet
+BERT's Limitations According to XLNet
 
 The XLNet paper identifies two key limitations in BERT's pretraining approach:
 
-## 1. Independence Assumption
+1. Independence Assumption
 
 **What it means:** When BERT predicts masked tokens, it assumes they are conditionally independent of each other given the unmasked tokens.
 
@@ -1460,7 +1389,7 @@ But it fails to model the joint dependency: p(New, York | is a city). BERT doesn
 
 **Why it's a problem:** Natural language has high-order dependencies between words. When multiple tokens are masked in a sequence, BERT can't model how these tokens depend on each other. This limits its ability to capture the complex dependencies that exist in language.
 
-## 2. Pretrain-Finetune Discrepancy
+2. Pretrain-Finetune Discrepancy
 
 **What it means:** During pretraining, BERT uses artificial [MASK] tokens that never appear during finetuning on downstream tasks.
 
@@ -1471,7 +1400,7 @@ But it fails to model the joint dependency: p(New, York | is a city). BERT doesn
 
 **Why it's a problem:** This creates a mismatch between pretraining and finetuning. The model is trained to handle artificial [MASK] tokens but then must work with fully visible text during actual use. BERT attempts to mitigate this by sometimes replacing [MASK] with the original token (80% mask, 10% random word, 10% unchanged), but this is a partial solution that still creates a discrepancy.
 
-## How XLNet Addresses These Limitations
+How XLNet Addresses These Limitations
 
 - **For the independence issue:** XLNet uses autoregressive factorization, which naturally models the joint probability using the product rule without independence assumptions.
 
@@ -1495,14 +1424,11 @@ This captures the dependency between "New" and "York" while training on uncorrup
 - Model parallelism for efficient large model training
 
 <details>
-<summary>
-Quick Summary
-</summary>
-# Megatron-LM: A Summary of Model Parallelism for Training Billion-Parameter Language Models
-
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 The Megatron-LM paper presents an approach for training extremely large language models using model parallelism that enables training transformer models with billions of parameters. Let me explain the key aspects of this work:
 
-## Core Innovation: Simple and Efficient Model Parallelism
+**Core Innovation**: Simple and Efficient Model Parallelism
 
 The authors implement a simple but effective model parallel approach where they split transformer layers across multiple GPUs in a way that minimizes communication overhead. They do this through:
 
@@ -1517,17 +1443,17 @@ The authors implement a simple but effective model parallel approach where they 
 
 4. **Duplicate computation**: Instead of communicating for small operations like dropout or layer normalization, they duplicate these computations across GPUs.
 
-## Scaling Achievements
+**Scaling Achievements**
 
 - They established a strong baseline by training a 1.2 billion parameter model on a single GPU that achieves 39 TeraFLOPs (30% of theoretical peak)
 - They scaled to an 8.3 billion parameter model using 512 GPUs with 8-way model parallelism and 64-way data parallelism
 - They achieved 15.1 PetaFLOPs sustained performance with 76% scaling efficiency compared to the single GPU case
 
-## Architecture Innovation for BERT Models
+**Architecture Innovation for BERT Models**
 
 The authors discovered that the standard BERT architecture suffers from degradation when scaled beyond the BERT-Large size. They fixed this by rearranging the layer normalization and residual connections in the architecture, enabling larger BERT models to achieve consistently better results.
 
-## Results
+**Results**
 
 Their models achieved state-of-the-art results on:
 
@@ -1537,11 +1463,9 @@ Their models achieved state-of-the-art results on:
 
 The paper demonstrates that with the right implementation approach, training multi-billion parameter language models is feasible, and these larger models lead to superior performance on a wide range of NLP tasks.
 
-Would you like me to elaborate on any specific aspect of the paper, such as the model parallelism implementation, the architectural innovations, or the performance results?
-
 </div>
 </details>
-
+<br/>
 This is a great time to talk about data, model and pipeline paralism and how massively large LLMs are trained across GPUs
 
 ### Sparse Attention Patterns
@@ -1551,12 +1475,8 @@ This is a great time to talk about data, model and pipeline paralism and how mas
 - Reduced computational complexity for long sequences
 
 <details>
-<summary>
-Quick Summary
-<summary>
-I'll help you explore this machine learning research paper and adapt my explanations based on your questions. Let me provide a brief high-level summary to start.
-
-# Summary: Generating Long Sequences with Sparse Transformers
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This 2019 paper by Rewon Child, Scott Gray, Alec Radford, and Ilya Sutskever from OpenAI introduces Sparse Transformers, an architectural innovation that makes Transformers more efficient for modeling very long sequences.
 
@@ -1569,16 +1489,9 @@ Key innovations:
 
 The authors demonstrate that Sparse Transformers can effectively model sequences of tens of thousands of timesteps using hundreds of layers. They apply the same architecture to model images, audio, and text from raw bytes, achieving state-of-the-art results on density modeling tasks for Enwik8, CIFAR-10, and ImageNet-64. Notably, they show it's possible to use self-attention to model sequences of length one million or more.
 
-Is there a specific aspect of the paper you'd like to explore first? For example, we could discuss:
-
-- How the sparse factorization of attention works
-- The benefits of their architectural modifications
-- The performance improvements on different data types
-- The mathematics behind the complexity reduction
-
 </div>
 </details>
-
+<br/>
 """
 However, the memory and computational requirements of
 such networks grows quadratically with sequence length,
@@ -1613,12 +1526,8 @@ https://lilianweng.github.io/posts/2018-06-24-attention/
 [paper](https://arxiv.org/abs/2001.04451)
 
 <details>
-<summary>
-Quick Summary
-</summary>
-I'll be happy to guide you through this research paper and provide explanations tailored to your questions, Professor Claude. Let me start with a high-level summary.
-
-## Paper Summary: "Reformer: The Efficient Transformer"
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 This 2020 ICLR paper introduces the Reformer, a more memory-efficient and computationally efficient variant of the Transformer architecture. The authors (Kitaev, Kaiser, and Levskaya) address key bottlenecks in standard Transformers:
 
@@ -1633,11 +1542,9 @@ Their solution combines two main innovations:
 
 The authors show that Reformer achieves comparable performance to standard Transformers while enabling training on much longer sequences (up to 64K tokens) and with substantially lower memory usage. They demonstrate results on text (enwik8) and image generation (ImageNet-64) tasks.
 
-I'm ready to discuss any specific aspects of the paper you'd like to explore further. For example, we could delve into how LSH attention works, understand the mathematics behind reversible residual networks, or examine the experimental results.
-
 </div>
 </details>
-
+<br/>
 https://www.youtube.com/watch?app=desktop&v=i4H0kjxrias&t=0s&ab_channel=YannicKilcher
 
 https://www.pinecone.io/learn/series/faiss/locality-sensitive-hashing/
@@ -1649,17 +1556,12 @@ https://jaketae.github.io/study/lsh/
 
 <details>
 
-<summary>
-Quick Summary
-</summary>
-
-# Longformer: The Long-Document Transformer - Summary
-
-Thank you for sharing this research paper! Let me provide a high-level summary before we dive into any specific questions you might have.
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
 The Longformer paper addresses a key limitation of traditional Transformer models: their quadratic computational complexity with respect to sequence length, which makes processing long documents prohibitively expensive. The authors introduce a novel attention mechanism that scales linearly with sequence length, enabling the processing of documents with thousands of tokens.
 
-## Key innovations:
+**Key innovations:**
 
 1. **Attention mechanism**: Longformer uses a combination of:
 
@@ -1679,10 +1581,9 @@ The Longformer paper addresses a key limitation of traditional Transformer model
 
 The paper demonstrates both the theoretical and practical advantages of this approach across multiple tasks including classification, question answering, and coreference resolution.
 
-Would you like me to elaborate on any particular aspect of the paper, such as the mathematics behind the attention mechanism, the implementation details, or the experimental results?
-
 </div>
 </details>
+<br/>
 
 ### GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding
 
@@ -1694,9 +1595,6 @@ https://www.youtube.com/watch?v=1VdEw_mGjFk&ab_channel=YannicKilcher
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-# GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding - Summary
-
-Thank you for sharing this research paper! Here's a high-level summary of GShard:
 
 GShard addresses critical scaling challenges in training extremely large neural network models. The paper introduces a module that enables efficient training of models with hundreds of billions to trillions of parameters through:
 
@@ -1715,10 +1613,9 @@ Key benefits of the approach include:
 - Efficient training with little communication overhead
 - Easy-to-use APIs that separate model description from parallelization implementation
 
-Would you like me to elaborate on any specific aspect of the paper, such as the mixture-of-experts architecture, the automatic sharding mechanism, or the experimental results?
-
 </div>
 </details>
+<br/>
 
 ### Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
 
@@ -1728,7 +1625,6 @@ Would you like me to elaborate on any specific aspect of the paper, such as the 
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-# Retrieval-Augmented Generation (RAG) for Knowledge-Intensive NLP Tasks
 
 This paper introduces RAG (Retrieval-Augmented Generation), a hybrid model architecture that combines the strengths of parametric memory (knowledge stored in neural network parameters) and non-parametric memory (knowledge stored in an external database that can be retrieved).
 
@@ -1745,10 +1641,9 @@ The authors explore two model variants:
 
 They evaluate RAG on knowledge-intensive tasks including open-domain QA, fact verification, and knowledge-grounded generation, achieving state-of-the-art results on several benchmarks. One particularly interesting aspect is that RAG's non-parametric memory can be easily updated (by changing the retrieval corpus) without retraining the model.
 
-Is there a specific aspect of the paper you'd like to explore in more detail?
-
 </div>
 </details>
+<br/>
 
 ### Big Bird: Transformers for Longer Sequences
 
@@ -1759,11 +1654,9 @@ Is there a specific aspect of the paper you'd like to explore in more detail?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Big Bird: Transformers for Longer Sequences - Summary
-
 The paper introduces BigBird, a sparse attention mechanism for transformer models that reduces the quadratic dependency on sequence length to linear, enabling the processing of sequences up to 8x longer than previously possible with similar hardware.
 
-## Key Innovations:
+**Key Innovations:**
 
 BigBird's sparse attention mechanism consists of three main components:
 
@@ -1771,7 +1664,7 @@ BigBird's sparse attention mechanism consists of three main components:
 2. **Window attention** - All tokens attend to a set of w local neighboring tokens
 3. **Random attention** - All tokens attend to a set of r random tokens
 
-## Theoretical Contributions:
+**Theoretical Contributions:**
 
 The authors provide theoretical guarantees for BigBird, showing that:
 
@@ -1779,7 +1672,7 @@ The authors provide theoretical guarantees for BigBird, showing that:
 2. It's Turing complete, preserving the expressive properties of full attention models
 3. Their theoretical analysis reveals the benefits of global tokens for maintaining expressivity
 
-## Experimental Results:
+**Experimental Results:**
 
 BigBird shows significant improvements in tasks requiring longer contexts:
 
@@ -1787,16 +1680,15 @@ BigBird shows significant improvements in tasks requiring longer contexts:
 2. **Document Summarization** - Outperforms previous methods on long document summarization tasks (Arxiv, PubMed, BigPatent)
 3. **Genomics Applications** - Novel application to DNA sequences, improving performance on promoter region prediction (99.9% F1) and chromatin profile prediction
 
-## Technical Details:
+**Technical Details:**
 
 - The paper addresses implementation details for efficiently computing the sparse attention on GPUs/TPUs through "blockification" of the attention pattern
 - The authors prove there's "no free lunch" - showing a natural task where sparse attention mechanisms require polynomially more layers compared to full attention
 - Their approach balances theoretical guarantees with practical efficiency
 
-Would you like me to elaborate on any specific aspect of the paper, such as the mathematical formulation of the attention mechanism, the theoretical proofs, or the experimental setup?
-
 </div>
 </details>
+<br/>
 
 **Problem**
 
@@ -1827,15 +1719,11 @@ attention mechanism that reduces this quadratic dependency to linear
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Language Models are Few-Shot Learners: Summary and Analysis
-
-Thank you for sharing this groundbreaking research paper, which introduces GPT-3, a 175 billion parameter autoregressive language model. I'll provide a high-level summary of the key contributions and findings of this work.
-
-## Key Contributions
+**Key Contributions**
 
 This paper demonstrates how scaling up language models to unprecedented sizes (175B parameters, 10x larger than previous models) enables significant improvements in few-shot learning capabilities. The authors show that large language models can perform tasks with few or no examples through "in-context learning," where the model adapts to new tasks simply by being conditioned on examples in its prompt, without parameter updates.
 
-## Main Findings
+**Main Findings**
 
 1. **Scaling Laws**: Performance on various tasks improves smoothly with model size, following predictable power-law scaling trends.
 
@@ -1847,7 +1735,7 @@ This paper demonstrates how scaling up language models to unprecedented sizes (1
 
 5. **Emergent Abilities**: Certain capabilities like arithmetic, novel word usage, and unscrambling words emerge more strongly at the largest model sizes, suggesting qualitative improvements beyond simple scaling.
 
-## Key Results Across Task Categories
+**Key Results Across Task Categories**
 
 - **Language Modeling**: Sets new SOTA on Penn Tree Bank perplexity (20.5)
 - **Cloze and Completion Tasks**: Substantial improvements on LAMBADA (86.4% accuracy)
@@ -1858,7 +1746,7 @@ This paper demonstrates how scaling up language models to unprecedented sizes (1
 - **Reading Comprehension**: Strong results on CoQA (85.0 F1)
 - **SuperGLUE**: Competitive with fine-tuned BERT-Large
 
-## Limitations
+**Limitations**
 
 The authors transparently address several limitations:
 
@@ -1870,18 +1758,17 @@ The authors transparently address several limitations:
 
 4. Some tasks still show a large gap between few-shot performance and fine-tuned models.
 
-## Broader Impacts
+**Broader Impacts**
 
 The paper discusses potential misuse concerns and ethics issues, including biases in the model and potential for generating misleading content. The authors conducted experiments showing that humans can distinguish GPT-3-generated news articles from human-written ones only at chance levels.
 
-## Significance
+**Significance**
 
 This work represents a paradigm shift in how we think about language models - rather than fine-tuning smaller models for specific tasks, it suggests that scaling up models enables general in-context learning abilities that can be applied to many tasks without task-specific training.
 
-Would you like me to explore any specific aspect of this paper in more detail?
-
 </div>
 </details>
+<br/>
 
 ### Rethinking Attention with Performers
 
@@ -1896,10 +1783,6 @@ https://www.youtube.com/watch?v=xJrKIPwVwGM&ab_channel=YannicKilcher
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-Thank you for sharing this fascinating paper! "Rethinking Attention with Performers" introduces an important innovation in the Transformer architecture domain.
-
-## High-Level Summary
-
 This 2021 ICLR paper introduces the Performer, a Transformer architecture that can estimate regular (softmax) attention with provable accuracy while achieving linear (rather than quadratic) space and time complexity. The key innovation is the FAVOR+ (Fast Attention Via positive Orthogonal Random features) mechanism, which enables efficient approximation of softmax attention kernels without assumptions about sparsity or low-rankness.
 
 The paper makes several key contributions:
@@ -1911,10 +1794,9 @@ The paper makes several key contributions:
 
 The authors demonstrate the Performer's effectiveness on diverse tasks from pixel prediction to protein sequence modeling, showing competitive results with other efficient attention methods while enabling much longer sequence lengths.
 
-I'd be happy to dive deeper into any specific aspect of this paper that interests you - whether it's the theoretical underpinnings of the FAVOR+ mechanism, the positive random features approach, the orthogonality benefits, or the experimental results.
-
 </div>
 </details>
+<br/>
 
 ### T5
 
@@ -1944,8 +1826,6 @@ Lab: Google
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Brief Summary of "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer"
-
 This 2020 paper by Raffel et al. introduces the "Text-to-Text Transfer Transformer" (T5), a unified approach to transfer learning for NLP tasks. The authors convert all text-based language problems into a consistent text-to-text format, where both inputs and outputs are always text strings. This allows them to use the same model, loss function, and training procedure across diverse tasks.
 
 The paper presents a comprehensive empirical study examining various aspects of transfer learning for NLP, including:
@@ -1960,11 +1840,9 @@ They introduce the "Colossal Clean Crawled Corpus" (C4), a massive dataset of cl
 
 The T5 approach demonstrates the effectiveness of a unified text-to-text framework for transfer learning across diverse NLP tasks, showing that with the right architecture and sufficient scale, a single approach can excel across the NLP landscape.
 
-Would you like me to explain any specific aspect of this paper in more detail?
-
 </div>
 </details>
-
+<br/>
 https://cameronrwolfe.substack.com/p/t5-text-to-text-transformers-part
 
 ### Measuring Massive Multitask Language Understanding
@@ -1976,8 +1854,6 @@ https://cameronrwolfe.substack.com/p/t5-text-to-text-transformers-part
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Summary of "Measuring Massive Multitask Language Understanding"
 
 This 2021 paper introduces a comprehensive benchmark for evaluating language models' multitask capabilities across 57 diverse subjects. The authors (Hendrycks et al.) created a test covering fields like STEM, humanities, social sciences, and professional domains at varying levels of difficulty, from elementary to advanced professional knowledge.
 
@@ -1992,10 +1868,9 @@ The research highlights several important insights about large language models c
 
 This work provided an important evaluation framework showing that while large language models were beginning to demonstrate impressive capabilities, they still had fundamental limitations in their ability to learn and apply specialized knowledge.
 
-I'm happy to explore any specific aspects of this paper that interest you.
-
 </div>
 </details>
+<br/>
 
 ### ZeRO (Zero Redundancy Optimizer)
 
@@ -2008,13 +1883,9 @@ I'm happy to explore any specific aspects of this paper that interest you.
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll be happy to guide you through this machine learning research paper as Professor Claude. Let me start with a high-level summary.
-
-# ZeRO: Memory Optimizations Toward Training Trillion Parameter Models
-
 This paper introduces ZeRO (Zero Redundancy Optimizer), a memory optimization system designed to overcome memory limitations in training extremely large deep learning models.
 
-## Key Contributions:
+**Key Contributions:**
 
 - ZeRO enables training models with billions to trillions of parameters by eliminating memory redundancies in data-parallel and model-parallel training
 - The approach maintains high computational efficiency while drastically reducing memory requirements
@@ -2025,11 +1896,9 @@ This paper introduces ZeRO (Zero Redundancy Optimizer), a memory optimization sy
 
 The paper presents an elegant solution to a fundamental bottleneck in large model training, showing how clever memory management can effectively scale model size proportional to the number of available devices.
 
-I'm ready to discuss any specific aspects of this paper that interest you. What would you like to explore first?
-
 </div>
 </details>
-
+<br/>
 https://oracle-oci-ocas.medium.com/zero-redundancy-optimizers-a-method-for-training-machine-learning-models-with-billion-parameter-472e8f4e7a5b
 
 https://www.youtube.com/watch?v=KgoHyMGpxBU&ab_channel=nPlan
@@ -2045,10 +1914,6 @@ Google's model that used a discriminative approach instead of masked language mo
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# ELECTRA: A Brief Overview
-
-You've shared the ELECTRA paper, which introduces an innovative pre-training approach for language models. Here's a high-level summary:
-
 ELECTRA presents a more efficient alternative to masked language modeling (MLM) pre-training methods like BERT. Instead of masking tokens and training a model to predict the original ones, ELECTRA proposes "replaced token detection" - a discriminative task where:
 
 1. A small generator model replaces some tokens with plausible alternatives
@@ -2062,10 +1927,9 @@ The key advantages of this approach are:
 
 The authors demonstrate ELECTRA's efficiency by showing it outperforms BERT, GPT, and other models when controlling for compute. For example, ELECTRA-Small trained on one GPU for 4 days outperforms GPT (trained with 30x more compute) on the GLUE benchmark.
 
-I'm happy to explore any specific aspects of the paper that interest you, such as the model architecture, training methodology, experimental results, or the mathematical formulations of the approach.
-
 </div>
 </details>
+<br/>
 
 ### Switch Transformer
 
@@ -2078,8 +1942,6 @@ Google's early mixture-of-experts approach that demonstrated trillion-parameter 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Switch Transformers: A Brief Overview
-
 This paper introduces the Switch Transformer, an architecture that simplifies the Mixture of Experts (MoE) approach to create more efficient and scalable language models. The key innovation is routing tokens to exactly one expert (rather than multiple experts) at each layer, which the authors call "switching." This approach:
 
 1. Significantly increases parameter count while keeping computational costs fixed
@@ -2089,10 +1951,9 @@ This paper introduces the Switch Transformer, an architecture that simplifies th
 
 The authors demonstrate that even with as few as two experts, their approach shows improvements over standard Transformers. They also introduce techniques to improve training stability, including selective precision for routing operations and expert dropout for fine-tuning.
 
-What aspect of the Switch Transformer would you like me to elaborate on?
-
 </div>
 </details>
+<br/>
 
 ### Scaling Laws
 
@@ -2104,8 +1965,6 @@ OpenAI's publication on the mathematical relationships between model size, datas
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I'll help you understand this fascinating paper on scaling laws for neural language models. Let me give you a high-level summary:
 
 This 2020 paper by Kaplan, McCandlish, et al. from OpenAI demonstrates that language model performance follows remarkably consistent power-law relationships across multiple dimensions of scale. The authors show that model loss decreases as a power-law function of three key factors: model size (number of parameters), dataset size, and amount of compute used for training.
 
@@ -2119,10 +1978,9 @@ Their key findings include:
 
 The paper's most striking insight is that these relationships hold across several orders of magnitude, suggesting fundamental scaling properties of neural language models that could inform how we approach building larger and more capable models.
 
-Is there a specific aspect of this paper you'd like to explore first? I'm happy to delve into the mathematical formulations, the empirical methodology, or the practical implications of their findings.
-
 </div>
 </details>
+<br/>
 
 ## 2021: Instruction Tuning and Alignment
 
@@ -2135,10 +1993,6 @@ Is there a specific aspect of this paper you'd like to explore first? I'm happy 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll be happy to guide you through this machine learning research paper with a focus on building mathematical intuition. Let me start with a high-level summary of the paper you've shared.
-
-## Brief Summary of RoFormer
-
 This paper introduces RoFormer (Rotary Position Embedding), a novel technique for encoding positional information in transformer models. The key innovation is representing token positions using rotation matrices, which elegantly captures both absolute position information and relative position relationships between tokens. Unlike previous approaches that often add position embeddings to token representations, RoFormer multiplies token representations by rotation matrices, preserving their norms while encoding position.
 
 The authors demonstrate that RoFormer has several compelling properties:
@@ -2150,11 +2004,9 @@ The authors demonstrate that RoFormer has several compelling properties:
 
 This approach appears to be a mathematically elegant reformulation of positional encoding in transformers that addresses limitations of previous methods while maintaining or improving performance.
 
-I'm ready to explore specific aspects of this paper based on your questions. Would you like to discuss the mathematical formulation of RoPE, its relationship to other position encoding methods, the experimental results, or something else?
-
 </div>
 </details>
-
+<br/>
 https://huggingface.co/blog/designing-positional-encoding
 
 ### Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM
@@ -2166,10 +2018,6 @@ https://huggingface.co/blog/designing-positional-encoding
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll help you navigate this machine learning research paper as Professor Claude. Let me start with a high-level summary.
-
-# Brief Summary: Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM
-
 This 2021 paper from NVIDIA, Stanford, and Microsoft researchers addresses the critical challenge of efficiently training extremely large language models (LLMs) with billions to trillions of parameters. The authors present a combined parallelization approach they call PTD-P that integrates:
 
 1. **Pipeline Parallelism** (P): Distributing layers across GPUs
@@ -2180,10 +2028,9 @@ The paper demonstrates impressive scaling to 3072 NVIDIA A100 GPUs, achieving 50
 
 Their approach makes training trillion-parameter models practical (estimated 3 months for full training), which was a significant advancement at publication time. The work includes both theoretical analysis and empirical validation of their proposed methods.
 
-Is there a particular aspect of the paper you'd like to explore first? For example, we could discuss the parallelization techniques in more detail, their pipeline scheduling approach, or the performance results they achieved.
-
 </div>
 </details>
+<br/>
 
 ### Transcending Scaling Laws with 0.1% Extra Compute
 
@@ -2193,8 +2040,6 @@ Is there a particular aspect of the paper you'd like to explore first? For examp
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Brief Summary of "Transcending Scaling Laws with 0.1% Extra Compute"
 
 This 2022 paper from Google introduces UL2R (UL2 Restore), a method that significantly improves large language models with minimal additional computation. The key idea is remarkably simple yet effective: taking a pre-trained language model (like PaLM) and continuing its training for a small number of steps using a mixture of different training objectives called "mixture-of-denoisers."
 
@@ -2207,10 +2052,9 @@ The authors demonstrate that applying UL2R to PaLM (creating "U-PaLM") yields im
 
 This approach is particularly interesting because it challenges conventional wisdom about scaling laws by showing that strategic changes to training objectives can significantly improve efficiency beyond what simply scaling up with more compute would achieve.
 
-Is there a particular aspect of this paper you'd like to explore further?
-
 </div>
 </details>
+<br/>
 
 ### Improving language models by retrieving from trillions of tokens
 
@@ -2221,27 +2065,22 @@ Is there a particular aspect of this paper you'd like to explore further?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-Thank you for sharing this research paper with me. Let me provide a high-level summary:
-
-# RETRO: Retrieval-Enhanced Transformer for Language Modeling
-
 This 2021 paper from DeepMind introduces Retrieval-Enhanced Transformer (RETRO), a novel approach to language modeling that enhances traditional transformer architectures with retrieval capabilities from massive text databases.
 
-## Key Innovations:
+**Key Innovations:**
 
 - RETRO models can retrieve from databases with trillions of tokens, effectively scaling the data available to the model by an order of magnitude beyond what can be consumed during training
 - The architecture uses a "chunked cross-attention" mechanism to efficiently incorporate retrieved passages into the language model
 - RETRO achieves performance comparable to models with 25× more parameters (e.g., similar to GPT-3 and Jurassic-1 despite using far fewer parameters)
 - The approach effectively creates a semi-parametric model, combining the strengths of parametric models with explicit retrieval
 
-## Significance:
+**Significance:**
 
 The paper demonstrates that retrieval offers an orthogonal scaling dimension to simply increasing model parameters, potentially providing a more efficient path to improving language model capabilities. It shows strong performance on downstream tasks like question answering while maintaining the flexibility to be used with or without retrieval at evaluation time.
 
-What aspects of this paper would you like to explore in more detail?
-
 </div>
 </details>
+<br/>
 
 ### CLIP
 
@@ -2269,19 +2108,15 @@ I have an entire blog dedicated to diffusion models, consdier checking that out 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Brief Summary of "PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel"
-
 This paper introduces PyTorch's Fully Sharded Data Parallel (FSDP), an industry-grade solution for training large-scale deep learning models. The technique addresses a critical challenge in the field: enabling the training of models that are too large to fit on a single GPU device.
 
 The key innovation of FSDP is that it decomposes models into smaller units and shards parameters across multiple devices, materializing the full parameters only when needed during computation. The paper details how FSDP has been carefully co-designed with PyTorch's core components (tensor implementation, dispatcher system, and CUDA memory caching allocator) to provide efficient training while maintaining user-friendly experiences.
 
 The authors explain various optimizations in FSDP including deferred initialization, configurable sharding strategies, communication-computation overlapping, and memory management techniques. Their evaluations show that FSDP achieves comparable performance to Distributed Data Parallel (DDP) for smaller models while enabling training of significantly larger models with near-linear TFLOPS scaling.
 
-What specific aspects of this paper would you like to explore further?
-
 </div>
 </details>
-
+<br/>
 https://engineering.fb.com/2021/07/15/open-source/fsdp/
 
 ### HumanEval
@@ -2292,8 +2127,6 @@ https://engineering.fb.com/2021/07/15/open-source/fsdp/
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Codex: Evaluating Large Language Models Trained on Code
 
 This paper introduces Codex, a GPT language model fine-tuned on publicly available code from GitHub, and evaluates its capabilities in generating functional Python code. Here's a high-level summary:
 
@@ -2309,10 +2142,9 @@ Key findings:
 
 This represents a significant step in code generation capabilities, moving beyond simple pattern matching to more sophisticated problem-solving, though still with substantial limitations.
 
-Is there a specific aspect of the paper you'd like to explore further?
-
 </div>
 </details>
+<br/>
 
 ### LoRA
 
@@ -2322,10 +2154,6 @@ Is there a specific aspect of the paper you'd like to explore further?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this research paper with me. I'll provide a brief high-level summary to get us started.
-
-# Summary of "LoRA: Low-Rank Adaptation of Large Language Models"
 
 This 2021 paper by Hu et al. from Microsoft introduces Low-Rank Adaptation (LoRA), an efficient fine-tuning method for large language models. The key innovation is freezing the pre-trained model weights while adding trainable low-rank decomposition matrices to each layer of the Transformer architecture.
 
@@ -2341,10 +2169,9 @@ The core insight is that while language models are heavily over-parameterized, t
 
 The paper includes extensive empirical validation across multiple models and tasks, an analysis of why low-rank updates work well, and discussion of the relationship between the original weights and LoRA updates.
 
-What specific aspects of this paper would you like me to explain in more detail?
-
 </div>
 </details>
+<br/>
 
 ### Self-Instruct: Aligning Language Models with Self-Generated Instructions
 
@@ -2355,11 +2182,9 @@ What specific aspects of this paper would you like me to explain in more detail?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# SELF-INSTRUCT: Aligning Language Models with Self-Generated Instructions
-
 This 2023 ACL paper by Wang et al. introduces SELF-INSTRUCT, a framework that improves instruction-following capabilities of pretrained language models by bootstrapping off their own generations. The key innovation is creating a semi-automated process that generates high-quality instruction data without extensive human annotation.
 
-## Key Points:
+**Key Points:**
 
 1. **The Problem**: Instruction-tuned language models depend heavily on human-written instruction data, which is limited in quantity, diversity, and creativity.
 
@@ -2388,10 +2213,9 @@ This 2023 ACL paper by Wang et al. introduces SELF-INSTRUCT, a framework that im
 
 This work is particularly important because it addresses a key limitation in scaling instruction-tuned models - the dependency on human-written instruction data. By enabling models to generate their own diverse instruction data, SELF-INSTRUCT offers a path to more general and capable instruction-following AI systems.
 
-Would you like me to elaborate on any specific aspect of the paper, such as the technical implementation, the evaluation methodology, or the implications of this approach?
-
 </div>
 </details>
+<br/>
 
 ### PaLM
 
@@ -2421,8 +2245,6 @@ Lab: Google
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Brief Summary of "PaLM: Scaling Language Modeling with Pathways"
-
 This 2022 paper from Google Research introduces PaLM (Pathways Language Model), a 540-billion parameter autoregressive language model trained on 780 billion tokens of text. The key contributions include:
 
 1. **Efficient scaling**: PaLM demonstrates the first large-scale use of Google's Pathways system, training across 6,144 TPU v4 chips with high efficiency (46.2% model FLOPS utilization).
@@ -2437,10 +2259,9 @@ This 2022 paper from Google Research introduces PaLM (Pathways Language Model), 
 
 The paper contributes significantly to understanding how model scaling affects performance and demonstrates that performance improvements from scale had not plateaued as of 2022. The research also establishes a foundation for Pathways as an efficient ML scaling infrastructure at Google.
 
-What specific aspect of the paper would you like to explore first?
-
 </div>
 </details>
+<br/>
 
 ### Gopher (DeepMind)
 
@@ -2455,8 +2276,6 @@ What specific aspect of the paper would you like to explore first?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Brief Summary of "Scaling Language Models: Methods, Analysis & Insights from Training Gopher"
-
 This 2021 paper from DeepMind introduces Gopher, a 280 billion parameter autoregressive Transformer language model. The research team trained a family of models ranging from 44 million to 280 billion parameters on a custom dataset called MassiveText (a diverse collection of web pages, books, news articles, and code).
 
 The paper makes several key contributions:
@@ -2469,10 +2288,9 @@ The paper makes several key contributions:
 
 The paper provides valuable insights into the capabilities and limitations of large language models circa 2021, predating many subsequent developments in the field but establishing important scaling trends and evaluation methodologies.
 
-I'd be happy to discuss any specific aspects of this paper that interest you, whether related to the technical implementation, evaluation methodology, ethical considerations, or the mathematical foundations of the work.
-
 </div>
 </details>
+<br/>
 
 ### Megatron-Turing NLG
 
@@ -2488,10 +2306,6 @@ I'd be happy to discuss any specific aspects of this paper that interest you, wh
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll be happy to help you understand the machine learning research paper you've shared. Let me start with a high-level summary.
-
-# Summary of "Using DeepSpeed and Megatron to Train Megatron-Turing NLG 530B"
-
 This paper presents Megatron-Turing NLG (MT-NLG), a 530 billion parameter autoregressive language model developed jointly by Microsoft and NVIDIA. At the time of publication (early 2022), this was the largest monolithic transformer-based language model ever trained. The paper focuses on three main aspects:
 
 1. **Training Infrastructure**: The authors detail their 3D parallelism approach, combining data, pipeline, and tensor-slicing parallelism to efficiently train at scale using DeepSpeed and Megatron frameworks.
@@ -2502,10 +2316,9 @@ This paper presents Megatron-Turing NLG (MT-NLG), a 530 billion parameter autore
 
 The model demonstrates impressive improvements in natural language understanding and generation capabilities, establishing new state-of-the-art results across several benchmarks. The authors also explore the model's social biases and in-context learning abilities.
 
-Would you like me to elaborate on any specific aspect of this paper, such as the 3D parallelism approach, their data curation methods, or their evaluation results?
-
 </div>
 </details>
+<br/>
 
 ## 2022: Democratization
 
@@ -2517,8 +2330,6 @@ Would you like me to elaborate on any specific aspect of this paper, such as the
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# High-Level Summary of "Efficiently Scaling Transformer Inference"
 
 This 2022 paper from Google researchers addresses the crucial challenge of deploying large language models (LLMs) efficiently for inference. In particular, they focus on:
 
@@ -2532,11 +2343,9 @@ The authors present an analytical model for selecting optimal partitioning strat
 
 The research provides a clear framework for making partitioning decisions based on model characteristics and deployment requirements, advancing the practical deployment of massive language models.
 
-Would you like me to explore any specific aspect of this paper in more detail?
-
 </div>
 </details>
-
+<br/>
 """
 The primary goal of this paper is to provide a set of engineering principles for how best to partition a model in
 order to scale Transformer inference. In other words, how is
@@ -2557,10 +2366,6 @@ these effects?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll be happy to help you understand this research paper on "Fast Inference from Transformers via Speculative Decoding." Let me provide a high-level summary first.
-
-## Brief Summary
-
 This paper introduces "speculative decoding," a technique to accelerate inference from large autoregressive Transformer models without changing their architecture, training procedure, or output distribution.
 
 The key insight is that language modeling often contains easier subtasks that can be approximated by smaller, more efficient models. The authors use these smaller models to "speculate" on the next few tokens that the larger model would generate, and then run the larger model in parallel to verify these speculations.
@@ -2569,10 +2374,9 @@ When the smaller model's predictions match what the larger model would have prod
 
 Their experiments show 2-3x speedups for T5-XXL (11B parameters) without any changes to model outputs, and they analyze various smaller models as approximators, finding that models about two orders of magnitude smaller than the target model provide good trade-offs between accuracy and speed.
 
-Would you like me to explain any particular aspect of this paper in more detail?
-
 </div>
 </details>
+<br/>
 
 ### Chinchilla
 
@@ -2602,8 +2406,6 @@ Lab: Deepmind
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Brief Summary of "Training Compute-Optimal Large Language Models"
-
 This 2022 paper by DeepMind (Hoffmann et al.) presents a significant finding that challenges previous assumptions about scaling large language models (LLMs).
 
 The authors discover that most large language models at the time (like GPT-3, Gopher, Jurassic-1) were significantly undertrained relative to their size. Through extensive experimentation with over 400 language models of various sizes trained on different amounts of data, they establish a key principle: **for compute-optimal training, model size and training tokens should be scaled in equal proportions**. This contradicts previous scaling laws from Kaplan et al. (2020), which suggested scaling model size more aggressively than training data.
@@ -2612,10 +2414,9 @@ To validate their findings, they trained "Chinchilla," a 70B parameter model on 
 
 This work highlights the importance of balanced scaling between model size and training data, and explains why focusing solely on model size isn't optimal. The paper has been highly influential in shaping how subsequent LLMs were developed.
 
-Is there any specific aspect of this paper you'd like me to explain in more detail?
-
 </div>
 </details>
+<br/>
 
 ### Chain-of-thought prompting
 
@@ -2626,20 +2427,15 @@ Is there any specific aspect of this paper you'd like me to explain in more deta
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll help you understand this research paper on chain-of-thought prompting in large language models. Let me provide a high-level summary first.
-
-# Brief Summary: Chain-of-Thought Prompting Elicits Reasoning in Large Language Models
-
 This 2022 paper by Jason Wei et al. from Google Research introduces "chain-of-thought prompting," a simple but powerful technique that enables large language models to perform complex reasoning tasks. The key insight is that by providing examples where the model sees step-by-step reasoning before giving an answer, the model learns to generate its own reasoning chains for new problems.
 
 The authors demonstrate that this ability emerges naturally in sufficiently large language models (like PaLM 540B) without any fine-tuning. The technique significantly improves performance on arithmetic, commonsense, and symbolic reasoning tasks. On some benchmarks like GSM8K (math word problems), the approach achieves state-of-the-art results, outperforming even fine-tuned models.
 
 What's particularly interesting is that this reasoning ability is "emergent" - it only appears in models above a certain size threshold, and smaller models actually perform worse with chain-of-thought prompting than with standard prompting.
 
-I'm happy to dive deeper into any specific aspects of the paper you're interested in exploring!
-
 </div>
 </details>
+<br/>
 
 ### InstructGPT
 
@@ -2671,8 +2467,6 @@ Lab: OpenAI
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Brief Summary of "Training language models to follow instructions with human feedback"
-
 This paper introduces InstructGPT, a model trained to follow human instructions by fine-tuning GPT-3 using reinforcement learning from human feedback (RLHF). The authors show that alignment with human preferences can be achieved through a three-step process:
 
 1. Collecting human demonstrations of desired behavior for supervised fine-tuning (SFT)
@@ -2683,10 +2477,9 @@ Their key findings show that even smaller InstructGPT models (1.3B parameters) c
 
 This work is significant as it provides a practical approach to aligning language models with human intent, though the authors note limitations including the model still making simple mistakes and the alignment being specifically to their team of human labelers rather than broader human values.
 
-Is there a specific aspect of the paper you'd like me to explore further?
-
 </div>
 </details>
+<br/>
 
 ### BLOOM
 
@@ -2716,8 +2509,6 @@ License: Open, but need to follow restrictions in Attachment A, BigScience RAIL 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# BLOOM: A 176B-Parameter Multilingual Language Model
-
 This paper introduces BLOOM (BigScience Large Open-science Open-access Multilingual Language Model), a 176 billion parameter language model created through a large-scale collaborative effort called BigScience. Here's a high-level summary:
 
 **Key Points:**
@@ -2742,6 +2533,7 @@ Is there a specific aspect of the paper you'd like to explore further?
 
 </div>
 </details>
+<br/>
 
 ### Emergent Abilities of Large Language Models
 
@@ -2751,8 +2543,6 @@ Is there a specific aspect of the paper you'd like to explore further?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Emergent Abilities of Large Language Models: Summary
 
 This paper by researchers from Google, Stanford, UNC Chapel Hill, and DeepMind explores a fascinating phenomenon they call "emergent abilities" in large language models (LLMs).
 
@@ -2771,15 +2561,9 @@ The authors also explore how certain capabilities like chain-of-thought reasonin
 
 The paper raises important questions about what other abilities might emerge with further scaling, whether emergence thresholds could be lowered with better architectures or training data, and why emergence happens at all.
 
-Would you like me to elaborate on any specific aspect of this paper? For example, I could discuss:
-
-- The specific tasks where emergence has been observed
-- Different theories about why emergence happens
-- The relationship between model scale and emergence
-- Implications for future AI development
-
 </div>
 </details>
+<br/>
 
 ### Flash Attention
 
@@ -2789,8 +2573,6 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I've received the paper "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness" by Tri Dao et al. from 2022. Let me provide a brief high-level summary:
 
 This paper introduces FlashAttention, an algorithm that makes the standard Transformer attention mechanism significantly faster and more memory-efficient by being "IO-aware" - that is, by carefully managing how data moves between different levels of GPU memory (high-bandwidth memory and on-chip SRAM).
 
@@ -2804,15 +2586,9 @@ These techniques reduce memory requirements from quadratic to linear in sequence
 
 The authors also extend FlashAttention to block-sparse attention, creating an even faster approximate attention algorithm.
 
-Would you like me to elaborate on any specific aspect of this paper? For example, I could explain:
-
-- The IO-complexity analysis
-- How the tiling algorithm works in detail
-- The mathematical formulation of their approach
-- The experimental results and what they demonstrate
-
 </div>
 </details>
+<br/>
 
 ### Grouped-query attention
 
@@ -2822,8 +2598,6 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# High-level Summary of GQA: Training Generalized Multi-Query Transformer Models
 
 This paper from Google Research tackles an important problem in transformer model inference: the memory bandwidth bottleneck caused by loading keys and values during autoregressive decoding.
 
@@ -2839,6 +2613,7 @@ I'd be happy to dive deeper into any specific aspect of the paper that interests
 
 </div>
 </details>
+<br/>
 
 ### ALiBi position encoding
 
@@ -2848,8 +2623,6 @@ I'd be happy to dive deeper into any specific aspect of the paper that interests
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Summary of "Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation"
 
 This paper introduces ALiBi (Attention with Linear Biases), a position encoding method for transformer models that enables training on shorter sequences while extrapolating to longer sequences at inference time.
 
@@ -2869,10 +2642,9 @@ The key contributions are:
 
 This work has significant practical implications for transformer efficiency, as training on shorter sequences requires substantially less computational resources while still enabling effective processing of longer sequences during inference.
 
-Would you like me to elaborate on any specific aspect of this paper? For example, I could explain how the ALiBi mechanism works, discuss the experimental results in more detail, or compare ALiBi with other position encoding approaches.
-
 </div>
 </details>
+<br/>
 
 ### DeepSpeed Inference: Enabling Efficient Inference of Transformer Models at Unprecedented Scale
 
@@ -2882,8 +2654,6 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# DeepSpeed Inference: A Brief Overview
 
 This paper introduces DeepSpeed Inference, a comprehensive system for efficient inference of transformer models at unprecedented scales. The authors address challenges in deploying extremely large transformer models (from billions to trillions of parameters) for inference applications.
 
@@ -2904,6 +2674,7 @@ The paper addresses specific challenges in transformer inference related to memo
 
 </div>
 </details>
+<br/>
 
 ### Claude 1
 
@@ -2920,10 +2691,6 @@ The paper addresses specific challenges in transformer inference related to memo
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this research paper with me. Let me provide a high-level summary:
-
-# FLAN: Finetuned Language Models are Zero-Shot Learners
 
 This 2022 ICLR paper by Jason Wei and colleagues at Google Research introduces "instruction tuning" - a simple yet effective approach to improve zero-shot learning capabilities of large language models. The authors:
 
@@ -2946,10 +2713,9 @@ Through ablation studies, they identify three critical factors for successful in
 
 This paper represents an important step in making large language models more capable of following natural language instructions without examples, expanding their practical utility for a wider audience.
 
-Would you like me to explore any specific aspect of this paper in more detail?
-
 </div>
 </details>
+<br/>
 
 ### Red Teaming Language Models with Language Models
 
@@ -2959,10 +2725,6 @@ Would you like me to explore any specific aspect of this paper in more detail?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I'd be happy to help guide you through the machine learning research paper you've shared.
-
-# Brief Summary of "Red Teaming Language Models with Language Models"
 
 This paper by Perez et al. introduces a novel approach for identifying harmful behaviors in language models (LMs) using other language models as "red team" attackers. Rather than relying on human-written test cases, which can be expensive and limited in scope, they demonstrate how to automatically generate test cases that effectively expose weaknesses in target LMs.
 
@@ -2976,10 +2738,9 @@ The researchers show that their method can uncover a variety of harms in a 280B 
 
 The paper provides a significant methodological contribution by exploring several techniques for generating test cases, from zero-shot generation to reinforcement learning, and demonstrates that LM-based red teaming can complement manual testing approaches.
 
-What specific aspects of the paper would you like to explore further? I'm happy to explain their methodology, discuss the mathematical formulations behind their approach, or analyze particular findings in more detail.
-
 </div>
 </details>
+<br/>
 
 ### HELM (Holistic Evaluation of Language Models)
 
@@ -2997,6 +2758,7 @@ Standardized evaluation metrics
 
 </div>
 </details>
+<br/>
 
 ### DALL-E 2 (OpenAI)
 
@@ -3037,6 +2799,7 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 
 </div>
 </details>
+<br/>
 
 ### Beyond the Imitation Game: Quantifying and extrapolating the capabilities of language models
 
@@ -3051,6 +2814,7 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 
 </div>
 </details>
+<br/>
 
 ### Minerva
 
@@ -3060,10 +2824,6 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I'll review this important paper on Minerva, Google's language model for quantitative reasoning. Let me provide a high-level summary first.
-
-## Brief Summary
 
 This paper introduces **Minerva**, a large language model specifically designed to solve quantitative reasoning problems in mathematics and science. The key innovation is training PaLM models (8B, 62B, and 540B parameters) on a carefully curated dataset of mathematical content from arXiv papers and web pages containing LaTeX formatting.
 
@@ -3080,6 +2840,7 @@ The paper demonstrates that language models can achieve impressive mathematical 
 
 </div>
 </details>
+<br/>
 
 ### ChatGPT
 
@@ -3096,8 +2857,6 @@ The beginning of an Era
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-Thank you for sharing this research paper with me. Let me provide a brief high-level summary:
-
 This paper introduces "PagedAttention," a novel attention algorithm for efficiently serving Large Language Models (LLMs), and "vLLM," a system built on this algorithm. The key innovation is inspired by virtual memory and paging techniques from operating systems - they divide the key-value (KV) cache memory into fixed-size blocks that can be stored non-contiguously, rather than requiring contiguous memory allocation.
 
 The KV cache is a significant memory bottleneck in LLM serving, often consuming around 30% of GPU memory. Traditional systems like FasterTransformer and Orca suffer from both internal and external memory fragmentation because they allocate contiguous memory chunks based on maximum possible sequence length, resulting in significant memory waste.
@@ -3109,11 +2868,9 @@ PagedAttention significantly improves memory efficiency by:
 3. Supporting dynamic memory allocation as sequences grow
 
 Their experiments show vLLM improves throughput by 2-4× compared to state-of-the-art systems while maintaining the same latency, with even greater improvements for longer sequences, larger models, and complex decoding algorithms like beam search.
-
-Would you like me to elaborate on any particular aspect of this paper, such as the PagedAttention algorithm, memory management techniques, or the experimental results?
-
 </div>
 </details>
+<br/>
 
 ### QLoRA: Efficient Finetuning of Quantized LLMs
 
@@ -3123,8 +2880,6 @@ Would you like me to elaborate on any particular aspect of this paper, such as t
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# QLORA: A Brief Overview
 
 This paper introduces QLORA (Quantized Low-Rank Adaptation), a significant advancement in efficient fine-tuning of large language models (LLMs). The key innovation is allowing 4-bit quantized models to be fine-tuned without performance degradation compared to full 16-bit precision models.
 
@@ -3138,10 +2893,9 @@ These innovations collectively allow fine-tuning of a 65B parameter model on a s
 
 The authors demonstrate QLORA's effectiveness by developing Guanaco, a family of models fine-tuned on the OASST1 dataset that performs competitively with ChatGPT on benchmark tests while requiring only 24 hours of training on a single GPU.
 
-Would you like me to explore any particular aspect of the paper in more detail?
-
 </div>
 </details>
+<br/>
 
 ### Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models: A Critical Review and Assessment
 
@@ -3151,8 +2905,6 @@ Would you like me to explore any particular aspect of the paper in more detail?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Summary of "Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models"
 
 This paper provides a comprehensive review and assessment of Parameter-Efficient Fine-Tuning (PEFT) methods for pretrained language models (PLMs). The authors address an important challenge in modern NLP: as language models grow increasingly larger (from BERT's 110M parameters to Falcon's 180B parameters), traditional fine-tuning becomes computationally prohibitive for many practitioners.
 
@@ -3168,10 +2920,9 @@ The authors conduct experiments with 11 representative PEFT methods across vario
 
 The paper also discusses applications of PEFT methods in multi-task learning, cross-lingual transfer, and backdoor attack/defense, concluding with future research directions in this rapidly evolving field.
 
-Is there a specific aspect of this paper you'd like me to explore in more detail?
-
 </div>
 </details>
+<br/>
 
 ### FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning
 
@@ -3196,6 +2947,7 @@ This advancement directly addresses the challenge of scaling Transformers to lon
 
 </div>
 </details>
+<br/>
 
 ### AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration
 
@@ -3205,10 +2957,6 @@ This advancement directly addresses the challenge of scaling Transformers to lon
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this research paper. I'll provide a high-level summary to start:
-
-# AWQ: Activation-aware Weight Quantization for On-Device LLM Compression and Acceleration
 
 This paper addresses the challenge of deploying large language models (LLMs) directly on edge devices, which is important for privacy, offline usage, and reduced operational costs. The authors propose Activation-aware Weight Quantization (AWQ), a hardware-friendly approach for low-bit weight-only quantization of LLMs.
 
@@ -3220,18 +2968,9 @@ Key contributions:
 4. Implementation of TinyChat, an efficient inference framework for 4-bit LLMs on edge devices
 
 Their method demonstrates superior performance over existing quantization approaches across various language model benchmarks, including instruction-tuned LMs and multi-modal LMs. The TinyChat implementation achieves more than 3× speedup over Huggingface FP16 implementations on both desktop and mobile GPUs, enabling even 70B parameter models to run on mobile GPUs.
-
-I'd be happy to explore specific aspects of this paper based on your questions. Some areas we could discuss include:
-
-- How AWQ identifies and protects salient weights
-- The mathematical foundations behind their scaling approach
-- Implementation details of TinyChat and its optimizations
-- Benchmark results across different model families and tasks
-
-What specific aspects of the paper would you like to explore first?
-
 </div>
 </details>
+<br/>
 
 ### Generative Agents: Interactive Simulacra of Human Behavior
 
@@ -3244,9 +2983,6 @@ Now we have started to get into the region of AI agents. I will recommend checki
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll help you navigate through this machine learning research paper with a focus on building mathematical intuition. Let me provide a high-level summary first.
-
-# "Generative Agents: Interactive Simulacra of Human Behavior"
 
 This paper introduces "generative agents" - computational agents powered by large language models that simulate believable human behavior in interactive environments. The authors present an architecture that extends language models to:
 
@@ -3262,10 +2998,9 @@ The authors evaluate their system through controlled experiments and an end-to-e
 
 This work represents an interesting intersection of large language models, interactive systems, and human behavior simulation with potential applications in virtual environments, social prototyping, and training scenarios.
 
-What specific aspects of this paper would you like to explore further?
-
 </div>
 </details>
+<br/>
 
 ### Voyager: An Open-Ended Embodied Agent with Large Language Models
 
@@ -3275,8 +3010,6 @@ What specific aspects of this paper would you like to explore further?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# VOYAGER: An Open-Ended Embodied Agent with Large Language Models
 
 This paper introduces VOYAGER, a novel AI agent that uses Large Language Models (specifically GPT-4) to enable lifelong learning and exploration in the open-world environment of Minecraft without human intervention.
 
@@ -3292,10 +3025,9 @@ VOYAGER outperforms previous state-of-the-art approaches by obtaining 3.3× more
 
 The approach is particularly interesting because it creates a lifelong learning agent that operates through code generation rather than traditional reinforcement learning methods, with no need for model parameter fine-tuning.
 
-Would you like me to elaborate on any specific aspect of this paper?
-
 </div>
 </details>
+<br/>
 
 ### Universal and Transferable Adversarial Attacks on Aligned Language Models
 
@@ -3305,10 +3037,6 @@ Would you like me to elaborate on any specific aspect of this paper?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I'll take on the role of Professor Claude to help you explore this research paper on adversarial attacks against aligned language models. Let me begin with a high-level summary of the paper.
-
-## Summary: Universal and Transferable Adversarial Attacks on Aligned Language Models
 
 This 2023 paper by Zou et al. demonstrates a concerning vulnerability in aligned language models (LLMs) such as GPT, Claude, and others that have been fine-tuned not to produce harmful content. The researchers develop a surprisingly effective method called "Greedy Coordinate Gradient" (GCG) to generate adversarial prompts that can reliably make these models generate harmful, objectionable content despite their alignment training.
 
@@ -3325,6 +3053,7 @@ I'm ready to explore any specific aspects of this paper that interest you, from 
 
 </div>
 </details>
+<br/>
 
 ### Tree of Thoughts: Deliberate Problem Solving with Large Language Models
 
@@ -3334,10 +3063,6 @@ I'm ready to explore any specific aspects of this paper that interest you, from 
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I'll be your guide in exploring this machine learning research paper! Let me start with a high-level summary.
-
-# Tree of Thoughts: Deliberate Problem Solving with Large Language Models
 
 This paper introduces "Tree of Thoughts" (ToT), a framework that enhances large language models' (LLMs) problem-solving abilities by enabling more deliberate reasoning and exploration. Unlike standard autoregressive text generation or even Chain of Thought prompting, ToT allows LLMs to:
 
@@ -3354,10 +3079,9 @@ The authors demonstrate significant improvements on three challenging tasks:
 
 This framework represents an interesting bridge between classical AI problem-solving methods (tree search) and modern LLMs, adding a more deliberate "System 2" thinking process to complement the associative "System 1" capabilities of LLMs.
 
-Is there a specific aspect of this paper you'd like to explore further?
-
 </div>
 </details>
+<br/>
 
 ### Mpt
 
@@ -3367,10 +3091,6 @@ Is there a specific aspect of this paper you'd like to explore further?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this document. This appears to be a blog post from MosaicML introducing their MPT-7B model, which was released in May 2023. Let me provide a brief high-level summary:
-
-# MPT-7B: A New Standard for Open-Source, Commercially Usable LLMs
 
 MosaicML introduced MPT-7B (MosaicML Pretrained Transformer), a 7 billion parameter language model that addresses key limitations in open-source LLMs. The model's key features include:
 
@@ -3389,10 +3109,9 @@ They released four variants:
 
 The model was trained in 9.5 days on 440 A100 GPUs at a cost of around $200,000, with zero human intervention required during training.
 
-Would you like me to elaborate on any specific aspect of this model, such as its architecture, training methodology, performance benchmarks, or potential applications?
-
 </div>
 </details>
+<br/>
 
 ### WizardLM: Empowering Large Language Models to Follow Complex Instructions
 
@@ -3402,10 +3121,6 @@ Would you like me to elaborate on any specific aspect of this model, such as its
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I'll be delighted to guide you through this machine learning research paper as Professor Claude. Let me provide a high-level summary to start.
-
-# WizardLM: Empowering Large Language Models to Follow Complex Instructions
 
 This paper introduces "Evol-Instruct," a novel method for automatically generating complex instruction data to improve large language models' (LLMs) instruction-following capabilities. Rather than relying on expensive and time-consuming human annotation of complex instructions, the authors propose using LLMs themselves to evolve simple instructions into more complex ones through systematic operations.
 
@@ -3423,6 +3138,7 @@ Is there a specific aspect of the paper you'd like to explore further? I'm happy
 
 </div>
 </details>
+<br/>
 
 ### DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales
 
@@ -3432,8 +3148,6 @@ Is there a specific aspect of the paper you'd like to explore further? I'm happy
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this research paper with me. Let me provide a brief, high-level summary of "DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales":
 
 This 2023 paper from Microsoft's DeepSpeed team introduces DeepSpeed-Chat, a system designed to democratize the training of ChatGPT-like models using Reinforcement Learning from Human Feedback (RLHF). The system addresses three key challenges in the current landscape: accessibility, efficiency, and affordability of RLHF training, particularly for models with billions of parameters.
 
@@ -3445,15 +3159,9 @@ DeepSpeed-Chat offers three main capabilities:
 
 The paper demonstrates impressive efficiency gains - up to 15x faster than existing systems - making RLHF training both faster and more affordable. For example, they show training an OPT-13B model in just 9 hours for about $290 on Azure, and scaling to train a 175B parameter model in under a day. The system also enables training of much larger models on limited hardware, such as running a 13B parameter model on a single GPU.
 
-Is there a specific aspect of the paper you'd like me to explore in more depth? For example, we could discuss:
-
-- The three-stage RLHF pipeline architecture
-- The Hybrid Engine's optimizations
-- The performance comparisons with existing systems
-- The implications for democratizing AI development
-
 </div>
 </details>
+<br/>
 
 ### GPT-4
 
@@ -3471,6 +3179,7 @@ Is there a specific aspect of the paper you'd like me to explore in more depth? 
 
 </div>
 </details>
+<br/>
 
 ### Mistral 7b
 
@@ -3480,10 +3189,6 @@ Is there a specific aspect of the paper you'd like me to explore in more depth? 
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-I'll serve as Professor Claude to help you understand machine learning research papers, focusing on building mathematical intuition while following your guidance for the discussion.
-
-## Brief Summary of Mistral 7B
 
 This paper introduces Mistral 7B, a 7-billion-parameter language model that achieves impressive efficiency and performance. The authors demonstrate that Mistral 7B outperforms larger models like Llama 2 (13B) across all benchmarks tested, and even surpasses Llama 1 (34B) in reasoning, mathematics, and code generation domains.
 
@@ -3497,10 +3202,10 @@ The paper also presents Mistral 7B-Instruct, a fine-tuned version that outperfor
 
 This work challenges conventional scaling laws by showing that careful architecture design can achieve better performance with fewer parameters, suggesting new directions for efficient LLM development.
 
-I'm ready to discuss any specific aspects of the paper you'd like to explore in more detail.
 
 </div>
 </details>
+<br/>
 
 ### LLaMA
 
@@ -3530,12 +3235,6 @@ Lab: Meta
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I'll be your guide through machine learning research papers as Professor Claude, focusing on building mathematical intuition through clear explanations. I'll start with high-level summaries, wait for your specific questions, suggest important concepts to explore, break down math step-by-step, reference prerequisites, simplify complex proofs, use analogies, and highlight limitations where relevant.
-
-Let me summarize the paper you've shared:
-
-# LLaMA: Open and Efficient Foundation Language Models
-
 This paper from Meta AI introduces LLaMA, a collection of foundation language models ranging from 7B to 65B parameters. The key contributions include:
 
 1. Creating state-of-the-art models trained exclusively on publicly available datasets (unlike many competitors that use proprietary data)
@@ -3546,10 +3245,9 @@ The researchers focus on optimizing for inference efficiency rather than just tr
 
 The paper also examines performance across various benchmarks including common sense reasoning, question answering, reading comprehension, mathematical reasoning, and code generation.
 
-Would you like me to elaborate on any particular aspect of the paper such as their training approach, architectural modifications, benchmarking methodology, or specific performance results?
-
 </div>
 </details>
+<br/>
 
 ### Mixtral 8x7B
 
@@ -3559,8 +3257,6 @@ Would you like me to elaborate on any particular aspect of the paper such as the
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Mixtral of Experts: A High-Performance Mixture-of-Experts Model
 
 This paper from Mistral AI introduces Mixtral 8x7B, a Sparse Mixture of Experts (SMoE) language model that represents a significant advancement in efficient language model architecture. Let me provide a concise overview of the key contributions:
 
@@ -3579,6 +3275,7 @@ The instruction-tuned version (Mixtral 8x7B - Instruct) performs exceptionally w
 
 </div>
 </details>
+<br/>
 
 ### LLaMA 2
 
@@ -3588,8 +3285,6 @@ The instruction-tuned version (Mixtral 8x7B - Instruct) performs exceptionally w
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Brief Summary of "Llama 2: Open Foundation and Fine-Tuned Chat Models"
 
 This paper introduces Llama 2, Meta's updated collection of large language models (LLMs) ranging from 7 billion to 70 billion parameters. The paper focuses on two main offerings:
 
@@ -3603,6 +3298,7 @@ Key contributions include detailed methodologies for the fine-tuning process, sa
 
 </div>
 </details>
+<br/>
 
 ### Vicuna (LMSYS)
 
@@ -3615,8 +3311,6 @@ Key contributions include detailed methodologies for the fine-tuning process, sa
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# Brief Summary of "Vicuna: An Open-Source Chatbot Impressing GPT-4 with 90%\* ChatGPT Quality"
 
 This blog post introduces Vicuna-13B, an open-source chatbot developed by fine-tuning Meta's LLaMA model on approximately 70,000 user-shared conversations collected from ShareGPT. According to their preliminary evaluation using GPT-4 as a judge, Vicuna-13B achieves more than 90% of the quality of OpenAI's ChatGPT and Google's Bard while outperforming other open-source models like base LLaMA and Stanford Alpaca in over 90% of test cases.
 
@@ -3635,6 +3329,7 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 
 </div>
 </details>
+<br/>
 
 ### Alpaca
 
@@ -3661,8 +3356,6 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Brief Summary of "Alpaca: A Strong, Replicable Instruction-Following Model"
-
 This blog post introduces Alpaca 7B, a model fine-tuned from Meta's LLaMA 7B using 52,000 instruction-following demonstrations. Stanford researchers created Alpaca to provide the academic community with an accessible instruction-following model comparable to OpenAI's text-davinci-003, but at a fraction of the cost (under $600 to reproduce).
 
 Key highlights:
@@ -3680,11 +3373,9 @@ Key highlights:
 6. **Safety measures**: Implemented content filtering via OpenAI's moderation API and watermarking for the demo
 
 The work aimed to democratize access to instruction-following models for academic research while acknowledging the risks and implementing appropriate safeguards.
-
-Would you like me to discuss any specific aspect, such as how Alpaca's approach compares to the methods used in Llama 2 or Vicuna, or explore the mathematical/technical details of their training methodology?
-
 </div>
 </details>
+<br/>
 
 ### Direct Preference Optimization (DPO)
 
@@ -3694,8 +3385,6 @@ Would you like me to discuss any specific aspect, such as how Alpaca's approach 
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# High-Level Summary: Direct Preference Optimization (DPO)
 
 This paper introduces **Direct Preference Optimization (DPO)**, a revolutionary approach that eliminates the need for reinforcement learning in training language models from human preferences, making the process dramatically simpler while maintaining or improving performance.
 
@@ -3709,7 +3398,7 @@ This paper introduces **Direct Preference Optimization (DPO)**, a revolutionary 
 
 **DPO's Breakthrough**: The paper shows that this two-stage process can be replaced with a single, simple classification loss that directly optimizes the language model on preference data.
 
-## Key Mathematical Insight
+**Key Mathematical Insight**
 
 The central theoretical contribution is recognizing that **your language model is secretly a reward model**. Specifically:
 
@@ -3718,7 +3407,7 @@ The central theoretical contribution is recognizing that **your language model i
 - **Key observation**: In the Bradley-Terry preference model, the partition function Z(x) cancels out when comparing preferences
 - **Result**: You can directly optimize the policy using a simple binary cross-entropy loss
 
-## The DPO Algorithm
+**The DPO Algorithm**
 
 Instead of optimizing a complex RL objective, DPO uses:
 
@@ -3733,7 +3422,7 @@ Where:
 - β controls the KL penalty strength
 - π_ref is the reference model (typically the SFT model)
 
-## Experimental Results
+**Experimental Results**
 
 **Performance**: DPO matches or exceeds PPO-based RLHF across three tasks:
 
@@ -3748,7 +3437,7 @@ Where:
 - Sampling during training
 - Extensive hyperparameter tuning
 
-## Theoretical Contributions
+**Theoretical Contributions**
 
 1. **Equivalence proof**: Shows DPO optimizes the same objective as RLHF
 2. **Completeness**: Proves any reward function class can be represented with their reparameterization
@@ -3758,14 +3447,11 @@ Where:
 
 This work represents a paradigm shift in preference learning by showing that the seemingly necessary complexity of RLHF can be completely avoided. DPO makes training language models from human preferences accessible to a much broader range of practitioners while providing better or equivalent results.
 
----
-
 **What makes this particularly impactful** is that it challenges a fundamental assumption in the field - that you need reinforcement learning to learn from preferences - and provides both theoretical justification and empirical validation for a much simpler alternative.
-
-What aspects of DPO would you like to explore in more detail? The mathematical derivation, the experimental setup, or perhaps the theoretical implications?
 
 </div>
 </details>
+<br/>
 
 ### Constitutional AI
 
@@ -3780,6 +3466,7 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 
 </div>
 </details>
+<br/>
 
 ### Toy Models of Superposition
 
@@ -3792,6 +3479,7 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 
 </div>
 </details>
+<br/>
 
 ### Towards Monosemanticity: Decomposing Language Models With Dictionary Learning
 
@@ -3804,6 +3492,7 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 
 </div>
 </details>
+<br/>
 
 ### PaLM 2
 
@@ -3817,15 +3506,11 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# High-Level Summary: PaLM 2 Technical Report
-
-This is a comprehensive technical report on **PaLM 2**, Google's successor to the original PaLM language model. Here's the key overview:
-
-## Core Contribution
+**Core Contribution**
 
 PaLM 2 achieves **better performance than its much larger predecessor** while being significantly more compute-efficient. This challenges the "bigger is always better" paradigm in language modeling.
 
-## Key Technical Insights
+**Key Technical Insights**
 
 **1. Scaling Laws Validation**
 
@@ -3844,27 +3529,24 @@ PaLM 2 achieves **better performance than its much larger predecessor** while be
 - Passes advanced language proficiency exams (C2 level) in multiple languages
 - Significant improvements on translation tasks
 
-## Performance Highlights
+**Performance Highlights**
 
 - Outperforms the much larger PaLM 540B on most benchmarks
 - Achieves state-of-the-art results on reasoning tasks (78.1% on BIG-Bench Hard)
 - Strong coding capabilities across multiple programming languages
 - Reduced memorization compared to PaLM
 
-## Responsible AI Focus
+**Responsible AI Focus**
 
 - Extensive evaluation of potential harms and biases across languages
 - Analysis of memorization and privacy implications
 - Inference-time toxicity control mechanisms
 
----
-
 **What makes this particularly interesting** is that it demonstrates that careful data curation, architectural improvements, and compute-optimal training can be more effective than simply scaling up model size - a finding with significant implications for the field's resource requirements and accessibility.
-
-What aspects of PaLM 2 would you like to explore in more detail?
 
 </div>
 </details>
+<br/>
 
 ### LAION-5B (LAION)
 
@@ -3880,41 +3562,35 @@ I was conflicted about whether I should put it here or not. But this is one of t
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# LAION-5B: An Open Large-Scale Dataset Overview
-
 This paper introduces **LAION-5B**, a massive open dataset containing 5.85 billion image-text pairs designed for training large-scale multimodal models like CLIP and text-to-image generators. Here's the high-level picture:
 
-## Key Contribution
+**Key Contribution**
 
 The authors address a critical bottleneck in multimodal AI research: while models like CLIP and DALL-E demonstrated the power of training on billions of image-text pairs, the datasets used were proprietary and unavailable to the broader research community. LAION-5B democratizes access to large-scale multimodal training data.
 
-## Dataset Composition
+**Dataset Composition**
 
 - **2.32B English** image-text pairs
 - **2.26B multilingual** pairs (100+ languages)
 - **1.27B "unknown language"** pairs (short-form text, product names, etc.)
 
-## Collection Methodology
+**Collection Methodology**
 
 1. Started with **Common Crawl** web archives
 2. Extracted images with alt-text from HTML
 3. **CLIP-filtered** pairs using cosine similarity thresholds (0.28 for English, 0.26 for others)
 4. Added safety tags for NSFW content, watermarks, and inappropriate material
 
-## Validation Results
+**Validation Results**
 
 The authors demonstrate LAION's utility by successfully reproducing CLIP model performance and training state-of-the-art text-to-image models (Stable Diffusion, GLIDE variants).
 
-## Significance
+**Significance**
 
 This represents the first openly available dataset at the scale needed for training foundation multimodal models, potentially accelerating research in vision-language AI while enabling transparency and bias auditing.
-
----
-
-I'm ready to dive deeper into any aspect that interests you - whether that's the mathematical details of the CLIP filtering process, the experimental validation methodology, the ethical considerations around large-scale web scraping, or the technical infrastructure challenges they solved. What would you like to explore first?
-
 </div>
 </details>
+<br/>
 
 ### LIMA
 
@@ -3928,28 +3604,26 @@ Demonstrated efficiency of small high-quality datasets
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# LIMA: Less Is More for Alignment Overview
-
 This paper presents **LIMA**, a striking demonstration that effective language model alignment can be achieved with remarkably little data. The core finding challenges conventional wisdom about the scale of instruction tuning needed for high-quality conversational AI.
 
-## Key Contribution
+**Key Contribution**
 
 The authors propose the **Superficial Alignment Hypothesis**: that a model's knowledge and capabilities are learned almost entirely during pretraining, while alignment primarily teaches the model which response format and style to use when interacting with users.
 
-## Experimental Design
+**Experimental Design**
 
 - Started with **LLaMa 65B** (pretrained base model)
 - Fine-tuned on only **1,000 carefully curated** prompt-response pairs
 - No reinforcement learning from human feedback (RLHF)
 - No massive instruction datasets (unlike typical approaches using millions of examples)
 
-## Dataset Composition (1,000 examples total)
+**Dataset Composition (1,000 examples total)**
 
 - **750 examples** from community Q&A (Stack Exchange, wikiHow, Reddit)
 - **250 manually authored** examples by the research team
 - Emphasis on **quality and diversity** over quantity
 
-## Results
+**Results**
 
 **Human preference study** across 300 test prompts showed LIMA:
 
@@ -3957,20 +3631,17 @@ The authors propose the **Superficial Alignment Hypothesis**: that a model's kno
 - Produces **equivalent or better responses** than GPT-4 in 43% of cases
 - **58% win/tie rate** against Bard, 65% against DaVinci003
 
-## Key Insights
+**Key Insights**
 
 1. **Quality >> Quantity**: Diminishing returns from scaling data without improving diversity/quality
 2. **Emergent capabilities**: Zero-shot dialogue ability that improves dramatically with just 30 dialogue examples
 3. **Pretraining power**: Most knowledge acquisition happens during pretraining, not instruction tuning
 
----
-
 This work has profound implications for understanding what makes language models helpful and could democratize access to high-quality conversational AI by dramatically reducing the data requirements for alignment.
-
-What aspect would you like to explore further? I could dive into the mathematical details of their training methodology, the careful data curation process that made 1,000 examples so effective, or the broader implications for our understanding of how language models learn to be helpful assistants.
 
 </div>
 </details>
+<br/>
 
 ### Mamba
 
@@ -3986,15 +3657,13 @@ https://tridao.me/blog/
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Mamba: A New Architecture for Sequence Modeling
-
 This paper introduces **Mamba**, a novel neural network architecture that aims to replace Transformers for sequence modeling tasks. Here's the high-level story:
 
-## The Core Problem
+**The Core Problem**
 
 Transformers dominate modern AI but have a fundamental limitation: their attention mechanism scales quadratically with sequence length, making them computationally expensive for long sequences (think processing entire books, long DNA sequences, or extended audio).
 
-## The Proposed Solution
+**The Proposed Solution**
 
 The authors develop **Selective State Space Models (SSMs)** - a new approach that:
 
@@ -4002,7 +3671,7 @@ The authors develop **Selective State Space Models (SSMs)** - a new approach tha
 - Introduces a novel "selection mechanism" that allows the model to selectively focus on or ignore parts of the input sequence
 - Achieves performance comparable to Transformers while being significantly faster
 
-## Key Innovation: Selection Mechanism
+**Key Innovation: Selection Mechanism**
 
 Traditional SSMs are "linear time-invariant" - they process all inputs the same way. Mamba's breakthrough is making the model parameters **input-dependent**, allowing it to:
 
@@ -4010,7 +3679,7 @@ Traditional SSMs are "linear time-invariant" - they process all inputs the same 
 - Forget irrelevant details
 - Adapt its behavior based on context
 
-## Empirical Results
+**Empirical Results**
 
 The paper demonstrates that Mamba:
 
@@ -4019,14 +3688,10 @@ The paper demonstrates that Mamba:
 - Achieves 5× higher inference throughput than Transformers
 - Works well across multiple domains (language, DNA, audio)
 
----
-
 This represents a significant step toward more efficient sequence models that could handle much longer contexts than current Transformers. The mathematical foundation combines classical control theory (state space models) with modern deep learning innovations.
-
-What aspects of this work would you like to explore in detail? I'm ready to dive into the mathematical formulations, architectural choices, or experimental results that interest you most.
-
 </div>
 </details>
+<br/>
 
 ### LLaVA (Visual Instruction Tuning)
 
@@ -4041,10 +3706,6 @@ What aspects of this work would you like to explore in detail? I'm ready to dive
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this foundational paper on LLaVA (Large Language and Vision Assistant)!
-
-## High-Level Summary
 
 This paper introduces **visual instruction tuning** - the first attempt to extend instruction-following capabilities from language-only models to multimodal vision-language tasks. The key contributions are:
 
@@ -4068,6 +3729,7 @@ I'm ready to dive deeper into any aspect you'd like to explore - whether that's 
 
 </div>
 </details>
+<br/>
 
 ### Claude 1/Claude 2
 
@@ -4089,15 +3751,13 @@ I'm ready to dive deeper into any aspect you'd like to explore - whether that's 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Gemini: A Family of Highly Capable Multimodal Models - Brief Summary
-
 This is Google's technical report introducing **Gemini**, a family of multimodal AI models that can process and understand text, images, audio, and video simultaneously. The paper presents three model sizes:
 
 - **Gemini Ultra**: The most capable model for complex reasoning tasks
 - **Gemini Pro**: Balanced performance and efficiency for scalable deployment
 - **Gemini Nano**: Optimized for on-device applications
 
-## Key Highlights:
+**Key Highlights:**
 
 **Breakthrough Performance**: Gemini Ultra achieves state-of-the-art results on 30 of 32 benchmarks tested, becoming the first model to surpass human expert performance on MMLU (90.04% vs 89.8% human expert threshold).
 
@@ -4108,11 +3768,9 @@ This is Google's technical report introducing **Gemini**, a family of multimodal
 **Responsible Deployment**: Extensive safety evaluations, red-teaming, and responsible AI practices integrated throughout development.
 
 The paper is quite comprehensive at 90+ pages, covering everything from architectural details and training infrastructure to extensive benchmarking and safety considerations.
-
-What specific aspects of Gemini would you like to explore? I could help you dive into the multimodal architecture, the mathematical foundations of their training approach, the benchmarking methodology, or any other technical details that caught your interest.
-
 </div>
 </details>
+<br/>
 
 ### Qwen
 
@@ -4122,10 +3780,6 @@ What specific aspects of Gemini would you like to explore? I could help you dive
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Hello! I'm Professor Claude, and I'm excited to help you explore this fascinating machine learning research paper you've shared.
-
-## Brief Summary: QWEN Technical Report
 
 This paper introduces **QWEN**, a comprehensive series of large language models developed by Alibaba's Qwen Team. Here's the high-level picture:
 
@@ -4150,6 +3804,7 @@ What aspects of this work would you like to dive deeper into? I'm ready to explo
 
 </div>
 </details>
+<br/>
 
 ### Qwen-VL
 
@@ -4159,10 +3814,6 @@ What aspects of this work would you like to dive deeper into? I'm ready to explo
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this paper! Let me provide a high-level summary of "Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond."
-
-## High-Level Summary
 
 This paper introduces **Qwen-VL**, a series of large-scale vision-language models that can process both images and text. The key contribution is creating models that go beyond basic image captioning and visual question answering to include **fine-grained capabilities** like:
 
@@ -4188,19 +3839,9 @@ The authors use a carefully designed 3-stage training approach:
 **Key Results:**
 Qwen-VL achieves state-of-the-art performance across multiple benchmarks compared to similar-scale models, particularly excelling in text-oriented tasks and fine-grained visual understanding.
 
----
-
-I'm ready to dive deeper into any specific aspects that interest you! Some potentially valuable areas to explore might include:
-
-- The mathematical formulation of their position-aware adapter
-- The multi-task training strategy and how they balance different objectives
-- The bounding box representation scheme for grounding tasks
-- The architectural choices and their trade-offs
-
-What would you like to explore first?
-
 </div>
 </details>
+<br/>
 
 ### Phi-1
 
@@ -4211,34 +3852,21 @@ What would you like to explore first?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I see you've shared the influential "Textbooks Are All You Need" paper by Gunasekar et al. from Microsoft Research! This is a fascinating study that challenged conventional scaling laws in language model training.
-
-## High-Level Summary
-
 This paper introduces **phi-1**, a remarkably compact 1.3B parameter language model for code generation that achieves impressive performance despite being orders of magnitude smaller than competing models. The key insight is that **data quality trumps data quantity** - they achieved 50.6% pass@1 accuracy on HumanEval and 55.5% on MBPP using only 7B tokens of carefully curated "textbook quality" data.
 
 **Core Innovation**: Instead of following traditional scaling laws (bigger models + more data = better performance), they focused on three high-quality datasets:
+
 1. **Filtered code** from The Stack/StackOverflow (~6B tokens) using GPT-4-based quality classification
-2. **Synthetic textbooks** generated by GPT-3.5 (<1B tokens) 
+2. **Synthetic textbooks** generated by GPT-3.5 (<1B tokens)
 3. **Synthetic exercises** for fine-tuning (~180M tokens)
 
 **Key Results**: phi-1 outperforms much larger models like StarCoder (15.5B parameters, 1T tokens) while being trained 100x faster and using 100x less data.
 
 **Broader Implications**: This work suggests that the "bitter lesson" of simply scaling compute might not be the only path forward - careful data curation can dramatically improve learning efficiency.
 
----
-
-I'm ready to dive deeper into any aspect that interests you! Some particularly rich areas for exploration might be:
-
-- The mathematical intuition behind why "textbook quality" data breaks scaling laws
-- The technical details of their data filtering methodology 
-- The emergent capabilities that appeared after fine-tuning
-- Their contamination analysis and data pruning experiments
-
-What would you like to explore first?
-
 </div>
 </details>
+<br/>
 
 ### Reinforced Self-Training (ReST) for Language Modeling
 
@@ -4246,11 +3874,14 @@ What would you like to explore first?
 
 <details>
 
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+
 <summary>Quick Summary</summary>
 
+</div>
 </details>
-
-
+<br/>
 
 ### The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits
 
@@ -4258,9 +3889,14 @@ What would you like to explore first?
 
 <details>
 
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+
 <summary>Quick Summary</summary>
 
+</div>
 </details>
+<br/>
 
 ## 2024: Efficiency and Performance
 
@@ -4274,10 +3910,6 @@ It's June 2025 currently while I am writing this, and I cannot say for certain i
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing the Gemma paper! Let me provide a high-level summary of this important work.
-
-## High-Level Summary
 
 **Gemma: Open Models Based on Gemini Research and Technology** introduces a family of open-source language models derived from Google's Gemini research. This represents a significant contribution to the open AI ecosystem, as it makes state-of-the-art capabilities more accessible to researchers and developers.
 
@@ -4310,6 +3942,7 @@ Thank you for sharing the Gemma paper! Let me provide a high-level summary of th
 
 </div>
 </details>
+<br/>
 
 ### Gemma 2
 
@@ -4318,43 +3951,31 @@ Thank you for sharing the Gemma paper! Let me provide a high-level summary of th
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Gemma 2: A High-Level Overview
-
 This paper introduces **Gemma 2**, Google DeepMind's next-generation family of open language models ranging from 2B to 27B parameters. Here's the key story:
 
-## Core Innovation: Knowledge Distillation at Scale
+**Core Innovation: Knowledge Distillation at Scale**
 
 The paper's main contribution is demonstrating that **knowledge distillation** - where smaller "student" models learn from larger "teacher" models - can dramatically improve performance when applied at massive scale (training on 50× more tokens than typically considered optimal).
 
-## Key Technical Advances
+**Key Technical Advances**
 
 - **Architectural improvements**: Interleaving local sliding window attention with global attention, grouped-query attention (GQA), and logit soft-capping
 - **Training methodology**: Using distillation instead of standard next-token prediction for the 2B and 9B models
 - **Responsible deployment**: Extensive safety evaluations and responsible AI toolkit development
 
-## Performance Highlights
+**Performance Highlights**
 
 - The models achieve state-of-the-art performance for their size class
 - Gemma 2-27B competes with models 2-3× larger (like LLaMA-3 70B)
 - Strong results on the LMSYS Chatbot Arena, with Gemma 2-27B ranking higher than LLaMA-3 70B
 
-## Broader Impact
+**Broader Impact**
 
 The paper provides evidence that **smaller, more efficiently trained models** can challenge the "bigger is always better" paradigm in LLMs, which has important implications for democratizing access to capable AI systems.
 
----
-
-I'm ready to dive deeper into any aspect that interests you! Some particularly rich areas for exploration might include:
-
-- The mathematical formulation of their knowledge distillation approach
-- The attention mechanism innovations and their computational trade-offs
-- The extensive evaluation methodology, especially their safety assessments
-- The architectural design choices and their theoretical justifications
-
-What would you like to explore first?
-
 </div>
 </details>
+<br/>
 
 ### Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference
 
@@ -4364,10 +3985,6 @@ What would you like to explore first?
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this comprehensive paper on Chatbot Arena! Let me provide you with a high-level summary to get us started.
-
-## Paper Summary: "Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference"
 
 This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating Large Language Models (LLMs) through human preferences rather than traditional static benchmarks. Here are the key contributions:
 
@@ -4391,6 +4008,7 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 
 </div>
 </details>
+<br/>
 
 ### TinyLlama: An Open-Source Small Language Model
 
@@ -4400,10 +4018,6 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-# TinyLlama: A Compact Open-Source Language Model
-
-## High-Level Summary
 
 This paper presents **TinyLlama**, a remarkably compact 1.1B parameter language model that challenges conventional wisdom about the relationship between model size and performance. The key insight is exploring what happens when you train a small model on far more data than traditional scaling laws suggest - specifically training on up to 3 trillion tokens (later reduced to 2T in v1.1).
 
@@ -4420,6 +4034,7 @@ The work is particularly valuable for democratizing language model research, ena
 
 </div>
 </details>
+<br/>
 
 ### MordernBert
 
@@ -4429,11 +4044,6 @@ The work is particularly valuable for democratizing language model research, ena
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
-Thank you for sharing this excellent paper on ModernBERT! Let me provide you with a high-level summary to start.
-
-## High-Level Summary
-
 This paper introduces **ModernBERT**, a significant modernization of the classic BERT encoder architecture. The key insight is that while decoder-only models like GPT have seen tremendous advances, encoder-only models have remained largely stagnant since BERT's original release in 2019.
 
 **Core Contributions:**
@@ -4455,6 +4065,7 @@ Encoders remain crucial for production systems doing retrieval, classification, 
 
 </div>
 </details>
+<br/>
 
 ### Jamba: A Hybrid Transformer-Mamba Language Model
 
@@ -4465,15 +4076,14 @@ Encoders remain crucial for production systems doing retrieval, classification, 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Jamba: A Hybrid Transformer-Mamba Language Model - Brief Overview
-
 This paper introduces **Jamba**, a novel hybrid architecture that combines three key components:
 
 1. **Transformer layers** (the standard attention mechanism we know)
 2. **Mamba layers** (a recent state-space model that's more memory-efficient)
 3. **Mixture-of-Experts (MoE)** (to scale model capacity while keeping compute manageable)
 
-## Key Innovation
+**Key Innovation**
+
 Instead of using pure Transformer or pure Mamba architectures, Jamba interleaves these different layer types in a flexible pattern. The released model uses a 1:7 ratio (1 attention layer for every 7 Mamba layers) and achieves:
 
 - **52B total parameters** but only **12B active parameters**
@@ -4482,25 +4092,16 @@ Instead of using pure Transformer or pure Mamba architectures, Jamba interleaves
 - **3x better throughput** than Mixtral on long contexts
 - Fits in a **single 80GB GPU**
 
-## The Core Problem It Solves
+**The Core Problem It Solves**
+
 Transformers struggle with long contexts due to quadratic memory scaling and large KV caches. Mamba is more efficient but historically underperforms Transformers. Jamba gets the best of both worlds by combining them strategically.
 
-## Particularly Interesting Finding
+**Particularly Interesting Finding**
+
 The paper shows that pure Mamba struggles with in-context learning (following formats in few-shot examples), but adding just a few attention layers restores this capability - suggesting attention mechanisms play a crucial role in pattern copying and format adherence.
-
----
-
-I'm ready to dive deeper into any aspect that interests you! Some potentially valuable areas to explore:
-
-- The mathematical formulation of how Mamba layers work and why they're more memory-efficient
-- The specific architectural decisions and ablation studies that led to the 1:7 ratio
-- The in-context learning analysis and what it reveals about attention vs. state-space models
-- The MoE integration and how it scales with the hybrid architecture
-
-What would you like to explore first?
-
 </div>
 </details>
+<br/>
 
 ### Claude 3
 
@@ -4518,6 +4119,7 @@ What would you like to explore first?
 
 </div>
 </details>
+<br/>
 
 ### LLaMA 3
 
@@ -4528,37 +4130,42 @@ What would you like to explore first?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Llama 3 Paper Overview
-
 This is Meta's comprehensive technical report on **Llama 3**, their latest family of foundation models. Here's a high-level summary:
 
-## What They Built
+**What They Built**
+
 - **Three model sizes**: 8B, 70B, and 405B parameters
 - **Flagship model**: Llama 3 405B - a dense transformer with 128K context window
 - **Multimodal extensions**: Vision, video, and speech capabilities (experimental)
 - **Performance**: Competitive with GPT-4, Claude 3.5 Sonnet on many benchmarks
 
-## Key Technical Contributions
+**Key Technical Contributions**
 
-**Scale & Data**: 
+**Scale & Data**:
+
 - 405B model trained on 15.6T tokens (vs 1.8T for Llama 2)
 - 50× more compute than largest Llama 2 model
 - Extensive data curation and quality filtering pipelines
 
 **Infrastructure Innovation**:
-- 4D parallelism for training at 16K GPU scale  
+
+- 4D parallelism for training at 16K GPU scale
 - Novel pipeline parallelism improvements
 - FP8 quantization for efficient inference
 
 **Safety & Alignment**:
+
 - Comprehensive safety evaluation across capabilities
 - Llama Guard 3 for system-level safety
 - Extensive red teaming and adversarial testing
 
-## Mathematical Foundation
+**Mathematical Foundation**
+
 The paper is built on established scaling laws but pushes them to new extremes, with careful attention to compute-optimal training and the tension between model size and training duration.
+
 </div>
 </details>
+<br/>
 
 ### Claude 3
 
@@ -4574,19 +4181,17 @@ Improved reasoning and multimodal capabilities
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-Thank you for sharing the Gemini 1.5 technical report! This is a substantial and impressive piece of work that I'm excited to help you explore.
-
-## High-Level Summary
-
 This paper introduces **Gemini 1.5 Pro and Gemini 1.5 Flash** - a new generation of multimodal AI models that represent a major leap in **long-context understanding**. The standout achievement is extending context windows from the typical 32K-200K tokens to **up to 10 million tokens** across text, images, video, and audio modalities.
 
 **Key Innovations:**
+
 - **Architecture**: Gemini 1.5 Pro uses a sparse mixture-of-experts (MoE) Transformer, while Flash is a distilled dense model
 - **Unprecedented Scale**: Can process ~7 million words, 107 hours of audio, or 10.5 hours of video in a single context
 - **Multimodal Excellence**: Near-perfect recall (>99%) on "needle-in-haystack" tasks across all modalities
 - **Practical Capabilities**: Learn new languages from single grammar books, analyze entire codebases, reason over hour-long videos
 
 **Performance Highlights:**
+
 - Outperforms Gemini 1.0 Ultra on most benchmarks despite using less training compute
 - Achieves state-of-the-art on many multimodal reasoning tasks
 - Demonstrates remarkable in-context learning (e.g., translating Kalamang, a language with <200 speakers, from documentation alone)
@@ -4594,51 +4199,44 @@ This paper introduces **Gemini 1.5 Pro and Gemini 1.5 Flash** - a new generation
 The paper also includes extensive safety evaluations and introduces novel benchmarks for long-context evaluation, addressing a key challenge in evaluating such capable models.
 
 **Mathematical/Technical Depth**: The paper contains rich technical content around scaling laws, architectural innovations, and evaluation methodologies that we could dive deep into.
-
-What aspects of this work would you like to explore? I'm ready to help you understand anything from the architectural details to the mathematical foundations of their scaling approaches, or the novel evaluation methodologies they developed.
-
 </div>
 </details>
+<br/>
 
-### Qwen 2 
+### Qwen 2
 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# QWEN2 Technical Report - High-Level Summary
-
 This paper introduces **Qwen2**, a comprehensive family of large language models ranging from 0.5B to 72B parameters, including both dense models and a Mixture-of-Experts (MoE) variant. Here are the key highlights:
 
-## **Main Contributions:**
+**Main Contributions:**
+
 - **Model Family**: Five model sizes (0.5B, 1.5B, 7B, 57B-A14B MoE, 72B) designed for different deployment scenarios
 - **Performance**: The flagship Qwen2-72B achieves strong results across benchmarks (84.2 MMLU, 64.6 HumanEval, 89.5 GSM8K)
 - **Multilingual**: Supports ~30 languages with robust capabilities
 - **Long Context**: Extended context length up to 131K tokens using YARN and Dual Chunk Attention
 
-## **Technical Innovations:**
+**Technical Innovations:**
+
 - **Architecture**: Grouped Query Attention (GQA) for efficient inference
 - **MoE Design**: Fine-grained experts with shared + routing-specific expert structure
 - **Training**: 7T tokens for dense models, enhanced data quality and distribution
 - **Post-training**: Scalable alignment with minimal human annotation using automated synthesis
 
-## **Key Strengths:**
+**Key Strengths:**
+
 - Outperforms most open-weight models including Qwen1.5
 - Competitive with proprietary models across diverse benchmarks
 - Strong performance in coding, mathematics, and reasoning tasks
 - Comprehensive safety and contamination analysis
 
 The paper represents a significant step forward in open-weight language models, with particular attention to practical deployment considerations and rigorous evaluation methodology.
-
----
-
-What specific aspects of Qwen2 would you like to explore in detail? I'm ready to dive into the mathematical formulations, architectural choices, training methodologies, or evaluation results based on your interests!
-
 </div>
 </details>
-
-
+<br/>
 
 ### phi-2/phi-3
 
@@ -4652,6 +4250,7 @@ High performance with limited training data
 
 </div>
 </details>
+<br/>
 
 ### OpenAI o1
 
@@ -4665,6 +4264,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### RSO (Reinforced Self-training with Online feedback)
 
@@ -4678,6 +4278,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### SPIN (Self-Played Improvement Narration)
 
@@ -4691,6 +4292,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### DBRX
 
@@ -4703,6 +4305,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision
 
@@ -4715,6 +4318,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### Qwen 2.5 (Alibaba)
 
@@ -4730,6 +4334,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### DeepSeek 2.5 (DeepSeek)
 
@@ -4745,6 +4350,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### Claude 3.5 Sonnet (Anthropic)
 
@@ -4760,6 +4366,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### DeepSeek-R1 (DeepSeek)
 
@@ -4775,6 +4382,7 @@ Advanced mathematical problem-solving
 
 </div>
 </details>
+<br/>
 
 ### Phi 3
 
@@ -4784,13 +4392,10 @@ Advanced mathematical problem-solving
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-You've now shared the Phi-3 Technical Report - what an interesting evolution from the original phi-1 paper! This represents a significant advancement in Microsoft's small language model research.
-
-## High-Level Summary
-
 This paper introduces the **Phi-3 family** of compact yet highly capable language models, with the flagship **phi-3-mini** (3.8B parameters) achieving performance competitive with much larger models like Mixtral 8x7B and GPT-3.5. The key breakthrough is that phi-3-mini can run locally on a phone while achieving 69% on MMLU and 8.38 on MT-bench.
 
 **Key Innovations from phi-1:**
+
 - **Massive scale-up**: From 1.3B to 3.8B parameters, trained on 3.3T tokens (vs 7B tokens for phi-1)
 - **Enhanced data recipe**: Evolved the "textbook quality" approach with more sophisticated filtering and synthetic data generation
 - **Model family**: phi-3-small (7B), phi-3-medium (14B), and phi-3.5 variants including MoE and Vision models
@@ -4800,18 +4405,9 @@ This paper introduces the **Phi-3 family** of compact yet highly capable languag
 
 **Remarkable Results**: A 3.8B model that fits on a phone outperforming models 10-25x larger, suggesting we may be far from the efficiency frontier that traditional scaling laws suggest.
 
----
-
-This is fascinating to compare with the original phi-1 work! Some areas that might be particularly interesting to explore:
-
-- **The mathematical intuition behind "data optimal" vs "compute optimal" regimes**
-- **How the quality filtering and synthetic data generation evolved from phi-1**  
-- **The technical innovations in phi-3.5-MoE and the Vision model**
-- **The safety and alignment methodology for production deployment**
-
-What aspects of this evolution from phi-1 to phi-3 would you like to dive into?
 </div>
 </details>
+<br/>
 
 ### Phi 4
 
@@ -4822,32 +4418,34 @@ What aspects of this evolution from phi-1 to phi-3 would you like to dive into?
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Phi-4 Technical Report - Summary
-
 This paper introduces **Phi-4**, a 14-billion parameter language model that achieves remarkable performance through a data-centric approach rather than simply scaling model size. Here are the key highlights:
 
-## Core Innovation: Quality over Scale
+**Core Innovation: Quality over Scale**
+
 - **Central Philosophy**: Strategic use of high-quality synthetic data throughout training, moving beyond traditional web-scraped datasets
 - **Architecture**: 14B parameters with minimal changes from Phi-3, proving that data quality can rival compute scaling
 - **Performance**: Outperforms much larger models (even its teacher GPT-4o) on STEM reasoning tasks like GPQA and MATH
 
-## Three Pillars of Development
+**Three Pillars of Development**
 
 1. **Synthetic Data Generation**: ~400B tokens using diverse techniques including multi-agent prompting, self-revision workflows, and instruction reversal
 2. **Curated Organic Data**: Meticulous filtering of web content, books, and code repositories to extract high-reasoning seeds
 3. **Advanced Post-Training**: Novel "Pivotal Token Search" (PTS) method for DPO that targets the most impactful tokens in reasoning chains
 
-## Standout Results
+**Standout Results**
+
 - **Fresh Evaluation**: Strong performance on November 2024 AMC-10/12 math competitions (completely contamination-proof)
 - **STEM Excellence**: Surpasses teacher model GPT-4o on graduate-level STEM (GPQA) and math competition problems (MATH)
 - **Efficiency**: Achieves frontier-model reasoning capabilities at a fraction of the computational cost
 
-## Mathematical Innovation
+**Mathematical Innovation**
+
 The paper introduces **Pivotal Token Search**, a fascinating approach that identifies tokens with the highest impact on solution success probability, creating more targeted preference optimization data.
 
 ---
 
 **What would you like to explore first?** I'd be happy to dive deeper into:
+
 - The mathematical formulation of Pivotal Token Search
 - The synthetic data generation techniques and their theoretical foundations
 - The training dynamics and curriculum design
@@ -4856,6 +4454,7 @@ The paper introduces **Pivotal Token Search**, a fascinating approach that ident
 
 </div>
 </details>
+<br/>
 
 ### Self-Play Fine-Tuning Converts Weak Language Models to Strong Language Models
 
@@ -4866,10 +4465,11 @@ The paper introduces **Pivotal Token Search**, a fascinating approach that ident
 <summary>Quick Summary</summary>
 
 </details>
+<br/>
 
 ## 2025
 
-### Gemma 3 
+### Gemma 3
 
 [paper](https://arxiv.org/pdf/2503.19786)
 
@@ -4878,13 +4478,10 @@ The paper introduces **Pivotal Token Search**, a fascinating approach that ident
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-I've reviewed the Gemma 3 Technical Report - a comprehensive paper introducing Google DeepMind's latest family of open language models. Here's a high-level summary:
-
-## Paper Overview
-
 **What it is**: Gemma 3 represents a significant evolution in the Gemma family, introducing multimodal capabilities (vision + text), extended context length (128K tokens), and improved multilingual support while maintaining the lightweight, open-model philosophy.
 
 **Key Technical Innovations**:
+
 - **Hybrid attention architecture**: A 5:1 ratio of local-to-global attention layers to manage long context memory efficiently
 - **Multimodal integration**: SigLIP vision encoder with Pan & Scan method for flexible image resolutions
 - **Enhanced post-training**: Novel distillation and reinforcement learning techniques (BOND, WARM, WARP)
@@ -4895,61 +4492,57 @@ I've reviewed the Gemma 3 Technical Report - a comprehensive paper introducing G
 
 **Mathematical Focus Areas**: The paper contains rich material on attention mechanisms, knowledge distillation formulations, memory optimization techniques, and scaling laws for multimodal training.
 
-This paper offers excellent opportunities to explore modern transformer architectures, efficient attention patterns, multimodal fusion techniques, and post-training optimization methods. 
-
-What specific aspects would you like to dive into? I'm ready to walk through any mathematical formulations, architectural decisions, or experimental methodologies that interest you!
+This paper offers excellent opportunities to explore modern transformer architectures, efficient attention patterns, multimodal fusion techniques, and post-training optimization methods.
 
 </div>
 </details>
+<br/>
 
 ### Llama 4
 
-
-
-### Qwen2.5 
+### Qwen2.5
 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-# Qwen2.5 Technical Report - High-Level Summary
-
 This paper introduces **Qwen2.5**, a comprehensive series of large language models representing a significant advancement over previous iterations. Here are the key highlights:
 
-## Core Improvements
+**Core Improvements**
+
 - **Massive data scaling**: Pre-training dataset expanded from 7 trillion to **18 trillion tokens**
 - **Enhanced post-training**: Sophisticated supervised fine-tuning with 1M+ samples plus multi-stage reinforcement learning (DPO + GRPO)
 - **Extended capabilities**: Generation length increased from 2K to 8K tokens, better structured data handling
 
-## Model Family
+**Model Family**
+
 - **Open-weight models**: 0.5B, 1.5B, 3B, 7B, 14B, 32B, and 72B parameters
 - **Proprietary MoE variants**: Qwen2.5-Turbo and Qwen2.5-Plus for API services
 - **Long-context version**: Qwen2.5-Turbo supports up to 1M tokens
 
-## Performance Achievements
+**Performance Achievements**
+
 - **Qwen2.5-72B-Instruct** matches Llama-3-405B-Instruct performance while being ~5× smaller
 - Strong improvements across mathematics, coding, reasoning, and multilingual tasks
 - Competitive with GPT-4o-mini and GPT-4o for the MoE variants
 
-## Technical Innovations
+**Technical Innovations**
+
 - Progressive context length scaling during training
 - Advanced long-context techniques (YARN + DCA)
 - Two-stage reinforcement learning (offline + online RL)
 - Sophisticated data filtering using Qwen2-Instruct models
 
 The paper demonstrates how careful scaling of both data and training techniques can achieve remarkable efficiency gains, making state-of-the-art performance accessible with significantly fewer parameters.
-
----
-
-I'm ready to dive deeper into any specific aspects that interest you! Some particularly rich areas for mathematical exploration include their scaling laws, the reinforcement learning framework, or the long-context training methodology.
-
 </div>
 </details>
+<br/>
 
 ### Qwen 2.5-1M
 
 [paper](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen2.5-1M/Qwen2_5_1M_Technical_Report.pdf)
+
 <details>
 
 <summary markdown="span">Quick Summary</summary>
@@ -4957,8 +4550,7 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 </div>
 </details>
-
-
+<br/>
 
 ### Qwen2.5-Omni
 
@@ -4971,10 +4563,9 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 </div>
 </details>
+<br/>
 
-
-
-### Qwen 3 
+### Qwen 3
 
 [paper](https://arxiv.org/pdf/2505.09388)
 
@@ -4985,28 +4576,20 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 </div>
 </details>
-
-
-
-
-
-
+<br/>
 
 ### Grok
 
 - Open-source model
 - 314B parameters
-- 
-<details>
+- <details>
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
 </div>
 </details>
-
-
-
+<br/>
 
 ### Pixtral
 
@@ -5022,8 +4605,7 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 </div>
 </details>
-
-
+<br/>
 
 ### Large Language Diffusion Models
 
@@ -5036,12 +4618,11 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 </div>
 </details>
+<br/>
 
+## It's all about DeepSeek
 
-
-## It's all about DeepSeek 
-
-This whole section is dedicated just to the geniuses that are DeepSeek 
+This whole section is dedicated just to the geniuses that are DeepSeek
 
 Consider reading all their paper from this list https://huggingface.co/collections/Presidentlin/deepseek-papers-674c536aa6acddd9bc98c2ac
 
@@ -5052,17 +4633,15 @@ Consider reading all their paper from this list https://huggingface.co/collectio
 
 </div>
 </details>
-
-
-
+<br/>
 
 ### Some Honorable blogs and mentions that I believe you should definitely check out:
+
 [blog](https://www.darioamodei.com/essay/machines-of-loving-grace)
 
 ## SELF NOTES AND MISC STUFF
 
-
-Include Large Text diffusion models 
+Include Large Text diffusion models
 
 Add performance charts showing scaling laws
 Include architecture diagrams for key innovations
@@ -5075,13 +4654,10 @@ NOTES TO SELF
 - Train a hand drawn sketch LORA in flux dev for images
 - Add a reference section in the end which redirects to the papers, Like latex reference and stuff.
 
-
 [TOP MEME, MOnkey to man evolution yearwise and leave the man with no model (to signify no AGI yet)]
 [Add tree from this paper to clarify that it was not a linear evolution but a tree wise, much like real theory of evolution https://arxiv.org/pdf/2304.13712]
 
 [add prerequisites section, summary section, skip to section]
-
-
 
 ## A short introduction to LLMs
 
