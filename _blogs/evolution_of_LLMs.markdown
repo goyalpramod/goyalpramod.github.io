@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: blog
 title: "Evolution of LLMs"
 date: 2025-05-05 12:00:00 +0530
@@ -6,8 +6,10 @@ categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
 
-[TOP MEME, MOnkey to man evolution yearwise and leave the man with no model (to signify no AGI yet)]
-[Add tree from this paper to clarify that it was not a linear evolution but a tree wise, much like real theory of evolution https://arxiv.org/pdf/2304.13712]
+## STILL A WORK IN PROGRESS, I MESSED UP THE PROD, PLEASE DONT READ 
+
+<!-- [TOP MEME, MOnkey to man evolution yearwise and leave the man with no model (to signify no AGI yet)]
+[Add tree from this paper to clarify that it was not a linear evolution but a tree wise, much like real theory of evolution https://arxiv.org/pdf/2304.13712] -->
 
 The landscape of language models has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we explore the
 
@@ -15,26 +17,94 @@ The landscape of language models has evolved dramatically since the introduction
 - architectural innovations
 - training breakthroughs
 
-From attention mechanisms to constitutional AI, we'll dive deep into the code, math, and ideas that revolutionized NLP.
+We will talk about everything the code, math, and ideas that revolutionized NLP.
 
 Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
 
-[add prerequisites section, summary section, skip to section]
+<!-- [add prerequisites section, summary section, skip to section] -->
 
 ## How this blog is structured
 
-First we would begin with a short to the transformers (Most LLM structure begin this way), then go sequentially how they are trained and infererenced. To lay a groundwork, on top of which we can build.
+We will go year by year, going through the revolutionary ideas introduced by each paper. Here is a quick list of the years and the seminal papers 
 
-After which we will have a look at a short AI timeline over the years, going year by year seeing the most influential work that shaped that and future years of LLMs.
+<details>
+<summary markdown="span">2017</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
 
-Where we will see what architectural innovation, computational breakthrough, training optimization that were invented over the years and how it affected LLMs and their benchmarks.
 
-Finally and most importantly we will dive deep into the technical understanding and implementation of these different techniques. Some of them being Flash Attention, KV-Caching, GRPO etc.
+<details>
+<summary markdown="span">2018</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
+
+
+<details>
+<summary markdown="span">2019</summary>
+<div markdown="1">
+<a href="https://www.w3schools.com">Visit W3Schools</a>
+</div>
+</details>
+
+
+<details>
+<summary markdown="span">2020</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
+
+
+<details>
+<summary markdown="span">2021</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
+
+
+<details>
+<summary markdown="span">2022</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
+
+
+<details>
+<summary markdown="span">2023</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
+
+
+<details>
+<summary markdown="span">2024</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
+
+
+<details>
+<summary markdown="span">2025</summary>
+<div markdown="1">
+[]()
+</div>
+</details>
+
+</br>
 
 Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). Over here I will just give quick intro and links to some ground breaking innovations.
 
-> NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them in the timeline. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
+> NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
 
+<!-- 
 ## A short introduction to LLMs
 
 This part is highly influenced by this [video](https://www.youtube.com/watch?v=7xTGNNLPyMI) by andrej karpathy
@@ -156,17 +226,17 @@ Now let's understand how a usual Encoder is trained, We will talk about BERT her
 
 Now let's do the same for T5
 
-### Inference
+### Inference -->
 
 ## The AI timeline
 
-This is a very short timeline of the most influential work, to read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
+This is a timeline of the most influential work, to read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
 
-The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline.
+The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
 
 [Write the name of the creators and labs]
 
-> The summaries are AI generated
+> Note: All the Quick summaries are AI generated, and may contain some mistakes. The core content is all human generated though, so they definitely contain mistakes :)
 
 ## 2017: The Foundation Year
 
@@ -174,7 +244,7 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 
 [Attention is all you need](https://arxiv.org/abs/1706.03762)
 
-The foundational paper on transformers , introduced some key ideas such as
+THE foundational paper that introduced some key ideas such as
 
 - Scaled dot-product attention
 - Multi-head attention mechanism
@@ -182,7 +252,7 @@ The foundational paper on transformers , introduced some key ideas such as
 - Layer normalization
 - Masked attention for autoregressive models
 
-We have talked deeply about each of these topics previously and I implore you to check that part out [here]()
+We have talked deeply about each of these topics previously and I implore you to check that part out [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/)
 
 **Training a Transformer**
 
@@ -193,37 +263,35 @@ This is one topic that we didnt talk about extensively so let's go over it, beca
 [Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
 
 As mind boggling as it sounds, the famed algorithm RLHF came out in 2017, the same year attention is all you need came out.
-
 Let us understand the ideas put forth and why it was such a big deal.
 
-If you are new to RL, check it out in the [appendix]()
-
 <details>
-<summary>Quick Summary</summary>
-"""
-Quick Summary
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
-This 2017 paper presents a method for training reinforcement learning (RL) agents using human feedback instead of explicitly defined reward functions. Here's a high-level overview:
+>This paper presents a method for training reinforcement learning (RL) agents using human feedback instead of explicitly refined reward functions. Here's a high-level overview:
+>
+>The authors address a fundamental challenge in RL: for many complex tasks, designing appropriate reward functions is difficult or impossible. Instead of requiring engineers to craft these functions, they develop a system where:
+>
+>1. Humans compare short video clips of agent behavior (1-2 seconds)
+>2. These comparisons train a reward predictor model  
+>3. The agent optimizes its policy using this learned reward function
+>
+>**Key contributions:**
+>
+>- They show this approach can solve complex RL tasks using feedback on less than 1% of the agent's interactions
+>- This dramatically reduces the human oversight required, making it practical for state-of-the-art RL systems
+>- They demonstrate training novel behaviors with just about an hour of human time
+>- Their approach works across domains including Atari games and simulated robot locomotion
+>
+>The technique represents a significant advance in aligning AI systems with human preferences, addressing concerns about misalignment between AI objectives and human values. By having humans evaluate agent behavior directly, the system learns rewards that better capture what humans actually want.
 
-The authors address a fundamental challenge in RL: for many complex tasks, designing appropriate reward functions is difficult or impossible. Instead of requiring engineers to craft these functions, they develop a system where:
-
-1. Humans compare short video clips of agent behavior (1-2 seconds)
-2. These comparisons train a reward predictor model
-3. The agent optimizes its policy using this learned reward function
-
-Key contributions:
-
-- They show this approach can solve complex RL tasks using feedback on less than 1% of the agent's interactions
-- This dramatically reduces the human oversight required, making it practical for state-of-the-art RL systems
-- They demonstrate training novel behaviors with just about an hour of human time
-- Their approach works across domains including Atari games and simulated robot locomotion
-
-The technique represents a significant advance in aligning AI systems with human preferences, addressing concerns about misalignment between AI objectives and human values. By having humans evaluate agent behavior directly, the system learns rewards that better capture what humans actually want.
-"""
-
+</div>
 </details>
 
-**Problem** : Training a RL system requires researchers make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems
+**Problem** : 
+
+| Training a RL system requires researchers make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems
 
 [Add image below, left side simple puzzle, right side complex puzzle]
 
@@ -300,6 +368,7 @@ $$
 - $\mu(1)$: Probability that human preferred segment 1
 - $\mu(2)$: Probability that human preferred segment 2
 - $\log$: Natural logarithm
+</div>
 </details>
 """"
 """
@@ -389,7 +458,8 @@ This is going to be math heavy so be prepared (Dw, I will guide you in each step
 """
 
 <details>
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 I'll be your guide through this machine learning research paper, focusing on building intuition for the mathematical concepts while waiting for your specific questions to dive deeper.
 
 ## High-Level Summary: Proximal Policy Optimization (PPO)
@@ -407,6 +477,7 @@ The core innovation is their clipped probability ratio approach, which constrain
 
 Feel free to ask specific questions about any aspect of the paper, and I'm happy to explore the mathematical formulations, algorithm details, or empirical results in greater depth.
 
+</div>
 </details>
 """
 
@@ -480,6 +551,7 @@ This observation motivates the need for the "proximal" part of PPO, which constr
 - $L^{PG}(\theta)$: Policy gradient objective function
 - $\log$: Natural logarithm
 - $\theta$: Policy parameters
+</div>
 </details>
 
 """
@@ -557,6 +629,7 @@ When implementing this in practice with automatic differentiation frameworks (li
 - $V(s_t)$: State-value function
 - $\theta$: Policy parameters
 - $\alpha$: Learning rate for gradient ascent
+</div>
 </details>
 ```
 
@@ -653,6 +726,7 @@ When solving this constrained optimization problem:
 - $\pi_{\theta_{old}}(\cdot|s_t)$: Complete action distribution under old policy for state $s_t$
 - $\pi_\theta(\cdot|s_t)$: Complete action distribution under new policy for state $s_t$
 - $H$: Hessian matrix of the KL divergence with respect to policy parameters
+</div>
 </details>
 ```
 
@@ -762,6 +836,7 @@ Figure 2 (mentioned in the text) shows that $L^{CLIP}$ forms a lower bound on $L
 - $\text{clip}(x,a,b)$: Function that clips $x$ to be within the interval $[a,b]$
 - $\epsilon$: Clipping hyperparameter (typically 0.2)
 - $\min(a,b)$: Function returning the minimum of $a$ and $b$
+</div>
 </details>
 """
 
@@ -797,6 +872,7 @@ This paper represents a significant advancement in scaling neural networks effic
 
 Is there a specific aspect of this paper you'd like to explore further?
 
+</div>
 </details>
 
 **Problem**
@@ -870,6 +946,7 @@ that are key for fine-tuning a language
 model.
 """
 
+</div>
 </details>
 
 #### ElMO: Embeddings from Language Models
@@ -892,6 +969,7 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 
 Is there a specific aspect of this paper you'd like me to elaborate on?
 
+</div>
 </details>
 
 **Problem**
@@ -968,6 +1046,7 @@ This paper laid important groundwork for later transformer-based language models
 
 What aspects of this paper would you like me to explore in more detail?
 
+</div>
 </details>
 
 **Problem**
@@ -1051,6 +1130,7 @@ They validate their approach through experiments on English-Japanese translation
 I'm ready to discuss any specific aspects of the paper you'd like to explore in more detail.
 """
 
+</div>
 </details>
 
 **Problem** Tough to make NMT language independent
@@ -1118,6 +1198,7 @@ The paper demonstrated significant improvements over previous methods on eleven 
 Is there a specific aspect of BERT that you'd like me to explain in more detail?
 
 </summary>
+</div>
 </details>
 
 This paper wasn't trying to find a problem then solve it per say. It is more of an innovation
@@ -1174,6 +1255,7 @@ The paper shows that GPT-2 achieves state-of-the-art results on 7 out of 8 teste
 
 This work represents a significant step toward building more general NLP systems that can learn to perform tasks from naturally occurring demonstrations in text, rather than requiring task-specific datasets and architectures for each application.
 
+</div>
 </details>
 """
 Common Crawl. Trinh & Le (2018)’s best results were
@@ -1242,6 +1324,7 @@ The authors emphasize that seemingly mundane training decisions (like batch size
 
 The paper is particularly notable for its thorough empirical analysis of training hyperparameters and careful ablation studies showing the contribution of each modification to overall performance.
 
+</div>
 </details>
 
 """
@@ -1357,6 +1440,7 @@ Key contributions:
 This work demonstrates that through careful distillation, smaller and more efficient models can be created without significant loss in performance, making state-of-the-art NLP more accessible for resource-constrained applications.
 """
 
+</div>
 </details>
 
 https://blog.roboflow.com/what-is-knowledge-distillation/
@@ -1409,6 +1493,7 @@ The paper presents a thorough ablation study comparing BART to other pretraining
 Would you like me to explain any specific aspect of the BART model in more detail?
 """
 
+</div>
 </details>
 
 """
@@ -1462,6 +1547,7 @@ In empirical evaluations, XLNet outperforms BERT on 20 tasks including question 
 
 Would you like me to explore any specific aspects of the architecture, the permutation language modeling approach, or the experimental results in more detail?
 
+</div>
 </details>
 
 """
@@ -1578,6 +1664,7 @@ The paper demonstrates that with the right implementation approach, training mul
 
 Would you like me to elaborate on any specific aspect of the paper, such as the model parallelism implementation, the architectural innovations, or the performance results?
 
+</div>
 </details>
 
 This is a great time to talk about data, model and pipeline paralism and how massively large LLMs are trained across GPUs
@@ -1614,6 +1701,7 @@ Is there a specific aspect of the paper you'd like to explore first? For example
 - The performance improvements on different data types
 - The mathematics behind the complexity reduction
 
+</div>
 </details>
 
 """
@@ -1672,6 +1760,7 @@ The authors show that Reformer achieves comparable performance to standard Trans
 
 I'm ready to discuss any specific aspects of the paper you'd like to explore further. For example, we could delve into how LSH attention works, understand the mathematics behind reversible residual networks, or examine the experimental results.
 
+</div>
 </details>
 
 https://www.youtube.com/watch?app=desktop&v=i4H0kjxrias&t=0s&ab_channel=YannicKilcher
@@ -1717,6 +1806,7 @@ The paper demonstrates both the theoretical and practical advantages of this app
 
 Would you like me to elaborate on any particular aspect of the paper, such as the mathematics behind the attention mechanism, the implementation details, or the experimental results?
 
+</div>
 </details>
 
 ### GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding
@@ -1727,7 +1817,8 @@ https://www.youtube.com/watch?v=1VdEw_mGjFk&ab_channel=YannicKilcher
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 # GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding - Summary
 
 Thank you for sharing this research paper! Here's a high-level summary of GShard:
@@ -1751,6 +1842,7 @@ Key benefits of the approach include:
 
 Would you like me to elaborate on any specific aspect of the paper, such as the mixture-of-experts architecture, the automatic sharding mechanism, or the experimental results?
 
+</div>
 </details>
 
 ### Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
@@ -1759,7 +1851,8 @@ Would you like me to elaborate on any specific aspect of the paper, such as the 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 # Retrieval-Augmented Generation (RAG) for Knowledge-Intensive NLP Tasks
 
 This paper introduces RAG (Retrieval-Augmented Generation), a hybrid model architecture that combines the strengths of parametric memory (knowledge stored in neural network parameters) and non-parametric memory (knowledge stored in an external database that can be retrieved).
@@ -1779,6 +1872,7 @@ They evaluate RAG on knowledge-intensive tasks including open-domain QA, fact ve
 
 Is there a specific aspect of the paper you'd like to explore in more detail?
 
+</div>
 </details>
 
 ### Big Bird: Transformers for Longer Sequences
@@ -1787,7 +1881,8 @@ Is there a specific aspect of the paper you'd like to explore in more detail?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Big Bird: Transformers for Longer Sequences - Summary
 
@@ -1825,6 +1920,7 @@ BigBird shows significant improvements in tasks requiring longer contexts:
 
 Would you like me to elaborate on any specific aspect of the paper, such as the mathematical formulation of the attention mechanism, the theoretical proofs, or the experimental setup?
 
+</div>
 </details>
 
 **Problem**
@@ -1853,7 +1949,8 @@ attention mechanism that reduces this quadratic dependency to linear
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Language Models are Few-Shot Learners: Summary and Analysis
 
@@ -1908,6 +2005,7 @@ This work represents a paradigm shift in how we think about language models - ra
 
 Would you like me to explore any specific aspect of this paper in more detail?
 
+</div>
 </details>
 
 ### Rethinking Attention with Performers
@@ -1920,7 +2018,8 @@ https://www.youtube.com/watch?v=xJrKIPwVwGM&ab_channel=YannicKilcher
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this fascinating paper! "Rethinking Attention with Performers" introduces an important innovation in the Transformer architecture domain.
 
@@ -1939,6 +2038,7 @@ The authors demonstrate the Performer's effectiveness on diverse tasks from pixe
 
 I'd be happy to dive deeper into any specific aspect of this paper that interests you - whether it's the theoretical underpinnings of the FAVOR+ mechanism, the positive random features approach, the orthogonality benefits, or the experimental results.
 
+</div>
 </details>
 
 ### T5
@@ -1966,7 +2066,8 @@ Lab: Google
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer"
 
@@ -1986,6 +2087,7 @@ The T5 approach demonstrates the effectiveness of a unified text-to-text framewo
 
 Would you like me to explain any specific aspect of this paper in more detail?
 
+</div>
 </details>
 
 https://cameronrwolfe.substack.com/p/t5-text-to-text-transformers-part
@@ -1997,7 +2099,8 @@ https://cameronrwolfe.substack.com/p/t5-text-to-text-transformers-part
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Summary of "Measuring Massive Multitask Language Understanding"
 
@@ -2016,6 +2119,7 @@ This work provided an important evaluation framework showing that while large la
 
 I'm happy to explore any specific aspects of this paper that interest you.
 
+</div>
 </details>
 
 ### ZeRO (Zero Redundancy Optimizer)
@@ -2026,7 +2130,8 @@ I'm happy to explore any specific aspects of this paper that interest you.
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll be happy to guide you through this machine learning research paper as Professor Claude. Let me start with a high-level summary.
 
@@ -2047,6 +2152,7 @@ The paper presents an elegant solution to a fundamental bottleneck in large mode
 
 I'm ready to discuss any specific aspects of this paper that interest you. What would you like to explore first?
 
+</div>
 </details>
 
 https://oracle-oci-ocas.medium.com/zero-redundancy-optimizers-a-method-for-training-machine-learning-models-with-billion-parameter-472e8f4e7a5b
@@ -2061,7 +2167,8 @@ Google's model that used a discriminative approach instead of masked language mo
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # ELECTRA: A Brief Overview
 
@@ -2082,6 +2189,7 @@ The authors demonstrate ELECTRA's efficiency by showing it outperforms BERT, GPT
 
 I'm happy to explore any specific aspects of the paper that interest you, such as the model architecture, training methodology, experimental results, or the mathematical formulations of the approach.
 
+</div>
 </details>
 
 ### Switch Transformer
@@ -2092,7 +2200,8 @@ Google's early mixture-of-experts approach that demonstrated trillion-parameter 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Switch Transformers: A Brief Overview
 
@@ -2107,6 +2216,7 @@ The authors demonstrate that even with as few as two experts, their approach sho
 
 What aspect of the Switch Transformer would you like me to elaborate on?
 
+</div>
 </details>
 
 ### Scaling Laws
@@ -2117,7 +2227,8 @@ OpenAI's publication on the mathematical relationships between model size, datas
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll help you understand this fascinating paper on scaling laws for neural language models. Let me give you a high-level summary:
 
@@ -2135,6 +2246,7 @@ The paper's most striking insight is that these relationships hold across severa
 
 Is there a specific aspect of this paper you'd like to explore first? I'm happy to delve into the mathematical formulations, the empirical methodology, or the practical implications of their findings.
 
+</div>
 </details>
 
 ## 2021: Instruction Tuning and Alignment
@@ -2145,7 +2257,8 @@ Is there a specific aspect of this paper you'd like to explore first? I'm happy 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll be happy to guide you through this machine learning research paper with a focus on building mathematical intuition. Let me start with a high-level summary of the paper you've shared.
 
@@ -2164,6 +2277,7 @@ This approach appears to be a mathematically elegant reformulation of positional
 
 I'm ready to explore specific aspects of this paper based on your questions. Would you like to discuss the mathematical formulation of RoPE, its relationship to other position encoding methods, the experimental results, or something else?
 
+</div>
 </details>
 
 https://huggingface.co/blog/designing-positional-encoding
@@ -2174,7 +2288,8 @@ https://huggingface.co/blog/designing-positional-encoding
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll help you navigate this machine learning research paper as Professor Claude. Let me start with a high-level summary.
 
@@ -2192,6 +2307,7 @@ Their approach makes training trillion-parameter models practical (estimated 3 m
 
 Is there a particular aspect of the paper you'd like to explore first? For example, we could discuss the parallelization techniques in more detail, their pipeline scheduling approach, or the performance results they achieved.
 
+</div>
 </details>
 
 ### Transcending Scaling Laws with 0.1% Extra Compute
@@ -2200,7 +2316,8 @@ Is there a particular aspect of the paper you'd like to explore first? For examp
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Transcending Scaling Laws with 0.1% Extra Compute"
 
@@ -2217,6 +2334,7 @@ This approach is particularly interesting because it challenges conventional wis
 
 Is there a particular aspect of this paper you'd like to explore further?
 
+</div>
 </details>
 
 ### Improving language models by retrieving from trillions of tokens
@@ -2225,7 +2343,8 @@ Is there a particular aspect of this paper you'd like to explore further?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this research paper with me. Let me provide a high-level summary:
 
@@ -2246,6 +2365,7 @@ The paper demonstrates that retrieval offers an orthogonal scaling dimension to 
 
 What aspects of this paper would you like to explore in more detail?
 
+</div>
 </details>
 
 ### CLIP
@@ -2271,7 +2391,8 @@ I have an entire blog dedicated to diffusion models, consdier checking that out 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel"
 
@@ -2283,6 +2404,7 @@ The authors explain various optimizations in FSDP including deferred initializat
 
 What specific aspects of this paper would you like to explore further?
 
+</div>
 </details>
 
 https://engineering.fb.com/2021/07/15/open-source/fsdp/
@@ -2293,7 +2415,8 @@ https://engineering.fb.com/2021/07/15/open-source/fsdp/
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Codex: Evaluating Large Language Models Trained on Code
 
@@ -2313,6 +2436,7 @@ This represents a significant step in code generation capabilities, moving beyon
 
 Is there a specific aspect of the paper you'd like to explore further?
 
+</div>
 </details>
 
 ### LoRA
@@ -2321,7 +2445,8 @@ Is there a specific aspect of the paper you'd like to explore further?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this research paper with me. I'll provide a brief high-level summary to get us started.
 
@@ -2343,6 +2468,7 @@ The paper includes extensive empirical validation across multiple models and tas
 
 What specific aspects of this paper would you like me to explain in more detail?
 
+</div>
 </details>
 
 ### Self-Instruct: Aligning Language Models with Self-Generated Instructions
@@ -2351,7 +2477,8 @@ What specific aspects of this paper would you like me to explain in more detail?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # SELF-INSTRUCT: Aligning Language Models with Self-Generated Instructions
 
@@ -2388,6 +2515,7 @@ This work is particularly important because it addresses a key limitation in sca
 
 Would you like me to elaborate on any specific aspect of the paper, such as the technical implementation, the evaluation methodology, or the implications of this approach?
 
+</div>
 </details>
 
 ### PaLM
@@ -2415,7 +2543,8 @@ Lab: Google
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "PaLM: Scaling Language Modeling with Pathways"
 
@@ -2435,6 +2564,7 @@ The paper contributes significantly to understanding how model scaling affects p
 
 What specific aspect of the paper would you like to explore first?
 
+</div>
 </details>
 
 ### Gopher (DeepMind)
@@ -2447,7 +2577,8 @@ What specific aspect of the paper would you like to explore first?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Scaling Language Models: Methods, Analysis & Insights from Training Gopher"
 
@@ -2465,6 +2596,7 @@ The paper provides valuable insights into the capabilities and limitations of la
 
 I'd be happy to discuss any specific aspects of this paper that interest you, whether related to the technical implementation, evaluation methodology, ethical considerations, or the mathematical foundations of the work.
 
+</div>
 </details>
 
 ### Megatron-Turing NLG
@@ -2478,7 +2610,8 @@ I'd be happy to discuss any specific aspects of this paper that interest you, wh
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll be happy to help you understand the machine learning research paper you've shared. Let me start with a high-level summary.
 
@@ -2496,6 +2629,7 @@ The model demonstrates impressive improvements in natural language understanding
 
 Would you like me to elaborate on any specific aspect of this paper, such as the 3D parallelism approach, their data curation methods, or their evaluation results?
 
+</div>
 </details>
 
 ## 2022: Democratization
@@ -2506,7 +2640,8 @@ Would you like me to elaborate on any specific aspect of this paper, such as the
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # High-Level Summary of "Efficiently Scaling Transformer Inference"
 
@@ -2524,6 +2659,7 @@ The research provides a clear framework for making partitioning decisions based 
 
 Would you like me to explore any specific aspect of this paper in more detail?
 
+</div>
 </details>
 
 """
@@ -2543,7 +2679,8 @@ these effects?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll be happy to help you understand this research paper on "Fast Inference from Transformers via Speculative Decoding." Let me provide a high-level summary first.
 
@@ -2559,6 +2696,7 @@ Their experiments show 2-3x speedups for T5-XXL (11B parameters) without any cha
 
 Would you like me to explain any particular aspect of this paper in more detail?
 
+</div>
 </details>
 
 ### Chinchilla
@@ -2586,7 +2724,8 @@ Lab: Deepmind
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Training Compute-Optimal Large Language Models"
 
@@ -2600,6 +2739,7 @@ This work highlights the importance of balanced scaling between model size and t
 
 Is there any specific aspect of this paper you'd like me to explain in more detail?
 
+</div>
 </details>
 
 ### Chain-of-thought prompting
@@ -2608,7 +2748,8 @@ Is there any specific aspect of this paper you'd like me to explain in more deta
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll help you understand this research paper on chain-of-thought prompting in large language models. Let me provide a high-level summary first.
 
@@ -2622,6 +2763,7 @@ What's particularly interesting is that this reasoning ability is "emergent" - i
 
 I'm happy to dive deeper into any specific aspects of the paper you're interested in exploring!
 
+</div>
 </details>
 
 ### InstructGPT
@@ -2651,7 +2793,8 @@ Lab: OpenAI
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Training language models to follow instructions with human feedback"
 
@@ -2667,6 +2810,7 @@ This work is significant as it provides a practical approach to aligning languag
 
 Is there a specific aspect of the paper you'd like me to explore further?
 
+</div>
 </details>
 
 ### BLOOM
@@ -2694,7 +2838,8 @@ License: Open, but need to follow restrictions in Attachment A, BigScience RAIL 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # BLOOM: A 176B-Parameter Multilingual Language Model
 
@@ -2720,6 +2865,7 @@ This paper represents a significant milestone in democratizing access to large l
 
 Is there a specific aspect of the paper you'd like to explore further?
 
+</div>
 </details>
 
 ### Emergent Abilities of Large Language Models
@@ -2728,7 +2874,8 @@ Is there a specific aspect of the paper you'd like to explore further?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Emergent Abilities of Large Language Models: Summary
 
@@ -2756,6 +2903,7 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 - The relationship between model scale and emergence
 - Implications for future AI development
 
+</div>
 </details>
 
 ### Flash Attention
@@ -2764,7 +2912,8 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I've received the paper "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness" by Tri Dao et al. from 2022. Let me provide a brief high-level summary:
 
@@ -2787,6 +2936,7 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 - The mathematical formulation of their approach
 - The experimental results and what they demonstrate
 
+</div>
 </details>
 
 ### Grouped-query attention
@@ -2795,7 +2945,8 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # High-level Summary of GQA: Training Generalized Multi-Query Transformer Models
 
@@ -2811,6 +2962,7 @@ The results demonstrate that GQA achieves quality close to multi-head attention 
 
 I'd be happy to dive deeper into any specific aspect of the paper that interests you most.
 
+</div>
 </details>
 
 ### ALiBi position encoding
@@ -2819,7 +2971,8 @@ I'd be happy to dive deeper into any specific aspect of the paper that interests
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Summary of "Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation"
 
@@ -2843,6 +2996,7 @@ This work has significant practical implications for transformer efficiency, as 
 
 Would you like me to elaborate on any specific aspect of this paper? For example, I could explain how the ALiBi mechanism works, discuss the experimental results in more detail, or compare ALiBi with other position encoding approaches.
 
+</div>
 </details>
 
 ### DeepSpeed Inference: Enabling Efficient Inference of Transformer Models at Unprecedented Scale
@@ -2851,7 +3005,8 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # DeepSpeed Inference: A Brief Overview
 
@@ -2872,6 +3027,7 @@ Their results demonstrate significant improvements:
 
 The paper addresses specific challenges in transformer inference related to memory bandwidth, throughput, and resource constraints, providing a comprehensive solution for the increasingly diverse landscape of transformer models.
 
+</div>
 </details>
 
 ### Claude 1
@@ -2887,7 +3043,8 @@ The paper addresses specific challenges in transformer inference related to memo
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this research paper with me. Let me provide a high-level summary:
 
@@ -2916,6 +3073,7 @@ This paper represents an important step in making large language models more cap
 
 Would you like me to explore any specific aspect of this paper in more detail?
 
+</div>
 </details>
 
 ### Red Teaming Language Models with Language Models
@@ -2924,7 +3082,8 @@ Would you like me to explore any specific aspect of this paper in more detail?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'd be happy to help guide you through the machine learning research paper you've shared.
 
@@ -2944,6 +3103,7 @@ The paper provides a significant methodological contribution by exploring severa
 
 What specific aspects of the paper would you like to explore further? I'm happy to explain their methodology, discuss the mathematical formulations behind their approach, or analyze particular findings in more detail.
 
+</div>
 </details>
 
 ### HELM (Holistic Evaluation of Language Models)
@@ -2957,8 +3117,10 @@ Standardized evaluation metrics
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### DALL-E 2 (OpenAI)
@@ -2983,7 +3145,8 @@ Standardized evaluation metrics
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 This paper addresses the challenge of compressing large language models (LLMs) like GPT-3 and BLOOM for more efficient inference. The key contribution is GPTQ, a novel one-shot weight quantization method that can compress models with billions of parameters down to 3-4 bits per weight with minimal accuracy loss.
 
@@ -2997,6 +3160,7 @@ At a high level:
 
 The practical impact is significant: GPTQ allows large models to run with far fewer computational resources, achieving 3.25x speedups on high-end GPUs and 4.5x speedups on more cost-effective ones, making these powerful models more accessible to researchers and practitioners.
 
+</div>
 </details>
 
 ### Beyond the Imitation Game: Quantifying and extrapolating the capabilities of language models
@@ -3007,8 +3171,10 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### Minerva
@@ -3017,7 +3183,8 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll review this important paper on Minerva, Google's language model for quantitative reasoning. Let me provide a high-level summary first.
 
@@ -3036,6 +3203,7 @@ This paper introduces **Minerva**, a large language model specifically designed 
 
 The paper demonstrates that language models can achieve impressive mathematical reasoning capabilities when trained on appropriate data, though they still fall short of human expert performance and have notable limitations in verification and complex multi-step problems.
 
+</div>
 </details>
 
 ### ChatGPT
@@ -3050,7 +3218,8 @@ The beginning of an Era
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this research paper with me. Let me provide a brief high-level summary:
 
@@ -3068,6 +3237,7 @@ Their experiments show vLLM improves throughput by 2-4× compared to state-of-th
 
 Would you like me to elaborate on any particular aspect of this paper, such as the PagedAttention algorithm, memory management techniques, or the experimental results?
 
+</div>
 </details>
 
 ### QLoRA: Efficient Finetuning of Quantized LLMs
@@ -3076,7 +3246,8 @@ Would you like me to elaborate on any particular aspect of this paper, such as t
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # QLORA: A Brief Overview
 
@@ -3094,6 +3265,7 @@ The authors demonstrate QLORA's effectiveness by developing Guanaco, a family of
 
 Would you like me to explore any particular aspect of the paper in more detail?
 
+</div>
 </details>
 
 ### Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models: A Critical Review and Assessment
@@ -3102,7 +3274,8 @@ Would you like me to explore any particular aspect of the paper in more detail?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Summary of "Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models"
 
@@ -3122,6 +3295,7 @@ The paper also discusses applications of PEFT methods in multi-task learning, cr
 
 Is there a specific aspect of this paper you'd like me to explore in more detail?
 
+</div>
 </details>
 
 ### FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning
@@ -3130,7 +3304,8 @@ Is there a specific aspect of this paper you'd like me to explore in more detail
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 This paper presents FlashAttention-2, an improved algorithm for implementing attention mechanisms in Transformer models that significantly enhances computational efficiency. Building on the original FlashAttention work, FlashAttention-2 introduces better parallelism and work partitioning strategies that achieve approximately 2× speedup over its predecessor.
 
@@ -3144,6 +3319,7 @@ The results are impressive - reaching 50-73% of theoretical maximum FLOPs/s on A
 
 This advancement directly addresses the challenge of scaling Transformers to longer sequence lengths, which is critical for applications like processing long documents, high-resolution images, and video data.
 
+</div>
 </details>
 
 ### AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration
@@ -3152,7 +3328,8 @@ This advancement directly addresses the challenge of scaling Transformers to lon
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this research paper. I'll provide a high-level summary to start:
 
@@ -3178,6 +3355,7 @@ I'd be happy to explore specific aspects of this paper based on your questions. 
 
 What specific aspects of the paper would you like to explore first?
 
+</div>
 </details>
 
 ### Generative Agents: Interactive Simulacra of Human Behavior
@@ -3188,7 +3366,8 @@ Now we have started to get into the region of AI agents. I will recommend checki
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll help you navigate through this machine learning research paper with a focus on building mathematical intuition. Let me provide a high-level summary first.
 
@@ -3210,6 +3389,7 @@ This work represents an interesting intersection of large language models, inter
 
 What specific aspects of this paper would you like to explore further?
 
+</div>
 </details>
 
 ### Voyager: An Open-Ended Embodied Agent with Large Language Models
@@ -3218,7 +3398,8 @@ What specific aspects of this paper would you like to explore further?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # VOYAGER: An Open-Ended Embodied Agent with Large Language Models
 
@@ -3238,6 +3419,7 @@ The approach is particularly interesting because it creates a lifelong learning 
 
 Would you like me to elaborate on any specific aspect of this paper?
 
+</div>
 </details>
 
 ### Universal and Transferable Adversarial Attacks on Aligned Language Models
@@ -3246,7 +3428,8 @@ Would you like me to elaborate on any specific aspect of this paper?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll take on the role of Professor Claude to help you explore this research paper on adversarial attacks against aligned language models. Let me begin with a high-level summary of the paper.
 
@@ -3265,6 +3448,7 @@ This represents a significant advancement in understanding vulnerabilities in LL
 
 I'm ready to explore any specific aspects of this paper that interest you, from the mathematical formulation of their attack method to the implications for language model safety.
 
+</div>
 </details>
 
 ### Tree of Thoughts: Deliberate Problem Solving with Large Language Models
@@ -3273,7 +3457,8 @@ I'm ready to explore any specific aspects of this paper that interest you, from 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll be your guide in exploring this machine learning research paper! Let me start with a high-level summary.
 
@@ -3296,6 +3481,7 @@ This framework represents an interesting bridge between classical AI problem-sol
 
 Is there a specific aspect of this paper you'd like to explore further?
 
+</div>
 </details>
 
 ### Mpt
@@ -3304,7 +3490,8 @@ Is there a specific aspect of this paper you'd like to explore further?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this document. This appears to be a blog post from MosaicML introducing their MPT-7B model, which was released in May 2023. Let me provide a brief high-level summary:
 
@@ -3329,6 +3516,7 @@ The model was trained in 9.5 days on 440 A100 GPUs at a cost of around $200,000,
 
 Would you like me to elaborate on any specific aspect of this model, such as its architecture, training methodology, performance benchmarks, or potential applications?
 
+</div>
 </details>
 
 ### WizardLM: Empowering Large Language Models to Follow Complex Instructions
@@ -3337,7 +3525,8 @@ Would you like me to elaborate on any specific aspect of this model, such as its
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll be delighted to guide you through this machine learning research paper as Professor Claude. Let me provide a high-level summary to start.
 
@@ -3357,6 +3546,7 @@ Their experiments show that WizardLM outperforms models like Alpaca and Vicuna o
 
 Is there a specific aspect of the paper you'd like to explore further? I'm happy to delve into the Evol-Instruct methodology, the evaluation approach, the mathematical components, or any other elements you find interesting.
 
+</div>
 </details>
 
 ### DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales
@@ -3365,7 +3555,8 @@ Is there a specific aspect of the paper you'd like to explore further? I'm happy
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this research paper with me. Let me provide a brief, high-level summary of "DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales":
 
@@ -3386,6 +3577,7 @@ Is there a specific aspect of the paper you'd like me to explore in more depth? 
 - The performance comparisons with existing systems
 - The implications for democratizing AI development
 
+</div>
 </details>
 
 ### GPT-4
@@ -3399,8 +3591,10 @@ Is there a specific aspect of the paper you'd like me to explore in more depth? 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### Mistral 7b
@@ -3409,7 +3603,8 @@ Is there a specific aspect of the paper you'd like me to explore in more depth? 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll serve as Professor Claude to help you understand machine learning research papers, focusing on building mathematical intuition while following your guidance for the discussion.
 
@@ -3429,6 +3624,7 @@ This work challenges conventional scaling laws by showing that careful architect
 
 I'm ready to discuss any specific aspects of the paper you'd like to explore in more detail.
 
+</div>
 </details>
 
 ### LLaMA
@@ -3456,7 +3652,8 @@ Lab: Meta
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I'll be your guide through machine learning research papers as Professor Claude, focusing on building mathematical intuition through clear explanations. I'll start with high-level summaries, wait for your specific questions, suggest important concepts to explore, break down math step-by-step, reference prerequisites, simplify complex proofs, use analogies, and highlight limitations where relevant.
 
@@ -3476,6 +3673,7 @@ The paper also examines performance across various benchmarks including common s
 
 Would you like me to elaborate on any particular aspect of the paper such as their training approach, architectural modifications, benchmarking methodology, or specific performance results?
 
+</div>
 </details>
 
 ### Mixtral 8x7B
@@ -3484,7 +3682,8 @@ Would you like me to elaborate on any particular aspect of the paper such as the
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Mixtral of Experts: A High-Performance Mixture-of-Experts Model
 
@@ -3503,6 +3702,7 @@ The Mixtral 8x7B model:
 
 The instruction-tuned version (Mixtral 8x7B - Instruct) performs exceptionally well, surpassing GPT-3.5 Turbo, Claude-2.1, Gemini Pro, and Llama 2 70B chat models on human evaluation benchmarks.
 
+</div>
 </details>
 
 ### LLaMA 2
@@ -3511,7 +3711,8 @@ The instruction-tuned version (Mixtral 8x7B - Instruct) performs exceptionally w
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Llama 2: Open Foundation and Fine-Tuned Chat Models"
 
@@ -3525,6 +3726,7 @@ The authors detail their comprehensive approach to safety alignment and provide 
 
 Key contributions include detailed methodologies for the fine-tuning process, safety mechanisms, and a transparent discussion of potential limitations and ethical considerations. The models have been released for both commercial and research use.
 
+</div>
 </details>
 
 ### Vicuna (LMSYS)
@@ -3536,7 +3738,8 @@ Key contributions include detailed methodologies for the fine-tuning process, sa
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Vicuna: An Open-Source Chatbot Impressing GPT-4 with 90%\* ChatGPT Quality"
 
@@ -3555,6 +3758,7 @@ Key highlights:
 
 The authors acknowledge limitations in mathematical reasoning, factual accuracy, and safety, noting that this represents an open starting point for future research.
 
+</div>
 </details>
 
 ### Alpaca
@@ -3579,7 +3783,8 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Brief Summary of "Alpaca: A Strong, Replicable Instruction-Following Model"
 
@@ -3603,6 +3808,7 @@ The work aimed to democratize access to instruction-following models for academi
 
 Would you like me to discuss any specific aspect, such as how Alpaca's approach compares to the methods used in Llama 2 or Vicuna, or explore the mathematical/technical details of their training methodology?
 
+</div>
 </details>
 
 ### Direct Preference Optimization (DPO)
@@ -3611,7 +3817,8 @@ Would you like me to discuss any specific aspect, such as how Alpaca's approach 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # High-Level Summary: Direct Preference Optimization (DPO)
 
@@ -3682,6 +3889,7 @@ This work represents a paradigm shift in preference learning by showing that the
 
 What aspects of DPO would you like to explore in more detail? The mathematical derivation, the experimental setup, or perhaps the theoretical implications?
 
+</div>
 </details>
 
 ### Constitutional AI
@@ -3692,8 +3900,10 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### Toy Models of Superposition
@@ -3702,8 +3912,10 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### Towards Monosemanticity: Decomposing Language Models With Dictionary Learning
@@ -3712,8 +3924,10 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### PaLM 2
@@ -3725,7 +3939,8 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # High-Level Summary: PaLM 2 Technical Report
 
@@ -3773,6 +3988,7 @@ PaLM 2 achieves **better performance than its much larger predecessor** while be
 
 What aspects of PaLM 2 would you like to explore in more detail?
 
+</div>
 </details>
 
 ### LAION-5B (LAION)
@@ -3786,7 +4002,8 @@ I was conflicted about whether I should put it here or not. But this is one of t
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # LAION-5B: An Open Large-Scale Dataset Overview
 
@@ -3821,6 +4038,7 @@ This represents the first openly available dataset at the scale needed for train
 
 I'm ready to dive deeper into any aspect that interests you - whether that's the mathematical details of the CLIP filtering process, the experimental validation methodology, the ethical considerations around large-scale web scraping, or the technical infrastructure challenges they solved. What would you like to explore first?
 
+</div>
 </details>
 
 ### LIMA
@@ -3832,7 +4050,8 @@ Demonstrated efficiency of small high-quality datasets
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # LIMA: Less Is More for Alignment Overview
 
@@ -3875,6 +4094,7 @@ This work has profound implications for understanding what makes language models
 
 What aspect would you like to explore further? I could dive into the mathematical details of their training methodology, the careful data curation process that made 1,000 examples so effective, or the broader implications for our understanding of how language models learn to be helpful assistants.
 
+</div>
 </details>
 
 ### Mamba
@@ -3888,7 +4108,8 @@ https://tridao.me/blog/
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Mamba: A New Architecture for Sequence Modeling
 
@@ -3929,6 +4150,7 @@ This represents a significant step toward more efficient sequence models that co
 
 What aspects of this work would you like to explore in detail? I'm ready to dive into the mathematical formulations, architectural choices, or experimental results that interest you most.
 
+</div>
 </details>
 
 ### LLaVA (Visual Instruction Tuning)
@@ -3942,7 +4164,8 @@ What aspects of this work would you like to explore in detail? I'm ready to dive
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this foundational paper on LLaVA (Large Language and Vision Assistant)!
 
@@ -3968,6 +4191,7 @@ This paper introduces **visual instruction tuning** - the first attempt to exten
 
 I'm ready to dive deeper into any aspect you'd like to explore - whether that's the mathematical formulations, training procedures, data generation pipeline, or architectural choices. What interests you most about this approach?
 
+</div>
 </details>
 
 ### Claude 1/Claude 2
@@ -3987,7 +4211,8 @@ I'm ready to dive deeper into any aspect you'd like to explore - whether that's 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Gemini: A Family of Highly Capable Multimodal Models - Brief Summary
 
@@ -4011,6 +4236,7 @@ The paper is quite comprehensive at 90+ pages, covering everything from architec
 
 What specific aspects of Gemini would you like to explore? I could help you dive into the multimodal architecture, the mathematical foundations of their training approach, the benchmarking methodology, or any other technical details that caught your interest.
 
+</div>
 </details>
 
 ### Qwen
@@ -4019,7 +4245,8 @@ What specific aspects of Gemini would you like to explore? I could help you dive
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Hello! I'm Professor Claude, and I'm excited to help you explore this fascinating machine learning research paper you've shared.
 
@@ -4046,6 +4273,7 @@ What makes this particularly interesting is their systematic approach to buildin
 
 What aspects of this work would you like to dive deeper into? I'm ready to explore the mathematical foundations, training methodologies, or any specific techniques that caught your attention!
 
+</div>
 </details>
 
 ### Qwen-VL
@@ -4054,7 +4282,8 @@ What aspects of this work would you like to dive deeper into? I'm ready to explo
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this paper! Let me provide a high-level summary of "Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond."
 
@@ -4095,6 +4324,7 @@ I'm ready to dive deeper into any specific aspects that interest you! Some poten
 
 What would you like to explore first?
 
+</div>
 </details>
 
 ### Phi-1
@@ -4103,7 +4333,8 @@ What would you like to explore first?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I see you've shared the influential "Textbooks Are All You Need" paper by Gunasekar et al. from Microsoft Research! This is a fascinating study that challenged conventional scaling laws in language model training.
 
@@ -4131,6 +4362,7 @@ I'm ready to dive deeper into any aspect that interests you! Some particularly r
 
 What would you like to explore first?
 
+</div>
 </details>
 
 ### Reinforced Self-Training (ReST) for Language Modeling
@@ -4165,7 +4397,8 @@ It's June 2025 currently while I am writing this, and I cannot say for certain i
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing the Gemma paper! Let me provide a high-level summary of this important work.
 
@@ -4200,13 +4433,15 @@ Thank you for sharing the Gemma paper! Let me provide a high-level summary of th
 - Strong performance on mathematics (46.4% on GSM8K) and coding tasks
 - Comprehensive safety evaluations show competitive performance on responsibility benchmarks
 
+</div>
 </details>
 
 ### Gemma 2
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Gemma 2: A High-Level Overview
 
@@ -4243,6 +4478,7 @@ I'm ready to dive deeper into any aspect that interests you! Some particularly r
 
 What would you like to explore first?
 
+</div>
 </details>
 
 ### Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference
@@ -4251,7 +4487,8 @@ What would you like to explore first?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this comprehensive paper on Chatbot Arena! Let me provide you with a high-level summary to get us started.
 
@@ -4277,6 +4514,7 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 
 **Why It Matters**: This addresses critical limitations of static benchmarks (contamination, lack of human alignment, limited diversity) by creating a continuously updating, human-preference-based evaluation system that better reflects real-world LLM usage.
 
+</div>
 </details>
 
 ### TinyLlama: An Open-Source Small Language Model
@@ -4285,7 +4523,8 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # TinyLlama: A Compact Open-Source Language Model
 
@@ -4304,6 +4543,7 @@ This paper presents **TinyLlama**, a remarkably compact 1.1B parameter language 
 
 The work is particularly valuable for democratizing language model research, enabling applications on resource-constrained devices, and providing a strong foundation for experimentation.
 
+</div>
 </details>
 
 ### MordernBert
@@ -4312,7 +4552,8 @@ The work is particularly valuable for democratizing language model research, ena
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing this excellent paper on ModernBERT! Let me provide you with a high-level summary to start.
 
@@ -4337,6 +4578,7 @@ This paper introduces **ModernBERT**, a significant modernization of the classic
 **Why This Matters:**
 Encoders remain crucial for production systems doing retrieval, classification, and RAG pipelines where efficiency matters more than generation capability. ModernBERT shows there's still significant room for improvement in this "mature" architecture family.
 
+</div>
 </details>
 
 ### Jamba: A Hybrid Transformer-Mamba Language Model
@@ -4345,7 +4587,8 @@ Encoders remain crucial for production systems doing retrieval, classification, 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Jamba: A Hybrid Transformer-Mamba Language Model - Brief Overview
 
@@ -4381,6 +4624,7 @@ I'm ready to dive deeper into any aspect that interests you! Some potentially va
 
 What would you like to explore first?
 
+</div>
 </details>
 
 ### Claude 3
@@ -4394,8 +4638,10 @@ What would you like to explore first?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### LLaMA 3
@@ -4404,7 +4650,8 @@ What would you like to explore first?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Llama 3 Paper Overview
 
@@ -4435,6 +4682,7 @@ This is Meta's comprehensive technical report on **Llama 3**, their latest famil
 
 ## Mathematical Foundation
 The paper is built on established scaling laws but pushes them to new extremes, with careful attention to compute-optimal training and the tension between model size and training duration.
+</div>
 </details>
 
 ### Claude 3
@@ -4448,7 +4696,8 @@ Improved reasoning and multimodal capabilities
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 Thank you for sharing the Gemini 1.5 technical report! This is a substantial and impressive piece of work that I'm excited to help you explore.
 
@@ -4473,13 +4722,15 @@ The paper also includes extensive safety evaluations and introduces novel benchm
 
 What aspects of this work would you like to explore? I'm ready to help you understand anything from the architectural details to the mathematical foundations of their scaling approaches, or the novel evaluation methodologies they developed.
 
+</div>
 </details>
 
 ### Qwen 2 
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # QWEN2 Technical Report - High-Level Summary
 
@@ -4509,6 +4760,7 @@ The paper represents a significant step forward in open-weight language models, 
 
 What specific aspects of Qwen2 would you like to explore in detail? I'm ready to dive into the mathematical formulations, architectural choices, training methodologies, or evaluation results based on your interests!
 
+</div>
 </details>
 
 
@@ -4520,8 +4772,10 @@ High performance with limited training data
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### OpenAI o1
@@ -4531,8 +4785,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### RSO (Reinforced Self-training with Online feedback)
@@ -4542,8 +4798,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### SPIN (Self-Played Improvement Narration)
@@ -4553,8 +4811,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### DBRX
@@ -4563,8 +4823,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision
@@ -4573,8 +4835,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### Qwen 2.5 (Alibaba)
@@ -4586,8 +4850,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### DeepSeek 2.5 (DeepSeek)
@@ -4599,8 +4865,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### Claude 3.5 Sonnet (Anthropic)
@@ -4612,8 +4880,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### DeepSeek-R1 (DeepSeek)
@@ -4625,8 +4895,10 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 ### Phi 3
@@ -4635,7 +4907,8 @@ Advanced mathematical problem-solving
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 You've now shared the Phi-3 Technical Report - what an interesting evolution from the original phi-1 paper! This represents a significant advancement in Microsoft's small language model research.
 
 ## High-Level Summary
@@ -4662,6 +4935,7 @@ This is fascinating to compare with the original phi-1 work! Some areas that mig
 - **The safety and alignment methodology for production deployment**
 
 What aspects of this evolution from phi-1 to phi-3 would you like to dive into?
+</div>
 </details>
 
 ### Phi 4
@@ -4670,7 +4944,8 @@ What aspects of this evolution from phi-1 to phi-3 would you like to dive into?
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Phi-4 Technical Report - Summary
 
@@ -4704,6 +4979,7 @@ The paper introduces **Pivotal Token Search**, a fascinating approach that ident
 - The contamination-proof evaluation methodology
 - Any specific technical aspects that caught your attention
 
+</div>
 </details>
 
 ### Self-Play Fine-Tuning Converts Weak Language Models to Strong Language Models
@@ -4724,7 +5000,8 @@ The paper introduces **Pivotal Token Search**, a fascinating approach that ident
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 I've reviewed the Gemma 3 Technical Report - a comprehensive paper introducing Google DeepMind's latest family of open language models. Here's a high-level summary:
 
@@ -4747,6 +5024,7 @@ This paper offers excellent opportunities to explore modern transformer architec
 
 What specific aspects would you like to dive into? I'm ready to walk through any mathematical formulations, architectural decisions, or experimental methodologies that interest you!
 
+</div>
 </details>
 
 ### Llama 4
@@ -4757,7 +5035,8 @@ What specific aspects would you like to dive into? I'm ready to walk through any
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
 # Qwen2.5 Technical Report - High-Level Summary
 
@@ -4790,6 +5069,7 @@ The paper demonstrates how careful scaling of both data and training techniques 
 
 I'm ready to dive deeper into any specific aspects that interest you! Some particularly rich areas for mathematical exploration include their scaling laws, the reinforcement learning framework, or the long-context training methodology.
 
+</div>
 </details>
 
 ### Qwen 2.5-1M
@@ -4859,8 +5139,10 @@ Consider reading all their paper from this list https://huggingface.co/collectio
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1"> Summary</summary>
 
+</div>
 </details>
 
 Include Large Text diffusion models 
@@ -4880,4 +5162,3 @@ NOTES TO SELF
 
 ### Some Honorable blogs and mentions that I believe you should definitely check out:
 
-https://magazine.sebastianraschka.com/p/understanding-large-language-models -->
