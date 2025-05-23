@@ -4133,6 +4133,27 @@ What would you like to explore first?
 
 </details>
 
+### Reinforced Self-Training (ReST) for Language Modeling
+
+[paper](https://arxiv.org/pdf/2308.08998)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+
+
+### The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits
+
+[paper](https://arxiv.org/pdf/2402.17764)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
 
 ## 2024: Efficiency and Performance
 
@@ -4685,6 +4706,16 @@ The paper introduces **Pivotal Token Search**, a fascinating approach that ident
 
 </details>
 
+### Self-Play Fine-Tuning Converts Weak Language Models to Strong Language Models
+
+[paper](https://arxiv.org/pdf/2401.01335)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
 ## 2025
 
 ### Gemma 3 
@@ -4761,12 +4792,37 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 </details>
 
+### Qwen 2.5-1M
 
-### DeepSeek
+[paper](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen2.5-1M/Qwen2_5_1M_Technical_Report.pdf)
 
-I can have a whole section dedicated just to the geniuses that are DeepSeek 
+<details>
 
-Consider reading all their paper from this list https://huggingface.co/collections/Presidentlin/deepseek-papers-674c536aa6acddd9bc98c2ac
+<summary>Quick Summary</summary>
+
+</details>
+
+### Qwen2.5-Omni
+
+[paper](https://github.com/QwenLM/Qwen2.5-Omni/blob/main/assets/Qwen2.5_Omni.pdf)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+### Qwen 3 
+
+[paper](https://arxiv.org/pdf/2505.09388)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+
+</details>
+
 
 
 ### Grok
@@ -4774,12 +4830,32 @@ Consider reading all their paper from this list https://huggingface.co/collectio
 - Open-source model
 - 314B parameters
 
+
 ### Pixtral
 
 [paper](https://arxiv.org/abs/2410.07073)
 
 - Multimodal capabilities
 - 12B parameters
+
+### Large Language Diffusion Models
+
+[paper](https://arxiv.org/pdf/2502.09992)
+
+<details>
+
+<summary>Quick Summary</summary>
+
+</details>
+
+
+## It's all about DeepSeek 
+
+This whole section is dedicated just to the geniuses that are DeepSeek 
+
+Consider reading all their paper from this list https://huggingface.co/collections/Presidentlin/deepseek-papers-674c536aa6acddd9bc98c2ac
+
+
 
 <details>
 
