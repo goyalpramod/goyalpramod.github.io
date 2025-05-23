@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: blog
 title: "Evolution of LLMs"
 date: 2025-05-05 12:00:00 +0530
@@ -8,8 +8,7 @@ image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 
 ## STILL A WORK IN PROGRESS, I MESSED UP THE PROD, PLEASE DONT READ 
 
-<!-- [TOP MEME, MOnkey to man evolution yearwise and leave the man with no model (to signify no AGI yet)]
-[Add tree from this paper to clarify that it was not a linear evolution but a tree wise, much like real theory of evolution https://arxiv.org/pdf/2304.13712] -->
+
 
 The landscape of language models has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we explore the
 
@@ -21,7 +20,6 @@ We will talk about everything the code, math, and ideas that revolutionized NLP.
 
 Additionally you can treat this blog as a sort of part 2, to my original blog on transformers which you can checkout [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
 
-<!-- [add prerequisites section, summary section, skip to section] -->
 
 ## How this blog is structured
 
@@ -104,129 +102,6 @@ Additionally there have been a lot of innovations in vision modeling, TTS, Image
 
 > NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
 
-<!-- 
-## A short introduction to LLMs
-
-This part is highly influenced by this [video](https://www.youtube.com/watch?v=7xTGNNLPyMI) by andrej karpathy
-
-A paper on pretraining [paper](https://arxiv.org/pdf/2003.08271)
-
-### Architecture
-
-We will be skipping over the internal details about the transformers model (you can read more about it in my previous blog), I will proceed with the assumption that you have a very deep level understanding of atleast the transformer model. Having that that let us proceed.
-
-As we can see the original transformer has two parts, an Encoder and a Decoder. And as is known, it was initially made for the sole purpose of Machine Translation.
-
-But over the years they have been used for a plethora of tasks from
-
-- Question Answering
-- Summarization
-- Tagging
-- Classification
-
-And many more.
-
-LLMs consist of architectures which are solely based on the Encoder like Bert
-
-[ADD_IMAGE_OF_BERT]
-
-LLMs consist of architectures which are solely based on the Decoder like gpt-1
-
-[ADD_IMAGE_OF_GPT1]
-
-There are LLMs which use the good ol Encoder Decoder layer together too like T5
-
-[WITH_IMAGE]
-
-One thing to be mindful of is, that the development of LLMs have been done on the transformers. There was no radical shift, only gradual and slow incremental changes. As you read more about them you will understand them better.
-
-In crux you only need to understand the basic Transformer architecture to understand most if not all LLMs.
-
-### Training
-
-As I mentioned there are 3 kinds of architectures when it comes to LLM, hence there is a different way of training each. Even though they share few similarities. Each has a different objective. Let us begin by first understanding the most popular LLM architecture, that being the decoder only architecture.
-
-#### Decoder Only
-
-##### Pretraining
-
-**Step 1: Data Collection**
-
-We know Decoder based LLMs are able to answer a variety of answer to questions about science, food, mathematics, facts etc. That is because they have been trained on a huge plethora of the data.
-
-So the first step is to collect the said data. One important thing to keep in mind is that these models are able to answer based on what they have seen. They are not performing any kind of reasoning. It is given a distribution, what is the most likely token that is to appear.
-
-So if you want a coding LLM you will collect a lot of code related data from publically available places like github.
-
-If you want a cooking LLM you will collected a lot of recipes and so on.
-
-Most general purpose LLMs are trained on data collected from various sources, hence they are able to answer a lot of question.
-
-A lot of filtering steps also goes behind it
-
-"
-Garbage in, garbage out
-"
-
-Most of the internet when crawled has data which looks something like this
-
-```html
-<html>
-  {add shit}
-</html>
-```
-
-Hence it needs to be processed into a more human readable form, You can imagine how humongous of a task it must be to clean huge datasets with GBs of data.
-
-Now there are other filterning that also needs to be done, How do you take care of profanity? What about fake news and so on
-
-**Step 2: Tokenization**
-
-{maybe talk about vocabulary and token length}
-
-When we talked about transformers, we skipped talking about tokenization, but as it is a vital piece of LLM training. We shall spend some time talking about it here.
-
-Sentence level tokenization
-
-My first question was, why do we need to break down words. Why not give the entire sentence. Heck why not give the whole paragraph as an input.
-
-While in practice it can be done, it is not wise. Because if we go back to our basic principle about LLMs.
-
-"They are next token predictors"
-
-So in given any large enough paragraph or even an essay. The likelihood of a sentence repeating is very low. So if we think it in terms of machines, if we transform each sentence into a token, we will have a vocabular with a lot of numbers, which do not relate to each other at all. So we can never predict what sentence will come after any given sentence.
-
-Word level tokenization
-
-A simple work around this seems to be, well why not just tokenize the words, instead of sentences. Because in any large enough paragraph or essay. Words repeat and they follow a logical sequence of what is to appear next. For example
-
-"Water is \_\_\_", if you gave me this sentence word by word, I will assume the next word is wet. Whereas if you gave me a sentence
-
-"Water is wet, This is a debatable topic." I will have no clue what can be said after this sentence, Maybe someone raises a point, maybe someone says something else.
-
-So word level helps us retain the logical sequence, and words have meanings to them too. But there is still one big issue. There can be millions of words, some have way higher representation in usual text and some are highly unlikely to occur in common place.
-
-There are words which are commonplace in one industry and rare in another.
-
-So we will have a huge vocabulary.
-
-If you think for a moment we may come to the conclusion that, why not use character level tokenization to solve this problem, this will reduce the vocabulary drastically.
-
-Here the problem would lie in the fact that characters by themselves do not hold much meaning (atleast in the english lexicon)
-
-**Step 3: Training the network**
-
-##### Fine-Tuning
-
-#### Encoder Only
-
-Now let's understand how a usual Encoder is trained, We will talk about BERT here
-
-#### Encoder Decoder
-
-Now let's do the same for T5
-
-### Inference -->
 
 ## The AI timeline
 
@@ -459,7 +334,7 @@ This is going to be math heavy so be prepared (Dw, I will guide you in each step
 
 <details>
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 I'll be your guide through this machine learning research paper, focusing on building intuition for the mathematical concepts while waiting for your specific questions to dive deeper.
 
 ## High-Level Summary: Proximal Policy Optimization (PPO)
@@ -1818,7 +1693,7 @@ https://www.youtube.com/watch?v=1VdEw_mGjFk&ab_channel=YannicKilcher
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 # GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding - Summary
 
 Thank you for sharing this research paper! Here's a high-level summary of GShard:
@@ -1852,7 +1727,7 @@ Would you like me to elaborate on any specific aspect of the paper, such as the 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 # Retrieval-Augmented Generation (RAG) for Knowledge-Intensive NLP Tasks
 
 This paper introduces RAG (Retrieval-Augmented Generation), a hybrid model architecture that combines the strengths of parametric memory (knowledge stored in neural network parameters) and non-parametric memory (knowledge stored in an external database that can be retrieved).
@@ -1882,7 +1757,7 @@ Is there a specific aspect of the paper you'd like to explore in more detail?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Big Bird: Transformers for Longer Sequences - Summary
 
@@ -1950,7 +1825,7 @@ attention mechanism that reduces this quadratic dependency to linear
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Language Models are Few-Shot Learners: Summary and Analysis
 
@@ -2019,7 +1894,7 @@ https://www.youtube.com/watch?v=xJrKIPwVwGM&ab_channel=YannicKilcher
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this fascinating paper! "Rethinking Attention with Performers" introduces an important innovation in the Transformer architecture domain.
 
@@ -2067,7 +1942,7 @@ Lab: Google
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer"
 
@@ -2100,7 +1975,7 @@ https://cameronrwolfe.substack.com/p/t5-text-to-text-transformers-part
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Summary of "Measuring Massive Multitask Language Understanding"
 
@@ -2131,7 +2006,7 @@ I'm happy to explore any specific aspects of this paper that interest you.
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll be happy to guide you through this machine learning research paper as Professor Claude. Let me start with a high-level summary.
 
@@ -2168,7 +2043,7 @@ Google's model that used a discriminative approach instead of masked language mo
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # ELECTRA: A Brief Overview
 
@@ -2201,7 +2076,7 @@ Google's early mixture-of-experts approach that demonstrated trillion-parameter 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Switch Transformers: A Brief Overview
 
@@ -2228,7 +2103,7 @@ OpenAI's publication on the mathematical relationships between model size, datas
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll help you understand this fascinating paper on scaling laws for neural language models. Let me give you a high-level summary:
 
@@ -2258,7 +2133,7 @@ Is there a specific aspect of this paper you'd like to explore first? I'm happy 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll be happy to guide you through this machine learning research paper with a focus on building mathematical intuition. Let me start with a high-level summary of the paper you've shared.
 
@@ -2289,7 +2164,7 @@ https://huggingface.co/blog/designing-positional-encoding
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll help you navigate this machine learning research paper as Professor Claude. Let me start with a high-level summary.
 
@@ -2317,7 +2192,7 @@ Is there a particular aspect of the paper you'd like to explore first? For examp
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Transcending Scaling Laws with 0.1% Extra Compute"
 
@@ -2344,7 +2219,7 @@ Is there a particular aspect of this paper you'd like to explore further?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this research paper with me. Let me provide a high-level summary:
 
@@ -2392,7 +2267,7 @@ I have an entire blog dedicated to diffusion models, consdier checking that out 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "PyTorch FSDP: Experiences on Scaling Fully Sharded Data Parallel"
 
@@ -2416,7 +2291,7 @@ https://engineering.fb.com/2021/07/15/open-source/fsdp/
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Codex: Evaluating Large Language Models Trained on Code
 
@@ -2446,7 +2321,7 @@ Is there a specific aspect of the paper you'd like to explore further?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this research paper with me. I'll provide a brief high-level summary to get us started.
 
@@ -2478,7 +2353,7 @@ What specific aspects of this paper would you like me to explain in more detail?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # SELF-INSTRUCT: Aligning Language Models with Self-Generated Instructions
 
@@ -2544,7 +2419,7 @@ Lab: Google
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "PaLM: Scaling Language Modeling with Pathways"
 
@@ -2578,7 +2453,7 @@ What specific aspect of the paper would you like to explore first?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Scaling Language Models: Methods, Analysis & Insights from Training Gopher"
 
@@ -2611,7 +2486,7 @@ I'd be happy to discuss any specific aspects of this paper that interest you, wh
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll be happy to help you understand the machine learning research paper you've shared. Let me start with a high-level summary.
 
@@ -2641,7 +2516,7 @@ Would you like me to elaborate on any specific aspect of this paper, such as the
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # High-Level Summary of "Efficiently Scaling Transformer Inference"
 
@@ -2680,7 +2555,7 @@ these effects?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll be happy to help you understand this research paper on "Fast Inference from Transformers via Speculative Decoding." Let me provide a high-level summary first.
 
@@ -2725,7 +2600,7 @@ Lab: Deepmind
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Training Compute-Optimal Large Language Models"
 
@@ -2749,7 +2624,7 @@ Is there any specific aspect of this paper you'd like me to explain in more deta
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll help you understand this research paper on chain-of-thought prompting in large language models. Let me provide a high-level summary first.
 
@@ -2794,7 +2669,7 @@ Lab: OpenAI
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Training language models to follow instructions with human feedback"
 
@@ -2839,7 +2714,7 @@ License: Open, but need to follow restrictions in Attachment A, BigScience RAIL 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # BLOOM: A 176B-Parameter Multilingual Language Model
 
@@ -2875,7 +2750,7 @@ Is there a specific aspect of the paper you'd like to explore further?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Emergent Abilities of Large Language Models: Summary
 
@@ -2913,7 +2788,7 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I've received the paper "FlashAttention: Fast and Memory-Efficient Exact Attention with IO-Awareness" by Tri Dao et al. from 2022. Let me provide a brief high-level summary:
 
@@ -2946,7 +2821,7 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # High-level Summary of GQA: Training Generalized Multi-Query Transformer Models
 
@@ -2972,7 +2847,7 @@ I'd be happy to dive deeper into any specific aspect of the paper that interests
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Summary of "Train Short, Test Long: Attention with Linear Biases Enables Input Length Extrapolation"
 
@@ -3006,7 +2881,7 @@ Would you like me to elaborate on any specific aspect of this paper? For example
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # DeepSpeed Inference: A Brief Overview
 
@@ -3044,7 +2919,7 @@ The paper addresses specific challenges in transformer inference related to memo
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this research paper with me. Let me provide a high-level summary:
 
@@ -3083,7 +2958,7 @@ Would you like me to explore any specific aspect of this paper in more detail?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'd be happy to help guide you through the machine learning research paper you've shared.
 
@@ -3118,7 +2993,7 @@ Standardized evaluation metrics
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -3146,7 +3021,7 @@ Standardized evaluation metrics
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 This paper addresses the challenge of compressing large language models (LLMs) like GPT-3 and BLOOM for more efficient inference. The key contribution is GPTQ, a novel one-shot weight quantization method that can compress models with billions of parameters down to 3-4 bits per weight with minimal accuracy loss.
 
@@ -3172,7 +3047,7 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -3184,7 +3059,7 @@ The practical impact is significant: GPTQ allows large models to run with far fe
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll review this important paper on Minerva, Google's language model for quantitative reasoning. Let me provide a high-level summary first.
 
@@ -3219,7 +3094,7 @@ The beginning of an Era
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this research paper with me. Let me provide a brief high-level summary:
 
@@ -3247,7 +3122,7 @@ Would you like me to elaborate on any particular aspect of this paper, such as t
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # QLORA: A Brief Overview
 
@@ -3275,7 +3150,7 @@ Would you like me to explore any particular aspect of the paper in more detail?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Summary of "Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models"
 
@@ -3305,7 +3180,7 @@ Is there a specific aspect of this paper you'd like me to explore in more detail
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 This paper presents FlashAttention-2, an improved algorithm for implementing attention mechanisms in Transformer models that significantly enhances computational efficiency. Building on the original FlashAttention work, FlashAttention-2 introduces better parallelism and work partitioning strategies that achieve approximately 2× speedup over its predecessor.
 
@@ -3329,7 +3204,7 @@ This advancement directly addresses the challenge of scaling Transformers to lon
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this research paper. I'll provide a high-level summary to start:
 
@@ -3367,7 +3242,7 @@ Now we have started to get into the region of AI agents. I will recommend checki
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll help you navigate through this machine learning research paper with a focus on building mathematical intuition. Let me provide a high-level summary first.
 
@@ -3399,7 +3274,7 @@ What specific aspects of this paper would you like to explore further?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # VOYAGER: An Open-Ended Embodied Agent with Large Language Models
 
@@ -3429,7 +3304,7 @@ Would you like me to elaborate on any specific aspect of this paper?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll take on the role of Professor Claude to help you explore this research paper on adversarial attacks against aligned language models. Let me begin with a high-level summary of the paper.
 
@@ -3458,7 +3333,7 @@ I'm ready to explore any specific aspects of this paper that interest you, from 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll be your guide in exploring this machine learning research paper! Let me start with a high-level summary.
 
@@ -3491,7 +3366,7 @@ Is there a specific aspect of this paper you'd like to explore further?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this document. This appears to be a blog post from MosaicML introducing their MPT-7B model, which was released in May 2023. Let me provide a brief high-level summary:
 
@@ -3526,7 +3401,7 @@ Would you like me to elaborate on any specific aspect of this model, such as its
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll be delighted to guide you through this machine learning research paper as Professor Claude. Let me provide a high-level summary to start.
 
@@ -3556,7 +3431,7 @@ Is there a specific aspect of the paper you'd like to explore further? I'm happy
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this research paper with me. Let me provide a brief, high-level summary of "DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales":
 
@@ -3592,7 +3467,7 @@ Is there a specific aspect of the paper you'd like me to explore in more depth? 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -3604,7 +3479,7 @@ Is there a specific aspect of the paper you'd like me to explore in more depth? 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll serve as Professor Claude to help you understand machine learning research papers, focusing on building mathematical intuition while following your guidance for the discussion.
 
@@ -3653,7 +3528,7 @@ Lab: Meta
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I'll be your guide through machine learning research papers as Professor Claude, focusing on building mathematical intuition through clear explanations. I'll start with high-level summaries, wait for your specific questions, suggest important concepts to explore, break down math step-by-step, reference prerequisites, simplify complex proofs, use analogies, and highlight limitations where relevant.
 
@@ -3683,7 +3558,7 @@ Would you like me to elaborate on any particular aspect of the paper such as the
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Mixtral of Experts: A High-Performance Mixture-of-Experts Model
 
@@ -3712,7 +3587,7 @@ The instruction-tuned version (Mixtral 8x7B - Instruct) performs exceptionally w
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Llama 2: Open Foundation and Fine-Tuned Chat Models"
 
@@ -3739,7 +3614,7 @@ Key contributions include detailed methodologies for the fine-tuning process, sa
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Vicuna: An Open-Source Chatbot Impressing GPT-4 with 90%\* ChatGPT Quality"
 
@@ -3784,7 +3659,7 @@ The authors acknowledge limitations in mathematical reasoning, factual accuracy,
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Brief Summary of "Alpaca: A Strong, Replicable Instruction-Following Model"
 
@@ -3818,7 +3693,7 @@ Would you like me to discuss any specific aspect, such as how Alpaca's approach 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # High-Level Summary: Direct Preference Optimization (DPO)
 
@@ -3901,7 +3776,7 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -3913,7 +3788,7 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -3925,7 +3800,7 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -3940,7 +3815,7 @@ What aspects of DPO would you like to explore in more detail? The mathematical d
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # High-Level Summary: PaLM 2 Technical Report
 
@@ -4003,7 +3878,7 @@ I was conflicted about whether I should put it here or not. But this is one of t
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # LAION-5B: An Open Large-Scale Dataset Overview
 
@@ -4051,7 +3926,7 @@ Demonstrated efficiency of small high-quality datasets
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # LIMA: Less Is More for Alignment Overview
 
@@ -4109,7 +3984,7 @@ https://tridao.me/blog/
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Mamba: A New Architecture for Sequence Modeling
 
@@ -4165,7 +4040,7 @@ What aspects of this work would you like to explore in detail? I'm ready to dive
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this foundational paper on LLaVA (Large Language and Vision Assistant)!
 
@@ -4212,7 +4087,7 @@ I'm ready to dive deeper into any aspect you'd like to explore - whether that's 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Gemini: A Family of Highly Capable Multimodal Models - Brief Summary
 
@@ -4246,7 +4121,7 @@ What specific aspects of Gemini would you like to explore? I could help you dive
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Hello! I'm Professor Claude, and I'm excited to help you explore this fascinating machine learning research paper you've shared.
 
@@ -4283,7 +4158,7 @@ What aspects of this work would you like to dive deeper into? I'm ready to explo
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this paper! Let me provide a high-level summary of "Qwen-VL: A Versatile Vision-Language Model for Understanding, Localization, Text Reading, and Beyond."
 
@@ -4334,7 +4209,7 @@ What would you like to explore first?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I see you've shared the influential "Textbooks Are All You Need" paper by Gunasekar et al. from Microsoft Research! This is a fascinating study that challenged conventional scaling laws in language model training.
 
@@ -4398,7 +4273,7 @@ It's June 2025 currently while I am writing this, and I cannot say for certain i
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing the Gemma paper! Let me provide a high-level summary of this important work.
 
@@ -4441,7 +4316,7 @@ Thank you for sharing the Gemma paper! Let me provide a high-level summary of th
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Gemma 2: A High-Level Overview
 
@@ -4488,7 +4363,7 @@ What would you like to explore first?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this comprehensive paper on Chatbot Arena! Let me provide you with a high-level summary to get us started.
 
@@ -4524,7 +4399,7 @@ This paper introduces **Chatbot Arena**, a crowdsourced platform for evaluating 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # TinyLlama: A Compact Open-Source Language Model
 
@@ -4553,7 +4428,7 @@ The work is particularly valuable for democratizing language model research, ena
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing this excellent paper on ModernBERT! Let me provide you with a high-level summary to start.
 
@@ -4588,7 +4463,7 @@ Encoders remain crucial for production systems doing retrieval, classification, 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Jamba: A Hybrid Transformer-Mamba Language Model - Brief Overview
 
@@ -4639,7 +4514,7 @@ What would you like to explore first?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4651,7 +4526,7 @@ What would you like to explore first?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Llama 3 Paper Overview
 
@@ -4697,7 +4572,7 @@ Improved reasoning and multimodal capabilities
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 Thank you for sharing the Gemini 1.5 technical report! This is a substantial and impressive piece of work that I'm excited to help you explore.
 
@@ -4730,7 +4605,7 @@ What aspects of this work would you like to explore? I'm ready to help you under
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # QWEN2 Technical Report - High-Level Summary
 
@@ -4773,7 +4648,7 @@ High performance with limited training data
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4786,7 +4661,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4799,7 +4674,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4812,7 +4687,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4824,7 +4699,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4836,7 +4711,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4851,7 +4726,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4866,7 +4741,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4881,7 +4756,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4896,7 +4771,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
@@ -4908,7 +4783,7 @@ Advanced mathematical problem-solving
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 You've now shared the Phi-3 Technical Report - what an interesting evolution from the original phi-1 paper! This represents a significant advancement in Microsoft's small language model research.
 
 ## High-Level Summary
@@ -4945,7 +4820,7 @@ What aspects of this evolution from phi-1 to phi-3 would you like to dive into?
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Phi-4 Technical Report - Summary
 
@@ -5001,7 +4876,7 @@ The paper introduces **Pivotal Token Search**, a fascinating approach that ident
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 I've reviewed the Gemma 3 Technical Report - a comprehensive paper introducing Google DeepMind's latest family of open language models. Here's a high-level summary:
 
@@ -5036,7 +4911,7 @@ What specific aspects would you like to dive into? I'm ready to walk through any
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 # Qwen2.5 Technical Report - High-Level Summary
 
@@ -5075,12 +4950,15 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 ### Qwen 2.5-1M
 
 [paper](https://qianwen-res.oss-cn-beijing.aliyuncs.com/Qwen2.5-1M/Qwen2_5_1M_Technical_Report.pdf)
-
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
+</div>
 </details>
+
+
 
 ### Qwen2.5-Omni
 
@@ -5088,9 +4966,13 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
+</div>
 </details>
+
+
 
 ### Qwen 3 
 
@@ -5098,10 +4980,15 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
-
+</div>
 </details>
+
+
+
+
 
 
 
@@ -5109,6 +4996,16 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 
 - Open-source model
 - 314B parameters
+- 
+<details>
+
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+
+</div>
+</details>
+
+
 
 
 ### Pixtral
@@ -5118,15 +5015,28 @@ I'm ready to dive deeper into any specific aspects that interest you! Some parti
 - Multimodal capabilities
 - 12B parameters
 
+<details>
+
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+
+</div>
+</details>
+
+
+
 ### Large Language Diffusion Models
 
 [paper](https://arxiv.org/pdf/2502.09992)
 
 <details>
 
-<summary>Quick Summary</summary>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
+</div>
 </details>
+
 
 
 ## It's all about DeepSeek 
@@ -5135,15 +5045,22 @@ This whole section is dedicated just to the geniuses that are DeepSeek
 
 Consider reading all their paper from this list https://huggingface.co/collections/Presidentlin/deepseek-papers-674c536aa6acddd9bc98c2ac
 
-
-
 <details>
 
 <summary markdown="span">Quick Summary</summary>
-<div markdown="1"> Summary</summary>
+<div markdown="1">
 
 </div>
 </details>
+
+
+
+
+### Some Honorable blogs and mentions that I believe you should definitely check out:
+[blog](https://www.darioamodei.com/essay/machines-of-loving-grace)
+
+## SELF NOTES AND MISC STUFF
+
 
 Include Large Text diffusion models 
 
@@ -5158,7 +5075,133 @@ NOTES TO SELF
 - Train a hand drawn sketch LORA in flux dev for images
 - Add a reference section in the end which redirects to the papers, Like latex reference and stuff.
 
-[blog](https://www.darioamodei.com/essay/machines-of-loving-grace)
 
-### Some Honorable blogs and mentions that I believe you should definitely check out:
+[TOP MEME, MOnkey to man evolution yearwise and leave the man with no model (to signify no AGI yet)]
+[Add tree from this paper to clarify that it was not a linear evolution but a tree wise, much like real theory of evolution https://arxiv.org/pdf/2304.13712]
 
+[add prerequisites section, summary section, skip to section]
+
+
+
+## A short introduction to LLMs
+
+This part is highly influenced by this [video](https://www.youtube.com/watch?v=7xTGNNLPyMI) by andrej karpathy
+
+A paper on pretraining [paper](https://arxiv.org/pdf/2003.08271)
+
+### Architecture
+
+We will be skipping over the internal details about the transformers model (you can read more about it in my previous blog), I will proceed with the assumption that you have a very deep level understanding of atleast the transformer model. Having that that let us proceed.
+
+As we can see the original transformer has two parts, an Encoder and a Decoder. And as is known, it was initially made for the sole purpose of Machine Translation.
+
+But over the years they have been used for a plethora of tasks from
+
+- Question Answering
+- Summarization
+- Tagging
+- Classification
+
+And many more.
+
+LLMs consist of architectures which are solely based on the Encoder like Bert
+
+[ADD_IMAGE_OF_BERT]
+
+LLMs consist of architectures which are solely based on the Decoder like gpt-1
+
+[ADD_IMAGE_OF_GPT1]
+
+There are LLMs which use the good ol Encoder Decoder layer together too like T5
+
+[WITH_IMAGE]
+
+One thing to be mindful of is, that the development of LLMs have been done on the transformers. There was no radical shift, only gradual and slow incremental changes. As you read more about them you will understand them better.
+
+In crux you only need to understand the basic Transformer architecture to understand most if not all LLMs.
+
+### Training
+
+As I mentioned there are 3 kinds of architectures when it comes to LLM, hence there is a different way of training each. Even though they share few similarities. Each has a different objective. Let us begin by first understanding the most popular LLM architecture, that being the decoder only architecture.
+
+#### Decoder Only
+
+##### Pretraining
+
+**Step 1: Data Collection**
+
+We know Decoder based LLMs are able to answer a variety of answer to questions about science, food, mathematics, facts etc. That is because they have been trained on a huge plethora of the data.
+
+So the first step is to collect the said data. One important thing to keep in mind is that these models are able to answer based on what they have seen. They are not performing any kind of reasoning. It is given a distribution, what is the most likely token that is to appear.
+
+So if you want a coding LLM you will collect a lot of code related data from publically available places like github.
+
+If you want a cooking LLM you will collected a lot of recipes and so on.
+
+Most general purpose LLMs are trained on data collected from various sources, hence they are able to answer a lot of question.
+
+A lot of filtering steps also goes behind it
+
+"
+Garbage in, garbage out
+"
+
+Most of the internet when crawled has data which looks something like this
+
+```html
+<html>
+  {add shit}
+</html>
+```
+
+Hence it needs to be processed into a more human readable form, You can imagine how humongous of a task it must be to clean huge datasets with GBs of data.
+
+Now there are other filterning that also needs to be done, How do you take care of profanity? What about fake news and so on
+
+**Step 2: Tokenization**
+
+{maybe talk about vocabulary and token length}
+
+When we talked about transformers, we skipped talking about tokenization, but as it is a vital piece of LLM training. We shall spend some time talking about it here.
+
+Sentence level tokenization
+
+My first question was, why do we need to break down words. Why not give the entire sentence. Heck why not give the whole paragraph as an input.
+
+While in practice it can be done, it is not wise. Because if we go back to our basic principle about LLMs.
+
+"They are next token predictors"
+
+So in given any large enough paragraph or even an essay. The likelihood of a sentence repeating is very low. So if we think it in terms of machines, if we transform each sentence into a token, we will have a vocabular with a lot of numbers, which do not relate to each other at all. So we can never predict what sentence will come after any given sentence.
+
+Word level tokenization
+
+A simple work around this seems to be, well why not just tokenize the words, instead of sentences. Because in any large enough paragraph or essay. Words repeat and they follow a logical sequence of what is to appear next. For example
+
+"Water is \_\_\_", if you gave me this sentence word by word, I will assume the next word is wet. Whereas if you gave me a sentence
+
+"Water is wet, This is a debatable topic." I will have no clue what can be said after this sentence, Maybe someone raises a point, maybe someone says something else.
+
+So word level helps us retain the logical sequence, and words have meanings to them too. But there is still one big issue. There can be millions of words, some have way higher representation in usual text and some are highly unlikely to occur in common place.
+
+There are words which are commonplace in one industry and rare in another.
+
+So we will have a huge vocabulary.
+
+If you think for a moment we may come to the conclusion that, why not use character level tokenization to solve this problem, this will reduce the vocabulary drastically.
+
+Here the problem would lie in the fact that characters by themselves do not hold much meaning (atleast in the english lexicon)
+
+**Step 3: Training the network**
+
+##### Fine-Tuning
+
+#### Encoder Only
+
+Now let's understand how a usual Encoder is trained, We will talk about BERT here
+
+#### Encoder Decoder
+
+Now let's do the same for T5
+
+### Inference -->
