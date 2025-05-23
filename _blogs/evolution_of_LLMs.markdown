@@ -102,28 +102,55 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 
 ### Transformer
 
-[Attention is all you need](https://arxiv.org/abs/1706.03762)
+| [Attention is all you need](https://arxiv.org/abs/1706.03762)
 
-THE foundational paper that introduced some key ideas such as
+<details>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
 
+>This is the famous "Attention Is All You Need" paper by Vaswani et al. that introduced the **Transformer architecture** - a groundbreaking neural network model that revolutionized natural language processing.
+>
+>**Key Innovation**
+>
+>The paper proposes replacing traditional recurrent neural networks (RNNs) and convolutional networks with a model based entirely on **attention mechanisms**. The core insight is that self-attention can capture dependencies between words regardless of their distance in a sequence, without needing to process them sequentially.
+>
+>**Architecture Highlights**
+>- **Encoder-Decoder Structure**: 6 layers each, with multi-head self-attention and feed-forward networks
+>- **Multi-Head Attention**: Uses 8 parallel attention heads to capture different types of relationships
+>- **Positional Encoding**: Sine/cosine functions to inject sequence order information
+>- **No Recurrence**: Enables much better parallelization during training
+>
+>**Results**
+>The Transformer achieved state-of-the-art performance on machine translation tasks:
+>- **28.4 BLEU** on English-to-German (WMT 2014)
+>- **41.8 BLEU** on English-to-French
+>- Trained significantly faster than previous models (12 hours vs. days/weeks)
+>
+>**Impact**
+>This architecture became the foundation for modern language models like BERT, GPT, and others. The paper's core principle - that attention mechanisms alone are sufficient for high-quality sequence modeling - fundamentally changed how we approach NLP tasks.
+>
+>The work demonstrated superior performance while being more parallelizable and interpretable than previous sequence-to-sequence models.
+</div>
+</details>
+<br/>
+THE foundational paper that introduced some key ideas such as: 
 - Scaled dot-product attention
 - Multi-head attention mechanism
 - Positional encodings
 - Layer normalization
 - Masked attention for autoregressive models
 
-We have talked deeply about each of these topics previously and I implore you to check that part out [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/)
+We have talked deeply about each of these topics previously and I implore you to check that part out [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
 
 **Training a Transformer**
 
 This is one topic that we didnt talk about extensively so let's go over it, because that is where the true beauty of GPT lies. How to train over huge amounts of data.
 
+[ADD_CONTENT]
+
 ### RLHF - Reinforcement Learning from Human Preferences
 
-[Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
-
-As mind boggling as it sounds, the famed algorithm RLHF came out in 2017, the same year attention is all you need came out.
-Let us understand the ideas put forth and why it was such a big deal.
+| [Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -149,56 +176,53 @@ Let us understand the ideas put forth and why it was such a big deal.
 </div>
 </details>
 <br/>
-**Problem** :
+As mind boggling as it sounds, the famed algorithm RLHF came out in 2017, the same year attention is all you need came out.
+Let us understand the ideas put forth and why it was such a big deal.
 
-| Training a RL system requires researchers make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems
+**The Problem** 
+
+Training a RL system requires researchers to make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems.
+
+[GIVE_EXAMPLE_LIKE_WRITING_STORIES_JOKES_ETC]
 
 [Add image below, left side simple puzzle, right side complex puzzle]
 
-**Solution** :
+**Solution Proposed** :
 
-"An alternative approach is to allow a human to provide feedback on our system’s current behavior
-and to use this feedback to define the task. In principle this fits within the paradigm of reinforcement
-learning, but using human feedback directly as a reward function is prohibitively expensive for RL
-systems that require hundreds or thousands of hours of experience."
+One possible solution is to allow a human to provide feedback on the system's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience.
 
 [Show image of a man sitting tirelessly through 1000 of hours of RL]
 
-"In summary, we desire a solution to sequential decision problems without a well-specified reward
-function that
+An ideal solution will
 
-1. enables us to solve tasks for which we can only recognize the desired behavior, but not
-   necessarily demonstrate it,
-2. allows agents to be taught by non-expert users,
-3. scales to large problems, and
-4. is economical with user feedback"
+1. Enable us to solve tasks about which we can tell the desired behaviour but not necessarily demostrate or describe it. 
+2. Allows systems to learn from non-expert users 
+3. Scales to large problems 
+4. Is economical
 
-"
-We ask the human to
-compare short video clips of the agent’s behavior, rather than to supply an absolute numerical
-score. We found comparisons to be easier for humans to provide in some domains, while being
-equally useful for learning human preferences.
-Comparing short video clips is nearly as fast as
-comparing individual states
-"
+In their experiment, the researchers asked labellers to compare short video clips od the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired. 
+
 
 [ADD Image from the paper]
 
 [Add 2 image,
-
 1. Human only shown parts of the way the model solving the problem
-2. Only compares which approach is better
-   ]
+2. Only compares which approach is better]
 
-Now let us understand how a model, learns from these preferences. I.e the reward modeling
+![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
 
-"""
+The human observes the system acting in the *enviornment* it then gives he's feedback. Which is taken by *reward predictor* which numerical defines the reward. Which is sent to the *RL algorithm* this updates the system based on the feedback and observation from the enviorment. That then changes the action of the system.
+
+This sounds simple enough in principle, but how do you teach a model to learn from these preferences. I.e reward modeling.
+
+[ADD YOU CAN SKIP THIS FOR NOW AND COME BACK WHEN YOU GET A BETTER IDEA ABOUT HOW LLMSs work]
+
 **Reward Modeling in RLHF**
 
-Read the following blogs to understand these topics better then explain them
+The following blogs helped me while writing this section
 
-- https://huggingface.co/blog/rlhf
-- https://huyenchip.com/2023/05/02/rlhf.html
+- [HF blog on RLHF](https://huggingface.co/blog/rlhf)
+- [Chip Huyen's blog on RLHF](https://huyenchip.com/2023/05/02/rlhf.html)
 
 The preference predictor model estimates the probability that a human would prefer trajectory segment σ¹ over σ²:
 
