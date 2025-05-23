@@ -82,6 +82,7 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 []()
 </div>
 </details>
+<br/>
 
 Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). Over here I will just give quick intro and links to some ground breaking innovations.
 
@@ -2868,6 +2869,7 @@ PagedAttention significantly improves memory efficiency by:
 3. Supporting dynamic memory allocation as sequences grow
 
 Their experiments show vLLM improves throughput by 2-4× compared to state-of-the-art systems while maintaining the same latency, with even greater improvements for longer sequences, larger models, and complex decoding algorithms like beam search.
+
 </div>
 </details>
 <br/>
@@ -2968,6 +2970,7 @@ Key contributions:
 4. Implementation of TinyChat, an efficient inference framework for 4-bit LLMs on edge devices
 
 Their method demonstrates superior performance over existing quantization approaches across various language model benchmarks, including instruction-tuned LMs and multi-modal LMs. The TinyChat implementation achieves more than 3× speedup over Huggingface FP16 implementations on both desktop and mobile GPUs, enabling even 70B parameter models to run on mobile GPUs.
+
 </div>
 </details>
 <br/>
@@ -2982,7 +2985,6 @@ Now we have started to get into the region of AI agents. I will recommend checki
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
-
 
 This paper introduces "generative agents" - computational agents powered by large language models that simulate believable human behavior in interactive environments. The authors present an architecture that extends language models to:
 
@@ -3202,7 +3204,6 @@ The paper also presents Mistral 7B-Instruct, a fine-tuned version that outperfor
 
 This work challenges conventional scaling laws by showing that careful architecture design can achieve better performance with fewer parameters, suggesting new directions for efficient LLM development.
 
-
 </div>
 </details>
 <br/>
@@ -3373,6 +3374,7 @@ Key highlights:
 6. **Safety measures**: Implemented content filtering via OpenAI's moderation API and watermarking for the demo
 
 The work aimed to democratize access to instruction-following models for academic research while acknowledging the risks and implementing appropriate safeguards.
+
 </div>
 </details>
 <br/>
@@ -3388,7 +3390,7 @@ The work aimed to democratize access to instruction-following models for academi
 
 This paper introduces **Direct Preference Optimization (DPO)**, a revolutionary approach that eliminates the need for reinforcement learning in training language models from human preferences, making the process dramatically simpler while maintaining or improving performance.
 
-## Core Innovation: Bypassing Reinforcement Learning
+**Core Innovation: Bypassing Reinforcement Learning**
 
 **The Problem with RLHF**: Traditional Reinforcement Learning from Human Feedback (RLHF) is complex and unstable, requiring:
 
@@ -3443,7 +3445,7 @@ Where:
 2. **Completeness**: Proves any reward function class can be represented with their reparameterization
 3. **Stability analysis**: Explains why actor-critic methods (like PPO) can be unstable due to high-variance gradients
 
-## Significance
+**Significance**
 
 This work represents a paradigm shift in preference learning by showing that the seemingly necessary complexity of RLHF can be completely avoided. DPO makes training language models from human preferences accessible to a much broader range of practitioners while providing better or equivalent results.
 
@@ -3588,6 +3590,7 @@ The authors demonstrate LAION's utility by successfully reproducing CLIP model p
 **Significance**
 
 This represents the first openly available dataset at the scale needed for training foundation multimodal models, potentially accelerating research in vision-language AI while enabling transparency and bias auditing.
+
 </div>
 </details>
 <br/>
@@ -3689,6 +3692,7 @@ The paper demonstrates that Mamba:
 - Works well across multiple domains (language, DNA, audio)
 
 This represents a significant step toward more efficient sequence models that could handle much longer contexts than current Transformers. The mathematical foundation combines classical control theory (state space models) with modern deep learning innovations.
+
 </div>
 </details>
 <br/>
@@ -3768,6 +3772,7 @@ This is Google's technical report introducing **Gemini**, a family of multimodal
 **Responsible Deployment**: Extensive safety evaluations, red-teaming, and responsible AI practices integrated throughout development.
 
 The paper is quite comprehensive at 90+ pages, covering everything from architectural details and training infrastructure to extensive benchmarking and safety considerations.
+
 </div>
 </details>
 <br/>
@@ -4099,6 +4104,7 @@ Transformers struggle with long contexts due to quadratic memory scaling and lar
 **Particularly Interesting Finding**
 
 The paper shows that pure Mamba struggles with in-context learning (following formats in few-shot examples), but adding just a few attention layers restores this capability - suggesting attention mechanisms play a crucial role in pattern copying and format adherence.
+
 </div>
 </details>
 <br/>
@@ -4199,6 +4205,7 @@ This paper introduces **Gemini 1.5 Pro and Gemini 1.5 Flash** - a new generation
 The paper also includes extensive safety evaluations and introduces novel benchmarks for long-context evaluation, addressing a key challenge in evaluating such capable models.
 
 **Mathematical/Technical Depth**: The paper contains rich technical content around scaling laws, architectural innovations, and evaluation methodologies that we could dive deep into.
+
 </div>
 </details>
 <br/>
@@ -4234,6 +4241,7 @@ This paper introduces **Qwen2**, a comprehensive family of large language models
 - Comprehensive safety and contamination analysis
 
 The paper represents a significant step forward in open-weight language models, with particular attention to practical deployment considerations and rigorous evaluation methodology.
+
 </div>
 </details>
 <br/>
@@ -4535,6 +4543,7 @@ This paper introduces **Qwen2.5**, a comprehensive series of large language mode
 - Sophisticated data filtering using Qwen2-Instruct models
 
 The paper demonstrates how careful scaling of both data and training techniques can achieve remarkable efficiency gains, making state-of-the-art performance accessible with significantly fewer parameters.
+
 </div>
 </details>
 <br/>
