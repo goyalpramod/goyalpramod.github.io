@@ -179,6 +179,8 @@ This is one topic that we didnt talk about extensively so let's go over it, beca
 As mind boggling as it sounds, the famed algorithm RLHF came out in 2017, the same year attention is all you need came out.
 Let us understand the ideas put forth and why it was such a big deal.
 
+(If you are not familiar with the idea of RL, I will recommend checking this small [course](https://huggingface.co/learn/deep-rl-course/unit0/introduction) by HuggingFace out)
+
 **The Problem** 
 
 Training a RL system requires researchers to make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems.
@@ -189,7 +191,7 @@ Training a RL system requires researchers to make a well define reward system, W
 
 **Solution Proposed** :
 
-One possible solution is to allow a human to provide feedback on the system's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience.
+One possible solution is to allow a human to provide feedback on the agents's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience.
 
 [Show image of a man sitting tirelessly through 1000 of hours of RL]
 
@@ -200,7 +202,7 @@ An ideal solution will
 3. Scales to large problems 
 4. Is economical
 
-In their experiment, the researchers asked labellers to compare short video clips od the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired. 
+In their experiment, the researchers asked labellers to compare short video clips of the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired. 
 
 
 [ADD Image from the paper]
@@ -211,7 +213,7 @@ In their experiment, the researchers asked labellers to compare short video clip
 
 ![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
 
-The human observes the system acting in the *enviornment* it then gives he's feedback. Which is taken by *reward predictor* which numerical defines the reward. Which is sent to the *RL algorithm* this updates the system based on the feedback and observation from the enviorment. That then changes the action of the system.
+The human observes the agent acting in the *enviornment* it then gives he's feedback. Which is taken by *reward predictor* which numerical defines the reward. Which is sent to the *RL algorithm* this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
 
 This sounds simple enough in principle, but how do you teach a model to learn from these preferences. I.e reward modeling.
 
