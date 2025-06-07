@@ -56,6 +56,8 @@ Fine-tune LLM
 
 CUDA & optimising GPUs
 
+- https://enccs.github.io/gpu-programming/2-gpu-ecosystem/
+
   - [Introduction to Cuda](https://www.pyspur.dev/blog/introduction_cuda_programming?s=08)
   - https://github.com/srush/GPU-Puzzles
   - https://fkong.tech/posts/2023-04-23-triton-cuda/?s=08
@@ -228,6 +230,7 @@ Blog Sites to read from
 - https://www.ruder.io/
 - https://sander.ai/posts/
 - https://mccormickml.com/archive
+- https://lmsys.org/blog/
 
 
 Github
