@@ -185,7 +185,7 @@ Let us understand the ideas put forth and why it was such a big deal.
 
 Training a RL system requires researchers to make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems.
 
-[GIVE_EXAMPLE_LIKE_WRITING_STORIES_JOKES_ETC]
+For example, it is tough to quantitavily define a good joke. One can only compare a good one, from a bad one. 
 
 [Add image below, left side simple puzzle, right side complex puzzle]
 
@@ -204,12 +204,7 @@ An ideal solution will
 
 In their experiment, the researchers asked labellers to compare short video clips of the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired. 
 
-
-[ADD Image from the paper]
-
-[Add 2 image,
-1. Human only shown parts of the way the model solving the problem
-2. Only compares which approach is better]
+[Add section, show lot of frames from a video, human is only shown part of it]
 
 ![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
 
@@ -217,22 +212,22 @@ The human observes the agent acting in the *enviornment* it then gives he's feed
 
 This sounds simple enough in principle, but how do you teach a model to learn from these preferences. I.e reward modeling.
 
-[ADD YOU CAN SKIP THIS FOR NOW AND COME BACK WHEN YOU GET A BETTER IDEA ABOUT HOW LLMSs work]
+> Note: We will be talking more in depth about RL algorithms in the next section. The topics in RL are rather complicated and usually talked in the end after an LLM is trained. So you can skip this part for now if it is daunting. 
 
-**Reward Modeling in RLHF**
+**Reward predictor in RLHF**
 
 The following blogs helped me while writing this section
 
 - [HF blog on RLHF](https://huggingface.co/blog/rlhf)
 - [Chip Huyen's blog on RLHF](https://huyenchip.com/2023/05/02/rlhf.html)
 
-The preference predictor model estimates the probability that a human would prefer trajectory segment σ¹ over σ²:
+The reward predictor is trained to predict which of two given trajectories(σ¹, σ²) will be prefered by a human
 
 $$
 \hat{P}\left[\sigma^{1} \succ \sigma^{2}\right]=\frac{\exp \sum \hat{r}\left(o_{t}^{1}, a_{t}^{1}\right)}{\exp \sum \hat{r}\left(o_{t}^{1}, a_{t}^{1}\right)+\exp \sum \hat{r}\left(o_{t}^{2}, a_{t}^{2}\right)}
 $$
 
-The reward function is trained using cross-entropy loss to match human preferences:
+It is trained using cross-entropy loss to match human preferences:
 
 $$
 \operatorname{loss}(\hat{r})=-\sum_{\left(\sigma^{1}, \sigma^{2}, \mu\right) \in D} \mu(1) \log \hat{P}\left[\sigma^{1} \succ \sigma^{2}\right]+\mu(2) \log \hat{P}\left[\sigma^{2} \succ \sigma^{1}\right]
@@ -257,28 +252,28 @@ $$
 - $\log$: Natural logarithm
 </div>
 </details>
-<br/>"""
-"""
-Understanding the Reward Function Fitting Process
+<br/>
 
-Let me break down this section step by step, which explains how the researchers train their reward function from human preferences:
+Let us understand the Reward Function Fitting Process
 
-1. The Preference-Predictor Model
+**The Preference-Predictor Model**
 
-The authors interpret their reward function estimate r̂ as a preference predictor. Instead of directly modeling a reward function, they model the probability that a human would prefer one trajectory segment over another.
+The authors instead of directly creating a reward function (which rewards an agent when it does the desired behaviour and punishes otherwise), they created a preference predictor. Which predicts which of the two given sequence of actions will be prefered by a human. 
 
-2. The Mathematical Formulation (Equation 1)
+**The Mathematical Formulation (Equation 1)**
 
 The equation P̂[σ¹ ≻ σ²] represents the predicted probability that a human would prefer trajectory segment σ¹ over segment σ².
 
 Breaking down the formula:
 
-- σ¹ and σ² are two different trajectory segments (short video clips of agent behavior)
-- o^i_t and a^i_t represent the observation and action at time t in trajectory i
-- r̂(o^i_t, a^i_t) is the estimated reward for that observation-action pair
+- $\sigma^{[1]}$ and $\sigma^{[2]}$ are two different trajectory segments (short video clips of agent behavior)
+- $o_{t}^{[i]}$ and $a_{t}^{[i]}$ represent the observation and action at time $t$ in trajectory $i$
+- $\hat{r}(o_{t}^{[i]}, a_{t}^{[i]})$ is the estimated reward for that observation-action pair
 - The formula uses the softmax function (exponential normalization):
 
-P̂[σ¹ ≻ σ²] = exp(∑r̂(o¹_t, a¹_t)) / [exp(∑r̂(o¹_t, a¹_t)) + exp(∑r̂(o²_t, a²_t))]
+$$
+\hat{P}\left[\sigma^{[1]} \succ \sigma^{[2]}\right] = \frac{\exp\left(\sum \hat{r}\left(o_{t}^{[1]}, a_{t}^{[1]}\right)\right)}{\exp\left(\sum \hat{r}\left(o_{t}^{[1]}, a_{t}^{[1]}\right)\right) + \exp\left(\sum \hat{r}\left(o_{t}^{[2]}, a_{t}^{[2]}\right)\right)}
+$$
 
 This means:
 
@@ -287,38 +282,45 @@ This means:
 3. Apply exponential function to both sums
 4. The probability of preferring trajectory 1 is the ratio of exp(sum1) to the total exp(sum1) + exp(sum2)
 
-5. The Loss Function
+**The Loss Function**
 
 The goal is to find parameters for r̂ that make its predictions match the actual human preferences:
 
-loss(r̂) = -∑ [μ(1)log P̂[σ¹ ≻ σ²] + μ(2)log P̂[σ² ≻ σ¹]]
+$$
+\operatorname{loss}(\hat{r}) = -\sum_{\left(\sigma^{[1]}, \sigma^{[2]}, \mu\right) \in D} \left[\mu([1])\log \hat{P}\left[\sigma^{[1]} \succ \sigma^{[2]}\right] + \mu([2])\log \hat{P}\left[\sigma^{[2]} \succ \sigma^{[1]}\right]\right]
+$$
 
 Where:
 
-- (σ¹, σ², μ) ∈ D means we're summing over all the comparison data in our dataset D
-- μ is a distribution over {1,2} indicating which segment the human preferred
-- If the human strictly preferred segment 1, then μ(1) = 1 and μ(2) = 0
-- If the human strictly preferred segment 2, then μ(1) = 0 and μ(2) = 1
-- If the human found them equal, then μ(1) = μ(2) = 0.5
+- $\left(\sigma^{[1]}, \sigma^{[2]}, \mu\right) \in D$ means we're summing over all the comparison data in our dataset $D$
+- $\mu$ is a distribution over $\{1,2\}$ indicating which segment the human preferred
+- If the human strictly preferred segment 1, then $\mu([1]) = 1$ and $\mu([2]) = 0$
+- If the human strictly preferred segment 2, then $\mu([1]) = 0$ and $\mu([2]) = 1$
+- If the human found them equal, then $\mu([1]) = \mu([2]) = 0.5$
 
 This is the standard cross-entropy loss function used in classification problems, measuring how well our predicted probabilities match the actual human judgments.
 
-4. The Bradley-Terry Model Connection
+**The Bradley-Terry Model Connection**
 
-This approach is based on the Bradley-Terry model, which is a statistical model for paired comparisons. It's similar to:
+> **Note from Wikipedia:** The Bradley–Terry model is a probability model for the outcome of pairwise comparisons between items, teams, or objects. Given a pair of items $i$ and $j$ drawn from some population, it estimates the probability that the pairwise comparison $i > j$ turns out true, as
+> 
+> $$\Pr(i>j) = \frac{p_i}{p_i + p_j}$$
+> 
+> where $p_i$ is a positive real-valued score assigned to individual $i$. The comparison $i > j$ can be read as "i is preferred to j", "i ranks higher than j", or "i beats j", depending on the application.
 
-1. The Elo rating system in chess: Players have ratings, and the difference in ratings predicts the probability of one player beating another.
+This approach is based on the [Bradley-Terry model](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model), which is a statistical model for paired comparisons. It's similar to:
+
+1. The [Elo rating](https://en.wikipedia.org/wiki/Elo_rating_system) system in chess: Players have ratings, and the difference in ratings predicts the probability of one player beating another.
 
 2. In this case: Trajectory segments have "ratings" (the sum of rewards), and the difference in ratings predicts the probability of a human preferring one segment over another.
 
 In essence, the reward function learns to assign higher values to states and actions that humans tend to prefer, creating a preference scale that can be used to guide the agent's behavior.
-"""
 
 The most important idea that we need to take forth from this paper is.
 
-We can use RLHF from non-expert humans for a fraction of cost by comparing stuff.
+*We can use RLHF from non-expert humans for a fraction of cost by comparing stuff.*
 
-Fun story: One time researchers tried to RL a helicopter and it started flying backwards
+Fun story: One time researchers tried to RL a helicopter and it started [flying backwards](https://www.youtube.com/watch?v=M-QUkgk3HyE&ab_channel=Stanford)
 
 ### PPO: Proximal Policy Optimization
 
@@ -4686,6 +4688,7 @@ NOTES TO SELF
 
 - Add a note for hardware, not in the scope of this blog but should not be ignored [DONE]
 - Quick note about benchmark, Not hear to explain these but these are the major ones that are used mostly.
+- Under each paper, add the image of the paper with the name of the authors as well as the abstract
 - Train a hand drawn sketch LORA in flux dev for images
 - Add a reference section in the end which redirects to the papers, Like latex reference and stuff.
 
