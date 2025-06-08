@@ -108,28 +108,31 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
->This is the famous "Attention Is All You Need" paper by Vaswani et al. that introduced the **Transformer architecture** - a groundbreaking neural network model that revolutionized natural language processing.
+> This is the famous "Attention Is All You Need" paper by Vaswani et al. that introduced the **Transformer architecture** - a groundbreaking neural network model that revolutionized natural language processing.
 >
->**Key Innovation**
+> **Key Innovation**
 >
->The paper proposes replacing traditional recurrent neural networks (RNNs) and convolutional networks with a model based entirely on **attention mechanisms**. The core insight is that self-attention can capture dependencies between words regardless of their distance in a sequence, without needing to process them sequentially.
+> The paper proposes replacing traditional recurrent neural networks (RNNs) and convolutional networks with a model based entirely on **attention mechanisms**. The core insight is that self-attention can capture dependencies between words regardless of their distance in a sequence, without needing to process them sequentially.
 >
->**Architecture Highlights**
->- **Encoder-Decoder Structure**: 6 layers each, with multi-head self-attention and feed-forward networks
->- **Multi-Head Attention**: Uses 8 parallel attention heads to capture different types of relationships
->- **Positional Encoding**: Sine/cosine functions to inject sequence order information
->- **No Recurrence**: Enables much better parallelization during training
+> **Architecture Highlights**
 >
->**Results**
->The Transformer achieved state-of-the-art performance on machine translation tasks:
->- **28.4 BLEU** on English-to-German (WMT 2014)
->- **41.8 BLEU** on English-to-French
->- Trained significantly faster than previous models (12 hours vs. days/weeks)
+> - **Encoder-Decoder Structure**: 6 layers each, with multi-head self-attention and feed-forward networks
+> - **Multi-Head Attention**: Uses 8 parallel attention heads to capture different types of relationships
+> - **Positional Encoding**: Sine/cosine functions to inject sequence order information
+> - **No Recurrence**: Enables much better parallelization during training
 >
->**Impact**
->This architecture became the foundation for modern language models like BERT, GPT, and others. The paper's core principle - that attention mechanisms alone are sufficient for high-quality sequence modeling - fundamentally changed how we approach NLP tasks.
+> **Results**
+> The Transformer achieved state-of-the-art performance on machine translation tasks:
 >
->The work demonstrated superior performance while being more parallelizable and interpretable than previous sequence-to-sequence models.
+> - **28.4 BLEU** on English-to-German (WMT 2014)
+> - **41.8 BLEU** on English-to-French
+> - Trained significantly faster than previous models (12 hours vs. days/weeks)
+>
+> **Impact**
+> This architecture became the foundation for modern language models like BERT, GPT, and others. The paper's core principle - that attention mechanisms alone are sufficient for high-quality sequence modeling - fundamentally changed how we approach NLP tasks.
+>
+> The work demonstrated superior performance while being more parallelizable and interpretable than previous sequence-to-sequence models.
+
 </div>
 </details>
 <br/>
@@ -181,38 +184,38 @@ Let us understand the ideas put forth and why it was such a big deal.
 
 (If you are not familiar with the idea of RL, I will recommend checking this small [course](https://huggingface.co/learn/deep-rl-course/unit0/introduction) by HuggingFace out)
 
-**The Problem** 
+**Problem**
 
-Training a RL system requires researchers to make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems.
+> Training a RL system requires researchers to make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems.
 
-For example, it is tough to quantitavily define a good joke. One can only compare a good one, from a bad one. 
+For example, it is tough to quantitavily define a good joke. One can only compare a good one, from a bad one.
 
 [Add image below, left side simple puzzle, right side complex puzzle]
 
-**Solution Proposed** :
+**Solution** :
 
-One possible solution is to allow a human to provide feedback on the agents's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience.
+> One possible solution is to allow a human to provide feedback on the agents's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience.
 
 [Show image of a man sitting tirelessly through 1000 of hours of RL]
 
 An ideal solution will
 
-1. Enable us to solve tasks about which we can tell the desired behaviour but not necessarily demostrate or describe it. 
-2. Allows systems to learn from non-expert users 
-3. Scales to large problems 
+1. Enable us to solve tasks about which we can tell the desired behaviour but not necessarily demostrate or describe it.
+2. Allows systems to learn from non-expert users
+3. Scales to large problems
 4. Is economical
 
-In their experiment, the researchers asked labellers to compare short video clips of the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired. 
+In their experiment, the researchers asked labellers to compare short video clips of the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired.
 
 [Add section, show lot of frames from a video, human is only shown part of it]
 
 ![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
 
-The human observes the agent acting in the *enviornment* it then gives he's feedback. Which is taken by *reward predictor* which numerical defines the reward. Which is sent to the *RL algorithm* this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
+The human observes the agent acting in the _enviornment_ it then gives he's feedback. Which is taken by _reward predictor_ which numerical defines the reward. Which is sent to the _RL algorithm_ this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
 
 This sounds simple enough in principle, but how do you teach a model to learn from these preferences. I.e reward modeling.
 
-> Note: We will be talking more in depth about RL algorithms in the next section. The topics in RL are rather complicated and usually talked in the end after an LLM is trained. So you can skip this part for now if it is daunting. 
+> Note: We will be talking more in depth about RL algorithms in the next section. The topics in RL are rather complicated and usually talked in the end after an LLM is trained. So you can skip this part for now if it is daunting.
 
 **Reward predictor in RLHF**
 
@@ -258,7 +261,7 @@ Let us understand the Reward Function Fitting Process
 
 **The Preference-Predictor Model**
 
-The authors instead of directly creating a reward function (which rewards an agent when it does the desired behaviour and punishes otherwise), they created a preference predictor. Which predicts which of the two given sequence of actions will be prefered by a human. 
+The authors instead of directly creating a reward function (which rewards an agent when it does the desired behaviour and punishes otherwise), they created a preference predictor. Which predicts which of the two given sequence of actions will be prefered by a human.
 
 **The Mathematical Formulation (Equation 1)**
 
@@ -303,9 +306,9 @@ This is the standard cross-entropy loss function used in classification problems
 **The Bradley-Terry Model Connection**
 
 > **Note from Wikipedia:** The Bradley–Terry model is a probability model for the outcome of pairwise comparisons between items, teams, or objects. Given a pair of items $i$ and $j$ drawn from some population, it estimates the probability that the pairwise comparison $i > j$ turns out true, as
-> 
+>
 > $$\Pr(i>j) = \frac{p_i}{p_i + p_j}$$
-> 
+>
 > where $p_i$ is a positive real-valued score assigned to individual $i$. The comparison $i > j$ can be read as "i is preferred to j", "i ranks higher than j", or "i beats j", depending on the application.
 
 This approach is based on the [Bradley-Terry model](https://en.wikipedia.org/wiki/Bradley%E2%80%93Terry_model), which is a statistical model for paired comparisons. It's similar to:
@@ -318,7 +321,7 @@ In essence, the reward function learns to assign higher values to states and act
 
 The most important idea that we need to take forth from this paper is.
 
-*We can use RLHF from non-expert humans for a fraction of cost by comparing stuff.*
+_We can use RLHF from non-expert humans for a fraction of cost by comparing stuff._
 
 Fun story: One time researchers tried to RL a helicopter and it started [flying backwards](https://www.youtube.com/watch?v=M-QUkgk3HyE&ab_channel=Stanford)
 
@@ -340,11 +343,9 @@ Read the following blogs to understand these topics better then explain them
 
 - NOTE Explain the maths using baskets and fruits
 
-Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it(Atleast in the early days).
+Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (Atleast in the early days).
 
 This is going to be math heavy so be prepared (Dw, I will guide you in each step)
-
-"""
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -363,35 +364,55 @@ The core innovation is their clipped probability ratio approach, which constrain
 
 </div>
 </details>
-<br/>"""
-
-**Problem** """
-However, there is room for improvement in developing a method that is scalable (to
+<br/>
+**Problem**
+> However, there is room for improvement in developing a method that is scalable (to
 large models and parallel implementations), data efficient, and robust (i.e., successful on a variety
 of problems without hyperparameter tuning). Q-learning (with function approximation) fails on
-many simple problems1 and is poorly understood, vanilla policy gradient methods have poor data
+many simple problems and is poorly understood, vanilla policy gradient methods have poor data
 effiency and robustness; and trust region policy optimization (TRPO) is relatively complicated,
 and is not compatible with architectures that include noise (such as dropout) or parameter sharing
 (between the policy and value function, or with auxiliary tasks).
-"""
 
-**Solution** """
-This paper seeks to improve the current state of affairs by introducing an algorithm that attains
-the data efficiency and reliable performance of TRPO, while using only first-order optimization.
-We propose a novel objective with clipped probability ratios, which forms a pessimistic estimate
-(i.e., lower bound) of the performance of the policy. To optimize policies, we alternate between
-sampling data from the policy and performing several epochs of optimization on the sampled **data**
-"""
+**Solution**
 
-Policy Gradient Methods
+> This paper seeks to improve the current state of affairs by introducing an algorithm that attains
+> the data efficiency and reliable performance of TRPO, while using only first-order optimization.
+> We propose a novel objective with clipped probability ratios, which forms a pessimistic estimate
+> (i.e., lower bound) of the performance of the policy. To optimize policies, we alternate between
+> sampling data from the policy and performing several epochs of optimization on the sampled data
 
-"""
+The following blogs & articles helped me write this section 
+
+- [Spinning up docs by OpenAI](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html), consider going through this to help understand the nomenclature used throughout this section
+- 
+
+[EXPLAIN]
+
+Types of RL algorithms
+
+1. Value based
+2. Policy based
+
+(This is a quick crash course reminder of RL Algorights, for a better deep dive. Go through the HF course I mentioned earlier.)
+
+#### Value Based
+
+[EXPLAIN]
+
+[Takes state and action, gives out probability of best action for the next state. [Give example of Q learning]]
+
+#### Policy based
+
+[EXPLAIN]
+
+[Takes state, directly gives the action]
+
+#### Policy Gradient Methods
 
 Understanding Policy Gradient Methods
 
-Let me break down this section on policy gradient methods step by step:
-
-Step 1: The Basic Idea
+**Step 1: The Basic Idea**
 
 Policy gradient methods are a family of reinforcement learning algorithms that directly optimize a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
 
@@ -399,7 +420,7 @@ Policy gradient methods are a family of reinforcement learning algorithms that d
 2. Estimating the policy gradient (the direction that would improve the policy)
 3. Updating the policy parameters using this gradient
 
-Step 2: The Gradient Estimator
+**Step 2: The Gradient Estimator**
 
 The core of policy gradient methods is the gradient estimator shown in equation (1). This formula tells us how to estimate the direction in which we should adjust our policy parameters to increase expected rewards:
 
@@ -408,11 +429,11 @@ The gradient estimator ĝ is an empirical average of the product of two terms:
 - `∇θ log πθ(at|st)`: The gradient of the log probability of taking action at in state st
 - `Ât`: An estimate of the advantage function, which tells us how much better action at is compared to the average action in state st
 
-Step 3: The Objective Function
+**Step 3: The Objective Function**
 
 Equation (2) shows the policy gradient objective function LPG(θ). In practice, modern implementations use automatic differentiation to compute the gradient. They set up an objective function whose gradient is the policy gradient estimator, then let the automatic differentiation calculate the gradient.
 
-Step 4: The Problem with Multiple Optimization Steps
+**Step 4: The Problem with Multiple Optimization Steps**
 
 The authors point out an important issue: while it seems like a good idea to perform multiple optimization steps on the same batch of data (to get more out of each data collection), this approach often leads to destructively large policy updates. This happens because:
 
