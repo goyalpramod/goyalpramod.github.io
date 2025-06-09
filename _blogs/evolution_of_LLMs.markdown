@@ -892,9 +892,11 @@ Let us understand that
 
 
 
-### ElMO: Embeddings from Language Models
+### ELMo: Embeddings from Language Models
 
-[Deep contextualized word representations](https://arxiv.org/abs/1802.05365)
+![Image of ELMo](/assets/blog_assets/evolution_of_llms/ELMO_abstract.webp)
+
+> Link to paper: [Deep contextualized word representations](https://arxiv.org/abs/1802.05365)
 
 https://pythonandml.github.io/dlbook/content/word_embeddings/elmo.html
 
@@ -914,7 +916,7 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 
 **Problem**
 
-learning high quality representations can be challenging. They should ideally
+> learning high quality representations can be challenging. They should ideally
 model both (1) complex characteristics of word
 use (e.g., syntax and semantics), and (2) how these
 uses vary across linguistic contexts (i.e., to model
@@ -922,12 +924,11 @@ polysemy).
 
 **Solution**
 
-"""
-Our representations differ from traditional word
+> Our representations differ from traditional word
 type embeddings in that each token is assigned a
 representation that is a function of the entire input
 sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus.
-"""
+
 
 ### GPT-1
 
