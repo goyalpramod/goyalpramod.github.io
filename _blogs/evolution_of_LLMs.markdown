@@ -823,9 +823,11 @@ We are deviating a bit from what the paper proposed and moving into the future o
 
 ## 2018: BERT and Early Innovations
 
-### Universal Language Model Fine-tuning for Text Classification
+### ULMFiT
 
-[paper](https://arxiv.org/pdf/1801.06146)
+![Image of MoE for RNNs](/assets/blog_assets/evolution_of_llms/ULM_abstract.webp)
+
+> Link to paper: [Universal Language Model Fine-tuning for Text Classification](https://arxiv.org/pdf/1801.06146)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -857,15 +859,38 @@ The paper demonstrates that effective transfer learning is possible in NLP witho
 </details>
 <br/>
 
-"""
-Inductive transfer learning has greatly impacted computer vision, but existing approaches in NLP still require task-specific
+
+**Problem**
+
+> Inductive transfer learning has greatly impacted computer vision, but existing approaches in NLP still require task-specific
 modifications and training from scratch.
-We propose Universal Language Model
-Fine-tuning (ULMFiT), an effective transfer learning method that can be applied to
+
+
+**Solution**
+
+> ULMFiT, an effective transfer learning method that can be applied to
 any task in NLP, and introduce techniques
 that are key for fine-tuning a language
 model.
-"""
+
+
+Everyone has heard of GPT, but did you wonder which paper was the inspiration behind it? Well look no further, Because this is the paper that laid the foundation that has changed our present world forever. 
+
+![Image of ULMFiT training](/assets/blog_assets/evolution_of_llms/4.webp)
+
+The first stage is pretty basic and nothing innovative, but the second & third stage is where the innovation lies. 
+
+So far noone had been able to fine a general purpose model to perform well on target task which was not present in the original modeling of the original model
+
+Let us understand that 
+
+#####  Target task Language Model fine-tuning
+
+**Discriminative fine-tuning**
+
+**Slanted triangular learning rates**
+
+
 
 ### ElMO: Embeddings from Language Models
 
