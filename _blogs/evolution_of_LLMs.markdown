@@ -102,7 +102,9 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 
 ### Transformer
 
-| [Attention is all you need](https://arxiv.org/abs/1706.03762)
+![Image of attention is all you need abstract](/assets/blog_assets/evolution_of_llms/transformers_abstract.webp)
+
+> Link to paper: [Attention is all you need](https://arxiv.org/abs/1706.03762)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -153,7 +155,9 @@ This is one topic that we didnt talk about extensively so let's go over it, beca
 
 ### RLHF - Reinforcement Learning from Human Preferences
 
-| [Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
+![Image of RLHF abstract](/assets/blog_assets/evolution_of_llms/rlhf_abstract.pdf.webp)
+
+> Link to paper: [Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -327,25 +331,9 @@ Fun story: One time researchers tried to RL a helicopter and it started [flying 
 
 ### PPO: Proximal Policy Optimization
 
-[Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
+![Image of ppo abstract](/assets/blog_assets/evolution_of_llms/ppo_abstract.pdf.webp)
 
-Read the following blogs to understand these topics better then explain them
-
-- https://lilianweng.github.io/posts/2018-04-08-policy-gradient/
-- http://www.scholarpedia.org/article/Policy_gradient_methods
-- https://spinningup.openai.com/en/latest/spinningup/rl_intro.html
-- https://jonathan-hui.medium.com/rl-policy-gradients-explained-9b13b688b146
-- https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9
-- http://www.incompleteideas.net/book/first/ebook/node43.html
-- https://cameronrwolfe.substack.com/p/proximal-policy-optimization-ppo
-- https://huggingface.co/blog/NormalUhr/rlhf-pipeline
-- https://iclr-blogposts.github.io/2024/blog/the-n-implementation-details-of-rlhf-with-ppo/
-
-- NOTE Explain the maths using baskets and fruits
-
-Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (Atleast in the early days).
-
-This is going to be math heavy so be prepared (Dw, I will guide you in each step)
+> Link to paper: [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -365,6 +353,13 @@ The core innovation is their clipped probability ratio approach, which constrain
 </div>
 </details>
 <br/>
+
+- SELF NOTE Explain the maths using baskets and fruits
+
+Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (Atleast in the early days).
+
+This is going to be math heavy so be prepared (Dw, I will guide you in each step)
+
 **Problem**
 > However, there is room for improvement in developing a method that is scalable (to
 large models and parallel implementations), data efficient, and robust (i.e., successful on a variety
@@ -385,7 +380,9 @@ and is not compatible with architectures that include noise (such as dropout) or
 The following blogs & articles helped me write this section 
 
 - [Spinning up docs by OpenAI](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html), consider going through this to help understand the nomenclature used throughout this section
-- 
+- [RL blogs by jonathan hui](https://jonathan-hui.medium.com/), they really simplified the ideas for me
+- [Understanding Policy Gradients](https://johnwlambert.github.io/policy-gradients/), this blog really helped me understand the math behind the idea
+- [These](https://karpathy.github.io/2016/05/31/rl/) [blogs](https://cameronrwolfe.substack.com/p/proximal-policy-optimization-ppo) [were](https://huggingface.co/blog/NormalUhr/rlhf-pipeline) [extremely](https://lilianweng.github.io/posts/2018-04-08-policy-gradient/) [helpful](https://iclr-blogposts.github.io/2024/blog/the-n-implementation-details-of-rlhf-with-ppo/) [too](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) (each word is a different link)
 
 [EXPLAIN]
 
@@ -748,16 +745,9 @@ Figure 2 (mentioned in the text) shows that $L^{CLIP}$ forms a lower bound on $L
 
 ### MOE : Mixture Of Experts
 
-[This came out in JAn so it should technically be at the top]
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/moe_abstract.webp)
 
-Another explosive paper, In 2017. Talk about being a crazy year right. Well to be perfectly honest MOE was actually introduced in 1990 in this [paper]()
-
-[Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538)
-
-blogs
-
-- https://huggingface.co/blog/moe
-- https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mixture-of-experts
+> Link to paper: [Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -778,17 +768,23 @@ This paper represents a significant advancement in scaling neural networks effic
 </details>
 <br/>
 
+Another explosive paper, in 2017. Talk about being a crazy year right. Well to be perfectly honest MOE was actually introduced in 1991 in the paper [Adaptive Mixture of Local Experts](https://www.cs.toronto.edu/~fritz/absps/jjnh91.pdf). But Noam et al introduced the idea to LSTMs, which really blew up.
+
 **Problem**
-"""
-The capacity of a neural network to absorb information is limited by its number of
+> The capacity of a neural network to absorb information is limited by its number of
 parameters.
-"""
+
 
 **Solution**
-"""
-Conditional computation, where parts of the network are active on a
+> Conditional computation, where parts of the network are active on a
 per-example basis, has been proposed in theory as a way of dramatically increasing model capacity without a proportional increase in computation.
-"""
+
+The following blogs helped me immensely while writing this section
+
+- [Mixture of Experts Explained](https://huggingface.co/blog/moe)
+- [A Visual Guide to Mixture of Experts (MoE)](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mixture-of-experts)
+
+
 
 [Visualize the solution as taking a bunch of students, then training each to be really good at one topic. Add a disclaimer that this is just for intuition. In reality it has been observed that MoE models focus more on tokens rather than man-made concepts]
 

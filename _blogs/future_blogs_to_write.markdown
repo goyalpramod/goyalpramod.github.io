@@ -184,6 +184,7 @@ An MLE's guide to WEB DEVELOPMENT
   - https://harper.blog/2025/02/16/my-llm-codegen-workflow-atm/?s=08
   - https://github.com/yamadashy/repomix
   - https://ai-sdk.dev/
+  - https://x.com/emirthedev/status/1931827480073019740?t=tWRSFdOUa6GpMAhBdJSNvA&s=08 (dither)
 
 IDK read to figure out
 
@@ -247,6 +248,7 @@ Book to read
 - https://milkov.tech/assets/psd.pdf
 - https://software-engineering-books.com/#web_development
 - https://www.kaggle.com/whitepaper-agent-companion
+- http://www.incompleteideas.net/book/first/ebook/the-book.html
 
 Youtube
 
