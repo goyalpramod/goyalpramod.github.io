@@ -361,13 +361,14 @@ Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes
 This is going to be math heavy so be prepared (Dw, I will guide you in each step)
 
 **Problem**
+
 > However, there is room for improvement in developing a method that is scalable (to
-large models and parallel implementations), data efficient, and robust (i.e., successful on a variety
-of problems without hyperparameter tuning). Q-learning (with function approximation) fails on
-many simple problems and is poorly understood, vanilla policy gradient methods have poor data
-effiency and robustness; and trust region policy optimization (TRPO) is relatively complicated,
-and is not compatible with architectures that include noise (such as dropout) or parameter sharing
-(between the policy and value function, or with auxiliary tasks).
+> large models and parallel implementations), data efficient, and robust (i.e., successful on a variety
+> of problems without hyperparameter tuning). Q-learning (with function approximation) fails on
+> many simple problems and is poorly understood, vanilla policy gradient methods have poor data
+> effiency and robustness; and trust region policy optimization (TRPO) is relatively complicated,
+> and is not compatible with architectures that include noise (such as dropout) or parameter sharing
+> (between the policy and value function, or with auxiliary tasks).
 
 **Solution**
 
@@ -377,7 +378,7 @@ and is not compatible with architectures that include noise (such as dropout) or
 > (i.e., lower bound) of the performance of the policy. To optimize policies, we alternate between
 > sampling data from the policy and performing several epochs of optimization on the sampled data
 
-The following blogs & articles helped me write this section 
+The following blogs & articles helped me write this section
 
 - [Spinning up docs by OpenAI](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html), consider going through this to help understand the nomenclature used throughout this section
 - [RL blogs by jonathan hui](https://jonathan-hui.medium.com/), they really simplified the ideas for me
@@ -393,19 +394,19 @@ Types of RL algorithms
 
 (This is a quick crash course reminder of RL Algorights, for a better deep dive. Go through the HF course I mentioned earlier.)
 
-#### Value Based
+##### Value Based
 
 [EXPLAIN]
 
 [Takes state and action, gives out probability of best action for the next state. [Give example of Q learning]]
 
-#### Policy based
+##### Policy based
 
 [EXPLAIN]
 
 [Takes state, directly gives the action]
 
-#### Policy Gradient Methods
+##### Policy Gradient Methods
 
 Understanding Policy Gradient Methods
 
@@ -771,26 +772,48 @@ This paper represents a significant advancement in scaling neural networks effic
 Another explosive paper, in 2017. Talk about being a crazy year right. Well to be perfectly honest MOE was actually introduced in 1991 in the paper [Adaptive Mixture of Local Experts](https://www.cs.toronto.edu/~fritz/absps/jjnh91.pdf). But Noam et al introduced the idea to LSTMs, which really blew up.
 
 **Problem**
-> The capacity of a neural network to absorb information is limited by its number of
-parameters.
 
+> The capacity of a neural network to absorb information is limited by its number of
+> parameters.
 
 **Solution**
+
 > Conditional computation, where parts of the network are active on a
-per-example basis, has been proposed in theory as a way of dramatically increasing model capacity without a proportional increase in computation.
+> per-example basis, has been proposed in theory as a way of dramatically increasing model capacity without a proportional increase in computation.
 
 The following blogs helped me immensely while writing this section
 
 - [Mixture of Experts Explained](https://huggingface.co/blog/moe)
 - [A Visual Guide to Mixture of Experts (MoE)](https://newsletter.maartengrootendorst.com/p/a-visual-guide-to-mixture-of-experts)
 
+![Image of MoE intuition](/assets/blog_assets/evolution_of_llms/2.webp)
 
+A simple intuition behind MoE can be seen as above, A single dense neural network is like a big student. Who has general knowledge about a lot of things without being particularly great at any one topic. When you ask him a question he takes his time to think and answers you, He also eats a lot because he is big.
 
-[Visualize the solution as taking a bunch of students, then training each to be really good at one topic. Add a disclaimer that this is just for intuition. In reality it has been observed that MoE models focus more on tokens rather than man-made concepts]
+But with a MoE layer, a smart router reads the question and directs it to the right expert. That expert gives a focused answer since they only need to worry about their specialty. As we're only activating one small expert instead of the entire large model, we use much less computation while still having access to lots of specialized knowledge.
 
-Understanding the Gating Network
+The above visualization is good for intuition point of view, but that is not how MoEs actually work in practice. For starter each expert is not an expert in a topic but expert in tokens, some can be punctuation experts, some can be noun experts etc. More on this later.
+
+This work introduced MoEs to LSTMs, so let us proceed forward in understanding that.
+Consider reading the following blog [Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) by [Christopher Olah](https://x.com/ch402?lang=en) & [Recurrent Neural Networks (RNNs), Clearly Explained!!!](https://www.youtube.com/watch?v=AsNTP8Kwu80) by [Josh Starmer](https://x.com/joshuastarmer?lang=en) if you need a refresher on the topic.
+
+![Image of MoE for RNNs](/assets/blog_assets/evolution_of_llms/3.webp)
+
+The idea seems simple enough, but there are multiple complexities like:
+
+- How do you train the model?
+- How do you create a fair gating function?
+- How many experts do you choose?
+
+Let's us go through each question one by one.
+
+> Note: We will see many changes that were made on this idea as we progress, but this was the foundational paper on MoEs for large models. So it is crucial that you understand it well.
+
+##### Understanding the Gating Network
 
 [completely understand 2.1 and write that down]
+
+Talk about sparse and dense networks too
 
 ADDRESSING PERFORMANCE CHALLENGES [TALK_ABOUT_THESE_AS_WELL]
 
