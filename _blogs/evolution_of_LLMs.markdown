@@ -185,7 +185,8 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 </details>
 <br/>
 
-THE foundational paper that introduced some key ideas such as: 
+THE foundational paper that introduced some key ideas such as:
+
 - Scaled dot-product attention
 - Multi-head attention mechanism
 - Positional encodings
@@ -435,6 +436,7 @@ While the original Transformer showed the power of attention-based training, it 
 </div>
 </details>
 <br/>
+
 As mind boggling as it sounds, the famed algorithm RLHF came out in 2017, the same year attention is all you need came out.
 Let us understand the ideas put forth and why it was such a big deal.
 
@@ -442,9 +444,9 @@ Let us understand the ideas put forth and why it was such a big deal.
 
 **Problem**
 
-> Training a RL system requires researchers to make a well define reward system, Which grows with complexity of system, Making it infeasible to train large RL systems.
+> Designing reward functions for complex behaviors is nearly impossible. How do you mathematically define "write a helpful response" or "be creative but truthful"? Traditional RL requires explicit numerical rewards for every action, but many desirable behaviors are subjective and context-dependent.
 
-For example, it is tough to quantitavily define a good joke. One can only compare a good one, from a bad one.
+For example, it's impossible to write code that scores joke quality, but humans can easily compare two jokes and say which is funnier.
 
 [Add image below, left side simple puzzle, right side complex puzzle]
 
@@ -467,7 +469,7 @@ In their experiment, the researchers asked labellers to compare short video clip
 
 ![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
 
-The human observes the agent acting in the _enviornment_ it then gives he's feedback. Which is taken by _reward predictor_ which numerical defines the reward. Which is sent to the _RL algorithm_ this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
+The human observes the agent acting in the _environment_ it then gives he's feedback. Which is taken by _reward predictor_ which numerical defines the reward. Which is sent to the _RL algorithm_ this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
 
 This sounds simple enough in principle, but how do you teach a model to learn from these preferences. I.e reward modeling.
 
@@ -481,6 +483,19 @@ The following blogs helped me while writing this section
 - [Chip Huyen's blog on RLHF](https://huyenchip.com/2023/05/02/rlhf.html)
 
 The reward predictor is trained to predict which of two given trajectories(σ¹, σ²) will be prefered by a human
+
+**Example:**
+[OR_USE_GRID_WORLD_EXAMPLE]
+Imagine two robot trajectories:
+
+- Trajectory A: Robot picks up cup, carries it normally, places it down
+- Trajectory B: Robot picks up cup, spins dramatically, places it down
+
+A human would prefer A (more efficient). The reward model learns to assign higher values to the observation-action pairs in trajectory A, eventually learning that "efficient movement" correlates with human preference.
+
+[ADD_IMAGERY]
+
+Reward predictor equation
 
 $$
 \hat{P}\left[\sigma^{1} \succ \sigma^{2}\right]=\frac{\exp \sum \hat{r}\left(o_{t}^{1}, a_{t}^{1}\right)}{\exp \sum \hat{r}\left(o_{t}^{1}, a_{t}^{1}\right)+\exp \sum \hat{r}\left(o_{t}^{2}, a_{t}^{2}\right)}
@@ -575,11 +590,11 @@ This approach is based on the [Bradley-Terry model](https://en.wikipedia.org/wik
 
 In essence, the reward function learns to assign higher values to states and actions that humans tend to prefer, creating a preference scale that can be used to guide the agent's behavior.
 
-The most important idea that we need to take forth from this paper is.
+The most important breakthrough: **We can align AI systems with human values using comparative feedback from non-experts.** This insight would prove crucial when training language models - instead of trying to define "helpful" or "harmless" mathematically, we can simply ask humans to compare outputs.
 
-_We can use RLHF from non-expert humans for a fraction of cost by comparing stuff._
+This comparative approach scales much better than rating individual responses, making it practical for training large language models on human preferences.
 
-Fun story: One time researchers tried to RL a helicopter and it started [flying backwards](https://www.youtube.com/watch?v=M-QUkgk3HyE&ab_channel=Stanford)
+| Fun story: One time researchers tried to RL a helicopter and it started [flying backwards](https://www.youtube.com/watch?v=M-QUkgk3HyE&ab_channel=Stanford)
 
 ### PPO: Proximal Policy Optimization
 
@@ -1063,15 +1078,189 @@ Let's us go through each question one by one.
 
 ##### Understanding the Gating Network
 
-[completely understand 2.1 and write that down]
+"""
 
-Talk about sparse and dense networks too
+The gating network is the "smart router" that decides which experts to activate for each input. The original paper introduced two key innovations:
 
-ADDRESSING PERFORMANCE CHALLENGES [TALK_ABOUT_THESE_AS_WELL]
+**Softmax Gating (Dense Baseline)**
 
-Load balancing loss,understand and explain that too
+```python
+# Simple dense gating - activates ALL experts with different weights
+G(x) = Softmax(x · W_g)
+y = Σ G(x)_i * Expert_i(x)  # All experts contribute
+```
 
-We are deviating a bit from what the paper proposed and moving into the future on how MoE is actually used.
+**Noisy Top-K Gating (The Sparse Innovation)**
+
+```python
+# Step 1: Add trainable noise for load balancing
+H(x)_i = (x · W_g)_i + StandardNormal() * Softplus((x · W_noise)_i)
+
+# Step 2: Keep only top K experts, set others to -∞
+KeepTopK(v, k)_i = {
+    v_i    if v_i is in top k elements
+    -∞     otherwise
+}
+
+# Step 3: Apply softmax (experts with -∞ get probability 0)
+G(x) = Softmax(KeepTopK(H(x), k))
+```
+
+**Why the noise?** The Gaussian noise helps with load balancing. Without it, the same few experts would always dominate, creating a "rich get richer" problem where popular experts get more training and become even more popular.
+
+**Why Top-K?** By keeping only the top K experts (typically K=2 or K=4), we achieve:
+
+- **Sparsity**: Most experts are inactive, saving computation
+- **Specialization**: Each expert focuses on specific patterns
+- **Scalability**: We can add thousands of experts without proportional compute increase
+
+##### Sparse vs Dense Networks
+
+**Dense Networks**: Every parameter is used for every input
+
+- High computational cost that scales linearly with parameters
+- Limited by memory and compute constraints
+- Parameters must be "generalists" handling all types of inputs
+
+**Sparse Networks (MoE)**: Only a subset of parameters are used per input
+
+- Computational cost scales with active experts, not total experts
+- Can have 1000x more parameters with similar compute budget
+- Parameters can be highly specialized for specific patterns
+
+This is the key insight: **conditional computation** allows us to scale model capacity without proportional compute scaling. It's like having a library with thousands of specialized books, but only reading the few relevant ones for each question.
+
+##### Addressing Performance Challenges
+
+The original paper identified several critical challenges that needed solving for MoE to work in practice:
+
+**1. The Shrinking Batch Problem**
+
+```
+Original batch: 1024 examples
+With 256 experts, k=4: Each expert sees only ~16 examples
+Small batches = inefficient GPU utilization
+```
+
+**Solution: Mix Data and Model Parallelism**
+
+- Combine batches from multiple GPUs before sending to experts
+- Each expert gets larger effective batch size: `(batch_size * num_devices * k) / num_experts`
+- Achieves factor of `d` improvement in expert batch size with `d` devices
+
+**2. Network Bandwidth Bottleneck**
+Modern GPUs have computational power thousands of times greater than network bandwidth. The solution:
+
+- Keep experts stationary on devices (don't move the experts)
+- Only send inputs/outputs across network (much smaller)
+- Use larger hidden layers to improve computation-to-communication ratio
+
+**3. Load Balancing Problem**
+Without intervention, a few experts dominate while others are rarely used.
+
+**Load Balancing Loss**:
+
+```python
+# Encourage equal usage across experts
+Importance(X) = Σ_{x∈X} G(x)  # Sum gate values per expert
+importance_loss = w_importance * CV(Importance(X))²
+
+# Encourage equal number of examples per expert
+Load(X) = smooth_estimator_of_examples_per_expert(X)
+load_loss = w_load * CV(Load(X))²
+
+total_loss = main_loss + importance_loss + load_loss
+```
+
+**Why both losses?** One expert might get few examples with large weights, another might get many examples with small weights. Both scenarios cause training issues.
+
+##### Training the MoE Model
+
+**Key Challenge**: How do experts specialize without explicit supervision?
+
+The specialization emerges through training dynamics:
+
+1. **Initial randomness**: All experts start random and perform similarly
+2. **Noise-induced preferences**: The noise in gating creates slight preferences
+3. **Reinforcement loop**: Experts that perform well for certain inputs get selected more
+4. **Emergent specialization**: Through this process, experts develop distinct capabilities
+
+**What do experts actually learn?** (From the paper's analysis)
+
+Unlike the intuitive "biology expert" or "math expert", real MoE experts learn much more fine-grained patterns:
+
+- **Syntactic specialization**: Expert 381 specializes in contexts with "researchers", "innovation", and "technology"
+- **Positional patterns**: Expert 752 handles phrases where indefinite article "a" introduces important concepts
+- **Semantic clustering**: Expert 2004 focuses on contexts involving speed and rapid change
+
+This emergent specialization is what makes MoE powerful - experts automatically discover useful divisions of labor without being explicitly told what to specialize in.
+
+##### Revolutionary Results
+
+**Language Modeling (1B Word Benchmark)**:
+
+- 4096-expert MoE: 24% better perplexity than dense baseline
+- Same computational cost as much smaller dense models
+- Up to 137B parameters (1000x parameter increase) with minimal compute overhead
+- Training time: 12 hours vs weeks for equivalent dense models
+
+**Machine Translation (WMT'14)**:
+
+- En→Fr: 40.56 BLEU (vs 39.22 for GNMT)
+- En→De: 26.03 BLEU (vs 24.91 for GNMT)
+- Achieved new state-of-the-art with lower computational cost
+- Faster training than dense models with better quality
+
+**Computational Efficiency**:
+
+- MoE models achieved 0.74-1.56 TFLOPS/GPU
+- Significant fraction of theoretical maximum (4.29 TFLOPS/GPU)
+- Only 37-46% of operations were in expert computations
+
+**The Breakthrough**: This was the first time conditional computation delivered on its theoretical promise at scale. Previous attempts had struggled with the practical challenges that this paper solved.
+
+##### From LSTMs to Modern Transformers
+
+While this paper applied MoE to LSTMs (the dominant architecture in 2017), the core insights proved even more powerful when later applied to Transformers:
+
+**Modern MoE Applications**:
+
+- **Switch Transformers (2022)**: Applied MoE to every Transformer layer, achieved 1.6T parameters
+- **PaLM-2**: Uses MoE for efficiency in Google's production models
+- **Mixtral 8x7B**: Open-source MoE that outperforms much larger dense models
+- **GPT-4**: Rumored to use MoE architecture (though not confirmed)
+
+**Why MoE + Transformers Work So Well**:
+
+- Transformers already have clear separation between attention and FFN layers
+- MoE can replace FFN layers without changing attention mechanisms
+- Better parallelization properties than RNNs
+- Attention provides better routing signal for expert selection
+
+**The Evolution Path**:
+
+```
+1991: Original MoE concept
+↓
+2017: Scalable MoE for LSTMs (this paper)
+↓
+2020-2022: MoE + Transformers (Switch, GShard)
+↓
+2023-2024: Production MoE models (PaLM-2, Mixtral, etc.)
+```
+
+##### Looking Forward
+
+The path from this 2017 paper to modern LLMs shows how foundational ideas can have delayed but massive impact. Key lessons that influenced later work:
+
+1. **Sparsity enables scale**: The core insight that you can have orders of magnitude more parameters without proportional compute increase
+2. **Load balancing is crucial**: Without proper load balancing, MoE models fail to train effectively
+3. **Engineering matters**: Success required solving practical challenges like communication costs and batch sizing
+4. **Specialization emerges**: Given proper training dynamics, experts will naturally develop useful specializations
+
+Today's largest language models increasingly rely on MoE architectures, making this paper's contributions more relevant than ever. The ability to scale to trillion-parameter models while maintaining reasonable training costs has become essential for pushing the boundaries of AI capabilities.
+
+"""
 
 ## 2018: BERT and Early Innovations
 
