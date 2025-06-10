@@ -932,8 +932,46 @@ sentence. We use vectors derived from a bidirectional LSTM that is trained with 
 
 ### GPT-1
 
-[paper](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
-[blog](https://openai.com/index/language-unsupervised/)
+![Image of GPT-1](/assets/blog_assets/evolution_of_llms/gpt1_abstract.webp)
+
+>Link to paper: [Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
+, [blog](https://openai.com/index/language-unsupervised/)
+
+<details>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+
+This seminal 2018 paper from OpenAI researchers (Radford, Narasimhan, Salimans, and Sutskever) introduces a powerful semi-supervised approach to natural language understanding that combines unsupervised pre-training with supervised fine-tuning.
+
+The key innovation lies in training a large transformer-based language model on unlabeled text data, then leveraging the learned representations by fine-tuning this model on specific downstream tasks. This approach addresses a fundamental challenge in NLP: the scarcity of labeled data for various language understanding tasks.
+
+The authors demonstrate that their method significantly outperforms task-specific architectures across 9 out of 12 NLP tasks, including natural language inference, question answering, semantic similarity, and text classification. Notable improvements include:
+
+- 8.9% on commonsense reasoning (Stories Cloze Test)
+- 5.7% on question answering (RACE)
+- 1.5% on textual entailment (MultiNLI)
+
+This approach minimizes task-specific architecture modifications by using "task-aware input transformations," which convert structured inputs into a sequence format compatible with the pre-trained model.
+
+This paper laid important groundwork for later transformer-based language models, demonstrating that generative pre-training on unlabeled data could significantly improve performance on downstream language understanding tasks.
+
+</div>
+</details>
+<br/>
+
+**Problem**
+
+> The ability to learn effectively from raw text is crucial to alleviating the dependence on supervised
+learning in natural language processing (NLP). Most deep learning methods require substantial
+amounts of manually labeled data, which restricts their applicability in many domains that suffer
+from a dearth of annotated resources
+
+**Solution**
+
+> """
+
+"""
+
 
 This was the beginning of the era we live in now
 
@@ -964,42 +1002,6 @@ Training a GPT
 
 Semi-supervised Sequence Learning
 
-<details>
-<summary markdown="span">Quick Summary</summary>
-<div markdown="1">
-
-This seminal 2018 paper from OpenAI researchers (Radford, Narasimhan, Salimans, and Sutskever) introduces a powerful semi-supervised approach to natural language understanding that combines unsupervised pre-training with supervised fine-tuning.
-
-The key innovation lies in training a large transformer-based language model on unlabeled text data, then leveraging the learned representations by fine-tuning this model on specific downstream tasks. This approach addresses a fundamental challenge in NLP: the scarcity of labeled data for various language understanding tasks.
-
-The authors demonstrate that their method significantly outperforms task-specific architectures across 9 out of 12 NLP tasks, including natural language inference, question answering, semantic similarity, and text classification. Notable improvements include:
-
-- 8.9% on commonsense reasoning (Stories Cloze Test)
-- 5.7% on question answering (RACE)
-- 1.5% on textual entailment (MultiNLI)
-
-This approach minimizes task-specific architecture modifications by using "task-aware input transformations," which convert structured inputs into a sequence format compatible with the pre-trained model.
-
-This paper laid important groundwork for later transformer-based language models, demonstrating that generative pre-training on unlabeled data could significantly improve performance on downstream language understanding tasks.
-
-</div>
-</details>
-<br/>
-
-**Problem**
-
-"""
-The ability to learn effectively from raw text is crucial to alleviating the dependence on supervised
-learning in natural language processing (NLP). Most deep learning methods require substantial
-amounts of manually labeled data, which restricts their applicability in many domains that suffer
-from a dearth of annotated resources
-"""
-
-**Solution**
-
-"""
-
-"""
 
 blog - https://towardsdatascience.com/understanding-the-evolution-of-gpt-part-1-an-in-depth-look-at-gpt-1-and-what-inspired-it-b7388a32e87d/#:~:text=GPT%2D1%20is%20the%20first,standard%20procedure%20for%20NLP%20tasks.
 
@@ -1030,17 +1032,9 @@ whitespace, and use the spaCy tokenizer.3
 
 ### Sentencepiece
 
-https://huggingface.co/docs/transformers/en/tokenizer_summary
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/sentencepiece_abstract.webp)
 
-https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/
-
-Wordpiece
-
-Unigram
-
-BPE https://arxiv.org/abs/1508.07909
-
-[paper](https://arxiv.org/abs/1808.06226)
+> Link to the paper: [SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing](https://arxiv.org/abs/1808.06226)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -1062,12 +1056,12 @@ They validate their approach through experiments on English-Japanese translation
 </details>
 <br/>
 
-**Problem** Tough to make NMT language independent
+**Problem** 
+> Tough to make NMT language independent
 
 **Solution**
 
-"""
-SentencePiece comprises four main components:
+> SentencePiece comprises four main components:
 Normalizer, Trainer, Encoder, and Decoder.
 Normalizer is a module to normalize semanticallyequivalent Unicode characters into canonical
 forms. Trainer trains the subword segmentation
@@ -1076,11 +1070,43 @@ type of subword model as the parameter of Trainer.
 Encoder internally executes Normalizer to normalize the input text and tokenizes it into a subword sequence with the subword model trained by
 Trainer. Decoder converts the subword sequence
 into the normalized tex
-"""
 
-### BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding
 
-[paper](https://arxiv.org/abs/1810.04805)
+https://huggingface.co/docs/transformers/en/tokenizer_summary
+
+https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/
+
+Wordpiece
+
+Unigram
+
+BPE https://arxiv.org/abs/1508.07909
+
+
+### BERT
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/BERT_abstract.webp)
+
+> Link to paper: [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](https://arxiv.org/abs/1810.04805)
+
+<details>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+
+This paper introduces BERT (Bidirectional Encoder Representations from Transformers), a groundbreaking language representation model that significantly advanced the state of natural language processing in 2018. The key innovation of BERT is its ability to pre-train deep bidirectional representations from unlabeled text, unlike previous models that were limited to unidirectional contexts (either left-to-right or right-to-left).
+
+BERT employs two novel pre-training tasks:
+
+1. **Masked Language Model (MLM)**: Randomly masks some percentage of input tokens and predicts those masked tokens
+2. **Next Sentence Prediction (NSP)**: Predicts whether two sentences follow each other in original text
+
+These pre-training objectives allow BERT to create context-aware representations that capture information from both left and right contexts. After pre-training on large text corpora (BookCorpus and Wikipedia), BERT can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of NLP tasks without task-specific architecture modifications.
+
+The paper demonstrated significant improvements over previous methods on eleven NLP tasks, including the GLUE benchmark, SQuAD, and SWAG datasets.
+
+</div>
+</details>
+<br/>
 
 https://jalammar.github.io/illustrated-bert/
 https://jalammar.github.io/a-visual-guide-to-using-bert-for-the-first-time/
@@ -1105,24 +1131,6 @@ License: Open, Apache-2.0
 Lab:Google
 """
 
-<details>
-<summary markdown="span">Quick Summary</summary>
-<div markdown="1">
-
-This paper introduces BERT (Bidirectional Encoder Representations from Transformers), a groundbreaking language representation model that significantly advanced the state of natural language processing in 2018. The key innovation of BERT is its ability to pre-train deep bidirectional representations from unlabeled text, unlike previous models that were limited to unidirectional contexts (either left-to-right or right-to-left).
-
-BERT employs two novel pre-training tasks:
-
-1. **Masked Language Model (MLM)**: Randomly masks some percentage of input tokens and predicts those masked tokens
-2. **Next Sentence Prediction (NSP)**: Predicts whether two sentences follow each other in original text
-
-These pre-training objectives allow BERT to create context-aware representations that capture information from both left and right contexts. After pre-training on large text corpora (BookCorpus and Wikipedia), BERT can be fine-tuned with just one additional output layer to create state-of-the-art models for a wide range of NLP tasks without task-specific architecture modifications.
-
-The paper demonstrated significant improvements over previous methods on eleven NLP tasks, including the GLUE benchmark, SQuAD, and SWAG datasets.
-
-</div>
-</details>
-<br/>
 This paper wasn't trying to find a problem then solve it per say. It is more of an innovation
 
 """
@@ -1138,24 +1146,9 @@ language inference, without substan
 
 ### GPT-2
 
-https://jalammar.github.io/illustrated-gpt2/
+![Image of GPT-2](/assets/blog_assets/evolution_of_llms/gpt2_abstract.webp)
 
-[blog](https://openai.com/index/better-language-models/)
-[paper](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf)
-
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/gpt2
-Family: GPT
-Pretraining Architecture: Decoder
-Pretraining Task: LM
-Extension: Minor extensions to the GPT architecture (e.g. layer normalization moved to the input of each sub-layer, or increased context size from 512 to 1024)
-Application: Text generation, but adaptable to many other NLP tasks when fine tuned.
-Date (of first known publication): 02/2019
-Num. Params: 124M, 355M, 774M, 1.5B
-Corpus: 8 million web pages (40 GB). 10X GPT . WebText dataset is created by crawling all links at Reddit with at least 3 Karma points.
-License: Open, Modified MIT license
-Lab: OpenAI
-"""
+> Link to paper: [Language Models are Unsupervised Multitask Learners](https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf),[blog](https://openai.com/index/better-language-models/)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -1206,14 +1199,28 @@ documents from WebText since it is a common data source
 for other datasets and could complicate analysis due to over
 """
 
+
+https://jalammar.github.io/illustrated-gpt2/
+"""
+Link: https://huggingface.co/docs/transformers/model_doc/gpt2
+Family: GPT
+Pretraining Architecture: Decoder
+Pretraining Task: LM
+Extension: Minor extensions to the GPT architecture (e.g. layer normalization moved to the input of each sub-layer, or increased context size from 512 to 1024)
+Application: Text generation, but adaptable to many other NLP tasks when fine tuned.
+Date (of first known publication): 02/2019
+Num. Params: 124M, 355M, 774M, 1.5B
+Corpus: 8 million web pages (40 GB). 10X GPT . WebText dataset is created by crawling all links at Reddit with at least 3 Karma points.
+License: Open, Modified MIT license
+Lab: OpenAI
+"""
+
+
 ### RoBERTa
 
-[paper](https://arxiv.org/abs/1907.11692)
+![Image of RoBERTa](/assets/blog_assets/evolution_of_llms/roberta_abstract.webp)
 
-- Dynamic masking
-- Removed NSP
-- Larger batch sizes
-- Extended training
+> Link to paper: [RoBERTa: A Robustly Optimized BERT Pretraining Approach](https://arxiv.org/abs/1907.11692)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -1243,6 +1250,13 @@ The paper is particularly notable for its thorough empirical analysis of trainin
 </div>
 </details>
 <br/>
+
+
+- Dynamic masking
+- Removed NSP
+- Larger batch sizes
+- Extended training
+
 """
 Link: https://huggingface.co/docs/transformers/model_doc/roberta
 Family: BERT
@@ -1303,26 +1317,11 @@ https://www.mindspore.cn/tutorials/experts/en/r2.2/optimize/gradient_accumulatio
 
 ### DistilBERT and Model Compression
 
-[paper](https://arxiv.org/abs/1910.01108)
 
-- Knowledge distillation techniques
-- Parameter sharing
-- Pruning strategies
-- Quantization methods
+![Image of BERT](/assets/blog_assets/evolution_of_llms/distillbert_abstract.webp)
 
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/distilbert
-Family: BERT
-Pretraining Architecture: Encoder
-Pretraining Task: MLM/NSP
-Extension: Compressed version of BERT using distillation, which is much more efficient given the same number of parameters
-Application: Same as BERT
-Date (of first known publication): 10/2019
-Num. Params:66M
-Corpus: Same as BERT
-License: Open, Apache-2.0
-Lab: Huggingface
-"""
+> Link to paper: [DistilBERT, a distilled version of BERT: smaller,faster, cheaper and lighter](https://arxiv.org/abs/1910.01108)
+
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -1354,6 +1353,27 @@ This work demonstrates that through careful distillation, smaller and more effic
 </div>
 </details>
 <br/>
+
+- Knowledge distillation techniques
+- Parameter sharing
+- Pruning strategies
+- Quantization methods
+
+"""
+Link: https://huggingface.co/docs/transformers/model_doc/distilbert
+Family: BERT
+Pretraining Architecture: Encoder
+Pretraining Task: MLM/NSP
+Extension: Compressed version of BERT using distillation, which is much more efficient given the same number of parameters
+Application: Same as BERT
+Date (of first known publication): 10/2019
+Num. Params:66M
+Corpus: Same as BERT
+License: Open, Apache-2.0
+Lab: Huggingface
+"""
+
+
 https://blog.roboflow.com/what-is-knowledge-distillation/
 https://datasciencedojo.com/blog/understanding-knowledge-distillation/
 https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html
@@ -1362,21 +1382,10 @@ https://medium.com/huggingface/distilbert-8cf3380435b5
 
 ### BART
 
-[paper](https://arxiv.org/abs/1910.13461)
+![Image of BART](/assets/blog_assets/evolution_of_llms/BART_abstract.webp)
 
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/bart
-Family: BERT for encoder, GPT for Decoder
-Pretraining Architecture: Encoder/Decoder
-Pretraining Task: DAE
-Extension: It can be seen as a generalization of BERT and GPT in that it combines ideas from both in the encoder and decoder
-Application: Mostly text generation but also some text understanding tasks
-Date (of first known publication): 10/2019
-Num. Params: Base = 140M, Large = 400M. In general, roughly 10% larger than BART for equivalent architectures.
-Corpus:Same as RoBERTa (160Gb of news, books, stories)
-License: Open, Apache-2.0
-Lab:Facebook
-"""
+> Link to paper: [BART: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation, Translation, and Comprehension](https://arxiv.org/abs/1910.13461)
+
 
 <details>
 
@@ -1400,6 +1409,22 @@ The paper presents a thorough ablation study comparing BART to other pretraining
 </div>
 </details>
 <br/>
+
+
+"""
+Link: https://huggingface.co/docs/transformers/model_doc/bart
+Family: BERT for encoder, GPT for Decoder
+Pretraining Architecture: Encoder/Decoder
+Pretraining Task: DAE
+Extension: It can be seen as a generalization of BERT and GPT in that it combines ideas from both in the encoder and decoder
+Application: Mostly text generation but also some text understanding tasks
+Date (of first known publication): 10/2019
+Num. Params: Base = 140M, Large = 400M. In general, roughly 10% larger than BART for equivalent architectures.
+Corpus:Same as RoBERTa (160Gb of news, books, stories)
+License: Open, Apache-2.0
+Lab:Facebook
+"""
+
 """
 We present BART, a denoising autoencoder
 for pretraining sequence-to-sequence models.
@@ -1421,10 +1446,9 @@ a back-translation system for machine translation, with only target language pre
 
 ### XLNet
 
-[paper](https://arxiv.org/abs/1906.08237)
+![Image of XLNet](/assets/blog_assets/evolution_of_llms/XLNet_abstract.webp)
 
-- Permutation-based training approach
-- Surpassed BERT on multiple benchmarks
+> Link to paper: [XLNet: Generalized Autoregressive Pretraining for Language Understanding](https://arxiv.org/abs/1906.08237)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -1449,6 +1473,12 @@ In empirical evaluations, XLNet outperforms BERT on 20 tasks including question 
 </div>
 </details>
 <br/>
+
+
+- Permutation-based training approach
+- Surpassed BERT on multiple benchmarks
+
+
 """
 With the capability of modeling bidirectional contexts, denoising autoencoding
 based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive language modeling. However, relying on corrupting the input with masks, BERT neglects dependency between the masked positions
@@ -1514,9 +1544,9 @@ This captures the dependency between "New" and "York" while training on uncorrup
 
 ### Megatron
 
-[paper](https://arxiv.org/abs/1909.08053)
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/megatron_abstract.webp)
 
-- Model parallelism for efficient large model training
+> Link to paper: [Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism](https://arxiv.org/abs/1909.08053)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -1561,11 +1591,16 @@ The paper demonstrates that with the right implementation approach, training mul
 </div>
 </details>
 <br/>
+
+- Model parallelism for efficient large model training
+
 This is a great time to talk about data, model and pipeline paralism and how massively large LLMs are trained across GPUs
 
 ### Sparse Attention Patterns
 
-[paper](https://arxiv.org/abs/1904.10509)
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/sparse_abstract.webp)
+
+> Link to paper: [Generating Long Sequences with Sparse Transformers](https://arxiv.org/abs/1904.10509)
 
 - Reduced computational complexity for long sequences
 
@@ -1587,6 +1622,7 @@ The authors demonstrate that Sparse Transformers can effectively model sequences
 </div>
 </details>
 <br/>
+
 """
 However, the memory and computational requirements of
 such networks grows quadratically with sequence length,
@@ -1611,6 +1647,7 @@ simplicity of the architecture leads us to believe it may be
 useful for many problems of interest.
 
 """
+
 https://reinforcedknowledge.com/sparse-transformers/
 https://lilianweng.github.io/posts/2018-06-24-attention/
 
