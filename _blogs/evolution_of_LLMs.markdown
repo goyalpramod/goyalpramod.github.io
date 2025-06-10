@@ -18,68 +18,114 @@ Additionally you can treat this blog as a sort of part 2, to my original blog on
 
 ## How this blog is structured
 
-We will go year by year, going through the revolutionary ideas introduced by each paper. Here is a quick list of the years and the seminal papers
+We will go year by year, going through the revolutionary ideas introduced by each paper. Here is a quick list of the years and the seminal papers. (You can go to any section at any given time by going through the table of content by clicking the button on the bottom left)
 
 <details>
 <summary markdown="span">2017</summary>
 <div markdown="1">
-[]()
+
+- [Attention is all you need](#transformer) <br/>
+- [Deep reinforcement learning from human preferences](#rlhf---reinforcement-learning-from-human-preferences) <br/>
+- [ Proximal Policy Optimization Algorithms](#ppo-proximal-policy-optimization) <br/>
+- [Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer](#moe--mixture-of-experts) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2018</summary>
 <div markdown="1">
-[]()
+
+- [Universal Language Model Fine-tuning for Text Classification](#ulmfit) <br/>
+- [Deep contextualized word representations](#elmo-embeddings-from-language-models) <br/>
+- [Improving Language Understanding by Generative Pre-Training ](#gpt-1) <br/>
+- [SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing](#sentencepiece) <br/>
+- [BERT: Pre-training of Deep Bidirectional Transformers for Language Understanding](#bert) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2019</summary>
 <div markdown="1">
-<a href="https://www.w3schools.com">Visit W3Schools</a>
+
+- [Language Models are Unsupervised Multitask Learners](#gpt-2) <br/>
+- [RoBERTa: A Robustly Optimized BERT Pretraining Approach](#roberta) <br/>
+- [DistilBERT, a distilled version of BERT: smaller,faster, cheaper and lighter](#distilbert-and-model-compression) <br/>
+- [BART: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation, Translation, and Comprehension](#bart) <br/>
+- [XLNet: Generalized Autoregressive Pretraining for Language Understanding](#xlnet) <br/>
+- [Megatron-LM: Training Multi-Billion Parameter Language Models Using Model Parallelism](#megatron) <br/>
+- [Generating Long Sequences with Sparse Transformers](#sparse-attention-patterns) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2020</summary>
 <div markdown="1">
-[]()
+
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2021</summary>
 <div markdown="1">
-[]()
+
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2022</summary>
 <div markdown="1">
-[]()
+
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2023</summary>
 <div markdown="1">
-[]()
+
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2024</summary>
 <div markdown="1">
-[]()
+
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
 </div>
 </details>
 
 <details>
 <summary markdown="span">2025</summary>
 <div markdown="1">
-[]()
+
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
+- [](#) <br/>
 </div>
 </details>
 <br/>
@@ -147,11 +193,202 @@ THE foundational paper that introduced some key ideas such as:
 
 We have talked deeply about each of these topics previously and I implore you to check that part out [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
 
-**Training a Transformer**
+##### Training a Transformer
 
 This is one topic that we didnt talk about extensively so let's go over it, because that is where the true beauty of GPT lies. How to train over huge amounts of data.
 
-[ADD_CONTENT]
+We will build iteratively, first starting small. And going massive as we approach the GPT paper.
+
+This [blog](https://machinelearningmastery.com/training-the-transformer-model/) helped me with this section extensively
+
+**Preparing the data**
+
+The original Transformer was trained for neural machine translation using English-German sentence pairs. The data preparation involves several crucial steps:
+
+```python
+# Data preparation
+import torch
+from torch.utils.data import DataLoader, Dataset
+from torch.nn.utils.rnn import pad_sequence
+
+def prepare_training_data(sentences):
+    # 1. Add special tokens
+    processed_sentences = []
+    for sentence in sentences:
+        processed_sentences.append("<START> " + sentence + " <EOS>")
+
+    # 2. Create vocabulary
+    vocab = build_vocab(processed_sentences)
+    vocab_size = len(vocab)
+
+    # 3. Convert to tensor sequences
+    sequences = []
+    for sentence in processed_sentences:
+        tokens = sentence.split()
+        sequence = torch.tensor([vocab[token] for token in tokens])
+        sequences.append(sequence)
+
+    # 4. Pad sequences
+    padded_sequences = pad_sequence(sequences, batch_first=True, padding_value=0)
+
+    return padded_sequences, vocab_size
+```
+
+**Why each step matters:**
+
+1. **Special tokens** (`<START>` and `<EOS>`): These tell the model where sentences begin and end. The `<START>` token signals the decoder to begin generation, while `<EOS>` teaches it when to stop. Without these, the model wouldn't know sentence boundaries. As we will move through the years, we will see how the special tokens used in LLMs have evolved as well. For example, think what will happen inside an LLM when it encounters a token that it hasn't seen during training, like a chinese character etc.
+
+2. **Vocabulary creation**: The vocabulary maps every unique word/token in the training data to a number. This is how we convert text (which computers can't process) into numerical tensors (which they can). The vocabulary size determines the final layer dimension of our model.
+
+3. **Tensor conversion**: Neural networks work with numbers, not words. Each word gets replaced by its vocabulary index, creating sequences of integers that can be fed into the model.
+
+4. **Padding**: Sentences have different lengths, but neural networks need fixed-size inputs for batch processing. Padding with zeros makes all sequences the same length, enabling efficient parallel computation.
+
+**Key Training Innovations**
+
+The Transformer introduced several training techniques that became standard:
+
+**1. Teacher Forcing with Masking**
+
+```python
+# During training, decoder sees target sequence shifted by one position
+encoder_input = source_sequence
+decoder_input = target_sequence[:, :-1]  # Remove last token
+decoder_output = target_sequence[:, 1:]  # Remove first token
+
+# Look-ahead mask prevents seeing future tokens
+def create_look_ahead_mask(seq_len):
+    mask = torch.triu(torch.ones(seq_len, seq_len), diagonal=1)
+    return mask.bool()
+
+mask = create_look_ahead_mask(decoder_input.size(1))
+```
+
+**Why this works:** Teacher forcing trains the decoder to predict the next token given all previous tokens, without requiring separate training data. The input-output shift creates a "next token prediction" task from translation pairs. The look-ahead mask ensures the model can't "cheat" by seeing future tokens during training - it must learn to predict based only on past context, just like during real inference.
+
+**2. Custom Learning Rate Schedule**
+The paper introduced a specific learning rate scheduler that warms up then decays:
+
+```python
+# Learning rate schedule from the paper
+import math
+
+class TransformerLRScheduler:
+    def __init__(self, optimizer, d_model=512, warmup_steps=4000):
+        self.optimizer = optimizer
+        self.d_model = d_model
+        self.warmup_steps = warmup_steps
+        self.step_count = 0
+
+    def step(self):
+        self.step_count += 1
+        lr = self.get_lr()
+        for param_group in self.optimizer.param_groups:
+            param_group['lr'] = lr
+
+    def get_lr(self):
+        arg1 = self.step_count ** -0.5
+        arg2 = self.step_count * (self.warmup_steps ** -1.5)
+        return (self.d_model ** -0.5) * min(arg1, arg2)
+```
+
+**Why this schedule:** The warmup phase gradually increases the learning rate, preventing the model from making drastic weight updates early in training when gradients are noisy. After warmup, the learning rate decays proportionally to the square root of the step number, allowing for fine-tuning as training progresses. This schedule was crucial for training stability with the Transformer's deep architecture.
+
+**3. Padding Masks for Loss Computation**
+
+```python
+import torch.nn.functional as F
+
+def masked_loss(target, prediction, pad_token=0):
+    # Don't compute loss on padding tokens
+    mask = (target != pad_token).float()
+
+    # Reshape for cross entropy
+    prediction = prediction.view(-1, prediction.size(-1))
+    target = target.view(-1)
+    mask = mask.view(-1)
+
+    # Compute cross entropy loss
+    loss = F.cross_entropy(prediction, target, reduction='none')
+    masked_loss = loss * mask
+
+    return masked_loss.sum() / mask.sum()
+```
+
+**Why masking matters:** Padding tokens (zeros) are artificial - they don't represent real words. Computing loss on them would teach the model incorrect patterns and waste computational resources. The mask ensures we only compute loss on actual content, leading to more meaningful gradients and better learning. This also prevents the model from learning to predict padding tokens, which would be useless during inference.
+
+**Training Configuration**
+
+The original paper used these hyperparameters:
+
+- **Model size**: 512 dimensions (base model)
+- **Attention heads**: 8
+- **Encoder/Decoder layers**: 6 each
+- **Feed-forward dimension**: 2048
+- **Dropout**: 0.1
+- **Optimizer**: Adam with custom learning rate schedule
+- **Training time**: ~12 hours on 8 P100 GPUs
+
+**The Training Loop**
+
+```python
+import torch
+import torch.nn as nn
+from torch.optim import Adam
+
+def train_step(model, optimizer, scheduler, encoder_input, decoder_input, decoder_output):
+    model.train()
+    optimizer.zero_grad()
+
+    # Forward pass
+    prediction = model(encoder_input, decoder_input)
+
+    # Compute masked loss and accuracy
+    loss = masked_loss(decoder_output, prediction)
+    accuracy = masked_accuracy(decoder_output, prediction)
+
+    # Backward pass
+    loss.backward()
+    optimizer.step()
+    scheduler.step()
+
+    return loss.item(), accuracy.item()
+
+# Main training loop
+model = TransformerModel(src_vocab_size, tgt_vocab_size, d_model=512)
+optimizer = Adam(model.parameters(), lr=1e-3, betas=(0.9, 0.98), eps=1e-9)
+scheduler = TransformerLRScheduler(optimizer, d_model=512)
+
+for epoch in range(num_epochs):
+    for batch in dataloader:
+        src_batch, tgt_batch = batch
+
+        # Prepare inputs
+        encoder_input = src_batch[:, 1:]     # Remove START token
+        decoder_input = tgt_batch[:, :-1]    # Remove EOS token
+        decoder_output = tgt_batch[:, 1:]    # Remove START token
+
+        loss, accuracy = train_step(
+            model, optimizer, scheduler,
+            encoder_input, decoder_input, decoder_output
+        )
+
+        if step % 100 == 0:
+            print(f'Epoch {epoch}, Step {step}, Loss: {loss:.4f}, Acc: {accuracy:.4f}')
+```
+
+**Why This Training Approach Worked**
+
+1. **Parallelization**: Unlike RNNs, all positions could be computed simultaneously
+2. **Stable Gradients**: Layer normalization and residual connections prevented vanishing gradients
+3. **Efficient Attention**: Scaled dot-product attention was computationally efficient
+4. **Smart Masking**: Prevented information leakage while enabling parallel training
+
+This training methodology laid the groundwork for scaling to the massive language models we see today. The key insight was that with proper masking and attention mechanisms, you could train much larger models much faster than sequential architectures allowed.
+
+**What's Coming Next**
+
+While the original Transformer showed the power of attention-based training, it was still limited to translation tasks with paired data. The real revolution came when researchers realized they could use similar training techniques on massive amounts of unlabeled text data - setting the stage for GPT and the era of large language models.
 
 ### RLHF - Reinforcement Learning from Human Preferences
 
