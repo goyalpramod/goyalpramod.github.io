@@ -859,38 +859,33 @@ The paper demonstrates that effective transfer learning is possible in NLP witho
 </details>
 <br/>
 
-
 **Problem**
 
 > Inductive transfer learning has greatly impacted computer vision, but existing approaches in NLP still require task-specific
-modifications and training from scratch.
-
+> modifications and training from scratch.
 
 **Solution**
 
 > ULMFiT, an effective transfer learning method that can be applied to
-any task in NLP, and introduce techniques
-that are key for fine-tuning a language
-model.
+> any task in NLP, and introduce techniques
+> that are key for fine-tuning a language
+> model.
 
-
-Everyone has heard of GPT, but did you wonder which paper was the inspiration behind it? Well look no further, Because this is the paper that laid the foundation that has changed our present world forever. 
+Everyone has heard of GPT, but did you wonder which paper was the inspiration behind it? Well look no further, Because this is the paper that laid the foundation that has changed our present world forever.
 
 ![Image of ULMFiT training](/assets/blog_assets/evolution_of_llms/4.webp)
 
-The first stage is pretty basic and nothing innovative, but the second & third stage is where the innovation lies. 
+The first stage is pretty basic and nothing innovative, but the second & third stage is where the innovation lies.
 
 So far noone had been able to fine a general purpose model to perform well on target task which was not present in the original modeling of the original model
 
-Let us understand that 
+Let us understand that
 
-#####  Target task Language Model fine-tuning
+##### Target task Language Model fine-tuning
 
 **Discriminative fine-tuning**
 
 **Slanted triangular learning rates**
-
-
 
 ### ELMo: Embeddings from Language Models
 
@@ -917,25 +912,24 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 **Problem**
 
 > learning high quality representations can be challenging. They should ideally
-model both (1) complex characteristics of word
-use (e.g., syntax and semantics), and (2) how these
-uses vary across linguistic contexts (i.e., to model
-polysemy).
+> model both (1) complex characteristics of word
+> use (e.g., syntax and semantics), and (2) how these
+> uses vary across linguistic contexts (i.e., to model
+> polysemy).
 
 **Solution**
 
 > Our representations differ from traditional word
-type embeddings in that each token is assigned a
-representation that is a function of the entire input
-sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus.
-
+> type embeddings in that each token is assigned a
+> representation that is a function of the entire input
+> sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus.
 
 ### GPT-1
 
 ![Image of GPT-1](/assets/blog_assets/evolution_of_llms/gpt1_abstract.webp)
 
->Link to paper: [Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
-, [blog](https://openai.com/index/language-unsupervised/)
+> Link to paper: [Improving Language Understanding by Generative Pre-Training](https://cdn.openai.com/research-covers/language-unsupervised/language_understanding_paper.pdf)
+> , [blog](https://openai.com/index/language-unsupervised/)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -962,16 +956,15 @@ This paper laid important groundwork for later transformer-based language models
 **Problem**
 
 > The ability to learn effectively from raw text is crucial to alleviating the dependence on supervised
-learning in natural language processing (NLP). Most deep learning methods require substantial
-amounts of manually labeled data, which restricts their applicability in many domains that suffer
-from a dearth of annotated resources
+> learning in natural language processing (NLP). Most deep learning methods require substantial
+> amounts of manually labeled data, which restricts their applicability in many domains that suffer
+> from a dearth of annotated resources
 
 **Solution**
 
 > """
 
 """
-
 
 This was the beginning of the era we live in now
 
@@ -1001,7 +994,6 @@ Our system works in two stages; first we train a transformer model on a very lar
 Training a GPT
 
 Semi-supervised Sequence Learning
-
 
 blog - https://towardsdatascience.com/understanding-the-evolution-of-gpt-part-1-an-in-depth-look-at-gpt-1-and-what-inspired-it-b7388a32e87d/#:~:text=GPT%2D1%20is%20the%20first,standard%20procedure%20for%20NLP%20tasks.
 
@@ -1056,21 +1048,21 @@ They validate their approach through experiments on English-Japanese translation
 </details>
 <br/>
 
-**Problem** 
+**Problem**
+
 > Tough to make NMT language independent
 
 **Solution**
 
 > SentencePiece comprises four main components:
-Normalizer, Trainer, Encoder, and Decoder.
-Normalizer is a module to normalize semanticallyequivalent Unicode characters into canonical
-forms. Trainer trains the subword segmentation
-model from the normalized corpus. We specify a
-type of subword model as the parameter of Trainer.
-Encoder internally executes Normalizer to normalize the input text and tokenizes it into a subword sequence with the subword model trained by
-Trainer. Decoder converts the subword sequence
-into the normalized tex
-
+> Normalizer, Trainer, Encoder, and Decoder.
+> Normalizer is a module to normalize semanticallyequivalent Unicode characters into canonical
+> forms. Trainer trains the subword segmentation
+> model from the normalized corpus. We specify a
+> type of subword model as the parameter of Trainer.
+> Encoder internally executes Normalizer to normalize the input text and tokenizes it into a subword sequence with the subword model trained by
+> Trainer. Decoder converts the subword sequence
+> into the normalized tex
 
 https://huggingface.co/docs/transformers/en/tokenizer_summary
 
@@ -1081,7 +1073,6 @@ Wordpiece
 Unigram
 
 BPE https://arxiv.org/abs/1508.07909
-
 
 ### BERT
 
@@ -1199,7 +1190,6 @@ documents from WebText since it is a common data source
 for other datasets and could complicate analysis due to over
 """
 
-
 https://jalammar.github.io/illustrated-gpt2/
 """
 Link: https://huggingface.co/docs/transformers/model_doc/gpt2
@@ -1214,7 +1204,6 @@ Corpus: 8 million web pages (40 GB). 10X GPT . WebText dataset is created by cra
 License: Open, Modified MIT license
 Lab: OpenAI
 """
-
 
 ### RoBERTa
 
@@ -1250,7 +1239,6 @@ The paper is particularly notable for its thorough empirical analysis of trainin
 </div>
 </details>
 <br/>
-
 
 - Dynamic masking
 - Removed NSP
@@ -1317,11 +1305,9 @@ https://www.mindspore.cn/tutorials/experts/en/r2.2/optimize/gradient_accumulatio
 
 ### DistilBERT and Model Compression
 
-
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/distillbert_abstract.webp)
 
 > Link to paper: [DistilBERT, a distilled version of BERT: smaller,faster, cheaper and lighter](https://arxiv.org/abs/1910.01108)
-
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -1373,7 +1359,6 @@ License: Open, Apache-2.0
 Lab: Huggingface
 """
 
-
 https://blog.roboflow.com/what-is-knowledge-distillation/
 https://datasciencedojo.com/blog/understanding-knowledge-distillation/
 https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html
@@ -1385,7 +1370,6 @@ https://medium.com/huggingface/distilbert-8cf3380435b5
 ![Image of BART](/assets/blog_assets/evolution_of_llms/BART_abstract.webp)
 
 > Link to paper: [BART: Denoising Sequence-to-Sequence Pre-training for Natural Language Generation, Translation, and Comprehension](https://arxiv.org/abs/1910.13461)
-
 
 <details>
 
@@ -1409,7 +1393,6 @@ The paper presents a thorough ablation study comparing BART to other pretraining
 </div>
 </details>
 <br/>
-
 
 """
 Link: https://huggingface.co/docs/transformers/model_doc/bart
@@ -1474,10 +1457,8 @@ In empirical evaluations, XLNet outperforms BERT on 20 tasks including question 
 </details>
 <br/>
 
-
 - Permutation-based training approach
 - Surpassed BERT on multiple benchmarks
-
 
 """
 With the capability of modeling bidirectional contexts, denoising autoencoding
