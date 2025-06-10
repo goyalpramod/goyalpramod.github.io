@@ -184,6 +184,7 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 </div>
 </details>
 <br/>
+
 THE foundational paper that introduced some key ideas such as: 
 - Scaled dot-product attention
 - Multi-head attention mechanism
@@ -192,6 +193,20 @@ THE foundational paper that introduced some key ideas such as:
 - Masked attention for autoregressive models
 
 We have talked deeply about each of these topics previously and I implore you to check that part out [here](https://goyalpramod.github.io/blogs/Transformers_laid_out/).
+
+**Problem**
+
+> Sequential models like RNNs and LSTMs process text word-by-word, creating a fundamental bottleneck: each word must wait for the previous word to be processed. This sequential nature makes training painfully slow and prevents the model from understanding long-range dependencies effectively.
+
+For example, in the sentence "The cat that lived in the house with the red door was hungry", by the time the model reaches "was hungry", it has largely forgotten about "The cat" due to the vanishing gradient problem. The model struggles to connect distant but related words.
+
+[Add image below: left side showing RNN processing words sequentially with time arrows, right side showing Transformer processing all words simultaneously with attention connections]
+
+**Solution**
+
+> The Transformer replaced sequential processing with parallel attention mechanisms. Instead of processing words one-by-one, it looks at all words simultaneously and uses attention to determine which words are most relevant to each other, regardless of their distance in the sentence.
+
+This attention-based approach allows the model to directly connect "The cat" with "was hungry" in a single step, while also enabling massive parallelization during training - turning what used to take weeks into hours.
 
 ##### Training a Transformer
 
@@ -248,7 +263,7 @@ def prepare_training_data(sentences):
 
 The Transformer introduced several training techniques that became standard:
 
-**1. Teacher Forcing with Masking**
+**Teacher Forcing with Masking**
 
 ```python
 # During training, decoder sees target sequence shifted by one position
@@ -266,7 +281,7 @@ mask = create_look_ahead_mask(decoder_input.size(1))
 
 **Why this works:** Teacher forcing trains the decoder to predict the next token given all previous tokens, without requiring separate training data. The input-output shift creates a "next token prediction" task from translation pairs. The look-ahead mask ensures the model can't "cheat" by seeing future tokens during training - it must learn to predict based only on past context, just like during real inference.
 
-**2. Custom Learning Rate Schedule**
+**Custom Learning Rate Schedule**
 The paper introduced a specific learning rate scheduler that warms up then decays:
 
 ```python
@@ -294,7 +309,7 @@ class TransformerLRScheduler:
 
 **Why this schedule:** The warmup phase gradually increases the learning rate, preventing the model from making drastic weight updates early in training when gradients are noisy. After warmup, the learning rate decays proportionally to the square root of the step number, allowing for fine-tuning as training progresses. This schedule was crucial for training stability with the Transformer's deep architecture.
 
-**3. Padding Masks for Loss Computation**
+**Padding Masks for Loss Computation**
 
 ```python
 import torch.nn.functional as F
