@@ -61,11 +61,19 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 <summary markdown="span">2020</summary>
 <div markdown="1">
 
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
+- [Reformer: The Efficient Transformer](#reformer-the-efficient-transformer) <br/>
+- [Longformer: The Long-Document Transformer](#longformer-the-long-document-transformer) <br/>
+- [GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding](#gshard-scaling-giant-models-with-conditional-computation-and-automatic-sharding) <br/>
+- [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](#retrieval-augmented-generation-for-knowledge-intensive-nlp-tasks) <br/>
+- [Big Bird: Transformers for Longer Sequences](#big-bird-transformers-for-longer-sequences) <br/>
+- [GPT-3](#gpt-3) <br/>
+- [Rethinking Attention with Performers](#rethinking-attention-with-performers) <br/>
+- [T5](#t5) <br/>
+- [Measuring Massive Multitask Language Understanding](#measuring-massive-multitask-language-understanding) <br/>
+- [ZeRO (Zero Redundancy Optimizer)](#zero-zero-redundancy-optimizer) <br/>
+- [ELECTRA](#electra) <br/>
+- [Switch Transformer](#switch-transformer) <br/>
+- [Scaling Laws](#scaling-laws) <br/>
 </div>
 </details>
 
@@ -73,23 +81,46 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 <summary markdown="span">2021</summary>
 <div markdown="1">
 
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
+- [RoFormer: Enhanced Transformer with Rotary Position Embedding](#roformer-enhanced-transformer-with-rotary-position-embedding) <br/>
+- [Efficient Large-Scale Language Model Training on GPU Clusters Using Megatron-LM](#efficient-large-scale-language-model-training-on-gpu-clusters-using-megatron-lm) <br/>
+- [Transcending Scaling Laws with 0.1% Extra Compute](#transcending-scaling-laws-with-01-extra-compute) <br/>
+- [Improving language models by retrieving from trillions of tokens](#improving-language-models-by-retrieving-from-trillions-of-tokens) <br/>
+- [CLIP](#clip) <br/>
+- [Dall-e](#dall-e) <br/>
+- [FSDP](#fsdp) <br/>
+- [HumanEval](#humaneval) <br/>
+- [LoRA](#lora) <br/>
+- [Self-Instruct: Aligning Language Models with Self-Generated Instructions](#self-instruct-aligning-language-models-with-self-generated-instructions) <br/>
+- [PaLM](#palm) <br/>
+- [Gopher (DeepMind)](#gopher-deepmind) <br/>
+- [Megatron-Turing NLG](#megatron-turing-nlg) <br/>
 </div>
 </details>
-
 <details>
 <summary markdown="span">2022</summary>
 <div markdown="1">
 
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
+- [EFFICIENTLY SCALING TRANSFORMER INFERENCE](#efficiently-scaling-transformer-inference) <br/>
+- [Fast Inference from Transformers via Speculative Decoding](#fast-inference-from-transformers-via-speculative-decoding) <br/>
+- [Chinchilla](#chinchilla) <br/>
+- [Chain-of-thought prompting](#chain-of-thought-prompting) <br/>
+- [InstructGPT](#instructgpt) <br/>
+- [BLOOM](#bloom) <br/>
+- [Emergent Abilities of Large Language Models](#emergent-abilities-of-large-language-models) <br/>
+- [Flash Attention](#flash-attention) <br/>
+- [Grouped-query attention](#grouped-query-attention) <br/>
+- [ALiBi position encoding](#alibi-position-encoding) <br/>
+- [DeepSpeed Inference: Enabling Efficient Inference of Transformer Models at Unprecedented Scale](#deepspeed-inference-enabling-efficient-inference-of-transformer-models-at-unprecedented-scale) <br/>
+- [Claude 1](#claude-1) <br/>
+- [FLAN (Fine-tuned LAnguage Net) (Google)](#flan-fine-tuned-language-net-google) <br/>
+- [Red Teaming Language Models with Language Models](#red-teaming-language-models-with-language-models) <br/>
+- [HELM (Holistic Evaluation of Language Models)](#helm-holistic-evaluation-of-language-models) <br/>
+- [DALL-E 2 (OpenAI)](#dall-e-2-openai) <br/>
+- [Stable Diffusion (Stability AI)](#stable-diffusion-stability-ai) <br/>
+- [GPTQ](#gptq) <br/>
+- [Beyond the Imitation Game: Quantifying and extrapolating the capabilities of language models](#beyond-the-imitation-game-quantifying-and-extrapolating-the-capabilities-of-language-models) <br/>
+- [Minerva](#minerva) <br/>
+- [ChatGPT](#chatgpt) <br/>
 </div>
 </details>
 
@@ -97,11 +128,41 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 <summary markdown="span">2023</summary>
 <div markdown="1">
 
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
+- [Efficient Memory Management for Large Language Model Serving with PagedAttention](#efficient-memory-management-for-large-language-model-serving-with-pagedattention) <br/>
+- [QLoRA: Efficient Finetuning of Quantized LLMs](#qlora-efficient-finetuning-of-quantized-llms) <br/>
+- [Parameter-Efficient Fine-Tuning Methods for Pretrained Language Models: A Critical Review and Assessment](#parameter-efficient-fine-tuning-methods-for-pretrained-language-models-a-critical-review-and-assessment) <br/>
+- [FlashAttention-2: Faster Attention with Better Parallelism and Work Partitioning](#flashattention-2-faster-attention-with-better-parallelism-and-work-partitioning) <br/>
+- [AWQ: Activation-aware Weight Quantization for LLM Compression and Acceleration](#awq-activation-aware-weight-quantization-for-llm-compression-and-acceleration) <br/>
+- [Generative Agents: Interactive Simulacra of Human Behavior](#generative-agents-interactive-simulacra-of-human-behavior) <br/>
+- [Voyager: An Open-Ended Embodied Agent with Large Language Models](#voyager-an-open-ended-embodied-agent-with-large-language-models) <br/>
+- [Universal and Transferable Adversarial Attacks on Aligned Language Models](#universal-and-transferable-adversarial-attacks-on-aligned-language-models) <br/>
+- [Tree of Thoughts: Deliberate Problem Solving with Large Language Models](#tree-of-thoughts-deliberate-problem-solving-with-large-language-models) <br/>
+- [Mpt](#mpt) <br/>
+- [WizardLM: Empowering Large Language Models to Follow Complex Instructions](#wizardlm-empowering-large-language-models-to-follow-complex-instructions) <br/>
+- [DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales](#deepspeed-chat-easy-fast-and-affordable-rlhf-training-of-chatgpt-like-models-at-all-scales) <br/>
+- [GPT-4](#gpt-4) <br/>
+- [Mistral 7b](#mistral-7b) <br/>
+- [LLaMA](#llama) <br/>
+- [Mixtral 8x7B](#mixtral-8x7b) <br/>
+- [LLaMA 2](#llama-2) <br/>
+- [Vicuna (LMSYS)](#vicuna-lmsys) <br/>
+- [Alpaca](#alpaca) <br/>
+- [Direct Preference Optimization (DPO)](#direct-preference-optimization-dpo) <br/>
+- [Constitutional AI](#constitutional-ai) <br/>
+- [Toy Models of Superposition](#toy-models-of-superposition) <br/>
+- [Towards Monosemanticity: Decomposing Language Models With Dictionary Learning](#towards-monosemanticity-decomposing-language-models-with-dictionary-learning) <br/>
+- [PaLM 2](#palm-2) <br/>
+- [LAION-5B (LAION)](#laion-5b-laion) <br/>
+- [LIMA](#lima) <br/>
+- [Mamba](#mamba) <br/>
+- [LLaVA (Visual Instruction Tuning)](#llava-visual-instruction-tuning) <br/>
+- [Claude 1/Claude 2](#claude-1claude-2) <br/>
+- [Gemini](#gemini) <br/>
+- [Qwen](#qwen) <br/>
+- [Qwen-VL](#qwen-vl) <br/>
+- [Phi-1](#phi-1) <br/>
+- [Reinforced Self-Training (ReST) for Language Modeling](#reinforced-self-training-rest-for-language-modeling) <br/>
+- [The Era of 1-bit LLMs: All Large Language Models are in 1.58 Bits](#the-era-of-1-bit-llms-all-large-language-models-are-in-158-bits) <br/>
 </div>
 </details>
 
@@ -109,11 +170,29 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 <summary markdown="span">2024</summary>
 <div markdown="1">
 
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
+- [Gemma](#gemma) <br/>
+- [Gemma 2](#gemma-2) <br/>
+- [Chatbot Arena: An Open Platform for Evaluating LLMs by Human Preference](#chatbot-arena-an-open-platform-for-evaluating-llms-by-human-preference) <br/>
+- [TinyLlama: An Open-Source Small Language Model](#tinyllama-an-open-source-small-language-model) <br/>
+- [MordernBert](#mordernbert) <br/>
+- [Jamba: A Hybrid Transformer-Mamba Language Model](#jamba-a-hybrid-transformer-mamba-language-model) <br/>
+- [Claude 3](#claude-3) <br/>
+- [LLaMA 3](#llama-3) <br/>
+- [Gemini 1.5](#gemini-15) <br/>
+- [Qwen 2](#qwen-2) <br/>
+- [phi-2/phi-3](#phi-2phi-3) <br/>
+- [OpenAI o1](#openai-o1) <br/>
+- [RSO (Reinforced Self-training with Online feedback)](#rso-reinforced-self-training-with-online-feedback) <br/>
+- [SPIN (Self-Played Improvement Narration)](#spin-self-played-improvement-narration) <br/>
+- [DBRX](#dbrx) <br/>
+- [FlashAttention-3: Fast and Accurate Attention with Asynchrony and Low-precision](#flashattention-3-fast-and-accurate-attention-with-asynchrony-and-low-precision) <br/>
+- [Qwen 2.5 (Alibaba)](#qwen-25-alibaba) <br/>
+- [DeepSeek 2.5 (DeepSeek)](#deepseek-25-deepseek) <br/>
+- [Claude 3.5 Sonnet (Anthropic)](#claude-35-sonnet-anthropic) <br/>
+- [DeepSeek-R1 (DeepSeek)](#deepseek-r1-deepseek) <br/>
+- [Phi 3](#phi-3) <br/>
+- [Phi 4](#phi-4) <br/>
+- [Self-Play Fine-Tuning Converts Weak Language Models to Strong Language Models](#self-play-fine-tuning-converts-weak-language-models-to-strong-language-models) <br/>
 </div>
 </details>
 
@@ -121,14 +200,18 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 <summary markdown="span">2025</summary>
 <div markdown="1">
 
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
-- [](#) <br/>
+- [Gemma 3](#gemma-3) <br/>
+- [Llama 4](#llama-4) <br/>
+- [Qwen2.5](#qwen25) <br/>
+- [Qwen 2.5-1M](#qwen-25-1m) <br/>
+- [Qwen2.5-Omni](#qwen25-omni) <br/>
+- [Qwen 3](#qwen-3) <br/>
+- [Grok](#grok) <br/>
+- [Pixtral](#pixtral) <br/>
+- [Large Language Diffusion Models](#large-language-diffusion-models) <br/>
 </div>
 </details>
-<br/>
+ <br/>
 
 Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). Over here I will just give quick intro and links to some ground breaking innovations.
 
@@ -1364,6 +1447,10 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 > type embeddings in that each token is assigned a
 > representation that is a function of the entire input
 > sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus.
+
+Before we start talking about ELMo we have to understand how word embeddings work and what they are. You can skip this section if you have an extensive understanding of the topic at hand 
+
+https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html
 
 ### GPT-1
 
