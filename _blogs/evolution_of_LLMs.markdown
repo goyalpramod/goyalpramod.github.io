@@ -735,26 +735,61 @@ The following blogs & articles helped me write this section
 - [Understanding Policy Gradients](https://johnwlambert.github.io/policy-gradients/), this blog really helped me understand the math behind the idea
 - [These](https://karpathy.github.io/2016/05/31/rl/) [blogs](https://cameronrwolfe.substack.com/p/proximal-policy-optimization-ppo) [were](https://huggingface.co/blog/NormalUhr/rlhf-pipeline) [extremely](https://lilianweng.github.io/posts/2018-04-08-policy-gradient/) [helpful](https://iclr-blogposts.github.io/2024/blog/the-n-implementation-details-of-rlhf-with-ppo/) [too](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) (each word is a different link)
 
-[EXPLAIN]
+##### What is Reinforcement Learning
 
-Types of RL algorithms
+![Image of RL](/assets/blog_assets/evolution_of_llms/RL.webp)
+_Image taken from [HuggingFace Course](https://huggingface.co/learn/deep-rl-course/en/unit1/rl-framework)_
 
-1. Value based
-2. Policy based
+In RL we create an Agent (An ML model like Neural networks) give it a defined set of Actions $A_t$ (In this case it would be, move left, move right, Press A to shoot).
 
-(This is a quick crash course reminder of RL Algorights, for a better deep dive. Go through the HF course I mentioned earlier.)
+The agent then chooses an action and interacts with the Environment, which returns a new state as well as reward (positive if we survived or did a favourable outcome, negative if we die or do an unfavourable outcome).
 
-##### Value Based
+Step by Step it looks something like this:
+
+- The agent recieves _state $S_0$_ from the environment (In this that would be the first frame of the game)
+- Based on _state $S_0$_, the agent takes _action $A_0$_ (chooses to move right)
+- The environment goes to new frame, new _state $S_1$_.
+- The environment gives the agent, _reward $R_t$_ (still alive!!!).
+
+The idea behind RL is based on reward hypothesis, which states that
+
+|_All goals can be described as the maximization of the expected return (expected cumulative reward)_
+
+Which can be mathematically represented as
+$R(\tau) = r_{t+1} + r_{t+2} + r_{t+3} + r_{t+4} + \ldots$
+($\tau$ read as tau)
+
+Remember this, It will prove useful later.
+
+##### Policy π: The Agent's Brain
+
+"""
+The Policy π is the brain of our Agent, it’s the function that tells us what action to take given the state we are in. So it defines the agent’s behavior at a given time.
+"""
+
+![Image of policy based approach](/assets/blog_assets/evolution_of_llms/policy.webp)
+
+![Image of RL](/assets/blog_assets/evolution_of_llms/rl_algos.webp)
+_Image taken from [OpenAI Spinning Up](https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html)_
+
+RL algorithms tell an Agent what action it should take to maximise it's cummulative reward. (remember that is the idea behind RL)
+
+Now there are many RL algorithms present as you can see from the image above, But most of them are developed from two central methods:
+
+1. Policy based methods
+2. Value based methods
+
+Let us understand both
+
+**Policy based**
+
+**Value Based**
 
 [EXPLAIN]
 
 [Takes state and action, gives out probability of best action for the next state. [Give example of Q learning]]
 
-##### Policy based
-
-[EXPLAIN]
-
-[Takes state, directly gives the action]
+(This is a quick crash course reminder of RL Algorights, for a better deep dive. Go through the HF course I mentioned earlier.)
 
 ##### Policy Gradient Methods
 
@@ -1448,7 +1483,7 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 > representation that is a function of the entire input
 > sentence. We use vectors derived from a bidirectional LSTM that is trained with a coupled language model (LM) objective on a large text corpus.
 
-Before we start talking about ELMo we have to understand how word embeddings work and what they are. You can skip this section if you have an extensive understanding of the topic at hand 
+Before we start talking about ELMo we have to understand how word embeddings work and what they are. You can skip this section if you have an extensive understanding of the topic at hand
 
 https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html
 
