@@ -1577,7 +1577,208 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 
 Before we start talking about ELMo we have to understand how word embeddings work and what they are. You can skip this section if you have an extensive understanding of the topic at hand
 
-https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html
+This [book](https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html) proved to be extremely helpful while writing this section. 
+
+##### Traditional Word Embeddings 
+
+Machines do not understand text but rather numbers. So researchers have come up with ways to represent words as numbers that still captures their complexity, semantics, meaning etc. Let's go one by one. 
+
+**One-Hot Vectors**
+
+One of the simplest solution is to create [one hot encoding](https://en.wikipedia.org/wiki/One-hot) for each word.
+
+![Image of One Hot Vector](/assets/blog_assets/evolution_of_llms/OHV.webp)
+
+Here, every word has been assigned a unique vector and the length of our one-hot encoded vector would be equal to the size of $V$ ($\|V\| = 3$).
+
+> Note:
+> - In OHE words are independant of each other and hence do not capture any relationship between them
+> - OHE is computationally expensive as in reality the size of vocabulary can be in billions
+
+**Bag-of-Words (BOW)**
+
+Think of BOW as the most straightforward way to convert text into numbers - it's like counting how many times each word appears in a document, completely ignoring the order.
+
+BOW creates a document-term matrix where each row represents a document and each column represents a word from our vocabulary. Each cell contains the frequency of that word in that specific document.
+
+> *[Image suggestion: A clean document-term matrix visualization showing 4 documents × 8 vocabulary words with frequency counts, highlighting how "document" appears 2 times in Document-2]*
+
+```python
+# Simple BOW implementation
+documents = ['this is the first document',
+             'this document is the second document', 
+             'this is the third one',
+             'is this the first document']
+
+# Create vocabulary
+vocab = []
+for doc in documents:
+    for word in doc.split():
+        if word not in vocab:
+            vocab.append(word)
+
+# Create BOW matrix
+bow_matrix = []
+for doc in documents:
+    word_count = [doc.split().count(word) for word in vocab]
+    bow_matrix.append(word_count)
+
+print("Vocab:", vocab)
+print("BOW Matrix:", bow_matrix)
+```
+
+The problem? BOW treats "The cat sat on the mat" and "The mat sat on the cat" as identical because it only cares about word counts, not context or order. Plus, common words like "the" and "is" get the same weight as meaningful words.
+
+**Co-occurrence Matrix**
+
+Instead of just counting words in documents, what if we count how often words appear *together*? That's exactly what co-occurrence matrices do.
+
+A co-occurrence matrix shows how frequently word pairs appear within a defined window (like within the same sentence). If "learning" and "machine" often appear together, they'll have a high co-occurrence score.
+
+> *[Image suggestion: A symmetric 8×8 co-occurrence matrix with highlighted cells showing high co-occurrence values, with annotations explaining why "is" and "the" have a value of 4]*
+
+The mathematical representation: For words $w_i$ and $w_j$, the co-occurrence count $C_{ij}$ represents how many times they appear together within a context window.
+
+$$C_{ij} = \sum_{k=1}^{N} \mathbb{I}(w_i, w_j \text{ co-occur in context } k)$$
+
+Where $\mathbb{I}$ is an indicator function and $N$ is the total number of contexts.
+
+```python
+# Simple co-occurrence matrix
+def build_cooccurrence_matrix(documents, window_size=1):
+    # Flatten all documents into one list
+    all_words = []
+    for doc in documents:
+        all_words.extend(doc.split())
+    
+    # Create vocabulary
+    vocab = list(set(all_words))
+    vocab_size = len(vocab)
+    
+    # Initialize matrix
+    cooc_matrix = [[0 for _ in range(vocab_size)] for _ in range(vocab_size)]
+    
+    # Count co-occurrences
+    for i in range(len(all_words)):
+        target_word = all_words[i]
+        target_idx = vocab.index(target_word)
+        
+        # Check words within window
+        for j in range(max(0, i-window_size), min(len(all_words), i+window_size+1)):
+            if i != j:
+                context_word = all_words[j]
+                context_idx = vocab.index(context_word)
+                cooc_matrix[target_idx][context_idx] += 1
+    
+    return cooc_matrix, vocab
+```
+
+The beauty of co-occurrence matrices is that they capture some semantic relationships - words that often appear together likely have related meanings.
+
+**N-Gram**
+
+N-grams extend the BOW concept by considering sequences of $n$ consecutive words instead of individual words. This helps capture some word order and context.
+
+- **Unigrams (n=1)**: Individual words → ["this", "is", "the", "first"]
+- **Bigrams (n=2)**: Word pairs → ["this is", "is the", "the first"] 
+- **Trigrams (n=3)**: Word triplets → ["this is the", "is the first"]
+
+> *[Image suggestion: A visual breakdown showing how "this is the first document" gets split into unigrams, bigrams, and trigrams with connecting arrows]*
+
+The mathematical formulation for n-gram probability:
+$$P(w_n|w_1, w_2, ..., w_{n-1}) \approx P(w_n|w_{n-k+1}, ..., w_{n-1})$$
+
+```python
+def generate_ngrams(text, n):
+    words = text.split()
+    ngrams = []
+    for i in range(len(words) - n + 1):
+        ngram = ' '.join(words[i:i+n])
+        ngrams.append(ngram)
+    return ngrams
+```
+
+The trade-off? Higher n-values capture more context but create exponentially more features and become computationally expensive.
+
+**TF-IDF (Term Frequency-Inverse Document Frequency)**
+
+TF-IDF is the smart cousin of BOW. It doesn't just count words - it considers how important a word is to a specific document relative to the entire collection.
+
+The intuition: Words that appear frequently in one document but rarely across all documents are more significant for that specific document.
+
+$$\text{TF-IDF}(t,d) = \text{TF}(t,d) \times \text{IDF}(t)$$
+
+Where:
+- $\text{TF}(t,d) = \frac{\text{count of term } t \text{ in document } d}{\text{total words in document } d}$
+- $\text{IDF}(t) = \log\left(\frac{\text{total documents}}{\text{documents containing term } t}\right)$
+
+> *[Image suggestion: A side-by-side comparison showing BOW vs TF-IDF matrices for the same documents, highlighting how common words like "the" get reduced scores in TF-IDF]*
+
+```python
+import math
+
+def compute_tf_idf(documents):
+    # Tokenize documents
+    doc_words = [doc.split() for doc in documents]
+    
+    # Build vocabulary
+    vocab = set()
+    for words in doc_words:
+        vocab.update(words)
+    vocab = list(vocab)
+    
+    # Compute TF matrix
+    tf_matrix = []
+    for words in doc_words:
+        tf_row = []
+        total_words = len(words)
+        for word in vocab:
+            tf = words.count(word) / total_words
+            tf_row.append(tf)
+        tf_matrix.append(tf_row)
+    
+    # Compute IDF vector
+    num_docs = len(documents)
+    idf_vector = []
+    for word in vocab:
+        docs_with_word = sum(1 for words in doc_words if word in words)
+        idf = math.log(num_docs / docs_with_word)
+        idf_vector.append(idf)
+    
+    # Compute TF-IDF matrix
+    tfidf_matrix = []
+    for i, tf_row in enumerate(tf_matrix):
+        tfidf_row = [tf * idf for tf, idf in zip(tf_row, idf_vector)]
+        tfidf_matrix.append(tfidf_row)
+    
+    return tfidf_matrix, vocab
+
+# Usage
+tfidf_matrix, vocab = compute_tf_idf(documents)
+print("TF-IDF Matrix shape:", len(tfidf_matrix), "x", len(vocab))
+```
+
+Notice how common words like "this", "is", "the" get lower TF-IDF scores because they appear in most documents, while specific words like "second" or "third" get higher scores.
+
+> *[Image suggestion: A heatmap visualization of the final TF-IDF matrix showing how common words have darker (lower) values while specific words have brighter (higher) values]*
+
+**The Limitation of Traditional Embeddings**
+
+All these methods share a fundamental flaw: they assign the same representation to a word regardless of context. The word "bank" gets the same vector whether we're talking about a river bank or a financial institution. This is where contextual embeddings like ELMo come to the rescue...
+
+##### Static Word Embeddings 
+
+**Word2Vec**
+
+**GloVe**
+
+**FastText**
+
+
+##### Contextual Word Embeddings 
+
+**Embeddings from Language Models**
+
 
 ### GPT-1
 
@@ -2289,9 +2490,11 @@ https://lilianweng.github.io/posts/2018-06-24-attention/
 
 ## 2020: The Scale Revolution
 
-### Reformer: The Efficient Transformer
+### Reformer
 
-[paper](https://arxiv.org/abs/2001.04451)
+![Image of Reformer](/assets/blog_assets/evolution_of_llms/reformer_abstract.webp)
+
+> Link to paper: [Reformer: The Efficient Transformer](https://arxiv.org/abs/2001.04451)
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -2318,9 +2521,11 @@ https://www.youtube.com/watch?app=desktop&v=i4H0kjxrias&t=0s&ab_channel=YannicKi
 https://www.pinecone.io/learn/series/faiss/locality-sensitive-hashing/
 https://jaketae.github.io/study/lsh/
 
-### Longformer: The Long-Document Transformer
+### Longformer
 
-[paper](https://arxiv.org/abs/2004.05150)
+![Image of Longformer](/assets/blog_assets/evolution_of_llms/longformer_abstract.webp)
+
+> Link to paper: [Longformer: The Long-Document Transformer](https://arxiv.org/abs/2004.05150)
 
 <details>
 
@@ -2353,9 +2558,11 @@ The paper demonstrates both the theoretical and practical advantages of this app
 </details>
 <br/>
 
-### GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding
+### GShard
 
-[paper](https://arxiv.org/abs/2006.16668)
+![Image of Gshard](/assets/blog_assets/evolution_of_llms/gshard_abstract.webp)
+
+> Link to paper: [GShard: Scaling Giant Models with Conditional Computation and Automatic Sharding](https://arxiv.org/abs/2006.16668)
 
 https://www.youtube.com/watch?v=1VdEw_mGjFk&ab_channel=YannicKilcher
 
@@ -2385,9 +2592,11 @@ Key benefits of the approach include:
 </details>
 <br/>
 
-### Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks
+### RAG (Retrieval-Augmented Generation)
 
-[paper](https://arxiv.org/abs/2005.11401)
+![Image of RAG](/assets/blog_assets/evolution_of_llms/RAG_abstract.webp)
+
+> Link to paper: [Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)
 
 <details>
 
@@ -2413,9 +2622,11 @@ They evaluate RAG on knowledge-intensive tasks including open-domain QA, fact ve
 </details>
 <br/>
 
-### Big Bird: Transformers for Longer Sequences
+### Big Bird
 
-[paper](https://arxiv.org/abs/2007.14062)
+![Image of Big Bird](/assets/blog_assets/evolution_of_llms/big_bird_abstract.webp)
+
+> Link to paper: [Big Bird: Transformers for Longer Sequences](https://arxiv.org/abs/2007.14062)
 
 <details>
 
@@ -2475,7 +2686,9 @@ attention mechanism that reduces this quadratic dependency to linear
 
 ### GPT-3
 
-[paper](https://arxiv.org/abs/2005.14165)
+![Image of gpt-3](/assets/blog_assets/evolution_of_llms/gpt3_abstract.webp)
+
+> Link to paper: [Language Models are Few-Shot Learners](https://arxiv.org/abs/2005.14165)
 
 - In-context learning
 - Few-shot capabilities
@@ -2540,7 +2753,9 @@ This work represents a paradigm shift in how we think about language models - ra
 
 ### Rethinking Attention with Performers
 
-[paper](https://arxiv.org/abs/2009.14794v4)
+![Image of Performer](/assets/blog_assets/evolution_of_llms/longformer_abstract.webp)
+
+> Link to paper: [Rethinking Attention with Performers](https://arxiv.org/abs/2009.14794v4)
 
 https://medium.com/analytics-vidhya/paper-explained-rethinking-attention-with-performers-b207f4bf4bc5
 
@@ -2568,7 +2783,9 @@ The authors demonstrate the Performer's effectiveness on diverse tasks from pixe
 
 ### T5
 
-[paper](https://arxiv.org/abs/1910.10683)
+![Image of Longformer](/assets/blog_assets/evolution_of_llms/t5_abstract.webp)
+
+> Link to paper: [Exploring the Limits of Transfer Learning with a Unified Text-to-Text Transformer](https://arxiv.org/abs/1910.10683)
 
 - Encoder-decoder architecture
 - Unified text-to-text framework
@@ -2615,8 +2832,11 @@ https://cameronrwolfe.substack.com/p/t5-text-to-text-transformers-part
 
 ### Measuring Massive Multitask Language Understanding
 
+![Image of Longformer](/assets/blog_assets/evolution_of_llms/mmlu_abstract.webp)
+
+> Link to paper: [Measuring Massive Multitask Language Understanding](https://arxiv.org/abs/2009.03300)
+
 (benchmark)
-[paper](https://arxiv.org/abs/2009.03300)
 
 <details>
 
@@ -2642,7 +2862,9 @@ This work provided an important evaluation framework showing that while large la
 
 ### ZeRO (Zero Redundancy Optimizer)
 
-[paper](https://arxiv.org/abs/1910.02054)
+![Image of ZeRO](/assets/blog_assets/evolution_of_llms/zero_abstract.webp)
+
+> Link to paper: [ZeRO: Memory Optimizations Toward Training Trillion Parameter Models](https://arxiv.org/abs/1910.02054)
 
 - Memory optimization for distributed training
 
@@ -2673,7 +2895,9 @@ https://www.youtube.com/watch?v=KgoHyMGpxBU&ab_channel=nPlan
 
 ### ELECTRA
 
-[paper](https://arxiv.org/abs/2003.10555)
+![Image of ELECTRA](/assets/blog_assets/evolution_of_llms/)
+
+> Link to paper: [ELECTRA: Pre-training Text Encoders as Discriminators Rather Than Generators](https://arxiv.org/abs/2003.10555)
 
 Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
 
