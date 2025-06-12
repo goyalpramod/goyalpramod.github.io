@@ -763,58 +763,179 @@ Remember this, It will prove useful later.
 
 ##### Policy π: The Agent's Brain
 
-"""
-The Policy π is the brain of our Agent, it’s the function that tells us what action to take given the state we are in. So it defines the agent’s behavior at a given time.
-"""
-
 ![Image of policy based approach](/assets/blog_assets/evolution_of_llms/policy.webp)
+
+The Policy π is the brain of our Agent, it’s the function that tells an Agent what action it should take at a given state and time.
+
+The policy is what we want to train and make an optimum policy π\*, that maximizes expected return when the agent acts according to it. (remember that is the idea behind RL)
 
 ![Image of RL](/assets/blog_assets/evolution_of_llms/rl_algos.webp)
 _Image taken from [OpenAI Spinning Up](https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html)_
 
-RL algorithms tell an Agent what action it should take to maximise it's cummulative reward. (remember that is the idea behind RL)
+Rhere are many RL algorithms present that we can use to train the policy as you can see from the image above, But most of them are developed from two central methods:
 
-Now there are many RL algorithms present as you can see from the image above, But most of them are developed from two central methods:
+1. **Policy based methods** : Directly, by teaching the agent to learn which action to take, given the current state
+2. **Value based methods** : Indirectly, teach the agent to learn which state is more valuable and then take the action that leads to the more valuable states
 
-1. Policy based methods
-2. Value based methods
+![Image of RL](/assets/blog_assets/evolution_of_llms/rl_policy_value.webp)
+_Image taken from [HuggingFace Course](https://huggingface.co/learn/deep-rl-course/en/unit1/two-methods)_
 
-Let us understand both
+(Don't get scared by the equations, I will explain them as we move forward. Also, this was a quick recap of RL, for a better deep dive. Consider going through the [HF course](https://huggingface.co/learn/deep-rl-course/en/unit0/introduction))
 
-**Policy based**
+As this section is dedicated to PPO, I will primarily be talking about the topics concerned with it. It can broadly be put in the following order:
 
-**Value Based**
+1. Policy Gradient Methods
+2. TRPO
+3. PPO
 
-[EXPLAIN]
-
-[Takes state and action, gives out probability of best action for the next state. [Give example of Q learning]]
-
-(This is a quick crash course reminder of RL Algorights, for a better deep dive. Go through the HF course I mentioned earlier.)
+I am skipping over many other intersting and amazing algorithms like [Q-Learning](https://en.wikipedia.org/wiki/Q-learning#:~:text=Q%2Dlearning%20can%20identify%20an,taken%20in%20a%20given%20state.), [DQN](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html), [Actor-critic](https://en.wikipedia.org/wiki/Actor-critic_algorithm) etc. As they are not relevant to this section. I still implore you to explore them through the links I have provided to get a better, broader and deeper grasp of RL.
 
 ##### Policy Gradient Methods
 
-Understanding Policy Gradient Methods
+**The Idea**
 
-**Step 1: The Basic Idea**
-
-Policy gradient methods are a family of reinforcement learning algorithms that directly optimize a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
+Policy gradient methods directly optimizes a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
 
 1. Collecting experience (state-action pairs and rewards) using the current policy
 2. Estimating the policy gradient (the direction that would improve the policy)
 3. Updating the policy parameters using this gradient
 
-**Step 2: The Gradient Estimator**
+**The Gradient Estimator**
 
-The core of policy gradient methods is the gradient estimator shown in equation (1). This formula tells us how to estimate the direction in which we should adjust our policy parameters to increase expected rewards:
+In our discussion so far, we talked about deterministic policy based methods. Ie given a state, choose an action $\pi(s) = a$. But when we are talking about policy gradients, we use a stochastic policy based method. Ie given a state, return a probability distribution of actions $\pi(a\|s) = P[A\|s]$.
 
-The gradient estimator ĝ is an empirical average of the product of two terms:
+![Image of RL](/assets/blog_assets/evolution_of_llms/probabilstic_rl.webp)
 
-- `∇θ log πθ(at|st)`: The gradient of the log probability of taking action at in state st
-- `Ât`: An estimate of the advantage function, which tells us how much better action at is compared to the average action in state st
+We also need to be aware of a few terms and mathematical tricks before moving forward:
 
-**Step 3: The Objective Function**
+1. **Trajectory**: A series of state action pair is called a trajectory.
 
-Equation (2) shows the policy gradient objective function LPG(θ). In practice, modern implementations use automatic differentiation to compute the gradient. They set up an objective function whose gradient is the policy gradient estimator, then let the automatic differentiation calculate the gradient.
+   $$\tau = (s_1,a_1,s_2,a_2,\ldots,s_H,a_H)$$
+
+2. **Log derivative trick**:
+
+   $$\nabla_\theta \log z = \frac{1}{z} \nabla_\theta z$$
+
+   This trick allows us to convert the gradient of a probability into the gradient of its logarithm, which is computationally more stable and easier to work with.
+
+   (To derive it just apply chain rule and know that the derivative of $\log(x)$ = $1/x$)
+
+3. **Definition of Expectation**:
+
+   For discrete distributions:
+   $$\mathbb{E}_{x \sim p(x)}[f(x)] = \sum_x p(x)f(x) \tag{1}$$
+
+   For continuous distributions:
+   $$\mathbb{E}_{x \sim p(x)}[f(x)] = \int_x p(x)f(x) \, dx \tag{2}$$
+   If you are new to the idea of expectation, Consider checking this amazing [blog](https://www.countbayesie.com/blog/2015/2/20/random-variables-and-expectation) on the topic.
+
+**Deriving the Policy Gradient**
+
+Let $\tau$ be a trajectory (sequence of state-action pairs), $\theta$ be the weights of our neural network policy. Our policy $\pi_\theta$ outputs action probabilities that depend upon the current state and network weights.
+
+We start with a desire to maximize our expected reward over complete trajectories.
+
+**From Reward Hypothesis to Policy Gradient**
+
+We begin with the reward hypothesis: we want to maximize $R(\tau)$ where $\tau$ is a trajectory.
+
+We can write the objective as the **probability of a trajectory being chosen by the policy multiplied by the reward for that trajectory**:
+
+$$J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[R(\tau)] = \sum_\tau \pi_\theta(\tau)R(\tau)$$
+
+This formulation is crucial because it connects:
+
+- $\pi_\theta(\tau)$: How likely our current policy is to generate trajectory $\tau$
+- $R(\tau)$: How much reward we get from that trajectory
+
+For continuous trajectory spaces, we can write this as:
+
+$$J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[R(\tau)] = \int \pi_\theta(\tau)R(\tau)d\tau$$
+
+Now we can derive the policy gradient by taking the gradient of our objective:
+
+$$\nabla_\theta J(\theta) = \nabla_\theta \int \pi_\theta(\tau)R(\tau)d\tau \tag{3}$$
+
+$$= \int \nabla_\theta \pi_\theta(\tau)R(\tau)d\tau \tag{4}$$
+
+$$= \int \pi_\theta(\tau) \frac{\nabla_\theta \pi_\theta(\tau)}{\pi_\theta(\tau)} R(\tau)d\tau \tag{5}$$
+
+$$= \int \pi_\theta(\tau) \nabla_\theta \log \pi_\theta(\tau) R(\tau)d\tau \tag{6}$$
+
+$$= \mathbb{E}_{\tau \sim \pi_\theta}[\nabla_\theta \log \pi_\theta(\tau) R(\tau)] \tag{7}$$
+
+**Step-by-step explanation:**
+
+- **(3)** Start with gradient of our objective function
+- **(4)** Push gradient inside the integral
+- **(5)** Multiply and divide by $\pi_\theta(\tau)$
+- **(6)** Apply the log derivative trick: $\nabla_\theta \log(z) = \frac{1}{z} \nabla_\theta z$
+- **(7)** Convert back to expectation form
+
+**Key insight:** The trajectory probability factors as:
+$$\pi_\theta(\tau) = \prod_{t=0}^{T} \pi_\theta(a_t|s_t)$$
+
+So the log probability becomes:
+$$\log \pi_\theta(\tau) = \sum_{t=0}^{T} \log \pi_\theta(a_t|s_t)$$
+
+What does this mean for us? If you want to maximize your expected reward, you can use gradient ascent. The gradient of the expected reward has an elegant form - it's simply **the expectation of the trajectory return times the sum of log probabilities of actions taken in that trajectory**.
+
+**Breaking Down the Trajectory Probability**
+
+$\pi_\theta(\tau)$ is defined as:
+
+$$\pi_\theta(s_1, a_1, \ldots, s_T, a_T) = p(s_1) \prod_{t=1}^{T} \pi_\theta(a_t|s_t)p(s_{t+1}|s_t, a_t)$$
+$$\underbrace{\qquad\qquad\qquad\qquad\qquad\qquad\qquad}_{\pi_\theta(\tau)}$$
+
+This breaks down as:
+
+- $p(s_1)$: Initial state distribution (environment dependent)
+- $\pi_\theta(a_t|s_t)$: Policy probability of choosing action $a_t$ in state $s_t$
+- $p(s_{t+1}|s_t, a_t)$: Environment transition probability (environment dependent)
+
+**Taking the Logarithm**
+
+When we take the log of a product, it becomes a sum:
+
+$$\log \pi_\theta(\tau) = \log p(s_1) + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \sum_{t=1}^{T} \log p(s_{t+1}|s_t, a_t)$$
+
+**Key Insight: What Depends on $\theta$?**
+
+The first and last terms do not depend on $\theta$ and can be removed when taking gradients:
+
+- $\log p(s_1)$: Initial state is determined by environment, not our policy
+- $\log p(s_{t+1}|s_t, a_t)$: Environment dynamics don't depend on our policy parameters
+
+$$\nabla_\theta \left[ \log p(s_1) + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \sum_{t=1}^{T} \log p(s_{t+1}|s_t, a_t) \right]$$
+
+$$= \nabla_\theta \left[ \cancel{\log p(s_1)} + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \cancel{\sum_{t=1}^{T} \log p(s_{t+1}|s_t, a_t)} \right]$$
+
+**Deriving $\nabla_\theta \log \pi_\theta(\tau)$**
+
+Therefore:
+$$\nabla_\theta \log \pi_\theta(\tau) = \nabla_\theta \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) = \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)$$
+
+**Final Policy Gradient Formula**
+
+So the policy gradient:
+$$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[\nabla_\theta \log \pi_\theta(\tau) R(\tau)]$$
+
+becomes:
+$$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) R(\tau)\right]$$
+
+**Practical Implementation**
+
+In practice, we estimate this expectation using sample trajectories:
+
+$$\boxed{\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t})\right) \left(\sum_{t=1}^{T} r(s_{i,t}, a_{i,t})\right)}$$
+
+$$\boxed{\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)}$$
+
+**What This Means**
+
+The elegant result is that we only need gradients of our policy's action probabilities - the environment dynamics completely disappear from our gradient computation! This makes policy gradients model-free and widely applicable.
+
+And we use this policy gradient to update the policy $\theta$.
 
 **Step 4: The Problem with Multiple Optimization Steps**
 
@@ -846,49 +967,6 @@ This observation motivates the need for the "proximal" part of PPO, which constr
 """
 
 """
-
-Detailed Mathematical Analysis of Policy Gradient Methods
-
-Let me focus specifically on the mathematical details of the policy gradient formulation:
-
-The Policy Gradient Estimator (Equation 1)
-
-$$\hat{g} = \mathbb{\hat{E}}_t\left[\nabla_\theta \log \pi_\theta(a_t|s_t)\hat{A}_t\right]$$
-
-Breaking this down mathematically:
-
-1. **Policy Parameterization**: $\pi_\theta(a_t|s_t)$ is a probability distribution over actions conditioned on the state, parameterized by $\theta$ (typically neural network weights). For each state $s_t$, it outputs a probability for each possible action $a_t$.
-
-2. **Log-Probability Gradient**: $\nabla_\theta \log \pi_\theta(a_t|s_t)$ computes the gradient of the log probability with respect to policy parameters $\theta$. This is a vector pointing in the direction that would increase the probability of taking action $a_t$ in state $s_t$.
-
-   - If $\pi_\theta$ is a Gaussian policy for continuous actions with mean $\mu_\theta(s_t)$ and standard deviation $\sigma_\theta(s_t)$, then:
-     $$\log \pi_\theta(a_t|s_t) = -\frac{(a_t - \mu_\theta(s_t))^2}{2\sigma_\theta(s_t)^2} - \log(\sigma_\theta(s_t)) - \frac{1}{2}\log(2\pi)$$
-   - If $\pi_\theta$ is a categorical policy for discrete actions with probabilities $p_\theta(a|s_t)$ for each action $a$, then:
-     $$\log \pi_\theta(a_t|s_t) = \log(p_\theta(a_t|s_t))$$
-
-3. **Advantage Estimation**: $\hat{A}_t$ is an estimator of the advantage function, which represents how much better action $a_t$ is compared to the average action in state $s_t$. Mathematically:
-   $$\hat{A}_t \approx Q(s_t, a_t) - V(s_t)$$
-
-   Where $Q(s_t, a_t)$ is the action-value function (expected return of taking action $a_t$ in state $s_t$) and $V(s_t)$ is the state-value function (expected return from state $s_t$).
-
-4. **Empirical Expectation**: $\mathbb{\hat{E}}_t[\cdot]$ indicates an empirical average over a batch of collected samples:
-   $$\mathbb{\hat{E}}_t[f(t)] = \frac{1}{T}\sum_{t=1}^T f(t)$$
-
-   Where $T$ is the number of timesteps in the collected batch.
-
-The Policy Gradient Objective (Equation 2)
-
-$$L^{PG}(\theta) = \mathbb{\hat{E}}_t\left[\log \pi_\theta(a_t|s_t)\hat{A}_t\right]$$
-
-This objective function is constructed so that its gradient with respect to $\theta$ equals the policy gradient estimator in Equation 1:
-
-$$\nabla_\theta L^{PG}(\theta) = \mathbb{\hat{E}}_t\left[\nabla_\theta \log \pi_\theta(a_t|s_t)\hat{A}_t\right] = \hat{g}$$
-
-The mathematical derivation works because:
-
-1. The advantage estimator $\hat{A}_t$ doesn't depend on $\theta$ (it's treated as a constant when differentiating)
-2. Therefore: $\nabla_\theta(\log \pi_\theta(a_t|s_t)\hat{A}_t) = \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot \hat{A}_t$
-3. The expectation operator and gradient operator can be exchanged (under mild conditions)
 
 Implementation Detail
 
@@ -1128,6 +1206,20 @@ Figure 2 (mentioned in the text) shows that $L^{CLIP}$ forms a lower bound on $L
 </div>
 </details>
 <br/>"""
+
+Before we move to the next section, I want to talk about a question that baffled me when I started learning about RL.
+
+> "Why do we need a value based approach"
+
+Policy based approach seem to work great and are intuitive as well, given a state, choose an action. Then why do we use value based approches. Needless complexity. Think for a minute then see the answer
+
+<details>
+<summary markdown="span">Answer</summary>
+<div markdown="1">
+
+</div>
+</details>
+<br/>
 
 ### MOE : Mixture Of Experts
 
