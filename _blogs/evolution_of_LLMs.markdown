@@ -40,7 +40,6 @@ This is a timeline of the most influential work, to read about more architecture
 
 The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
 
-
 <details>
 <summary markdown="span">2017</summary>
 <div markdown="1">
@@ -552,7 +551,7 @@ An ideal solution will
 In their experiment, the researchers asked labellers to compare short video clips of the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired.
 
 ![Image of hop](/assets/blog_assets/evolution_of_llms/hop.webp)
-*Image sourced from [paper](https://arxiv.org/abs/1706.03741)*
+_Image sourced from [paper](https://arxiv.org/abs/1706.03741)_
 
 The human observes the agent acting in the _environment_ it then gives he's feedback. Which is taken by _reward predictor_ which numerical defines the reward. Which is sent to the _RL algorithm_ this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
 
@@ -893,6 +892,7 @@ The joint probability of a sequence of events can be factored as:
 $$P(s_1, a_1, s_2, a_2, \ldots, s_T, a_T) = P(s_1) \cdot P(a_1|s_1) \cdot P(s_2|s_1, a_1) \cdot P(a_2|s_1, a_1, s_2) \cdots$$
 
 However, in the **Markov Decision Process (MDP) setting**, we have two key assumptions:
+
 1. **Markov Property**: Next state depends only on current state and action: $P(s_{t+1}\|s_1, a_1, \ldots, s_t, a_t) = P(s_{t+1}\|s_t, a_t)$
 2. **Policy Markov Property**: Action depends only on current state: $P(a_t\|s_1, a_1, \ldots, s_t) = \pi_\theta(a_t\|s_t)$
 
@@ -952,10 +952,12 @@ $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t
 **Step 2: How do we compute expectations in practice?**
 
 We can't compute the expectation $\mathbb{E}_{\tau \sim \pi_\theta}[\cdot]$ analytically because:
+
 - There are infinitely many possible trajectories
 - We don't know the environment dynamics $p(s_{t+1}\|s_t, a_t)$
 
 Instead, we use **Monte Carlo sampling**:
+
 1. Collect $N$ sample trajectories by running our current policy: $\{\tau_1, \tau_2, \ldots, \tau_N\}$
 2. Approximate the expectation using the sample average:
 
@@ -974,10 +976,10 @@ $$\boxed{\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \left(\sum_{
 $$\boxed{\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)}$$
 
 Where:
+
 - $i$ indexes the sampled trajectories ($1$ to $N$)
 - $t$ indexes time steps within each trajectory ($1$ to $T$)
 - $(s_{i,t}, a_{i,t})$ is the state-action pair at time $t$ in trajectory $i$
-
 
 **What This Means**
 
@@ -987,218 +989,140 @@ And we use this policy gradient to update the policy $\theta$.
 
 To get an intuition behind the idea consider reading the intuition part of this [blog](https://jonathan-hui.medium.com/rl-policy-gradients-explained-9b13b688b146).
 
-**Policy Gradient for Continous Space**
+"""
 
+[STILL_DOESNT_MAKE_SENSE_TO_ME]
 
+**Policy Gradient for Continuous Space**
+
+So far, we've been working with discrete action spaces - think Atari games where you can move left, move right, or press A to shoot. But what happens when your agent needs to control a robot arm, steer a car, or even select the "best" next token in language model fine-tuning? Welcome to the world of continuous control!
+
+**The Problem with Discrete Thinking**
+
+In discrete spaces, our policy outputs probabilities for each possible action:
+
+- Move left: 30%
+- Move right: 45%
+- Shoot: 25%
+
+But in continuous spaces, actions are real numbers. Imagine trying to control a robot arm where the joint angle can be any value between -180° and +180°. You can't enumerate probabilities for every possible angle - there are infinitely many!
+
+**Enter Gaussian Policies**
+
+The elegant solution is to make our neural network output **parameters of a probability distribution** instead of individual action probabilities. Specifically, we use a Gaussian (normal) distribution.
+
+Here's how it works:
+
+Instead of: $\pi_\theta(a_t|s_t) = \text{[probability for each discrete action]}$
+
+We use: $\pi_\theta(a_t|s_t) = \mathcal{N}(f_{\text{neural network}}(s_t); \Sigma)$
+
+Let's break it down:
+
+1. **Feed the state** $s_t$ into your neural network
+2. **Network outputs the mean** $\mu = f_{\text{neural network}}(s_t)$ - this is the "preferred" action
+3. **Choose a covariance matrix** $\Sigma$ - this controls how much exploration/uncertainty around that mean
+4. **Sample the actual action** from the Gaussian: $a_t \sim \mathcal{N}(\mu, \Sigma)$
+
+**The Mathematics**
+
+Now here comes the beautiful part. Remember our policy gradient formula?
+
+$$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) R(\tau)\right]$$
+
+The **exact same formula still applies!** We just need to compute $\nabla_\theta \log \pi_\theta(a_t|s_t)$ differently.
+
+**Understanding the Gaussian Distribution**
+
+Let's start with what a Gaussian distribution actually looks like. For continuous actions, we assume they follow this probability density function:
+
+$$f(x) = \frac{1}{(2\pi)^{d/2} |\Sigma|^{1/2}} \exp\left\{-\frac{1}{2}(x - \mu)^T \Sigma^{-1} (x - \mu)\right\}$$
+
+This looks scary, but it's just the mathematical way of saying: "actions are most likely to be near the mean $\mu$, with spread determined by covariance $\Sigma$."
+
+**Computing the Log Policy**
+
+Now, since our policy $\pi_\theta(a_t|s_t) = \mathcal{N}(f_{\text{neural network}}(s_t); \Sigma)$, we have:
+
+$$\log \pi_\theta(a_t|s_t) = \log f(a_t)$$
+
+Taking the logarithm of our Gaussian:
+
+$$\log \pi_\theta(a_t|s_t) = \log\left[\frac{1}{(2\pi)^{d/2} |\Sigma|^{1/2}} \exp\left\{-\frac{1}{2}(a_t - \mu)^T \Sigma^{-1} (a_t - \mu)\right\}\right]$$
+
+Using properties of logarithms ($\log(AB) = \log A + \log B$ and $\log(e^x) = x$):
+
+$$\log \pi_\theta(a_t|s_t) = \log\left[\frac{1}{(2\pi)^{d/2} |\Sigma|^{1/2}}\right] - \frac{1}{2}(a_t - \mu)^T \Sigma^{-1} (a_t - \mu)$$
+
+The first term is just a constant (doesn't depend on our neural network parameters $\theta$), so we can ignore it when taking gradients:
+
+$$\log \pi_\theta(a_t|s_t) = -\frac{1}{2}(a_t - \mu)^T \Sigma^{-1} (a_t - \mu) + \text{const}$$
+
+Since $\mu = f_{\text{neural network}}(s_t)$, we can rewrite this as:
+
+$$\log \pi_\theta(a_t|s_t) = -\frac{1}{2}||f(s_t) - a_t||^2_\Sigma + \text{const}$$
+
+**Taking the Gradient**
+
+Now we can compute the gradient with respect to our network parameters $\theta$:
+
+$$\nabla_\theta \log \pi_\theta(a_t|s_t) = \nabla_\theta \left[-\frac{1}{2}(a_t - f(s_t))^T \Sigma^{-1} (a_t - f(s_t))\right]$$
+
+Using the chain rule:
+
+$$\nabla_\theta \log \pi_\theta(a_t|s_t) = -\frac{1}{2} \Sigma^{-1}(f(s_t) - a_t) \frac{df}{d\theta}$$
+
+**What Does This Gradient Mean?**
+
+This gradient has a beautiful intuitive interpretation:
+
+- **$(f(s_t) - a_t)$**: The difference between what your network predicted and the action you actually took
+- **$\frac{df}{d\theta}$**: How to change the network parameters to affect the output
+- **$\Sigma^{-1}$**: Weighting factor (less weight for high-variance directions)
+
+**The Learning Process**
+
+When you collect experience and compute rewards, here's what happens:
+
+1. **Good action taken** ($R(\tau) > 0$): The gradient pushes $f(s_t)$ closer to the good action $a_t$
+2. **Bad action taken** ($R(\tau) < 0$): The gradient pushes $f(s_t)$ away from the bad action $a_t$
+3. **Standard backpropagation**: This gradient flows back through the network to update $\theta$
+
+**Why "Exactly the Same Algorithm"?**
+
+The beauty is that our policy gradient update remains:
+$$\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$$
+
+The **only difference** is how we compute $\nabla_\theta \log \pi_\theta(a_t|s_t)$:
+
+- **Discrete case**: Gradient of softmax probabilities
+- **Continuous case**: Gradient of Gaussian log-likelihood (what we just derived!)
+
+Everything else stays identical - collect trajectories, compute returns, update parameters. The same core algorithm seamlessly handles both discrete and continuous control problems!
+"""
 
 **Policy Gradient Improvements**
+
+There are two methods in which RL is trained
+
+1. Monte Carlo Learning: Cummulative reward of the entire episode (Entire run of the enviorment)
+2. Temporal Difference Learning: Reward is used to update policy in every step
+
+[Add_IMAGE]
+
+Policy Gradient (PG) uses MC this causes it to have low bias (Expected reward is close to actual reward, as the same policy is used throughout the run) but high variance (Some runs produce great results, some really bad).
+
+"""
+Variance hurts deep learning optimization. The variance provides conflicting descent direction for the model to learn. One sampled rewards may want to increase the log likelihood and another may want to decrease it. This hurts the convergence. To reduce the variance caused by actions, we want to reduce the variance for the sampled rewards.
+"""
+
+[TALK ABOUT DISCOUNT, ADVANTAGE, THEN MOVE TO TRPO]
+
 """
 
 TRPO
 
-"""
-
-Detailed Mathematical Analysis of Trust Region Methods
-
-Let me focus specifically on the mathematical formulation of Trust Region Policy Optimization (TRPO):
-
-The TRPO Objective (Equations 3-4)
-
-The TRPO algorithm formulates policy optimization as a constrained optimization problem:
-
-$$
-\begin{align}
-\text{maximize}_\theta \quad & \mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right] \quad \quad (3)\\
-\text{subject to} \quad & \mathbb{\hat{E}}_t[\text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]] \leq \delta \quad (4)
-\end{align}
-$$
-
-Breaking this down mathematically:
-
-1. **Probability Ratio**: The term $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ is the ratio of probabilities under the new policy $\pi_\theta$ versus the old policy $\pi_{\theta_{old}}$. This ratio:
-
-   - Equals 1 when the policies assign equal probability to the action
-   - Is greater than 1 when the new policy makes the action more likely
-   - Is less than 1 when the new policy makes the action less likely
-
-2. **Surrogate Objective**: The objective $\mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right]$ can be understood as:
-
-   - When $\hat{A}_t > 0$ (good actions), increase their probability (maximize ratio)
-   - When $\hat{A}_t < 0$ (bad actions), decrease their probability (minimize ratio)
-
-3. **KL Divergence Constraint**: The term $\text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]$ measures the difference between the old and new policy distributions. For two distributions $P$ and $Q$, the KL divergence is defined as:
-   $$\text{KL}[P||Q] = \mathbb{E}_{x \sim P}\left[\log\frac{P(x)}{Q(x)}\right]$$
-
-   - For continuous action spaces with Gaussian policies:
-     $$\text{KL}[\mathcal{N}(\mu_1,\Sigma_1)||\mathcal{N}(\mu_2,\Sigma_2)] = \frac{1}{2}\left[\log\frac{|\Sigma_2|}{|\Sigma_1|} + \text{Tr}(\Sigma_2^{-1}\Sigma_1) + (\mu_2-\mu_1)^T\Sigma_2^{-1}(\mu_2-\mu_1) - d\right]$$
-     where $d$ is the dimension of the action space.
-
-   - For discrete action spaces:
-     $$\text{KL}[P||Q] = \sum_{a} P(a) \log\frac{P(a)}{Q(a)}$$
-
-4. **Constraint Parameter $\delta$**: This hyperparameter controls how much the policy is allowed to change in a single update. Typically small values (e.g., 0.01-0.05) are used.
-
-The Penalized Version (Equation 5)
-
-Instead of using a hard constraint, the theory also supports a penalized objective:
-
-$$\text{maximize}_\theta \mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t - \beta \text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]\right] \quad (5)$$
-
-This reformulates the constrained optimization as an unconstrained one:
-
-1. **Penalty Coefficient $\beta$**: This parameter balances between maximizing the surrogate objective and minimizing the KL divergence.
-
-   - Large $\beta$: Conservative updates that change the policy very little
-   - Small $\beta$: Aggressive updates that may significantly change the policy
-
-2. **Mathematical Equivalence**: Under certain conditions, for any constraint $\delta$ in equation (4), there exists a $\beta$ in equation (5) that gives the same solution.
-
-3. **Practical Challenge**: The paper notes that finding a single value of $\beta$ that works well across different problems (or even at different stages of the same problem) is difficult, which is why TRPO uses the constrained formulation instead.
-
-4. **Mathematical Insight**: The paper mentions that a surrogate objective using the max KL (rather than mean KL) forms a lower bound (pessimistic estimate) on policy performance. This theoretical foundation justifies the constraint-based approach.
-
-Implementation Details
-
-When solving this constrained optimization problem:
-
-1. TRPO applies a linear approximation to the objective:
-   $$\mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right] \approx \mathbb{\hat{E}}_t\left[\hat{A}_t\right] + \mathbb{\hat{E}}_t\left[\frac{\partial}{\partial \theta}\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\bigg|_{\theta=\theta_{old}}\right]^T(\theta - \theta_{old})$$
-
-2. And a quadratic approximation to the constraint:
-   $$\mathbb{\hat{E}}_t[\text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)]] \approx \frac{1}{2}(\theta - \theta_{old})^T H (\theta - \theta_{old})$$
-   where $H$ is the Hessian of the KL divergence with respect to $\theta$.
-
-3. The conjugate gradient algorithm is then used to efficiently solve this approximated problem.
-
-<details>
-<summary markdown="span">Mathematical Notation</summary>
-<div markdown="1">
-
-- $\pi_\theta(a_t|s_t)$: Probability of taking action $a_t$ in state $s_t$ under policy with parameters $\theta$
-- $\pi_{\theta_{old}}(a_t|s_t)$: Probability under previous policy parameters
-- $\theta_{old}$: Vector of policy parameters before the update
-- $\hat{A}_t$: Advantage function estimator at timestep $t$
-- $\mathbb{\hat{E}}_t[\cdot]$: Empirical average over collected samples
-- $\text{KL}[P||Q]$: Kullback-Leibler divergence between distributions $P$ and $Q$
-- $\delta$: Constraint parameter limiting the size of policy update
-- $\beta$: Coefficient for KL penalty in the unconstrained formulation
-- $\pi_{\theta_{old}}(\cdot|s_t)$: Complete action distribution under old policy for state $s_t$
-- $\pi_\theta(\cdot|s_t)$: Complete action distribution under new policy for state $s_t$
-- $H$: Hessian matrix of the KL divergence with respect to policy parameters
-</div>
-</details>
-<br/>
-
-"""
-
-Clipped Surogate Objective
-
-"""
-
-Detailed Mathematical Analysis of Clipped Surrogate Objective
-
-Let me focus on the mathematical details of the Clipped Surrogate Objective, which is the core innovation of PPO:
-
-The Probability Ratio and CPI Objective
-
-First, the paper defines a probability ratio:
-
-$$r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$$
-
-This ratio measures how the probability of taking action $a_t$ in state $s_t$ changes under the new policy $\pi_\theta$ compared to the old policy $\pi_{\theta_{old}}$. An important property is that $r(\theta_{old}) = 1$, since at $\theta = \theta_{old}$, the policies are identical.
-
-The Conservative Policy Iteration (CPI) objective from previous work is defined as:
-
-$$L^{CPI}(\theta) = \mathbb{\hat{E}}_t\left[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}\hat{A}_t\right] = \mathbb{\hat{E}}_t\left[r_t(\theta)\hat{A}_t\right] \quad (6)$$
-
-This objective encourages:
-
-- Increasing probability (making $r_t(\theta) > 1$) for actions with positive advantage ($\hat{A}_t > 0$)
-- Decreasing probability (making $r_t(\theta) < 1$) for actions with negative advantage ($\hat{A}_t < 0$)
-
-The Clipped Surrogate Objective (Equation 7)
-
-The key innovation of PPO is the clipped surrogate objective:
-
-$$L^{CLIP}(\theta) = \mathbb{\hat{E}}_t\left[\min(r_t(\theta)\hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t)\right] \quad (7)$$
-
-Breaking this down mathematically:
-
-1. **Clipping Function**: The function $\text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)$ constrains the probability ratio to the interval $[1-\epsilon, 1+\epsilon]$:
-
-   $$
-   \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) = \begin{cases}
-   1-\epsilon & \text{if } r_t(\theta) < 1-\epsilon \\
-   r_t(\theta) & \text{if } 1-\epsilon \leq r_t(\theta) \leq 1+\epsilon \\
-   1+\epsilon & \text{if } r_t(\theta) > 1+\epsilon
-   \end{cases}
-   $$
-
-2. **The Minimum Operation**: The $\min$ operation in the objective creates a pessimistic estimate by taking the lower of two values:
-
-   - The original surrogate objective $r_t(\theta)\hat{A}_t$
-   - The clipped surrogate objective $\text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon)\hat{A}_t$
-
-3. **Case Analysis Based on Advantage Sign**:
-
-   When $\hat{A}_t > 0$ (positive advantage):
-
-   - The original objective $r_t(\theta)\hat{A}_t$ increases monotonically with $r_t(\theta)$
-   - The clipped objective is constant at $(1+\epsilon)\hat{A}_t$ when $r_t(\theta) > 1+\epsilon$
-   - Taking the minimum means we optimize $r_t(\theta)\hat{A}_t$ only when $r_t(\theta) \leq 1+\epsilon$
-   - Beyond that, there's no incentive to increase $r_t(\theta)$ further
-
-   When $\hat{A}_t < 0$ (negative advantage):
-
-   - The original objective $r_t(\theta)\hat{A}_t$ decreases monotonically with $r_t(\theta)$
-   - The clipped objective is constant at $(1-\epsilon)\hat{A}_t$ when $r_t(\theta) < 1-\epsilon$
-   - Taking the minimum means we optimize $r_t(\theta)\hat{A}_t$ only when $r_t(\theta) \geq 1-\epsilon$
-   - Below that, there's no incentive to decrease $r_t(\theta)$ further
-
-4. **Mathematical Properties**:
-
-   - First-order equivalence: $L^{CLIP}(\theta) = L^{CPI}(\theta)$ to first order around $\theta_{old}$ (i.e., at $r = 1$)
-   - Explicit constraint: Unlike TRPO, the constraint is built directly into the objective function
-   - Lower bound: $L^{CLIP}$ serves as a pessimistic bound (lower bound) on $L^{CPI}$
-   - Automatic penalty: The clipping automatically penalizes large policy changes without requiring complex constrained optimization
-
-5. **Hyperparameter $\epsilon$**: Controls the clipping threshold, typically set to a small value like 0.2. This determines how much the policy is allowed to change in a single update.
-
-Graphical Interpretation (Figure 1)
-
-The paper includes graphs showing the behavior of a single term in $L^{CLIP}$ as a function of the probability ratio $r$:
-
-1. For positive advantages ($\hat{A}_t > 0$):
-   - The function increases linearly with $r$ until $r = 1+\epsilon$
-   - After that, it plateaus, removing any incentive to increase $r$ beyond $1+\epsilon$
-2. For negative advantages ($\hat{A}_t < 0$):
-   - The function decreases linearly with $r$ until $r = 1-\epsilon$
-   - Below that, it plateaus, removing any incentive to decrease $r$ below $1-\epsilon$
-
-The red circle at $r = 1$ in both plots represents the starting point of optimization (the previous policy).
-
-Lower Bound Property (Figure 2)
-
-Figure 2 (mentioned in the text) shows that $L^{CLIP}$ forms a lower bound on $L^{CPI}$, effectively penalizing large policy updates. This approximates the trust region method of TRPO but uses only first-order optimization.
-
-<details>
-<summary markdown="span">Mathematical Notation</summary>
-<div markdown="1">
-
-- $r_t(\theta)$: Probability ratio $\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ at timestep $t$
-- $\pi_\theta(a_t|s_t)$: Probability of action $a_t$ in state $s_t$ under policy with parameters $\theta$
-- $\pi_{\theta_{old}}(a_t|s_t)$: Same probability under previous policy parameters
-- $\theta_{old}$: Policy parameters before the update
-- $\hat{A}_t$: Advantage function estimator at timestep $t$
-- $\mathbb{\hat{E}}_t[\cdot]$: Empirical average over collected samples
-- $L^{CPI}(\theta)$: Conservative Policy Iteration objective
-- $L^{CLIP}(\theta)$: Clipped surrogate objective
-- $\text{clip}(x,a,b)$: Function that clips $x$ to be within the interval $[a,b]$
-- $\epsilon$: Clipping hyperparameter (typically 0.2)
-- $\min(a,b)$: Function returning the minimum of $a$ and $b$
-</div>
-</details>
-<br/>"""
+[TALK ABOUT IMPORTANCE SAMPLING, MM Algo, Trust Region]
 
 Before we move to the next section, I want to talk about a question that baffled me when I started learning about RL.
 
@@ -1570,11 +1494,11 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 
 Before we start talking about ELMo we have to understand how word embeddings work and what they are. You can skip this section if you have an extensive understanding of the topic at hand
 
-This [book](https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html) proved to be extremely helpful while writing this section. 
+This [book](https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html) proved to be extremely helpful while writing this section.
 
-##### Traditional Word Embeddings 
+##### Traditional Word Embeddings
 
-Machines do not understand text but rather numbers. So researchers have come up with ways to represent words as numbers that still captures their complexity, semantics, meaning etc. Let's go one by one. 
+Machines do not understand text but rather numbers. So researchers have come up with ways to represent words as numbers that still captures their complexity, semantics, meaning etc. Let's go one by one.
 
 **One-Hot Vectors**
 
@@ -1585,6 +1509,7 @@ One of the simplest solution is to create [one hot encoding](https://en.wikipedi
 Here, every word has been assigned a unique vector and the length of our one-hot encoded vector would be equal to the size of $V$ ($\|V\| = 3$).
 
 > Note:
+>
 > - In OHE words are independant of each other and hence do not capture any relationship between them
 > - OHE is computationally expensive as in reality the size of vocabulary can be in billions
 
@@ -1594,12 +1519,12 @@ Think of BOW as the most straightforward way to convert text into numbers - it's
 
 BOW creates a document-term matrix where each row represents a document and each column represents a word from our vocabulary. Each cell contains the frequency of that word in that specific document.
 
-> *[Image suggestion: A clean document-term matrix visualization showing 4 documents × 8 vocabulary words with frequency counts, highlighting how "document" appears 2 times in Document-2]*
+> _[Image suggestion: A clean document-term matrix visualization showing 4 documents × 8 vocabulary words with frequency counts, highlighting how "document" appears 2 times in Document-2]_
 
 ```python
 # Simple BOW implementation
 documents = ['this is the first document',
-             'this document is the second document', 
+             'this document is the second document',
              'this is the third one',
              'is this the first document']
 
@@ -1624,11 +1549,11 @@ The problem? BOW treats "The cat sat on the mat" and "The mat sat on the cat" as
 
 **Co-occurrence Matrix**
 
-Instead of just counting words in documents, what if we count how often words appear *together*? That's exactly what co-occurrence matrices do.
+Instead of just counting words in documents, what if we count how often words appear _together_? That's exactly what co-occurrence matrices do.
 
 A co-occurrence matrix shows how frequently word pairs appear within a defined window (like within the same sentence). If "learning" and "machine" often appear together, they'll have a high co-occurrence score.
 
-> *[Image suggestion: A symmetric 8×8 co-occurrence matrix with highlighted cells showing high co-occurrence values, with annotations explaining why "is" and "the" have a value of 4]*
+> _[Image suggestion: A symmetric 8×8 co-occurrence matrix with highlighted cells showing high co-occurrence values, with annotations explaining why "is" and "the" have a value of 4]_
 
 The mathematical representation: For words $w_i$ and $w_j$, the co-occurrence count $C_{ij}$ represents how many times they appear together within a context window.
 
@@ -1643,26 +1568,26 @@ def build_cooccurrence_matrix(documents, window_size=1):
     all_words = []
     for doc in documents:
         all_words.extend(doc.split())
-    
+
     # Create vocabulary
     vocab = list(set(all_words))
     vocab_size = len(vocab)
-    
+
     # Initialize matrix
     cooc_matrix = [[0 for _ in range(vocab_size)] for _ in range(vocab_size)]
-    
+
     # Count co-occurrences
     for i in range(len(all_words)):
         target_word = all_words[i]
         target_idx = vocab.index(target_word)
-        
+
         # Check words within window
         for j in range(max(0, i-window_size), min(len(all_words), i+window_size+1)):
             if i != j:
                 context_word = all_words[j]
                 context_idx = vocab.index(context_word)
                 cooc_matrix[target_idx][context_idx] += 1
-    
+
     return cooc_matrix, vocab
 ```
 
@@ -1673,10 +1598,10 @@ The beauty of co-occurrence matrices is that they capture some semantic relation
 N-grams extend the BOW concept by considering sequences of $n$ consecutive words instead of individual words. This helps capture some word order and context.
 
 - **Unigrams (n=1)**: Individual words → ["this", "is", "the", "first"]
-- **Bigrams (n=2)**: Word pairs → ["this is", "is the", "the first"] 
+- **Bigrams (n=2)**: Word pairs → ["this is", "is the", "the first"]
 - **Trigrams (n=3)**: Word triplets → ["this is the", "is the first"]
 
-> *[Image suggestion: A visual breakdown showing how "this is the first document" gets split into unigrams, bigrams, and trigrams with connecting arrows]*
+> _[Image suggestion: A visual breakdown showing how "this is the first document" gets split into unigrams, bigrams, and trigrams with connecting arrows]_
 
 The mathematical formulation for n-gram probability:
 $$P(w_n|w_1, w_2, ..., w_{n-1}) \approx P(w_n|w_{n-k+1}, ..., w_{n-1})$$
@@ -1702,10 +1627,11 @@ The intuition: Words that appear frequently in one document but rarely across al
 $$\text{TF-IDF}(t,d) = \text{TF}(t,d) \times \text{IDF}(t)$$
 
 Where:
+
 - $\text{TF}(t,d) = \frac{\text{count of term } t \text{ in document } d}{\text{total words in document } d}$
 - $\text{IDF}(t) = \log\left(\frac{\text{total documents}}{\text{documents containing term } t}\right)$
 
-> *[Image suggestion: A side-by-side comparison showing BOW vs TF-IDF matrices for the same documents, highlighting how common words like "the" get reduced scores in TF-IDF]*
+> _[Image suggestion: A side-by-side comparison showing BOW vs TF-IDF matrices for the same documents, highlighting how common words like "the" get reduced scores in TF-IDF]_
 
 ```python
 import math
@@ -1713,13 +1639,13 @@ import math
 def compute_tf_idf(documents):
     # Tokenize documents
     doc_words = [doc.split() for doc in documents]
-    
+
     # Build vocabulary
     vocab = set()
     for words in doc_words:
         vocab.update(words)
     vocab = list(vocab)
-    
+
     # Compute TF matrix
     tf_matrix = []
     for words in doc_words:
@@ -1729,7 +1655,7 @@ def compute_tf_idf(documents):
             tf = words.count(word) / total_words
             tf_row.append(tf)
         tf_matrix.append(tf_row)
-    
+
     # Compute IDF vector
     num_docs = len(documents)
     idf_vector = []
@@ -1737,13 +1663,13 @@ def compute_tf_idf(documents):
         docs_with_word = sum(1 for words in doc_words if word in words)
         idf = math.log(num_docs / docs_with_word)
         idf_vector.append(idf)
-    
+
     # Compute TF-IDF matrix
     tfidf_matrix = []
     for i, tf_row in enumerate(tf_matrix):
         tfidf_row = [tf * idf for tf, idf in zip(tf_row, idf_vector)]
         tfidf_matrix.append(tfidf_row)
-    
+
     return tfidf_matrix, vocab
 
 # Usage
@@ -1753,13 +1679,13 @@ print("TF-IDF Matrix shape:", len(tfidf_matrix), "x", len(vocab))
 
 Notice how common words like "this", "is", "the" get lower TF-IDF scores because they appear in most documents, while specific words like "second" or "third" get higher scores.
 
-> *[Image suggestion: A heatmap visualization of the final TF-IDF matrix showing how common words have darker (lower) values while specific words have brighter (higher) values]*
+> _[Image suggestion: A heatmap visualization of the final TF-IDF matrix showing how common words have darker (lower) values while specific words have brighter (higher) values]_
 
 **The Limitation of Traditional Embeddings**
 
 All these methods share a fundamental flaw: they assign the same representation to a word regardless of context. The word "bank" gets the same vector whether we're talking about a river bank or a financial institution. This is where contextual embeddings like ELMo come to the rescue...
 
-##### Static Word Embeddings 
+##### Static Word Embeddings
 
 **Word2Vec**
 
@@ -1767,11 +1693,9 @@ All these methods share a fundamental flaw: they assign the same representation 
 
 **FastText**
 
-
-##### Contextual Word Embeddings 
+##### Contextual Word Embeddings
 
 **Embeddings from Language Models**
-
 
 ### GPT-1
 
