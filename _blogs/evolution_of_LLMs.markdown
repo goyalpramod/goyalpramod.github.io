@@ -18,7 +18,28 @@ Additionally you can treat this blog as a sort of part 2, to my original blog on
 
 ## How this blog is structured
 
-We will go year by year, going through the revolutionary ideas introduced by each paper. Here is a quick list of the years and the seminal papers. (You can go to any section at any given time by going through the table of content by clicking the button on the bottom left)
+We will go year by year, going through the revolutionary ideas introduced by each paper.
+
+In the beginning of each section, I have added an image of the abstract of the paper, as well as the authors. I have done this to show you, how many people were involved behind one single idea. As well as what they felt like was the main contribution of their paper.
+
+Below that I have provided the link to the original paper if you wish to consult that, subsequently there is a quick summary section which you can skim over if you feel like you know the crux behind the idea.
+
+> Note: All the Quick summaries are AI generated, and may contain some mistakes. The core content is all human generated though, so they definitely contain mistakes :)
+
+After that, each section contains intuition, code , and mathematical explanation (wherever required) for each ideas. I have tried to add all the prerequisite knowledge wherever possible (Like the PPO section contains derivation of policy gradient methods, as well as explanation for TRPO). I have provided links to resources wherever I have felt I cannot provide enough background or do sufficient justice to the source material.
+
+Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). AS this is primarily an LLM blog, I will just give quick intro and links to some ground breaking innovations involving other ML papers.
+
+This blog took significant time, energy and a piece of my health. Hope you enjoy it, consider sharing it if you feel like it can help others. And I am truly grateful to you for taking the time out to read this. Thank you!!!
+
+> NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
+
+## The AI timeline
+
+This is a timeline of the most influential work, to read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
+
+The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
+
 
 <details>
 <summary markdown="span">2017</summary>
@@ -212,20 +233,6 @@ We will go year by year, going through the revolutionary ideas introduced by eac
 </div>
 </details>
  <br/>
-
-Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). Over here I will just give quick intro and links to some ground breaking innovations.
-
-> NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
-
-## The AI timeline
-
-This is a timeline of the most influential work, to read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
-
-The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
-
-[Write the name of the creators and labs]
-
-> Note: All the Quick summaries are AI generated, and may contain some mistakes. The core content is all human generated though, so they definitely contain mistakes :)
 
 ## 2017: The Foundation Year
 
