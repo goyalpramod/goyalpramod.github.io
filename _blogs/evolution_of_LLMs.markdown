@@ -287,11 +287,11 @@ We have talked deeply about each of these topics previously and I implore you to
 
 **Problem**
 
-> Sequential models like RNNs and LSTMs process text word-by-word, creating a fundamental bottleneck: each word must wait for the previous word to be processed. This sequential nature makes training painfully slow and prevents the model from understanding long-range dependencies effectively.
+> Sequential models like [RNNs](https://d2l.ai/chapter_recurrent-neural-networks/rnn.html) and LSTMs process text word-by-word, creating a fundamental bottleneck: each word must wait for the previous word to be processed. This sequential nature makes training painfully slow and prevents the model from understanding long-range dependencies effectively.
 
 For example, in the sentence "The cat that lived in the house with the red door was hungry", by the time the model reaches "was hungry", it has largely forgotten about "The cat" due to the vanishing gradient problem. The model struggles to connect distant but related words.
 
-[Add image below: left side showing RNN processing words sequentially with time arrows, right side showing Transformer processing all words simultaneously with attention connections]
+![Image of rnn vs transformers](/assets/blog_assets/evolution_of_llms/rnn_vs_transformer.webp)
 
 **Solution**
 
@@ -305,7 +305,7 @@ This is one topic that we didnt talk about extensively so let's go over it, beca
 
 We will build iteratively, first starting small. And going massive as we approach the GPT paper.
 
-This [blog](https://machinelearningmastery.com/training-the-transformer-model/) helped me with this section extensively
+This [blog](https://machinelearningmastery.com/training-the-transformer-model/) helped me with this section.
 
 **Preparing the data**
 
@@ -538,13 +538,9 @@ Let us understand the ideas put forth and why it was such a big deal.
 
 For example, it's impossible to write code that scores joke quality, but humans can easily compare two jokes and say which is funnier.
 
-[Add image below, left side simple puzzle, right side complex puzzle]
-
 **Solution** :
 
-> One possible solution is to allow a human to provide feedback on the agents's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience.
-
-[Show image of a man sitting tirelessly through 1000 of hours of RL]
+> One possible solution is to allow a human to provide feedback on the agents's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience. It was discovered by the researchers that preference modeling by a human even on a small subset provided great results.
 
 An ideal solution will
 
@@ -555,11 +551,12 @@ An ideal solution will
 
 In their experiment, the researchers asked labellers to compare short video clips of the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired.
 
-[Add section, show lot of frames from a video, human is only shown part of it]
-
-![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
+![Image of hop](/assets/blog_assets/evolution_of_llms/hop.webp)
+*Image sourced from [paper](https://arxiv.org/abs/1706.03741)*
 
 The human observes the agent acting in the _environment_ it then gives he's feedback. Which is taken by _reward predictor_ which numerical defines the reward. Which is sent to the _RL algorithm_ this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
+
+![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
 
 This sounds simple enough in principle, but how do you teach a model to learn from these preferences. I.e reward modeling.
 
@@ -575,15 +572,14 @@ The following blogs helped me while writing this section
 The reward predictor is trained to predict which of two given trajectories(σ¹, σ²) will be prefered by a human
 
 **Example:**
-[OR_USE_GRID_WORLD_EXAMPLE]
+![Image of trajectories](/assets/blog_assets/evolution_of_llms/trajector_comparison.webp)
+
 Imagine two robot trajectories:
 
-- Trajectory A: Robot picks up cup, carries it normally, places it down
-- Trajectory B: Robot picks up cup, spins dramatically, places it down
+- Trajectory A: Robot goes directly to the goal
+- Trajectory B: Robot roams around then goes to the goal
 
 A human would prefer A (more efficient). The reward model learns to assign higher values to the observation-action pairs in trajectory A, eventually learning that "efficient movement" correlates with human preference.
-
-[ADD_IMAGERY]
 
 Reward predictor equation
 
@@ -664,6 +660,8 @@ Where:
 
 This is the standard cross-entropy loss function used in classification problems, measuring how well our predicted probabilities match the actual human judgments.
 
+[ADD_CODE]
+
 **The Bradley-Terry Model Connection**
 
 > **Note from Wikipedia:** The Bradley–Terry model is a probability model for the outcome of pairwise comparisons between items, teams, or objects. Given a pair of items $i$ and $j$ drawn from some population, it estimates the probability that the pairwise comparison $i > j$ turns out true, as
@@ -710,8 +708,6 @@ The core innovation is their clipped probability ratio approach, which constrain
 </div>
 </details>
 <br/>
-
-- SELF NOTE Explain the maths using baskets and fruits
 
 Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (Atleast in the early days).
 
@@ -889,16 +885,26 @@ What does this mean for us? If you want to maximize your expected reward, you ca
 
 **Breaking Down the Trajectory Probability**
 
-$\pi_\theta(\tau)$ is defined as:
+In reinforcement learning, a trajectory $\tau = (s_1, a_1, s_2, a_2, \ldots, s_T, a_T)$ is generated through a sequential process. The probability of observing this specific trajectory under policy $\pi_\theta$ comes from the **chain rule of probability**.
 
-$$\pi_\theta(s_1, a_1, \ldots, s_T, a_T) = p(s_1) \prod_{t=1}^{T} \pi_\theta(a_t|s_t)p(s_{t+1}|s_t, a_t)$$
-$$\underbrace{\qquad\qquad\qquad\qquad\qquad\qquad\qquad}_{\pi_\theta(\tau)}$$
+**Derivation using Chain Rule:**
 
-This breaks down as:
+The joint probability of a sequence of events can be factored as:
+$$P(s_1, a_1, s_2, a_2, \ldots, s_T, a_T) = P(s_1) \cdot P(a_1|s_1) \cdot P(s_2|s_1, a_1) \cdot P(a_2|s_1, a_1, s_2) \cdots$$
+
+However, in the **Markov Decision Process (MDP) setting**, we have two key assumptions:
+1. **Markov Property**: Next state depends only on current state and action: $P(s_{t+1}\|s_1, a_1, \ldots, s_t, a_t) = P(s_{t+1}\|s_t, a_t)$
+2. **Policy Markov Property**: Action depends only on current state: $P(a_t\|s_1, a_1, \ldots, s_t) = \pi_\theta(a_t\|s_t)$
+
+Applying these assumptions:
+
+$$\pi_\theta(\tau) = \pi_\theta(s_1, a_1, \ldots, s_T, a_T) = p(s_1) \prod_{t=1}^{T} \pi_\theta(a_t|s_t)p(s_{t+1}|s_t, a_t)$$
+
+$$\underbrace{p(s_1) \prod_{t=1}^{T} \pi_\theta(a_t|s_t)p(s_{t+1}|s_t, a_t)}_{\pi_\theta(\tau)}$$
 
 - $p(s_1)$: Initial state distribution (environment dependent)
-- $\pi_\theta(a_t|s_t)$: Policy probability of choosing action $a_t$ in state $s_t$
-- $p(s_{t+1}|s_t, a_t)$: Environment transition probability (environment dependent)
+- $\pi_\theta(a_t\|s_t)$: Policy probability of choosing action $a_t$ in state $s_t$
+- $p(s_{t+1}\|s_t, a_t)$: Environment transition probability (environment dependent)
 
 **Taking the Logarithm**
 
@@ -911,7 +917,7 @@ $$\log \pi_\theta(\tau) = \log p(s_1) + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) 
 The first and last terms do not depend on $\theta$ and can be removed when taking gradients:
 
 - $\log p(s_1)$: Initial state is determined by environment, not our policy
-- $\log p(s_{t+1}|s_t, a_t)$: Environment dynamics don't depend on our policy parameters
+- $\log p(s_{t+1}\|s_t, a_t)$: Environment dynamics don't depend on our policy parameters
 
 $$\nabla_\theta \left[ \log p(s_1) + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \sum_{t=1}^{T} \log p(s_{t+1}|s_t, a_t) \right]$$
 
@@ -932,11 +938,46 @@ $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t
 
 **Practical Implementation**
 
-In practice, we estimate this expectation using sample trajectories:
+We derived the theoretical policy gradient as:
+$$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) R(\tau)\right]$$
 
+**Step 1: What is $R(\tau)$?**
+
+The trajectory return $R(\tau)$ is the total reward collected along the trajectory:
+$$R(\tau) = \sum_{t=1}^{T} r(s_t, a_t)$$
+
+So our gradient becomes:
+$$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t\|s_t)\right) \left(\sum_{t=1}^{T} r(s_t, a_t)\right)\right]$$
+
+**Step 2: How do we compute expectations in practice?**
+
+We can't compute the expectation $\mathbb{E}_{\tau \sim \pi_\theta}[\cdot]$ analytically because:
+- There are infinitely many possible trajectories
+- We don't know the environment dynamics $p(s_{t+1}\|s_t, a_t)$
+
+Instead, we use **Monte Carlo sampling**:
+1. Collect $N$ sample trajectories by running our current policy: $\{\tau_1, \tau_2, \ldots, \tau_N\}$
+2. Approximate the expectation using the sample average:
+
+$$\mathbb{E}_{\tau \sim \pi_\theta}[f(\tau)] \approx \frac{1}{N} \sum_{i=1}^{N} f(\tau_i)$$
+
+**Step 3: Applying Monte Carlo approximation**
+
+This is a fabulous [video](https://www.youtube.com/watch?v=7ESK5SaP-bc&ab_channel=MarbleScience) to understand Monte Carlo approcimation.
+
+Substituting our specific function:
+$$f(\tau) = \left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) \left(\sum_{t=1}^{T} r(s_t, a_t)\right)$$
+
+We get:
 $$\boxed{\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t})\right) \left(\sum_{t=1}^{T} r(s_{i,t}, a_{i,t})\right)}$$
 
 $$\boxed{\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)}$$
+
+Where:
+- $i$ indexes the sampled trajectories ($1$ to $N$)
+- $t$ indexes time steps within each trajectory ($1$ to $T$)
+- $(s_{i,t}, a_{i,t})$ is the state-action pair at time $t$ in trajectory $i$
+
 
 **What This Means**
 
@@ -944,68 +985,13 @@ The elegant result is that we only need gradients of our policy's action probabi
 
 And we use this policy gradient to update the policy $\theta$.
 
-**Step 4: The Problem with Multiple Optimization Steps**
+To get an intuition behind the idea consider reading the intuition part of this [blog](https://jonathan-hui.medium.com/rl-policy-gradients-explained-9b13b688b146).
 
-The authors point out an important issue: while it seems like a good idea to perform multiple optimization steps on the same batch of data (to get more out of each data collection), this approach often leads to destructively large policy updates. This happens because:
+**Policy Gradient for Continous Space**
 
-1. The data was collected using an older version of the policy
-2. As the policy changes during optimization, the data becomes less representative of the current policy's behavior
-3. This mismatch can lead to overconfident and harmful updates
 
-This observation motivates the need for the "proximal" part of PPO, which constrains how much the policy can change during these multiple optimization steps.
 
-<details>
-<summary markdown="span">Mathematical Notation</summary>
-<div markdown="1">
-
-- $\hat{g}$: Estimator of the policy gradient
-- $\mathbb{Ê}_t$: Empirical average over a finite batch of samples
-- $\nabla_\theta \log \pi_\theta(a_t|s_t)$: Gradient of the log probability of taking action $a_t$ in state $s_t$ under policy $\pi_\theta$
-- $\hat{A}_t$: Estimator of the advantage function at timestep $t$
-- $\pi_\theta$: A stochastic policy parameterized by $\theta$
-- $s_t$: State at timestep $t$
-- $a_t$: Action at timestep $t$
-- $L^{PG}(\theta)$: Policy gradient objective function
-- $\log$: Natural logarithm
-- $\theta$: Policy parameters
-</div>
-</details>
-<br/>
-"""
-
-"""
-
-Implementation Detail
-
-When implementing this in practice with automatic differentiation frameworks (like TensorFlow or PyTorch), we:
-
-1. Compute $\hat{A}_t$ values for our collected batch of data
-2. Set up the objective function $L^{PG}(\theta)$
-3. Let the automatic differentiation compute the gradient
-4. Apply this gradient using a stochastic gradient ascent algorithm:
-   $$\theta_{new} = \theta_{old} + \alpha \cdot \hat{g}$$
-   Where $\alpha$ is the learning rate
-
-<details>
-<summary markdown="span">Mathematical Notation</summary>
-<div markdown="1">
-
-- $\hat{g}$: Estimator of the policy gradient
-- $\mathbb{\hat{E}}_t[\cdot]$: Empirical average over a finite batch of samples ($\frac{1}{T}\sum_{t=1}^T$)
-- $\nabla_\theta$: Gradient operator with respect to parameters $\theta$
-- $\log \pi_\theta(a_t|s_t)$: Log probability of taking action $a_t$ in state $s_t$ under policy $\pi_\theta$
-- $\hat{A}_t$: Estimator of the advantage function at timestep $t$
-- $\pi_\theta$: A stochastic policy parameterized by $\theta$
-- $s_t$: State at timestep $t$
-- $a_t$: Action at timestep $t$
-- $L^{PG}(\theta)$: Policy gradient objective function
-- $Q(s_t, a_t)$: Action-value function
-- $V(s_t)$: State-value function
-- $\theta$: Policy parameters
-- $\alpha$: Learning rate for gradient ascent
-</div>
-</details>
-<br/>
+**Policy Gradient Improvements**
 """
 
 TRPO
