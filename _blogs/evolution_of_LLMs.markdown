@@ -1837,15 +1837,50 @@ They validate their approach through experiments on English-Japanese translation
 > Trainer. Decoder converts the subword sequence
 > into the normalized tex
 
-https://huggingface.co/docs/transformers/en/tokenizer_summary
+The following articles helped me write this section
 
-https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/
+- [Transformers Documentation](https://huggingface.co/docs/transformers/en/tokenizer_summary)
+- [Sentencepiece tokenizer demystified](https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/)
 
 Wordpiece
 
 Unigram
 
 BPE https://arxiv.org/abs/1508.07909
+
+##### What are tokenizers?
+
+As we have discussed earlier. Machines do not understand words, They understand numbers. Tokens are basically words represented as numbers that Language Models use to communicate. (You will see why this is an oversimplification in a minute?)
+
+**Why call them tokens if they are just words?**
+
+Taking back what I said, they aren't exactly words. Let us understand why.
+
+**Word Level Tokenization**
+
+Let's start with a simple sentence and tokenize (converting words in a document to token) it.
+
+[Add_IMAGE]
+
+Now imagine instead of a sentence, it was a page, or a whole book. It will contain thoughsands if hundred thousands of unique words. There are languages which have more than a [million unique words](https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words). It will be unfeasible to tokenize each word.
+
+Also what if we run into a word we have never seen during training. That will break our model, to overcome this, we can use something called Character Level Tokenization.
+
+**Character Level Tokenization**
+
+Let's again start with the same sentence
+
+[ADD_IMAGE]
+
+This fixes our problem of a huge vocabulary, but we run into other issues. First being, it is highly inefficient. There are words that repeat often in a page and it's inefficient to write the same long sequence of tokens to represent them
+
+[ADD_IMAGE]
+
+Another one being, characters by themselves do not hold any meaning. This removes any semantic relation
+
+[ADD_E_MEME](Unless it's E ofc)
+
+There have been innovations made to fix these problems, let's look into them one by one.
 
 ### BERT
 
