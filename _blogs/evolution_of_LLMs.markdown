@@ -3,7 +3,7 @@ layout: blog
 title: "Evolution of LLMs"
 date: 2025-05-05 12:00:00 +0530
 categories: [personal, technology]
-image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
+image: assets/blog_assets/evolution_of_llms/meme.webp
 ---
 
 The landscape of language models(LMs) has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we explore the
@@ -733,7 +733,7 @@ This is going to be math heavy so be prepared (Dw, I will guide you in each step
 The following blogs & articles helped me write this section
 
 - [Spinning up docs by OpenAI](https://spinningup.openai.com/en/latest/spinningup/rl_intro.html), consider going through this to help understand the nomenclature used throughout this section
-- [RL blogs by jonathan hui](https://jonathan-hui.medium.com/), they really simplified the ideas for me
+- [RL blogs by jonathan hui](https://jonathan-hui.medium.com/rl-deep-reinforcement-learning-series-833319a95530), they really simplified the ideas for me
 - [Understanding Policy Gradients](https://johnwlambert.github.io/policy-gradients/), this blog really helped me understand the math behind the idea
 - [These](https://karpathy.github.io/2016/05/31/rl/) [blogs](https://cameronrwolfe.substack.com/p/proximal-policy-optimization-ppo) [were](https://huggingface.co/blog/NormalUhr/rlhf-pipeline) [extremely](https://lilianweng.github.io/posts/2018-04-08-policy-gradient/) [helpful](https://iclr-blogposts.github.io/2024/blog/the-n-implementation-details-of-rlhf-with-ppo/) [too](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) (each word is a different link)
 
@@ -1193,7 +1193,8 @@ Now that we understand the advantage function, let's see how it all comes togeth
 
 $$\nabla U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i=1}^{m} \nabla_\theta \log P(\tau^{(i)}; \theta)(R(\tau^{(i)}) - b)$$
 
-[INSERT_PSEUDOC)DE_IMAGE]
+![Image of policy based approach](/assets/blog_assets/evolution_of_llms/vanilla_pg.webp)
+_Image taken from [RL — Policy Gradient Explained](https://jonathan-hui.medium.com/rl-policy-gradients-explained-9b13b688b146)_
 
 **Reward Discount**
 
@@ -1228,9 +1229,590 @@ The vanilla policy gradient serves as the foundation for more advanced methods l
 
 """
 
-TRPO
+##### TRPO
 
-[TALK ABOUT IMPORTANCE SAMPLING, MM Algo, Trust Region]
+**The Sample Efficiency Problem**
+
+Our vanilla policy gradient algorithm works, but it has a critical flaw that makes it impractical for real-world applications. Let's examine what happens during training:
+
+1. **Collect trajectories** using current policy π_θ
+2. **Compute gradients** from these trajectories
+3. **Update policy** θ → θ_new
+4. **Throw away all previous data** and start over
+
+This last step is the killer. Imagine training a robot to walk - every time you make a small adjustment to the policy, you must collect entirely new walking data and discard everything you learned before. For complex tasks requiring thousands of timesteps per trajectory, this becomes computationally prohibitive.
+
+Recall our policy gradient formula:
+
+$$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot A(s_t, a_t)\right]$$
+
+The expectation $\mathbb{E}_{\tau \sim \pi_\theta}$ means we must sample trajectories using the current policy π_θ. When we update θ, this distribution changes, invalidating all our previous samples.
+
+**Importance Sampling**
+
+What if we could reuse old data to estimate the performance of our new policy? This is exactly what importance sampling enables. The core insight is beautifully simple:
+
+| **If you want to compute an expectation under distribution p, but you have samples from distribution q, you can reweight the samples by the ratio p/q.**
+
+**The Maths**
+
+For any function f(x), the expectation under distribution p can be computed as:
+
+$$\mathbb{E}_{x \sim p}[f(x)] = \sum_x p(x)f(x)$$
+
+But using importance sampling, we can compute this same expectation using samples from a different distribution q:
+
+$$\mathbb{E}_{x \sim p}[f(x)] = \sum_x p(x)f(x) = \sum_x \frac{p(x)}{q(x)} \cdot q(x)f(x) = \mathbb{E}_{x \sim q}\left[\frac{p(x)}{q(x)} f(x)\right]$$
+
+The magic happens in that middle step - we multiply and divide by q(x), creating a ratio p(x)/q(x) that reweights our samples.
+
+Let's see this in action with a concrete example. Suppose we want to compute the expected value of f(x) = x under two different distributions:
+
+**Distribution p**: P(x=1) = 0.5, P(x=3) = 0.5  
+**Distribution q**: P(x=1) = 0.8, P(x=3) = 0.2
+
+**Direct calculation under p:**
+$$\mathbb{E}_{x \sim p}[f(x)] = 0.5 \times 1 + 0.5 \times 3 = 2.0$$
+
+**Using importance sampling with samples from q:**
+
+If we sample from q and get samples [1, 1, 1, 3], we can estimate the expectation under p by reweighting:
+
+For x=1: weight = p(1)/q(1) = 0.5/0.8 = 0.625  
+For x=3: weight = p(3)/q(3) = 0.5/0.2 = 2.5
+
+$$\mathbb{E}_{x \sim p}[f(x)] \approx \frac{1}{4}[0.625 \times 1 + 0.625 \times 1 + 0.625 \times 1 + 2.5 \times 3] = 2.0$$
+
+The reweighted result matches our direct calculation!
+
+Now we can revolutionize our policy gradient approach. Instead of:
+
+$$\mathbb{E}_{\tau \sim \pi_\theta}[f(\tau)]$$
+
+We can use:
+
+$$\mathbb{E}_{\tau \sim \pi_{\theta_{old}}}\left[\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} f(\tau)\right]$$
+
+**Breaking Down the Trajectory Probability Ratio**
+
+Remember that trajectory probabilities factor as:
+$$\pi_\theta(\tau) = \prod_{t=1}^{T} \pi_\theta(a_t|s_t) \cdot p(s_{t+1}|s_t, a_t)$$
+
+The environment dynamics p(s\_{t+1}|s_t, a_t) are the same for both policies, so they cancel out in the ratio:
+
+$$\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} = \frac{\prod_{t=1}^{T} \pi_\theta(a_t|s_t)}{\prod_{t=1}^{T} \pi_{\theta_{old}}(a_t|s_t)} = \prod_{t=1}^{T} \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$$
+
+Our objective becomes:
+
+$$J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta_{old}}}\left[\prod_{t=1}^{T} \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)} \cdot R(\tau)\right]$$
+
+This is huge! We can now:
+
+- **Collect data** with policy π_θ_old
+- **Reuse this data** multiple times to evaluate different policies π_θ
+- **Dramatically improve sample efficiency**
+
+**Problem with Importance Sampling **
+
+But there's a catch. Importance sampling works well only when the two distributions are similar. If π*θ becomes very different from π*θ_old, the probability ratios can explode or vanish:
+
+- **Ratio >> 1**: New policy assigns much higher probability to some actions
+- **Ratio << 1**: New policy assigns much lower probability to some actions
+- **Ratio ≈ 0**: Catastrophic - new policy never takes actions the old policy preferred
+
+The Variance Explosion Problem
+
+Consider what happens if one action has ratio = 100 while others have ratio = 0.01. A single high-ratio sample can dominate the entire gradient estimate, leading to:
+
+- **Unstable training**: Gradients vary wildly between batches
+- **Poor convergence**: The algorithm makes erratic updates
+- **Sample inefficiency**: We need many more samples to get reliable estimates
+
+**Solution: Constrained Policy Updates**
+
+The breakthrough insight: **constrain how much the policy can change** to keep importance sampling ratios well-behaved. This leads us naturally to the concept of trust regions - regions where we trust our importance sampling approximation to be accurate.
+
+But how do we guarantee that our policy updates always improve performance? This is where two key concepts come into play: the Minorize-Maximization (MM) algorithm and trust regions.
+
+**Minorize-Maximization (MM) Algorithm**
+
+Can we guarantee that any policy update always improves the expected rewards? This seems impossible, but it's theoretically achievable through the MM algorithm.
+
+**The MM Insight**: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
+
+**How MM Works**
+
+The MM algorithm follows this iterative process:
+
+1. **Find a lower bound** M that approximates the expected reward η locally at the current guess θ_i
+2. **Optimize** the lower bound M to find the next policy guess θ\_{i+1}
+3. **Repeat** until convergence
+
+For this to work, M must be:
+
+- **A lower bound**: M(θ) ≤ η(θ) for all θ
+- **Tight at current point**: M(θ_i) = η(θ_i)
+- **Easier to optimize**: M should be simpler than η (typically quadratic)
+
+**The Maths**
+
+The lower bound function has the form:
+$M(\theta) = g \cdot (\theta - \theta_{old}) - \frac{1}{2}(\theta - \theta_{old})^T F (\theta - \theta_{old})$
+
+This is a quadratic approximation where:
+
+- g is the gradient at θ_old
+- F is a positive definite matrix (often related to the Hessian)
+
+**Why MM Guarantees Improvement**
+
+**Key insight**: If M is a lower bound that never crosses η, then maximizing M must improve η.
+
+**Proof sketch**:
+
+- Since M(θ*{old}) = η(θ*{old}) and M(θ) ≤ η(θ) everywhere
+- If we find θ*{new} such that M(θ*{new}) > M(θ\_{old})
+- Then η(θ*{new}) ≥ M(θ*{new}) > M(θ*{old}) = η(θ*{old})
+- Therefore η(θ*{new}) > η(θ*{old}) ✓
+
+| **By optimizing a lower bound function approximating η locally, MM guarantees policy improvement every iteration and leads us to the optimal policy eventually.**
+
+**Trust Regions: From Line Search to Constrained Optimization**
+
+There are two major optimization paradigms:
+
+1. **Line Search** (like gradient descent): Choose direction first, then step size
+2. **Trust Region**: Choose maximum step size first, then find optimal point within that region
+
+The Trust Region Approach
+
+In trust region methods, we:
+
+1. **Define a trust region** of radius δ around current policy θ_old
+2. **Find the optimal policy** within this constrained region
+3. **Adapt the radius** based on how well our approximation worked
+
+The optimization problem becomes:
+$\max_{\theta} \; M(\theta)$
+$\text{subject to} \; \|\theta - \theta_{old}\| \leq \delta$
+
+Adaptive Trust Region Sizing
+
+The trust region radius δ can be dynamically adjusted:
+
+- **If approximation is good**: Expand δ for next iteration
+- **If approximation is poor**: Shrink δ for next iteration
+- **If policy diverges too much**: Shrink δ to prevent importance sampling breakdown
+
+Why Trust Regions Work for RL
+
+In reinforcement learning, trust regions serve a dual purpose:
+
+1. **Mathematical**: Keep our quadratic approximation M valid
+2. **Statistical**: Prevent importance sampling ratios from exploding
+
+**The connection**: When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
+
+Optimal Importance Sampling
+
+Before diving into TRPO, let's understand what makes importance sampling work best. The accuracy of our expected value estimate increases with more samples, but what's the optimal sampling distribution?
+
+For computing:
+$$\mathbb{E}_{p(x)}[f(x)]$$
+
+Using importance sampling with distribution q:
+$$\mathbb{E}_{p(x)}[f(x)] \approx \frac{1}{N} \sum_i \frac{p(x_i)}{q(x_i)} f(x_i)$$
+
+**The optimal sampling distribution that minimizes variance is:**
+$$q^*(x) \propto p(x)|f(x)|$$
+
+**Intuitive interpretation**: Sample more frequently where the function value |f(x)| is large. This concentrates samples where they have the most impact on the expectation.
+
+Normalized vs Unnormalized Importance Sampling
+
+In many ML applications, we only know unnormalized distributions. For unnormalized distribution $\tilde{p}(x) = p(x) \cdot Z$ where Z is unknown:
+
+$$\mathbb{E}_{p}[f(x)] = \frac{\sum_m f(x^m) w^m}{\sum_m w^m}$$
+
+where $w^m = \frac{\tilde{p}(x^m)}{q(x^m)}$
+
+**Trade-offs:**
+
+- **Unnormalized**: Unbiased but higher variance
+- **Normalized**: Biased but lower variance
+
+In practice, normalized importance sampling often performs better due to reduced variance.
+
+Math Notation Reference
+
+| Symbol                                                                      | Meaning                                             |
+| --------------------------------------------------------------------------- | --------------------------------------------------- |
+| $\pi_\theta(a\|s)$                                                          | Policy probability of action a given state s        |
+| $\pi_{\theta_{old}}(a\|s)$                                                  | Old policy probability                              |
+| $\tau$                                                                      | Trajectory $(s_1, a_1, s_2, a_2, \ldots)$           |
+| $\pi_\theta(\tau)$                                                          | Probability of trajectory under policy $\pi_\theta$ |
+| $\frac{\pi_\theta(a_t\|s_t)}{\pi_{\theta_{old}}(a_t\|s_t)}$                 | Importance sampling ratio for single timestep       |
+| $\prod_{t=1}^{T} \frac{\pi_\theta(a_t\|s_t)}{\pi_{\theta_{old}}(a_t\|s_t)}$ | Importance sampling ratio for full trajectory       |
+| $R(\tau)$                                                                   | Total reward of trajectory                          |
+| $A(s_t, a_t)$                                                               | Advantage function                                  |
+| $\eta(\theta)$                                                              | Expected reward under policy $\pi_\theta$           |
+| $M(\theta)$                                                                 | Lower bound function in MM algorithm                |
+| $\theta_{old}$                                                              | Current policy parameters                           |
+| $\delta$                                                                    | Trust region radius                                 |
+| $F$                                                                         | Positive definite matrix (approximating curvature)  |
+| $g$                                                                         | Policy gradient vector                              |
+| $\mathcal{L}_\pi(\pi')$                                                     | Lower bound function using importance sampling      |
+| $D_{KL}(\pi'\|\|\pi)$                                                       | KL divergence between policies                      |
+| $d^\pi(s)$                                                                  | Discounted state visitation distribution            |
+| $F$                                                                         | Fisher Information Matrix                           |
+| $C$                                                                         | Penalty coefficient for KL divergence               |
+| $r_t(\theta)$                                                               | PPO importance sampling ratio                       |
+| $\epsilon$                                                                  | PPO clipping parameter                              |
+| $\mathcal{L}^{CLIP}(\theta)$                                                | PPO clipped objective function                      |
+| $\beta$                                                                     | Adaptive KL penalty coefficient                     |
+
+Putting It All Together
+
+Now we can finally understand how TRPO elegantly combines all the concepts we've explored:
+
+1. **Importance Sampling** - to reuse old data efficiently
+2. **MM Algorithm** - to guarantee policy improvement
+3. **Trust Regions** - to constrain policy changes and keep approximations valid
+
+TRPO represents the culmination of these ideas into a practical, theoretically-grounded algorithm.
+
+The TRPO Optimization Problem
+
+TRPO reformulates our policy optimization as maximizing improvement relative to the current policy. Instead of maximizing absolute performance J(π'), we maximize:
+
+$\max_{\pi'} J(\pi') - J(\pi)$
+
+This is mathematically equivalent but conceptually important - we're explicitly measuring progress.
+
+Constructing the Lower Bound Function ℒ
+
+To apply the MM algorithm, TRPO constructs a lower bound function ℒ that uses importance sampling:
+
+$\mathcal{L}_\pi(\pi') = \frac{1}{1-\gamma} \mathbb{E}_{s\sim d^\pi} \left[ \frac{\pi'(a|s)}{\pi(a|s)} A^\pi(s,a) \right]$
+
+where:
+
+- $d^\pi(s)$ is the discounted state visitation distribution under policy π
+- $A^\pi(s,a)$ is the advantage function under policy π
+
+**Key insight**: This function uses importance sampling to estimate how well policy π' would perform using data collected from policy π.
+
+The Trust Region Constraint
+
+The theoretical foundation comes from this crucial bound (proven in the TRPO paper):
+
+$J(\pi') - J(\pi) \geq \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]]}$
+
+This tells us:
+
+- **Left side**: True policy improvement
+- **Right side**: Our lower bound estimate minus a penalty term
+
+The penalty term grows with KL divergence, so the bound becomes loose when policies differ too much.
+
+Two Equivalent Formulations
+
+TRPO can be formulated in two mathematically equivalent ways:
+
+**KL-Penalized (Unconstrained):**
+$\max_{\pi'} \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]]}$
+
+**KL-Constrained:**
+$\max_{\pi'} \mathcal{L}_\pi(\pi')$
+$\text{subject to } \mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]] \leq \delta$
+
+In practice, the constrained version is preferred because:
+
+- δ is easier to tune than the penalty coefficient C
+- Hard constraints provide better worst-case guarantees
+- The constraint directly controls the trust region size
+
+Guaranteed Monotonic Improvement
+
+The beauty of TRPO lies in its theoretical guarantee. Since we have:
+
+$J(\pi') - J(\pi) \geq \mathcal{L}_\pi(\pi') - C\sqrt{\text{KL divergence}}$
+
+If we:
+
+1. **Optimize** ℒ_π(π') (using importance sampling)
+2. **Constrain** KL divergence to be small
+3. **Ensure** ℒ_π(π) = 0 (which is always true when π' = π)
+
+Then ℒ_π(π') ≥ 0 implies J(π') ≥ J(π) ✓
+
+> **TRPO's guarantee: Every policy update improves performance or leaves it unchanged. We never move backwards.**
+
+The Intuitive Picture
+
+Think of TRPO this way:
+
+1. **Sample trajectories** with current policy π
+2. **Estimate** how well any nearby policy π' would do on these same trajectories (importance sampling)
+3. **Find the best** nearby policy within our trust region (constrained optimization)
+4. **Verify** the policy is actually better before committing (safety check)
+
+The trust region ensures our importance sampling estimates remain accurate, while the MM algorithm structure guarantees we always improve.
+
+From Theory to Practice: Natural Policy Gradient
+
+The constrained optimization problem:
+$\max_{\pi'} \mathcal{L}_\pi(\pi')$
+$\text{subject to } \mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]] \leq \delta$
+
+Can be solved using a Taylor expansion around the current policy. This leads to the **Natural Policy Gradient** update:
+
+$\theta_{k+1} = \theta_k + \sqrt{\frac{2\delta}{g^T F^{-1} g}} F^{-1} g$
+
+where:
+
+- g is the policy gradient
+- F is the Fisher Information Matrix (measures policy curvature)
+- δ is the trust region size
+
+**Why "Natural"?** Unlike vanilla gradient descent which uses Euclidean distance in parameter space, the natural gradient uses the Fisher Information Matrix to measure distance in the space of probability distributions. This makes the updates invariant to how we parameterize the policy.
+
+The Fisher Information Matrix Challenge
+
+The Natural Policy Gradient requires computing F^(-1)g, but inverting the Fisher Information Matrix is computationally expensive for large neural networks:
+
+$F = \mathbb{E}_{s,a \sim \pi_k} \left[ \nabla_\theta \log \pi_\theta(a|s) \nabla_\theta \log \pi_\theta(a|s)^T \right]$
+
+For modern deep networks with millions of parameters, this matrix is huge and inverting it is prohibitive.
+
+Truncated Natural Policy Gradient (TNPG)
+
+The solution is elegant: instead of computing F^(-1)g directly, use the **Conjugate Gradient** method to solve:
+
+$F x = g$
+
+This iterative method finds x ≈ F^(-1)g without explicitly computing the inverse, requiring only matrix-vector products Fv rather than full matrix inversion.
+
+**Conjugate Gradient insight**: For quadratic objectives, CG finds the optimal solution in at most n steps (where n is the number of parameters), but typically converges much faster in practice.
+
+The Complete TRPO Algorithm
+
+TRPO combines Truncated Natural Policy Gradient with a safety verification step:
+
+1. **Collect trajectories** using current policy π_k
+2. **Estimate advantage function** A^π_k using any method (GAE, TD, etc.)
+3. **Compute policy gradient** g and set up Fisher Information Matrix function
+4. **Solve Fx = g** using Conjugate Gradient to get search direction
+5. **Compute step size** to satisfy trust region constraint
+6. **Perform line search** with exponential backoff:
+   - Try proposed update θ' = θ_k + α·x
+   - **Verify** KL divergence ≤ δ and ℒ(θ') ≥ 0
+   - If verification fails, reduce α and try again
+7. **Update policy** only after verification succeeds
+
+TRPO's Limitations
+
+Despite its theoretical elegance, TRPO has practical limitations:
+
+**Computational Cost**: Computing the Fisher Information Matrix and running Conjugate Gradient adds significant overhead compared to first-order methods like Adam.
+
+**Sample Efficiency**: TRPO requires large batch sizes to accurately estimate the Fisher Information Matrix, making it less sample efficient than some modern alternatives.
+
+**Scalability**: The second-order nature makes it impractical for very large networks where first-order methods excel.
+
+These limitations motivated the development of **Proximal Policy Optimization (PPO)**, which achieves similar performance with much simpler implementation.
+
+The Legacy of TRPO
+
+TRPO's lasting contributions to reinforcement learning:
+
+1. **Principled Policy Updates**: Showed how to make guaranteed progress in policy optimization
+2. **Trust Region Concepts**: Established the importance of constraining policy changes
+3. **Importance Sampling Integration**: Demonstrated practical applications in RL
+4. **Theoretical Foundation**: Provided rigorous guarantees that influenced subsequent algorithms
+
+From TRPO to PPO: The Quest for Simplicity
+
+While TRPO provided a theoretical breakthrough with its guaranteed policy improvement, it came with significant practical limitations that motivated the development of **Proximal Policy Optimization (PPO)**.
+
+TRPO's Practical Challenges
+
+Despite its elegant theory, TRPO faced several issues in real-world applications:
+
+1. **Computational Complexity**: Computing the Fisher Information Matrix and running conjugate gradient is expensive
+2. **Implementation Difficulty**: Second-order optimization requires careful numerical handling
+3. **Scalability Issues**: The method becomes prohibitive for very large neural networks
+4. **Sample Inefficiency**: Large batch sizes needed for accurate Fisher Information estimation
+
+As the PPO paper noted: _"Q-learning (with function approximation) fails on many simple problems and is poorly understood, vanilla policy gradient methods have poor data efficiency and robustness; and trust region policy optimization (TRPO) is relatively complicated, and is not compatible with architectures that include noise (such as dropout) or parameter sharing."_
+
+PPO's Philosophy: Simple Yet Effective
+
+PPO takes a fundamentally different approach - instead of rigorously enforcing trust region constraints, it uses a **soft penalty** that can be optimized with standard first-order methods like Adam.
+
+**Core insight**: We can tolerate occasional "bad" policy updates if we make the algorithm simple enough to run many iterations quickly and robustly.
+
+PPO Algorithm Design
+
+The Clipped Objective Function
+
+PPO's key innovation is the **clipped surrogate objective** that directly constrains the importance sampling ratio:
+
+$\mathcal{L}^{CLIP}(\theta) = \mathbb{E}_t \left[ \min \left( r_t(\theta) \hat{A}_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \hat{A}_t \right) \right]$
+
+where:
+
+- $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ is the importance sampling ratio
+- $\hat{A}_t$ is the advantage estimate
+- $\epsilon$ is the clipping parameter (typically 0.2)
+
+**How clipping works:**
+
+- When $\hat{A}_t > 0$ (good action): clip ratio to $[1, 1+\epsilon]$ - prevents over-exploitation
+- When $\hat{A}_t < 0$ (bad action): clip ratio to $[1-\epsilon, 1]$ - prevents over-penalization
+
+Two Network Architecture
+
+PPO maintains two policy networks:
+
+1. **Current Policy** $\pi_\theta(a|s)$ - being optimized
+2. **Old Policy** $\pi_{\theta_k}(a|s)$ - used for importance sampling (fixed during optimization)
+
+This separation enables:
+
+- **Sample reuse**: Evaluate new policies using data from old policy
+- **Controlled updates**: Clip ratios to prevent destructive policy changes
+- **Computational efficiency**: No need for second-order computations
+
+PPO vs TRPO: Key Differences
+
+| Aspect                    | TRPO                           | PPO                    |
+| ------------------------- | ------------------------------ | ---------------------- |
+| **Constraint Type**       | Hard KL constraint             | Soft clipping penalty  |
+| **Optimization**          | Second-order (Natural PG + CG) | First-order (Adam/SGD) |
+| **Theoretical Guarantee** | Monotonic improvement          | Heuristic bounds       |
+| **Implementation**        | Complex                        | Simple                 |
+| **Computational Cost**    | High                           | Low                    |
+| **Robustness**            | Sensitive to hyperparameters   | More robust            |
+
+PPO Implementation Variants
+
+PPO with Adaptive KL Penalty
+
+Before the clipped version, PPO used an adaptive penalty approach:
+
+$\mathcal{L}^{KLPEN}(\theta) = \mathbb{E}_t \left[ \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)} \hat{A}_t - \beta \text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)] \right]$
+
+**Adaptive mechanism:**
+
+- If KL divergence > target: increase β (stronger penalty)
+- If KL divergence < target: decrease β (weaker penalty)
+
+This approach proved less stable than clipping in practice.
+
+PPO-Clip: The Winning Formula
+
+The clipped objective became the standard because:
+
+1. **No hyperparameter tuning**: ε is robust across different environments
+2. **Automatic regularization**: Clipping naturally prevents destructive updates
+3. **Computational simplicity**: No KL divergence computation needed during optimization
+4. **Empirical effectiveness**: Matches or exceeds TRPO performance with much less complexity
+
+The Clipping Mechanism Explained
+
+Let's understand how clipping preserves the trust region concept:
+
+```python
+# Simplified PPO loss computation
+ratio = new_policy_prob / old_policy_prob
+unclipped_loss = ratio * advantage
+clipped_loss = torch.clamp(ratio, 1-eps, 1+eps) * advantage
+final_loss = torch.min(unclipped_loss, clipped_loss)
+```
+
+**Intuition behind clipping:**
+
+When advantage > 0 (good action):
+
+- If ratio > 1+ε: clipping prevents excessive probability increase
+- Algorithm becomes conservative about over-optimizing good actions
+
+When advantage < 0 (bad action):
+
+- If ratio < 1-ε: clipping prevents excessive probability decrease
+- Algorithm becomes conservative about over-penalizing bad actions
+
+This creates an implicit trust region where extreme policy changes are automatically rejected.
+
+PPO's Practical Advantages
+
+1. Sample Efficiency Through Reuse
+   Unlike vanilla policy gradients that use each sample only once, PPO can perform multiple optimization steps on the same batch of data:
+
+```python
+for epoch in range(ppo_epochs):  # Typically 3-10 epochs
+    for batch in dataloader:
+        loss = compute_ppo_loss(batch)
+        optimizer.step()
+```
+
+2. Robust to Hyperparameters
+   The clipping parameter ε = 0.2 works well across diverse environments, making PPO much more practical than methods requiring extensive tuning.
+
+3. Compatible with Modern Architectures
+   PPO works seamlessly with:
+
+- Dropout and batch normalization
+- Parameter sharing between policy and value networks
+- Recurrent neural networks
+- Attention mechanisms
+
+4. Easy Implementation
+   A complete PPO implementation requires only ~100 lines of code, compared to TRPO's significantly more complex implementation.
+
+PPO in Practice: Why It Dominates
+
+PPO has become the default choice for policy gradient methods because it strikes an optimal balance:
+
+**Theoretical Foundation**: Inherits TRPO's trust region insights
+**Practical Simplicity**: Uses first-order optimization everyone understands  
+**Empirical Performance**: Matches or exceeds more complex methods
+**Implementation Ease**: Straightforward to debug and extend
+**Computational Efficiency**: Fast enough for large-scale applications
+
+Modern Applications
+
+PPO powers many state-of-the-art systems:
+
+- **OpenAI's GPT training**: RLHF (Reinforcement Learning from Human Feedback)
+- **Game AI**: Dota 2, StarCraft II agents
+- **Robotics**: Real-world robot control
+- **Autonomous systems**: Self-driving cars, drones
+
+Conclusion: The Evolution of Policy Optimization
+
+The journey from vanilla policy gradients to PPO illustrates a key principle in machine learning: **practical simplicity often trumps theoretical complexity**.
+
+**The progression:**
+
+1. **Vanilla Policy Gradient**: Simple but sample inefficient
+2. **Importance Sampling**: Enables data reuse but introduces variance
+3. **MM Algorithm + Trust Regions**: Provides theoretical guarantees but complex implementation
+4. **TRPO**: Combines all concepts with rigorous theory but computational overhead
+5. **PPO**: Captures the essential insights in a simple, practical package
+
+PPO succeeds because it:
+
+- **Preserves the core insight**: Constrain policy changes to maintain valid approximations
+- **Simplifies the implementation**: Replace hard constraints with soft clipping
+- **Maintains effectiveness**: Achieves similar performance with much less complexity
+
+The story of importance sampling in RL demonstrates how theoretical understanding leads to practical breakthroughs. By deeply understanding why and how importance sampling works, we can build algorithms that are both principled and practical - the hallmark of great machine learning systems.
+
+While PPO has largely replaced TRPO in practice, understanding TRPO provides crucial insight into the fundamental principles underlying modern policy gradient methods. The concepts we've explored - importance sampling, MM algorithms, trust regions, and their elegant combination - form the theoretical foundation that makes PPO's empirical success possible.
+
+---
 
 Before we move to the next section, I want to talk about a question that baffled me when I started learning about RL.
 
