@@ -1118,6 +1118,114 @@ Variance hurts deep learning optimization. The variance provides conflicting des
 
 [TALK ABOUT DISCOUNT, ADVANTAGE, THEN MOVE TO TRPO]
 
+**Recall: Our Current Policy Gradient**
+
+Remember, our policy gradient formula is:
+
+$$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t})\right) \left(\sum_{t=1}^{T} r(s_{i,t}, a_{i,t})\right)$$
+
+We can rewrite this more compactly as:
+
+$$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \cdot Q(s_{i,t}, a_{i,t})$$
+
+Where $Q(s,a)$ represents the **total reward we get from taking action $a$ in state $s$** (this is called the Q-function or action-value function).
+
+**The Baseline Trick**
+
+Here's a mathematical insight: **we can subtract any term from our gradient as long as that term doesn't depend on our policy parameters $\theta$.**
+
+Why? Because:
+$$\nabla_\theta [f(\theta) - c] = \nabla_\theta f(\theta) - \nabla_\theta c = \nabla_\theta f(\theta) - 0 = \nabla_\theta f(\theta)$$
+
+So instead of using $Q(s,a)$ directly, we can use $Q(s,a) - V(s)$, where $V(s)$ is some baseline function.
+
+**What Should Our Baseline Be?**
+
+The most natural choice is $V(s) =$ **the expected reward from state $s$** (called the value function). This represents "how good is this state on average?"
+
+Our new gradient becomes:
+$$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \cdot (Q(s_{i,t}, a_{i,t}) - V(s_{i,t}))$$
+
+**Enter the Advantage Function**
+
+We define the **Advantage Function** as:
+$$A^{\pi}(s,a) = Q^{\pi}(s,a) - V^{\pi}(s)$$
+
+The advantage function answers the question: **"How much better is taking action $a$ in state $s$ compared to the average action in that state?"**
+
+- **$A(s,a) > 0$**: Action $a$ is better than average → increase its probability
+- **$A(s,a) < 0$**: Action $a$ is worse than average → decrease its probability
+- **$A(s,a) = 0$**: Action $a$ is exactly average → no change needed
+
+**The Advantage-Based Policy Gradient**
+
+Our final policy gradient becomes:
+$$\boxed{\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \cdot A^{\pi}(s_{i,t}, a_{i,t})}$$
+
+**Why This Reduces Variance**
+
+Let's revisit our earlier example with the advantage function:
+
+**Situation 1**: Trajectory A gets +10 rewards, Trajectory B gets -10 rewards
+
+- If average performance is 0: $A_A = +10$, $A_B = -10$
+- Result: Increase A's probability, decrease B's probability ✓
+
+**Situation 2**: Trajectory A gets +10 rewards, Trajectory B gets +1 rewards
+
+- If average performance is +5.5: $A_A = +4.5$, $A_B = -4.5$
+- Result: Increase A's probability, decrease B's probability ✓
+
+**The key insight**: Even when both trajectories have positive rewards, the advantage function correctly identifies which one is relatively better!
+
+**Zero-Centered Learning**
+
+In deep learning, we want input features to be zero-centered. The advantage function does exactly this for our rewards:
+
+- **Without baseline**: All positive rewards → always increase probabilities
+- **With advantage**: Rewards centered around zero → increase good actions, decrease bad ones
+
+This gives our policy gradient much clearer, less conflicting signals, significantly reducing variance and improving convergence.
+
+**The Complete Vanilla Policy Gradient Algorithm**
+
+Now that we understand the advantage function, let's see how it all comes together in the complete algorithm:
+
+$$\nabla U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i=1}^{m} \nabla_\theta \log P(\tau^{(i)}; \theta)(R(\tau^{(i)}) - b)$$
+
+[INSERT_PSEUDOC)DE_IMAGE]
+
+**Reward Discount**
+
+There's one more important technique that further reduces variance: **reward discounting**.
+
+Reward discount reduces variance by reducing the impact of distant actions. The intuition is that actions taken now should have more influence on immediate rewards than on rewards received far in the future.
+
+Instead of using the raw cumulative reward, we use a **discounted return**:
+
+$$Q^{\pi,\gamma}(s, a) \leftarrow r_0 + \gamma r_1 + \gamma^2 r_2 + \cdots | s_0 = s, a_0 = a$$
+
+Where:
+
+- $\gamma \in [0,1]$ is the **discount factor**
+- $\gamma = 0$: Only immediate rewards matter
+- $\gamma = 1$: All future rewards are equally important
+- $\gamma \approx 0.99$: Common choice that slightly prioritizes near-term rewards
+
+**The corresponding objective function becomes:**
+
+$$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \left(\sum_{t'=t}^{T} \gamma^{t'-t} r(s_{i,t'}, a_{i,t'})\right)$$
+
+**Why Discounting Helps:**
+
+- **Reduces variance**: Distant rewards have less influence, so random events far in the future don't dominate the gradient
+- **Focuses learning**: The agent learns to optimize for more predictable, near-term outcomes
+- **Mathematical stability**: Prevents infinite returns in continuing tasks
+
+**This complete framework is defined as the Vanilla Policy Gradient.**
+
+The vanilla policy gradient serves as the foundation for more advanced methods like PPO, TRPO, and A3C, which we'll explore in subsequent sections.
+
 """
 
 TRPO
