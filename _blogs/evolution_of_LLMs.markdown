@@ -708,7 +708,7 @@ The core innovation is their clipped probability ratio approach, which constrain
 </details>
 <br/>
 
-Another big LLM algo that came out in 2017, and too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (Atleast in the early days).
+Another LLM algo that came out in 2017, and that too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (Atleast in the early days).
 
 This is going to be math heavy so be prepared (Dw, I will guide you in each step)
 
@@ -793,8 +793,6 @@ As this section is dedicated to PPO, I will primarily be talking about the topic
 I am skipping over many other intersting and amazing algorithms like [Q-Learning](https://en.wikipedia.org/wiki/Q-learning#:~:text=Q%2Dlearning%20can%20identify%20an,taken%20in%20a%20given%20state.), [DQN](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html), [Actor-critic](https://en.wikipedia.org/wiki/Actor-critic_algorithm) etc. As they are not relevant to this section. I still implore you to explore them through the links I have provided to get a better, broader and deeper grasp of RL.
 
 ##### Policy Gradient Methods
-
-**The Idea**
 
 Policy gradient methods directly optimizes a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
 
@@ -1343,6 +1341,10 @@ For this to work, M must be:
 
 **The Maths**
 
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/9.webp)
+*Image taken from [RL — Trust Region Policy Optimization (TRPO) Explained](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)*
+
 The lower bound function has the form:
 $M(\theta) = g \cdot (\theta - \theta_{old}) - \frac{1}{2}(\theta - \theta_{old})^T F (\theta - \theta_{old})$
 
@@ -1397,6 +1399,10 @@ In reinforcement learning, trust regions serve a dual purpose:
 2. **Statistical**: Prevent importance sampling ratios from exploding
 
 When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
+
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/line_search_vs_trust_region.webp)
+
 
 **Optimal Importance Sampling**
 
