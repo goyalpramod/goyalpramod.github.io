@@ -1116,8 +1116,6 @@ Policy Gradient (PG) uses MC this causes it to have low bias (Expected reward is
 Variance hurts deep learning optimization. The variance provides conflicting descent direction for the model to learn. One sampled rewards may want to increase the log likelihood and another may want to decrease it. This hurts the convergence. To reduce the variance caused by actions, we want to reduce the variance for the sampled rewards.
 """
 
-[TALK ABOUT DISCOUNT, ADVANTAGE, THEN MOVE TO TRPO]
-
 **Recall: Our Current Policy Gradient**
 
 Remember, our policy gradient formula is:
@@ -1146,9 +1144,7 @@ The most natural choice is $V(s) =$ **the expected reward from state $s$** (call
 Our new gradient becomes:
 $$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \cdot (Q(s_{i,t}, a_{i,t}) - V(s_{i,t}))$$
 
-**Enter the Advantage Function**
-
-We define the **Advantage Function** as:
+This is defined as the **Advantage Function**:
 $$A^{\pi}(s,a) = Q^{\pi}(s,a) - V^{\pi}(s)$$
 
 The advantage function answers the question: **"How much better is taking action $a$ in state $s$ compared to the average action in that state?"**
@@ -1157,14 +1153,10 @@ The advantage function answers the question: **"How much better is taking action
 - **$A(s,a) < 0$**: Action $a$ is worse than average → decrease its probability
 - **$A(s,a) = 0$**: Action $a$ is exactly average → no change needed
 
-**The Advantage-Based Policy Gradient**
-
 Our final policy gradient becomes:
 $$\boxed{\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \cdot A^{\pi}(s_{i,t}, a_{i,t})}$$
 
-**Why This Reduces Variance**
-
-Let's revisit our earlier example with the advantage function:
+Let's understand why this reduces variance with an example:
 
 **Situation 1**: Trajectory A gets +10 rewards, Trajectory B gets -10 rewards
 
@@ -1176,9 +1168,7 @@ Let's revisit our earlier example with the advantage function:
 - If average performance is +5.5: $A_A = +4.5$, $A_B = -4.5$
 - Result: Increase A's probability, decrease B's probability ✓
 
-**The key insight**: Even when both trajectories have positive rewards, the advantage function correctly identifies which one is relatively better!
-
-**Zero-Centered Learning**
+Even when both trajectories have positive rewards, the advantage function correctly identifies which one is relatively better!
 
 In deep learning, we want input features to be zero-centered. The advantage function does exactly this for our rewards:
 
@@ -1187,11 +1177,13 @@ In deep learning, we want input features to be zero-centered. The advantage func
 
 This gives our policy gradient much clearer, less conflicting signals, significantly reducing variance and improving convergence.
 
-**The Complete Vanilla Policy Gradient Algorithm**
+**Vanilla Policy Gradient Algorithm**
 
 Now that we understand the advantage function, let's see how it all comes together in the complete algorithm:
 
 $$\nabla U(\theta) \approx \hat{g} = \frac{1}{m} \sum_{i=1}^{m} \nabla_\theta \log P(\tau^{(i)}; \theta)(R(\tau^{(i)}) - b)$$
+
+(The notation may change from paper to paper, but the core idea remains the same)
 
 ![Image of policy based approach](/assets/blog_assets/evolution_of_llms/vanilla_pg.webp)
 _Image taken from [RL — Policy Gradient Explained](https://jonathan-hui.medium.com/rl-policy-gradients-explained-9b13b688b146)_
@@ -1201,6 +1193,8 @@ _Image taken from [RL — Policy Gradient Explained](https://jonathan-hui.medium
 There's one more important technique that further reduces variance: **reward discounting**.
 
 Reward discount reduces variance by reducing the impact of distant actions. The intuition is that actions taken now should have more influence on immediate rewards than on rewards received far in the future.
+
+You can think of it in terms of money, would rather have money right now, or have it later.
 
 Instead of using the raw cumulative reward, we use a **discounted return**:
 
@@ -1223,11 +1217,7 @@ $$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nab
 - **Focuses learning**: The agent learns to optimize for more predictable, near-term outcomes
 - **Mathematical stability**: Prevents infinite returns in continuing tasks
 
-**This complete framework is defined as the Vanilla Policy Gradient.**
-
-The vanilla policy gradient serves as the foundation for more advanced methods like PPO, TRPO, and A3C, which we'll explore in subsequent sections.
-
-"""
+All of this comprises the complete Vanila Policy Gradient Algorithm which serves as the foundation for more advanced methods like PPO, TRPO, and GRPO, which we'll explore in subsequent sections.
 
 ##### TRPO
 
@@ -1240,7 +1230,7 @@ Our vanilla policy gradient algorithm works, but it has a critical flaw that mak
 3. **Update policy** θ → θ_new
 4. **Throw away all previous data** and start over
 
-This last step is the killer. Imagine training a robot to walk - every time you make a small adjustment to the policy, you must collect entirely new walking data and discard everything you learned before. For complex tasks requiring thousands of timesteps per trajectory, this becomes computationally prohibitive.
+This last step is the problem. Imagine training a robot to walk - every time you make a small adjustment to the policy, you must collect entirely new walking data and discard everything you learned before. For complex tasks requiring thousands of timesteps per trajectory, this becomes computationally prohibitive.
 
 Recall our policy gradient formula:
 
@@ -1250,7 +1240,7 @@ The expectation $\mathbb{E}_{\tau \sim \pi_\theta}$ means we must sample traject
 
 **Importance Sampling**
 
-What if we could reuse old data to estimate the performance of our new policy? This is exactly what importance sampling enables. The core insight is beautifully simple:
+What if we could reuse old data to estimate the performance of our new policy? This is exactly what importance sampling enables. The core idea is beautifully simple:
 
 | **If you want to compute an expectation under distribution p, but you have samples from distribution q, you can reweight the samples by the ratio p/q.**
 
@@ -1266,7 +1256,7 @@ $$\mathbb{E}_{x \sim p}[f(x)] = \sum_x p(x)f(x) = \sum_x \frac{p(x)}{q(x)} \cdot
 
 The magic happens in that middle step - we multiply and divide by q(x), creating a ratio p(x)/q(x) that reweights our samples.
 
-Let's see this in action with a concrete example. Suppose we want to compute the expected value of f(x) = x under two different distributions:
+Let's see this in action with an example. Suppose we want to compute the expected value of f(x) = x under two different distributions:
 
 **Distribution p**: P(x=1) = 0.5, P(x=3) = 0.5  
 **Distribution q**: P(x=1) = 0.8, P(x=3) = 0.2
@@ -1293,14 +1283,13 @@ We can use:
 
 $$\mathbb{E}_{\tau \sim \pi_{\theta_{old}}}\left[\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} f(\tau)\right]$$
 
-**Breaking Down the Trajectory Probability Ratio**
 
 Remember that trajectory probabilities factor as:
-$$\pi_\theta(\tau) = \prod_{t=1}^{T} \pi_\theta(a_t|s_t) \cdot p(s_{t+1}|s_t, a_t)$$
+$$\pi_\theta(\tau) = \prod_{t=1}^{T} \pi_\theta(a_t\|s_t) \cdot p(s_{t+1}\|s_t, a_t)$$
 
-The environment dynamics p(s\_{t+1}|s_t, a_t) are the same for both policies, so they cancel out in the ratio:
+The environment dynamics $p(s\_{t+1}\|s_t, a_t)$ are the same for both policies, so they cancel out in the ratio:
 
-$$\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} = \frac{\prod_{t=1}^{T} \pi_\theta(a_t|s_t)}{\prod_{t=1}^{T} \pi_{\theta_{old}}(a_t|s_t)} = \prod_{t=1}^{T} \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$$
+$$\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} = \frac{\prod_{t=1}^{T} \pi_\theta(a_t\|s_t)}{\prod_{t=1}^{T} \pi_{\theta_{old}}(a_t\|s_t)} = \prod_{t=1}^{T} \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$$
 
 Our objective becomes:
 
@@ -1312,7 +1301,7 @@ This is huge! We can now:
 - **Reuse this data** multiple times to evaluate different policies π_θ
 - **Dramatically improve sample efficiency**
 
-**Problem with Importance Sampling **
+**Problem with Importance Sampling**
 
 But there's a catch. Importance sampling works well only when the two distributions are similar. If π*θ becomes very different from π*θ_old, the probability ratios can explode or vanish:
 
@@ -1320,15 +1309,13 @@ But there's a catch. Importance sampling works well only when the two distributi
 - **Ratio << 1**: New policy assigns much lower probability to some actions
 - **Ratio ≈ 0**: Catastrophic - new policy never takes actions the old policy preferred
 
-The Variance Explosion Problem
-
 Consider what happens if one action has ratio = 100 while others have ratio = 0.01. A single high-ratio sample can dominate the entire gradient estimate, leading to:
 
 - **Unstable training**: Gradients vary wildly between batches
 - **Poor convergence**: The algorithm makes erratic updates
 - **Sample inefficiency**: We need many more samples to get reliable estimates
 
-**Solution: Constrained Policy Updates**
+**Constrained Policy Updates**
 
 The breakthrough insight: **constrain how much the policy can change** to keep importance sampling ratios well-behaved. This leads us naturally to the concept of trust regions - regions where we trust our importance sampling approximation to be accurate.
 
@@ -1338,7 +1325,7 @@ But how do we guarantee that our policy updates always improve performance? This
 
 Can we guarantee that any policy update always improves the expected rewards? This seems impossible, but it's theoretically achievable through the MM algorithm.
 
-**The MM Insight**: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
+**The MM idea**: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
 
 **How MM Works**
 
@@ -1366,7 +1353,7 @@ This is a quadratic approximation where:
 
 **Why MM Guarantees Improvement**
 
-**Key insight**: If M is a lower bound that never crosses η, then maximizing M must improve η.
+If M is a lower bound that never crosses η, then maximizing M must improve η.
 
 **Proof sketch**:
 
@@ -1377,14 +1364,12 @@ This is a quadratic approximation where:
 
 | **By optimizing a lower bound function approximating η locally, MM guarantees policy improvement every iteration and leads us to the optimal policy eventually.**
 
-**Trust Regions: From Line Search to Constrained Optimization**
+**Trust Regions**
 
 There are two major optimization paradigms:
 
 1. **Line Search** (like gradient descent): Choose direction first, then step size
 2. **Trust Region**: Choose maximum step size first, then find optimal point within that region
-
-The Trust Region Approach
 
 In trust region methods, we:
 
@@ -1411,9 +1396,9 @@ In reinforcement learning, trust regions serve a dual purpose:
 1. **Mathematical**: Keep our quadratic approximation M valid
 2. **Statistical**: Prevent importance sampling ratios from exploding
 
-**The connection**: When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
+When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
 
-Optimal Importance Sampling
+**Optimal Importance Sampling**
 
 Before diving into TRPO, let's understand what makes importance sampling work best. The accuracy of our expected value estimate increases with more samples, but what's the optimal sampling distribution?
 
@@ -1471,7 +1456,8 @@ Math Notation Reference
 | $\mathcal{L}^{CLIP}(\theta)$                                                | PPO clipped objective function                      |
 | $\beta$                                                                     | Adaptive KL penalty coefficient                     |
 
-Putting It All Together
+
+**TRPO**
 
 Now we can finally understand how TRPO elegantly combines all the concepts we've explored:
 
@@ -1481,15 +1467,11 @@ Now we can finally understand how TRPO elegantly combines all the concepts we've
 
 TRPO represents the culmination of these ideas into a practical, theoretically-grounded algorithm.
 
-The TRPO Optimization Problem
-
 TRPO reformulates our policy optimization as maximizing improvement relative to the current policy. Instead of maximizing absolute performance J(π'), we maximize:
 
 $\max_{\pi'} J(\pi') - J(\pi)$
 
 This is mathematically equivalent but conceptually important - we're explicitly measuring progress.
-
-Constructing the Lower Bound Function ℒ
 
 To apply the MM algorithm, TRPO constructs a lower bound function ℒ that uses importance sampling:
 
@@ -1500,9 +1482,8 @@ where:
 - $d^\pi(s)$ is the discounted state visitation distribution under policy π
 - $A^\pi(s,a)$ is the advantage function under policy π
 
-**Key insight**: This function uses importance sampling to estimate how well policy π' would perform using data collected from policy π.
+This function uses importance sampling to estimate how well policy π' would perform using data collected from policy π.
 
-The Trust Region Constraint
 
 The theoretical foundation comes from this crucial bound (proven in the TRPO paper):
 
@@ -1514,8 +1495,6 @@ This tells us:
 - **Right side**: Our lower bound estimate minus a penalty term
 
 The penalty term grows with KL divergence, so the bound becomes loose when policies differ too much.
-
-Two Equivalent Formulations
 
 TRPO can be formulated in two mathematically equivalent ways:
 
@@ -1532,8 +1511,6 @@ In practice, the constrained version is preferred because:
 - Hard constraints provide better worst-case guarantees
 - The constraint directly controls the trust region size
 
-Guaranteed Monotonic Improvement
-
 The beauty of TRPO lies in its theoretical guarantee. Since we have:
 
 $J(\pi') - J(\pi) \geq \mathcal{L}_\pi(\pi') - C\sqrt{\text{KL divergence}}$
@@ -1548,8 +1525,6 @@ Then ℒ_π(π') ≥ 0 implies J(π') ≥ J(π) ✓
 
 > **TRPO's guarantee: Every policy update improves performance or leaves it unchanged. We never move backwards.**
 
-The Intuitive Picture
-
 Think of TRPO this way:
 
 1. **Sample trajectories** with current policy π
@@ -1558,8 +1533,6 @@ Think of TRPO this way:
 4. **Verify** the policy is actually better before committing (safety check)
 
 The trust region ensures our importance sampling estimates remain accurate, while the MM algorithm structure guarantees we always improve.
-
-From Theory to Practice: Natural Policy Gradient
 
 The constrained optimization problem:
 $\max_{\pi'} \mathcal{L}_\pi(\pi')$
@@ -1577,7 +1550,7 @@ where:
 
 **Why "Natural"?** Unlike vanilla gradient descent which uses Euclidean distance in parameter space, the natural gradient uses the Fisher Information Matrix to measure distance in the space of probability distributions. This makes the updates invariant to how we parameterize the policy.
 
-The Fisher Information Matrix Challenge
+**The Fisher Information Matrix Challenge**
 
 The Natural Policy Gradient requires computing F^(-1)g, but inverting the Fisher Information Matrix is computationally expensive for large neural networks:
 
@@ -1646,7 +1619,7 @@ Despite its elegant theory, TRPO faced several issues in real-world applications
 
 As the PPO paper noted: _"Q-learning (with function approximation) fails on many simple problems and is poorly understood, vanilla policy gradient methods have poor data efficiency and robustness; and trust region policy optimization (TRPO) is relatively complicated, and is not compatible with architectures that include noise (such as dropout) or parameter sharing."_
 
-PPO's Philosophy: Simple Yet Effective
+##### PPO's Philosophy: Simple Yet Effective
 
 PPO takes a fundamentally different approach - instead of rigorously enforcing trust region constraints, it uses a **soft penalty** that can be optimized with standard first-order methods like Adam.
 
