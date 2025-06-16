@@ -1801,7 +1801,7 @@ Policy based approach seem to work great and are intuitive as well, given a stat
 </details>
 <br/>
 
-### MOE : Mixture Of Experts
+### MoE
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/moe_abstract.webp)
 
@@ -1865,6 +1865,16 @@ The idea seems simple enough, but there are multiple complexities like:
 Let's us go through each question one by one.
 
 > Note: We will see many changes that were made on this idea as we progress, but this was the foundational paper on MoEs for large models. So it is crucial that you understand it well.
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/moe_layer.webp)
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/sparse_vs_dense_moe.webp)
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/5.webp)
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/6.webp)
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/7.webp)
 
 ##### Understanding the Gating Network
 
