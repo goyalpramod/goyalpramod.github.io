@@ -833,10 +833,6 @@ We also need to be aware of a few terms and mathematical tricks before moving fo
 
 Let $\tau$ be a trajectory (sequence of state-action pairs), $\theta$ be the weights of our neural network policy. Our policy $\pi_\theta$ outputs action probabilities that depend upon the current state and network weights.
 
-We start with a desire to maximize our expected reward over complete trajectories.
-
-**From Reward Hypothesis to Policy Gradient**
-
 We begin with the reward hypothesis: we want to maximize $R(\tau)$ where $\tau$ is a trajectory.
 
 We can write the objective as the **probability of a trajectory being chosen by the policy multiplied by the reward for that trajectory**:
@@ -872,7 +868,7 @@ $$= \mathbb{E}_{\tau \sim \pi_\theta}[\nabla_\theta \log \pi_\theta(\tau) R(\tau
 - **(6)** Apply the log derivative trick: $\nabla_\theta \log(z) = \frac{1}{z} \nabla_\theta z$
 - **(7)** Convert back to expectation form
 
-**Key insight:** The trajectory probability factors as:
+The trajectory probability factors as:
 $$\pi_\theta(\tau) = \prod_{t=0}^{T} \pi_\theta(a_t|s_t)$$
 
 So the log probability becomes:
@@ -880,11 +876,7 @@ $$\log \pi_\theta(\tau) = \sum_{t=0}^{T} \log \pi_\theta(a_t|s_t)$$
 
 What does this mean for us? If you want to maximize your expected reward, you can use gradient ascent. The gradient of the expected reward has an elegant form - it's simply **the expectation of the trajectory return times the sum of log probabilities of actions taken in that trajectory**.
 
-**Breaking Down the Trajectory Probability**
-
-In reinforcement learning, a trajectory $\tau = (s_1, a_1, s_2, a_2, \ldots, s_T, a_T)$ is generated through a sequential process. The probability of observing this specific trajectory under policy $\pi_\theta$ comes from the **chain rule of probability**.
-
-**Derivation using Chain Rule:**
+In reinforcement learning, a trajectory $\tau = (s_1, a_1, s_2, a_2, \ldots, s_T, a_T)$ is generated through a sequential process. The probability of observing this specific trajectory under policy $\pi_\theta$ comes from the [**chain rule of probability**](https://en.wikipedia.org/wiki/Chain_rule_(probability)).
 
 The joint probability of a sequence of events can be factored as:
 $$P(s_1, a_1, s_2, a_2, \ldots, s_T, a_T) = P(s_1) \cdot P(a_1|s_1) \cdot P(s_2|s_1, a_1) \cdot P(a_2|s_1, a_1, s_2) \cdots$$
@@ -904,15 +896,13 @@ $$\underbrace{p(s_1) \prod_{t=1}^{T} \pi_\theta(a_t|s_t)p(s_{t+1}|s_t, a_t)}_{\p
 - $\pi_\theta(a_t\|s_t)$: Policy probability of choosing action $a_t$ in state $s_t$
 - $p(s_{t+1}\|s_t, a_t)$: Environment transition probability (environment dependent)
 
-**Taking the Logarithm**
-
 When we take the log of a product, it becomes a sum:
 
 $$\log \pi_\theta(\tau) = \log p(s_1) + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \sum_{t=1}^{T} \log p(s_{t+1}|s_t, a_t)$$
 
-**Key Insight: What Depends on $\theta$?**
+**What Depends on $\theta$?**
 
-The first and last terms do not depend on $\theta$ and can be removed when taking gradients:
+The first and last terms do not depend on $\theta$ and can be removed when taking gradients(and this is often done in practice):
 
 - $\log p(s_1)$: Initial state is determined by environment, not our policy
 - $\log p(s_{t+1}\|s_t, a_t)$: Environment dynamics don't depend on our policy parameters
@@ -921,12 +911,8 @@ $$\nabla_\theta \left[ \log p(s_1) + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \
 
 $$= \nabla_\theta \left[ \cancel{\log p(s_1)} + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \cancel{\sum_{t=1}^{T} \log p(s_{t+1}|s_t, a_t)} \right]$$
 
-**Deriving $\nabla_\theta \log \pi_\theta(\tau)$**
-
 Therefore:
 $$\nabla_\theta \log \pi_\theta(\tau) = \nabla_\theta \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) = \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)$$
-
-**Final Policy Gradient Formula**
 
 So the policy gradient:
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[\nabla_\theta \log \pi_\theta(\tau) R(\tau)]$$
