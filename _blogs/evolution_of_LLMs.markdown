@@ -1,9 +1,9 @@
-<!-- ---
+---
 layout: blog
 title: "Evolution of LLMs"
 date: 2025-05-05 12:00:00 +0530
 categories: [personal, technology]
-image: assets/blog_assets/evolution_of_llms/meme.webp
+image: assets/blog_assets/evolution_of_llms/download.webp
 ---
 
 The landscape of language models(LMs) has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we explore the
@@ -32,13 +32,15 @@ Additionally there have been a lot of innovations in vision modeling, TTS, Image
 
 This blog took significant time, energy and a piece of my health. Hope you enjoy it, consider sharing it if you feel like it can help others. And I am truly grateful to you for taking the time out to read this. Thank you!!!
 
-> NOTE: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
+> Note: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI, Anthropic, Google etc are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
 
 ## The AI timeline
 
 This is a timeline of the most influential work, to read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
 
 The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
+
+| Links post 2017 are broken as it's still work in progress
 
 <details>
 <summary markdown="span">2017</summary>
@@ -232,6 +234,8 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 </div>
 </details>
  <br/>
+
+> Note: I am releasing this blog early as a preview to get feedback from the community. It is still a work in progress and I plan to explain as well as implement each paper from each year. Do let me know your thoughts through my socials, or in the comments below!!!
 
 ## 2017: The Foundation Year
 
@@ -661,8 +665,6 @@ Where:
 
 This is the standard cross-entropy loss function used in classification problems, measuring how well our predicted probabilities match the actual human judgments.
 
-[ADD_CODE]
-
 **The Bradley-Terry Model Connection**
 
 > **Note from Wikipedia:** The Bradley–Terry model is a probability model for the outcome of pairwise comparisons between items, teams, or objects. Given a pair of items $i$ and $j$ drawn from some population, it estimates the probability that the pairwise comparison $i > j$ turns out true, as
@@ -882,15 +884,17 @@ What does this mean for us? If you want to maximize your expected reward, you ca
 
 In reinforcement learning, a trajectory $\tau = (s_1, a_1, s_2, a_2, \ldots, s_T, a_T)$ is generated through a sequential process. The probability of observing this specific trajectory under policy $\pi_\theta$ comes from the [**chain rule of probability**](<https://en.wikipedia.org/wiki/Chain_rule_(probability)>).
 
+| This is quite complex to intuitively understand in my opinion. Consider going through this [stack exchange](https://stats.stackexchange.com/questions/585038/question-for-the-derivation-of-the-probability-of-a-trajectory). <br/> <br/> Intuition: Let's calculate the joint probability of a sequence like $P(\text{sunny weather, white shirt, ice cream})$ - what's the chance it's sunny outside, I'm wearing a white shirt, and I chose to eat ice cream all happening together? <br/> <br/> We can break this down step by step: First, what's the probability it's sunny outside? That's $P(\text{sunny})$. Given that it's sunny, what are the chances I wear a white shirt? That's $P(\text{white shirt \| sunny})$. Finally, given it's sunny and I'm wearing white, what's the probability I eat ice cream? That's $P(\text{ice cream \| sunny, white shirt})$.<br/> <br/> $$P(\text{sunny, white shirt, ice cream}) = P(\text{sunny}) \cdot P(\text{white shirt \| sunny}) \cdot P(\text{ice cream \| sunny, white shirt})$$<br/> <br/> By multiplying these conditional probabilities, we get the full joint probability. In reinforcement learning, trajectories work the same way: $P(s_1, a_1, s_2, a_2, \ldots)$ breaks down into "what state do we start in?" then "what action do we take?" then "where do we transition?" and so on. Each step depends only on what happened before, making complex trajectory probabilities manageable to compute and optimize.
+
 The joint probability of a sequence of events can be factored as:
 $$P(s_1, a_1, s_2, a_2, \ldots, s_T, a_T) = P(s_1) \cdot P(a_1|s_1) \cdot P(s_2|s_1, a_1) \cdot P(a_2|s_1, a_1, s_2) \cdots$$
-
-[WHERE_DO_THESE_ASSUMPTIONS_COME_FROM]
 
 However, in the **Markov Decision Process (MDP) setting**, we have two key assumptions:
 
 1. **Markov Property**: Next state depends only on current state and action: $P(s_{t+1}\|s_1, a_1, \ldots, s_t, a_t) = P(s_{t+1}\|s_t, a_t)$
 2. **Policy Markov Property**: Action depends only on current state: $P(a_t\|s_1, a_1, \ldots, s_t) = \pi_\theta(a_t\|s_t)$
+
+| Chapter 3 of [RL book by Sutton and Barto](http://incompleteideas.net/book/RLbook2020.pdf) covers the topic well
 
 Applying these assumptions:
 
@@ -905,8 +909,6 @@ $$\underbrace{p(s_1) \prod_{t=1}^{T} \pi_\theta(a_t|s_t)p(s_{t+1}|s_t, a_t)}_{\p
 When we take the log of a product, it becomes a sum:
 
 $$\log \pi_\theta(\tau) = \log p(s_1) + \sum_{t=1}^{T} \log \pi_\theta(a_t|s_t) + \sum_{t=1}^{T} \log p(s_{t+1}|s_t, a_t)$$
-
-**What Depends on $\theta$?**
 
 The first and last terms do not depend on $\theta$ and can be removed when taking gradients(and this is often done in practice):
 
@@ -964,8 +966,6 @@ Where:
 - $t$ indexes time steps within each trajectory ($1$ to $T$)
 - $(s_{i,t}, a_{i,t})$ is the state-action pair at time $t$ in trajectory $i$
 
-**What This Means**
-
 The elegant result is that we only need gradients of our policy's action probabilities - the environment dynamics completely disappear from our gradient computation! This makes policy gradients model-free and widely applicable.
 
 And we use this policy gradient to update the policy $\theta$.
@@ -990,8 +990,7 @@ The elegant solution is to make our neural network output **parameters of a prob
 
 Here's how it works:
 
-Instead of: $\pi_\theta(a_t\|s_t) = \text{[probability for each discrete action]}$
-
+Instead of: $\pi_\theta(a_t\|s_t) = \text{[probability for each discrete action]}$ <br/>
 We use: $\pi_\theta(a_t\|s_t) = \mathcal{N}(f_{\text{neural network}}(s_t); \Sigma)$
 
 Let's break it down:
@@ -1001,9 +1000,7 @@ Let's break it down:
 3. **Choose a covariance matrix** $\Sigma$ - this controls how much exploration/uncertainty around that mean
 4. **Sample the actual action** from the Gaussian: $a_t \sim \mathcal{N}(\mu, \Sigma)$
 
-**The Mathematics**
-
-Now here comes the beautiful part. Remember our policy gradient formula?
+Now comes the amazing part. Remember our policy gradient formula?
 
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) R(\tau)\right]$$
 
@@ -1062,7 +1059,7 @@ When you collect experience and compute rewards, here's what happens:
 Our policy gradient update remains:
 $$\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$$
 
-The **only difference** is how we compute $\nabla_\theta \log \pi_\theta(a_t|s_t)$:
+The **only difference** is how we compute $\nabla_\theta \log \pi_\theta(a_t\|s_t)$:
 
 - **Discrete case**: Gradient of softmax probabilities
 - **Continuous case**: Gradient of Gaussian log-likelihood (what we just derived!)
@@ -1076,7 +1073,8 @@ There are two methods in which RL is trained
 1. Monte Carlo Learning: Cummulative reward of the entire episode (Entire run of the enviorment)
 2. Temporal Difference Learning: Reward is used to update policy in every step
 
-[Add_IMAGE]
+![Image of MC vs TD](/assets/blog_assets/evolution_of_llms/mc_vs_td.webp)
+*Image taken from [Reinforcement Learning and Bandits for Speech and Language Processing: Tutorial, Review and Outlook](https://www.researchgate.net/publication/364732848_Reinforcement_Learning_and_Bandits_for_Speech_and_Language_Processing_Tutorial_Review_and_Outlook)*
 
 Policy Gradient (PG) uses MC this causes it to have low bias (Expected reward is close to actual reward, as the same policy is used throughout the run) but high variance (Some runs produce great results, some really bad).
 
@@ -1202,7 +1200,7 @@ The expectation $\mathbb{E}_{\tau \sim \pi_\theta}$ means we must sample traject
 
 **Importance Sampling**
 
-What if we could reuse old data to estimate the performance of our new policy? This is exactly what importance sampling enables. The core idea is beautifully simple:
+What if we could reuse old data to estimate the performance of our new policy? This is exactly what [importance sampling](https://stats.stackexchange.com/questions/254114/what-is-importance-sampling) enables. The core idea is beautifully simple:
 
 | **If you want to compute an expectation under distribution p, but you have samples from distribution q, you can reweight the samples by the ratio p/q.**
 
@@ -1286,8 +1284,6 @@ Can we guarantee that any policy update always improves the expected rewards? Th
 
 The MM idea: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
 
-How MM Works
-
 The MM algorithm follows this iterative process:
 
 1. **Find a lower bound** M that approximates the expected reward η locally at the current guess θ_i
@@ -1300,9 +1296,6 @@ For this to work, M must be:
 - **Tight at current point**: M(θ_i) = η(θ_i)
 - **Easier to optimize**: M should be simpler than η (typically quadratic)
 
-![Image of Minorize Maximization algorithm](/assets/blog_assets/evolution_of_llms/9.webp)
-_Image taken from [RL — Trust Region Policy Optimization (TRPO) Explained](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)_
-
 The lower bound function has the form:
 $M(\theta) = g \cdot (\theta - \theta_{old}) - \frac{1}{2}(\theta - \theta_{old})^T F (\theta - \theta_{old})$
 
@@ -1311,7 +1304,9 @@ This is a quadratic approximation where:
 - g is the gradient at θ_old
 - F is a positive definite matrix (often related to the Hessian)
 
-**Why MM Guarantees Improvement**
+![Image of Minorize Maximization algorithm](/assets/blog_assets/evolution_of_llms/9.webp)
+_Image taken from [RL — Trust Region Policy Optimization (TRPO) Explained](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)_
+
 
 If M is a lower bound that never crosses η, then maximizing M must improve η.
 
@@ -1373,7 +1368,7 @@ $$\mathbb{E}_{p(x)}[f(x)] \approx \frac{1}{N} \sum_i \frac{p(x_i)}{q(x_i)} f(x_i
 The optimal sampling distribution that minimizes variance is:
 $$q^*(x) \propto p(x)|f(x)|$$
 
-Intuitive interpretation: Sample more frequently where the function value |f(x)| is large. This concentrates samples where they have the most impact on the expectation.
+Intuitive interpretation: Sample more frequently where the function value \|f(x)\| is large. This concentrates samples where they have the most impact on the expectation.
 
 In many ML applications, we only know unnormalized distributions. For unnormalized distribution $\tilde{p}(x) = p(x) \cdot Z$ where Z is unknown:
 
@@ -1406,15 +1401,6 @@ Math Notation Reference
 | $\delta$                                                                    | Trust region radius                                 |
 | $F$                                                                         | Positive definite matrix (approximating curvature)  |
 | $g$                                                                         | Policy gradient vector                              |
-| $\mathcal{L}_\pi(\pi')$                                                     | Lower bound function using importance sampling      |
-| $D_{KL}(\pi'\|\|\pi)$                                                       | KL divergence between policies                      |
-| $d^\pi(s)$                                                                  | Discounted state visitation distribution            |
-| $F$                                                                         | Fisher Information Matrix                           |
-| $C$                                                                         | Penalty coefficient for KL divergence               |
-| $r_t(\theta)$                                                               | PPO importance sampling ratio                       |
-| $\epsilon$                                                                  | PPO clipping parameter                              |
-| $\mathcal{L}^{CLIP}(\theta)$                                                | PPO clipped objective function                      |
-| $\beta$                                                                     | Adaptive KL penalty coefficient                     |
 
 **TRPO**
 
@@ -1434,7 +1420,7 @@ This is mathematically equivalent but conceptually important - we're explicitly 
 
 To apply the MM algorithm, TRPO constructs a lower bound function ℒ that uses importance sampling:
 
-$\mathcal{L}_\pi(\pi') = \frac{1}{1-\gamma} \mathbb{E}_{s\sim d^\pi} \left[ \frac{\pi'(a|s)}{\pi(a|s)} A^\pi(s,a) \right]$
+$$\mathcal{L}_\pi(\pi') = \frac{1}{1-\gamma} \mathbb{E}_{s\sim d^\pi} \left[ \frac{\pi'(a|s)}{\pi(a|s)} A^\pi(s,a) \right]$$
 
 where:
 
@@ -1443,9 +1429,9 @@ where:
 
 This function uses importance sampling to estimate how well policy π' would perform using data collected from policy π.
 
-The theoretical foundation comes from this crucial bound (proven in the TRPO paper):
+The theoretical foundation comes from this crucial bound (proven in Appendix 2 of the [TRPO paper](https://arxiv.org/pdf/1502.05477)):
 
-$J(\pi') - J(\pi) \geq \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]]}$
+$$J(\pi') - J(\pi) \geq \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi' \| \pi)[s]]}$$
 
 This tells us:
 
@@ -1457,11 +1443,11 @@ The penalty term grows with KL divergence, so the bound becomes loose when polic
 TRPO can be formulated in two mathematically equivalent ways:
 
 **KL-Penalized (Unconstrained):**
-$\max_{\pi'} \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]]}$
+$$\max_{\pi'} \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi' \| \pi)[s]]}$$
 
 **KL-Constrained:**
-$\max_{\pi'} \mathcal{L}_\pi(\pi')$
-$\text{subject to } \mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]] \leq \delta$
+$$\max_{\pi'} \mathcal{L}_\pi(\pi')$$
+$$\text{subject to } \mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]] \leq \delta$$
 
 In practice, the constrained version is preferred because:
 
@@ -2007,7 +1993,11 @@ The path from this 2017 paper to modern LLMs shows how foundational ideas can ha
 Today's largest language models increasingly rely on MoE architectures, making this paper's contributions more relevant than ever. The ability to scale to trillion-parameter models while maintaining reasonable training costs has become essential for pushing the boundaries of AI capabilities.
 
 """
+## WORK IN PROGRESS NOTICE
 
+> Rest of the sections from 2018-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
+
+<!-- 
 ## 2018: BERT and Early Innovations
 
 ### ULMFiT
