@@ -1465,22 +1465,22 @@ If we:
 2. **Constrain** KL divergence to be small
 3. **Ensure** ℒ_π(π) = 0 (which is always true when π' = π)
 
-Then ℒ_π(π') ≥ 0 implies J(π') ≥ J(π) ✓
+Then $\mathcal{L}_\pi(\pi') \geq 0$ implies $J(\pi') \geq J(\pi)$ ✓
 
 > **TRPO's guarantee: Every policy update improves performance or leaves it unchanged. We never move backwards.**
 
 Think of TRPO this way:
 
-1. **Sample trajectories** with current policy π
-2. **Estimate** how well any nearby policy π' would do on these same trajectories (importance sampling)
+1. **Sample trajectories** with current policy $\pi$
+2. **Estimate** how well any nearby policy $\pi'$ would do on these same trajectories (importance sampling)
 3. **Find the best** nearby policy within our trust region (constrained optimization)
 4. **Verify** the policy is actually better before committing (safety check)
 
 The trust region ensures our importance sampling estimates remain accurate, while the MM algorithm structure guarantees we always improve.
 
 The constrained optimization problem:
-$\max_{\pi'} \mathcal{L}_\pi(\pi')$
-$\text{subject to } \mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]] \leq \delta$
+$$\max_{\pi'} \mathcal{L}_\pi(\pi')$$
+$$\text{subject to } \mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]] \leq \delta$$
 
 Can be solved using a Taylor expansion around the current policy. This leads to the **Natural Policy Gradient** update:
 
@@ -1496,7 +1496,7 @@ where:
 
 The Natural Policy Gradient requires computing F^(-1)g, but inverting the Fisher Information Matrix is computationally expensive for large neural networks:
 
-$F = \mathbb{E}_{s,a \sim \pi_k} \left[ \nabla_\theta \log \pi_\theta(a|s) \nabla_\theta \log \pi_\theta(a|s)^T \right]$
+$$F = \mathbb{E}_{s,a \sim \pi_k} \left[ \nabla_\theta \log \pi_\theta(a|s) \nabla_\theta \log \pi_\theta(a|s)^T \right]$$
 
 For modern deep networks with millions of parameters, this matrix is huge and inverting it is prohibitive.
 
@@ -1573,7 +1573,7 @@ $\mathcal{L}^{CLIP}(\theta) = \mathbb{E}_t \left[ \min \left( r_t(\theta) \hat{A
 
 where:
 
-- $r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$ is the importance sampling ratio
+- $r_t(\theta) = \frac{\pi_\theta(a_t\|s_t)}{\pi_{\theta_{old}}(a_t\|s_t)}$ is the importance sampling ratio
 - $\hat{A}_t$ is the advantage estimate
 - $\epsilon$ is the clipping parameter (typically 0.2)
 
@@ -1586,8 +1586,8 @@ Two Network Architecture
 
 PPO maintains two policy networks:
 
-1. **Current Policy** $\pi_\theta(a|s)$ - being optimized
-2. **Old Policy** $\pi_{\theta_k}(a|s)$ - used for importance sampling (fixed during optimization)
+1. **Current Policy** $\pi_\theta(a\|s)$ - being optimized
+2. **Old Policy** $\pi_{\theta_k}(a\|s)$ - used for importance sampling (fixed during optimization)
 
 This separation enables:
 
@@ -1610,7 +1610,7 @@ PPO with Adaptive KL Penalty
 
 Before the clipped version, PPO used an adaptive penalty approach:
 
-$\mathcal{L}^{KLPEN}(\theta) = \mathbb{E}_t \left[ \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)} \hat{A}_t - \beta \text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)] \right]$
+$$\mathcal{L}^{KLPEN}(\theta) = \mathbb{E}_t \left[ \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)} \hat{A}_t - \beta \text{KL}[\pi_{\theta_{old}}(\cdot|s_t), \pi_\theta(\cdot|s_t)] \right]$$
 
 **Adaptive mechanism:**
 
