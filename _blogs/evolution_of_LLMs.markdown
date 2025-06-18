@@ -239,7 +239,8 @@ The blog ["Transformer models: an introduction and catalog — 2023 Edition"
 
 ![Image of attention is all you need abstract](/assets/blog_assets/evolution_of_llms/transformers_abstract.webp)
 
-> Link to paper: [Attention is all you need](https://arxiv.org/abs/1706.03762)
+> Link to paper: [Attention is all you need](https://arxiv.org/abs/1706.03762) <br/>
+> Link to implementation: [WORK IN PROGRESS]
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -499,7 +500,8 @@ While the original Transformer showed the power of attention-based training, it 
 
 ![Image of RLHF abstract](/assets/blog_assets/evolution_of_llms/rlhf_abstract.pdf.webp)
 
-> Link to paper: [Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741)
+> Link to paper: [Deep reinforcement learning from human preferences](https://arxiv.org/abs/1706.03741) <br/>
+> Link to implementation: [WORK IN PROGRESS]
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -687,7 +689,8 @@ This comparative approach scales much better than rating individual responses, m
 
 ![Image of ppo abstract](/assets/blog_assets/evolution_of_llms/ppo_abstract.pdf.webp)
 
-> Link to paper: [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347)
+> Link to paper: [Proximal Policy Optimization Algorithms](https://arxiv.org/abs/1707.06347) <br/>
+> Link to implementation: [WORK IN PROGRESS]
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -736,6 +739,7 @@ The following blogs & articles helped me write this section
 - [RL blogs by jonathan hui](https://jonathan-hui.medium.com/rl-deep-reinforcement-learning-series-833319a95530), they really simplified the ideas for me
 - [Understanding Policy Gradients](https://johnwlambert.github.io/policy-gradients/), this blog really helped me understand the math behind the idea
 - [These](https://karpathy.github.io/2016/05/31/rl/) [blogs](https://cameronrwolfe.substack.com/p/proximal-policy-optimization-ppo) [were](https://huggingface.co/blog/NormalUhr/rlhf-pipeline) [extremely](https://lilianweng.github.io/posts/2018-04-08-policy-gradient/) [helpful](https://iclr-blogposts.github.io/2024/blog/the-n-implementation-details-of-rlhf-with-ppo/) [too](https://iclr-blog-track.github.io/2022/03/25/ppo-implementation-details/) (each word is a different link)
+- The [bible](http://incompleteideas.net/book/the-book-2nd.html) of modern RL
 
 ##### What is Reinforcement Learning
 
@@ -876,10 +880,12 @@ $$\log \pi_\theta(\tau) = \sum_{t=0}^{T} \log \pi_\theta(a_t|s_t)$$
 
 What does this mean for us? If you want to maximize your expected reward, you can use gradient ascent. The gradient of the expected reward has an elegant form - it's simply **the expectation of the trajectory return times the sum of log probabilities of actions taken in that trajectory**.
 
-In reinforcement learning, a trajectory $\tau = (s_1, a_1, s_2, a_2, \ldots, s_T, a_T)$ is generated through a sequential process. The probability of observing this specific trajectory under policy $\pi_\theta$ comes from the [**chain rule of probability**](https://en.wikipedia.org/wiki/Chain_rule_(probability)).
+In reinforcement learning, a trajectory $\tau = (s_1, a_1, s_2, a_2, \ldots, s_T, a_T)$ is generated through a sequential process. The probability of observing this specific trajectory under policy $\pi_\theta$ comes from the [**chain rule of probability**](<https://en.wikipedia.org/wiki/Chain_rule_(probability)>).
 
 The joint probability of a sequence of events can be factored as:
 $$P(s_1, a_1, s_2, a_2, \ldots, s_T, a_T) = P(s_1) \cdot P(a_1|s_1) \cdot P(s_2|s_1, a_1) \cdot P(a_2|s_1, a_1, s_2) \cdots$$
+
+[WHERE_DO_THESE_ASSUMPTIONS_COME_FROM]
 
 However, in the **Markov Decision Process (MDP) setting**, we have two key assumptions:
 
@@ -920,36 +926,29 @@ $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}[\nabla_\theta \log
 becomes:
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) R(\tau)\right]$$
 
-**Practical Implementation**
-
-We derived the theoretical policy gradient as:
-$$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) R(\tau)\right]$$
-
-**Step 1: What is $R(\tau)$?**
-
 The trajectory return $R(\tau)$ is the total reward collected along the trajectory:
 $$R(\tau) = \sum_{t=1}^{T} r(s_t, a_t)$$
 
 So our gradient becomes:
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t\|s_t)\right) \left(\sum_{t=1}^{T} r(s_t, a_t)\right)\right]$$
 
-**Step 2: How do we compute expectations in practice?**
+**How do we compute expectations in practice?**
 
-We can't compute the expectation $\mathbb{E}_{\tau \sim \pi_\theta}[\cdot]$ analytically because:
+We can't compute the expectation $\mathbb{E}_{\tau \sim \pi{\theta}}[\cdot]$ analytically because:
 
 - There are infinitely many possible trajectories
 - We don't know the environment dynamics $p(s_{t+1}\|s_t, a_t)$
 
-Instead, we use **Monte Carlo sampling**:
+Instead, we use [**Monte Carlo sampling**](https://en.wikipedia.org/wiki/Monte_Carlo_method):
 
 1. Collect $N$ sample trajectories by running our current policy: $\{\tau_1, \tau_2, \ldots, \tau_N\}$
 2. Approximate the expectation using the sample average:
 
 $$\mathbb{E}_{\tau \sim \pi_\theta}[f(\tau)] \approx \frac{1}{N} \sum_{i=1}^{N} f(\tau_i)$$
 
-**Step 3: Applying Monte Carlo approximation**
+**Applying Monte Carlo approximation**
 
-This is a fabulous [video](https://www.youtube.com/watch?v=7ESK5SaP-bc&ab_channel=MarbleScience) to understand Monte Carlo approcimation.
+This is a fabulous [video](https://www.youtube.com/watch?v=7ESK5SaP-bc&ab_channel=MarbleScience) to understand Monte Carlo approximation.
 
 Substituting our specific function:
 $$f(\tau) = \left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) \left(\sum_{t=1}^{T} r(s_t, a_t)\right)$$
@@ -973,13 +972,9 @@ And we use this policy gradient to update the policy $\theta$.
 
 To get an intuition behind the idea consider reading the intuition part of this [blog](https://jonathan-hui.medium.com/rl-policy-gradients-explained-9b13b688b146).
 
-"""
-
-[STILL_DOESNT_MAKE_SENSE_TO_ME]
-
 **Policy Gradient for Continuous Space**
 
-So far, we've been working with discrete action spaces - think Atari games where you can move left, move right, or press A to shoot. But what happens when your agent needs to control a robot arm, steer a car, or even select the "best" next token in language model fine-tuning? Welcome to the world of continuous control!
+So far, we've been working with discrete action spaces, like our super mad bot game where you can move left, move right, or press A to shoot. But what happens when your agent needs to control a robot arm, steer a car, or even select the "best" next token in language model fine-tuning? Welcome to the world of continuous control!
 
 **The Problem with Discrete Thinking**
 
@@ -989,17 +984,15 @@ In discrete spaces, our policy outputs probabilities for each possible action:
 - Move right: 45%
 - Shoot: 25%
 
-But in continuous spaces, actions are real numbers. Imagine trying to control a robot arm where the joint angle can be any value between -180° and +180°. You can't enumerate probabilities for every possible angle - there are infinitely many!
+But in continuous spaces, actions are real numbers. Imagine trying to control a robot arm where the joint angle can be any value between -180° and +180°. You can't enumerate probabilities for every possible angle, there are infinitely many! (like in real numbers, you cannot even count the numbers present between 179 and 180... Where do you even begin?)
 
-**Enter Gaussian Policies**
-
-The elegant solution is to make our neural network output **parameters of a probability distribution** instead of individual action probabilities. Specifically, we use a Gaussian (normal) distribution.
+The elegant solution is to make our neural network output **parameters of a probability distribution** (eg mean and standard deviation of a [normal distribution](https://en.wikipedia.org/wiki/Normal_distribution)) instead of individual action probabilities. Specifically, we use a Gaussian (normal) distribution.
 
 Here's how it works:
 
-Instead of: $\pi_\theta(a_t|s_t) = \text{[probability for each discrete action]}$
+Instead of: $\pi_\theta(a_t\|s_t) = \text{[probability for each discrete action]}$
 
-We use: $\pi_\theta(a_t|s_t) = \mathcal{N}(f_{\text{neural network}}(s_t); \Sigma)$
+We use: $\pi_\theta(a_t\|s_t) = \mathcal{N}(f_{\text{neural network}}(s_t); \Sigma)$
 
 Let's break it down:
 
@@ -1014,19 +1007,17 @@ Now here comes the beautiful part. Remember our policy gradient formula?
 
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\left(\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t)\right) R(\tau)\right]$$
 
-The **exact same formula still applies!** We just need to compute $\nabla_\theta \log \pi_\theta(a_t|s_t)$ differently.
+The **exact same formula still applies!** We just need to compute $\nabla_\theta \log \pi_\theta(a_t\|s_t)$ differently.
 
-**Understanding the Gaussian Distribution**
-
-Let's start with what a Gaussian distribution actually looks like. For continuous actions, we assume they follow this probability density function:
+Let's start with what a [Multivariant Gaussian distribution](https://en.wikipedia.org/wiki/Multivariate_normal_distribution) actually looks like. For continuous actions, we assume they follow this probability density function:
 
 $$f(x) = \frac{1}{(2\pi)^{d/2} |\Sigma|^{1/2}} \exp\left\{-\frac{1}{2}(x - \mu)^T \Sigma^{-1} (x - \mu)\right\}$$
 
 This looks scary, but it's just the mathematical way of saying: "actions are most likely to be near the mean $\mu$, with spread determined by covariance $\Sigma$."
 
-**Computing the Log Policy**
+(To understand where this idea comes from, read [13.7](http://incompleteideas.net/book/RLbook2020.pdf) from RL by Sutton and Barton)
 
-Now, since our policy $\pi_\theta(a_t|s_t) = \mathcal{N}(f_{\text{neural network}}(s_t); \Sigma)$, we have:
+Now, since our policy $\pi_\theta(a_t\|s_t) = \mathcal{N}(f_{\text{neural network}}(s_t); \Sigma)$, we have:
 
 $$\log \pi_\theta(a_t|s_t) = \log f(a_t)$$
 
@@ -1046,7 +1037,7 @@ Since $\mu = f_{\text{neural network}}(s_t)$, we can rewrite this as:
 
 $$\log \pi_\theta(a_t|s_t) = -\frac{1}{2}||f(s_t) - a_t||^2_\Sigma + \text{const}$$
 
-**Taking the Gradient**
+Both the above equations are the same, it's just a shorthand of writing it this way. It is also known as [Mahalanobis distance](https://en.wikipedia.org/wiki/Mahalanobis_distance) squared.
 
 Now we can compute the gradient with respect to our network parameters $\theta$:
 
@@ -1056,15 +1047,11 @@ Using the chain rule:
 
 $$\nabla_\theta \log \pi_\theta(a_t|s_t) = -\frac{1}{2} \Sigma^{-1}(f(s_t) - a_t) \frac{df}{d\theta}$$
 
-**What Does This Gradient Mean?**
-
 This gradient has a beautiful intuitive interpretation:
 
 - **$(f(s_t) - a_t)$**: The difference between what your network predicted and the action you actually took
 - **$\frac{df}{d\theta}$**: How to change the network parameters to affect the output
 - **$\Sigma^{-1}$**: Weighting factor (less weight for high-variance directions)
-
-**The Learning Process**
 
 When you collect experience and compute rewards, here's what happens:
 
@@ -1072,9 +1059,7 @@ When you collect experience and compute rewards, here's what happens:
 2. **Bad action taken** ($R(\tau) < 0$): The gradient pushes $f(s_t)$ away from the bad action $a_t$
 3. **Standard backpropagation**: This gradient flows back through the network to update $\theta$
 
-**Why "Exactly the Same Algorithm"?**
-
-The beauty is that our policy gradient update remains:
+Our policy gradient update remains:
 $$\theta \leftarrow \theta + \alpha \nabla_\theta J(\theta)$$
 
 The **only difference** is how we compute $\nabla_\theta \log \pi_\theta(a_t|s_t)$:
@@ -1083,7 +1068,6 @@ The **only difference** is how we compute $\nabla_\theta \log \pi_\theta(a_t|s_t
 - **Continuous case**: Gradient of Gaussian log-likelihood (what we just derived!)
 
 Everything else stays identical - collect trajectories, compute returns, update parameters. The same core algorithm seamlessly handles both discrete and continuous control problems!
-"""
 
 **Policy Gradient Improvements**
 
@@ -1096,11 +1080,7 @@ There are two methods in which RL is trained
 
 Policy Gradient (PG) uses MC this causes it to have low bias (Expected reward is close to actual reward, as the same policy is used throughout the run) but high variance (Some runs produce great results, some really bad).
 
-"""
-Variance hurts deep learning optimization. The variance provides conflicting descent direction for the model to learn. One sampled rewards may want to increase the log likelihood and another may want to decrease it. This hurts the convergence. To reduce the variance caused by actions, we want to reduce the variance for the sampled rewards.
-"""
-
-**Recall: Our Current Policy Gradient**
+| A [stack exchange](https://ai.stackexchange.com/questions/22118/what-is-the-bias-variance-trade-off-in-reinforcement-learning) on bias & variance in RL
 
 Remember, our policy gradient formula is:
 
@@ -1121,9 +1101,7 @@ $$\nabla_\theta [f(\theta) - c] = \nabla_\theta f(\theta) - \nabla_\theta c = \n
 
 So instead of using $Q(s,a)$ directly, we can use $Q(s,a) - V(s)$, where $V(s)$ is some baseline function.
 
-**What Should Our Baseline Be?**
-
-The most natural choice is $V(s) =$ **the expected reward from state $s$** (called the value function). This represents "how good is this state on average?"
+The most natural choice for baseline is $V(s) =$ **the expected reward from state $s$** (The value function). This represents "how good is this state on average?"
 
 Our new gradient becomes:
 $$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \cdot (Q(s_{i,t}, a_{i,t}) - V(s_{i,t}))$$
@@ -1191,11 +1169,11 @@ Where:
 - $\gamma = 1$: All future rewards are equally important
 - $\gamma \approx 0.99$: Common choice that slightly prioritizes near-term rewards
 
-**The corresponding objective function becomes:**
+The corresponding objective function becomes:
 
 $$\nabla_\theta J(\theta) \approx \frac{1}{N} \sum_{i=1}^{N} \sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_{i,t}|s_{i,t}) \left(\sum_{t'=t}^{T} \gamma^{t'-t} r(s_{i,t'}, a_{i,t'})\right)$$
 
-**Why Discounting Helps:**
+Why Discounting Helps:
 
 - **Reduces variance**: Distant rewards have less influence, so random events far in the future don't dominate the gradient
 - **Focuses learning**: The agent learns to optimize for more predictable, near-term outcomes
@@ -1227,8 +1205,6 @@ The expectation $\mathbb{E}_{\tau \sim \pi_\theta}$ means we must sample traject
 What if we could reuse old data to estimate the performance of our new policy? This is exactly what importance sampling enables. The core idea is beautifully simple:
 
 | **If you want to compute an expectation under distribution p, but you have samples from distribution q, you can reweight the samples by the ratio p/q.**
-
-**The Maths**
 
 For any function f(x), the expectation under distribution p can be computed as:
 
@@ -1266,7 +1242,6 @@ $$\mathbb{E}_{\tau \sim \pi_\theta}[f(\tau)]$$
 We can use:
 
 $$\mathbb{E}_{\tau \sim \pi_{\theta_{old}}}\left[\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} f(\tau)\right]$$
-
 
 Remember that trajectory probabilities factor as:
 $$\pi_\theta(\tau) = \prod_{t=1}^{T} \pi_\theta(a_t\|s_t) \cdot p(s_{t+1}\|s_t, a_t)$$
@@ -1309,9 +1284,9 @@ But how do we guarantee that our policy updates always improve performance? This
 
 Can we guarantee that any policy update always improves the expected rewards? This seems impossible, but it's theoretically achievable through the MM algorithm.
 
-**The MM idea**: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
+The MM idea: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
 
-**How MM Works**
+How MM Works
 
 The MM algorithm follows this iterative process:
 
@@ -1325,11 +1300,8 @@ For this to work, M must be:
 - **Tight at current point**: M(θ_i) = η(θ_i)
 - **Easier to optimize**: M should be simpler than η (typically quadratic)
 
-**The Maths**
-
-
-![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/9.webp)
-*Image taken from [RL — Trust Region Policy Optimization (TRPO) Explained](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)*
+![Image of Minorize Maximization algorithm](/assets/blog_assets/evolution_of_llms/9.webp)
+_Image taken from [RL — Trust Region Policy Optimization (TRPO) Explained](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)_
 
 The lower bound function has the form:
 $M(\theta) = g \cdot (\theta - \theta_{old}) - \frac{1}{2}(\theta - \theta_{old})^T F (\theta - \theta_{old})$
@@ -1386,9 +1358,7 @@ In reinforcement learning, trust regions serve a dual purpose:
 
 When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
 
-
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/line_search_vs_trust_region.webp)
-
 
 **Optimal Importance Sampling**
 
@@ -1448,7 +1418,6 @@ Math Notation Reference
 | $\mathcal{L}^{CLIP}(\theta)$                                                | PPO clipped objective function                      |
 | $\beta$                                                                     | Adaptive KL penalty coefficient                     |
 
-
 **TRPO**
 
 Now we can finally understand how TRPO elegantly combines all the concepts we've explored:
@@ -1475,7 +1444,6 @@ where:
 - $A^\pi(s,a)$ is the advantage function under policy π
 
 This function uses importance sampling to estimate how well policy π' would perform using data collected from policy π.
-
 
 The theoretical foundation comes from this crucial bound (proven in the TRPO paper):
 
@@ -1797,7 +1765,8 @@ Policy based approach seem to work great and are intuitive as well, given a stat
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/moe_abstract.webp)
 
-> Link to paper: [Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538)
+> Link to paper: [Outrageously Large Neural Networks: The Sparsely-Gated Mixture-of-Experts Layer](https://arxiv.org/abs/1701.06538) <br/>
+> Link to implementation: [WORK IN PROGRESS]
 
 <details>
 <summary markdown="span">Quick Summary</summary>
