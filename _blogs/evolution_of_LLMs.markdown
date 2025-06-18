@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: "Evolution of LLMs"
-date: 2025-05-05 12:00:00 +0530
+date: 2025-06-18 12:00:00 +0530
 categories: [personal, technology]
 image: assets/blog_assets/evolution_of_llms/download.webp
 ---
