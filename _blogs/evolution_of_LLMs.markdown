@@ -1331,6 +1331,8 @@ There are two major optimization paradigms:
 1. **Line Search** (like gradient descent): Choose direction first, then step size
 2. **Trust Region**: Choose maximum step size first, then find optimal point within that region
 
+![Image of Line search vs Trust Region](/assets/blog_assets/evolution_of_llms/line_search_vs_trust_region.webp)
+
 In trust region methods, we:
 
 1. **Define a trust region** of radius δ around current policy θ_old
@@ -1358,8 +1360,6 @@ In reinforcement learning, trust regions serve a dual purpose:
 
 When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
 
-![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/line_search_vs_trust_region.webp)
-
 **Optimal Importance Sampling**
 
 Before diving into TRPO, let's understand what makes importance sampling work best. The accuracy of our expected value estimate increases with more samples, but what's the optimal sampling distribution?
@@ -1370,12 +1370,10 @@ $$\mathbb{E}_{p(x)}[f(x)]$$
 Using importance sampling with distribution q:
 $$\mathbb{E}_{p(x)}[f(x)] \approx \frac{1}{N} \sum_i \frac{p(x_i)}{q(x_i)} f(x_i)$$
 
-**The optimal sampling distribution that minimizes variance is:**
+The optimal sampling distribution that minimizes variance is:
 $$q^*(x) \propto p(x)|f(x)|$$
 
-**Intuitive interpretation**: Sample more frequently where the function value |f(x)| is large. This concentrates samples where they have the most impact on the expectation.
-
-Normalized vs Unnormalized Importance Sampling
+Intuitive interpretation: Sample more frequently where the function value |f(x)| is large. This concentrates samples where they have the most impact on the expectation.
 
 In many ML applications, we only know unnormalized distributions. For unnormalized distribution $\tilde{p}(x) = p(x) \cdot Z$ where Z is unknown:
 
@@ -1510,8 +1508,6 @@ where:
 
 **Why "Natural"?** Unlike vanilla gradient descent which uses Euclidean distance in parameter space, the natural gradient uses the Fisher Information Matrix to measure distance in the space of probability distributions. This makes the updates invariant to how we parameterize the policy.
 
-**The Fisher Information Matrix Challenge**
-
 The Natural Policy Gradient requires computing F^(-1)g, but inverting the Fisher Information Matrix is computationally expensive for large neural networks:
 
 $F = \mathbb{E}_{s,a \sim \pi_k} \left[ \nabla_\theta \log \pi_\theta(a|s) \nabla_\theta \log \pi_\theta(a|s)^T \right]$
@@ -1583,11 +1579,7 @@ As the PPO paper noted: _"Q-learning (with function approximation) fails on many
 
 PPO takes a fundamentally different approach - instead of rigorously enforcing trust region constraints, it uses a **soft penalty** that can be optimized with standard first-order methods like Adam.
 
-**Core insight**: We can tolerate occasional "bad" policy updates if we make the algorithm simple enough to run many iterations quickly and robustly.
-
-PPO Algorithm Design
-
-The Clipped Objective Function
+**Core idea**: We can tolerate occasional "bad" policy updates if we make the algorithm simple enough to run many iterations quickly and robustly.
 
 PPO's key innovation is the **clipped surrogate objective** that directly constrains the importance sampling ratio:
 
@@ -1627,8 +1619,6 @@ PPO vs TRPO: Key Differences
 | **Implementation**        | Complex                        | Simple                 |
 | **Computational Cost**    | High                           | Low                    |
 | **Robustness**            | Sensitive to hyperparameters   | More robust            |
-
-PPO Implementation Variants
 
 PPO with Adaptive KL Penalty
 
@@ -1704,8 +1694,7 @@ for epoch in range(ppo_epochs):  # Typically 3-10 epochs
 4. Easy Implementation
    A complete PPO implementation requires only ~100 lines of code, compared to TRPO's significantly more complex implementation.
 
-PPO in Practice: Why It Dominates
-
+PPO in Practice: Why It Dominate
 PPO has become the default choice for policy gradient methods because it strikes an optimal balance:
 
 **Theoretical Foundation**: Inherits TRPO's trust region insights
@@ -1722,8 +1711,6 @@ PPO powers many state-of-the-art systems:
 - **Game AI**: Dota 2, StarCraft II agents
 - **Robotics**: Real-world robot control
 - **Autonomous systems**: Self-driving cars, drones
-
-Conclusion: The Evolution of Policy Optimization
 
 The journey from vanilla policy gradients to PPO illustrates a key principle in machine learning: **practical simplicity often trumps theoretical complexity**.
 
@@ -1744,8 +1731,6 @@ PPO succeeds because it:
 The story of importance sampling in RL demonstrates how theoretical understanding leads to practical breakthroughs. By deeply understanding why and how importance sampling works, we can build algorithms that are both principled and practical - the hallmark of great machine learning systems.
 
 While PPO has largely replaced TRPO in practice, understanding TRPO provides crucial insight into the fundamental principles underlying modern policy gradient methods. The concepts we've explored - importance sampling, MM algorithms, trust regions, and their elegant combination - form the theoretical foundation that makes PPO's empirical success possible.
-
----
 
 Before we move to the next section, I want to talk about a question that baffled me when I started learning about RL.
 
