@@ -6,7 +6,7 @@ categories: [personal, technology]
 image: assets/blog_assets/evolution_of_llms/download.webp
 ---
 
-The landscape of language models(LMs) has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we explore the
+The landscape of language models(LMs) has evolved dramatically since the introduction of the Transformer architecture in 2017. Here we will explore the
 
 - mathematical foundations
 - architectural innovations
@@ -20,23 +20,21 @@ Additionally you can treat this blog as a sort of part 2, to my original blog on
 
 We will go year by year, going through the revolutionary ideas introduced by each paper.
 
-In the beginning of each section, I have added an image of the abstract of the paper, as well as the authors. I have done this to show you, how many people were involved behind one single idea. As well as what they felt like was the main contribution of their paper.
+In the beginning of each section, I have added the abstract of each paper, as well as the authors. I have done this to show you, how many people were involved behind one single idea. As well as what they felt like was the main contribution of their paper.
 
-Below that I have provided the link to the original paper if you wish to consult that, subsequently there is a quick summary section which you can skim over if you feel like you know the crux behind the idea.
+Below that I have provided the link to the original paper as well as my own implementation of it, subsequently there is a quick summary section which you can skim over if you feel like you know the crux behind the idea.
 
-> Note: All the Quick summaries are AI generated, and may contain some mistakes. The core content is all human generated though, so they definitely contain mistakes :)
+> Note: All the Quick summaries are AI generated, and may contain some mistakes. The core content is all human generated though, so it definitely contains mistakes :)
 
-After that, each section contains intuition, code , and mathematical explanation (wherever required) for each ideas. I have tried to add all the prerequisite knowledge wherever possible (Like the PPO section contains derivation of policy gradient methods, as well as explanation for TRPO). I have provided links to resources wherever I have felt I cannot provide enough background or do sufficient justice to the source material.
+After that, each section contains intuition, code, and mathematical explanation (wherever required) for each idea. I have tried to add all the prerequisite knowledge wherever possible (Like the PPO section contains derivation of policy gradient methods, as well as explanation for TRPO). I have provided links to resources wherever I have felt I cannot provide enough background or do sufficient justice to the source material.
 
-Additionally there have been a lot of innovations in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). AS this is primarily an LLM blog, I will just give quick intro and links to some ground breaking innovations involving other ML papers.
-
-This blog took significant time, energy and a piece of my health. Hope you enjoy it, consider sharing it if you feel like it can help others. And I am truly grateful to you for taking the time out to read this. Thank you!!!
+Additionally there has been a lot of innovation in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). AS this is primarily an LLM blog, I will just give quick intro and links to some ground breaking innovations involving other ML papers.
 
 > Note: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI, Anthropic, Google etc are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
 
 ## The AI timeline
 
-This is a timeline of the most influential work, to read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
+This is a timeline of the most influential work. To read about more architectures that were huge at the time but died down eventually, consider going through the [Transformer catalog](https://docs.google.com/spreadsheets/d/1ltyrAB6BL29cOv2fSpNQnnq2vbX8UrHl47d7FkIf6t4/edit?gid=0#gid=0).
 
 The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
 
@@ -305,7 +303,7 @@ This attention-based approach allows the model to directly connect "The cat" wit
 
 ##### Training a Transformer
 
-This is one topic that we didnt talk about extensively so let's go over it, because that is where the true beauty of GPT lies. How to train over huge amounts of data.
+This is one topic that we didn't talk about extensively so let's go over it, because that is where the true beauty of GPT lies. How to train over huge amounts of data.
 
 We will build iteratively, first starting small. And going massive as we approach the GPT paper.
 
@@ -343,8 +341,6 @@ def prepare_training_data(sentences):
 
     return padded_sequences, vocab_size
 ```
-
-**Why each step matters:**
 
 1. **Special tokens** (`<START>` and `<EOS>`): These tell the model where sentences begin and end. The `<START>` token signals the decoder to begin generation, while `<EOS>` teaches it when to stop. Without these, the model wouldn't know sentence boundaries. As we will move through the years, we will see how the special tokens used in LLMs have evolved as well. For example, think what will happen inside an LLM when it encounters a token that it hasn't seen during training, like a chinese character etc.
 
@@ -496,8 +492,6 @@ for epoch in range(num_epochs):
 
 This training methodology laid the groundwork for scaling to the massive language models we see today. The key insight was that with proper masking and attention mechanisms, you could train much larger models much faster than sequential architectures allowed.
 
-**What's Coming Next**
-
 While the original Transformer showed the power of attention-based training, it was still limited to translation tasks with paired data. The real revolution came when researchers realized they could use similar training techniques on massive amounts of unlabeled text data - setting the stage for GPT and the era of large language models.
 
 ### RLHF - Reinforcement Learning from Human Preferences
@@ -545,21 +539,21 @@ For example, it's impossible to write code that scores joke quality, but humans 
 
 **Solution** :
 
-> One possible solution is to allow a human to provide feedback on the agents's current behaviour and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience. It was discovered by the researchers that preference modeling by a human even on a small subset provided great results.
+> One possible solution is to allow a human to provide feedback on the agents's current behavior and use this feedback to define the task. But this poses another problem, this would require hundreds of hours as well as domain experience. It was discovered by the researchers that preference modeling by a human even on a small subset provided great results.
 
 An ideal solution will
 
-1. Enable us to solve tasks about which we can tell the desired behaviour but not necessarily demostrate or describe it.
+1. Enable us to solve tasks about which we can tell the desired behavior but not necessarily demonstrate or describe it.
 2. Allows systems to learn from non-expert users
 3. Scales to large problems
 4. Is economical
 
-In their experiment, the researchers asked labellers to compare short video clips of the agent's behaviour. They found that by using a small sample of clips they were able to train the system to behave as desired.
+In their experiment, the researchers asked labellers to compare short video clips of the agent's behavior. They found that by using a small sample of clips they were able to train the system to behave as desired.
 
 ![Image of hop](/assets/blog_assets/evolution_of_llms/hop.webp)
 _Image sourced from [paper](https://arxiv.org/abs/1706.03741)_
 
-The human observes the agent acting in the _environment_ it then gives he's feedback. Which is taken by _reward predictor_ which numerical defines the reward. Which is sent to the _RL algorithm_ this updates the agent based on the feedback and observation from the enviorment. That then changes the action of the agent.
+The human observes the agent acting in the _environment_ he then gives he's feedback. Which is taken by _reward predictor_ which numerical defines the reward. Which is sent to the _RL algorithm_ this updates the agent based on the feedback and observation from the environment. That then changes the action of the agent.
 
 ![Image of RLHF](/assets/blog_assets/evolution_of_llms/1.webp)
 
@@ -574,7 +568,7 @@ The following blogs helped me while writing this section
 - [HF blog on RLHF](https://huggingface.co/blog/rlhf)
 - [Chip Huyen's blog on RLHF](https://huyenchip.com/2023/05/02/rlhf.html)
 
-The reward predictor is trained to predict which of two given trajectories(σ¹, σ²) will be prefered by a human
+The reward predictor is trained to predict which of two given trajectories(σ¹, σ²) will be preferred by a human
 
 **Example:**
 ![Image of trajectories](/assets/blog_assets/evolution_of_llms/trajector_comparison.webp)
@@ -623,7 +617,7 @@ Let us understand the Reward Function Fitting Process
 
 **The Preference-Predictor Model**
 
-The authors instead of directly creating a reward function (which rewards an agent when it does the desired behaviour and punishes otherwise), they created a preference predictor. Which predicts which of the two given sequence of actions will be prefered by a human.
+The authors instead of directly creating a reward function (which rewards an agent when it does the desired behavior and punishes otherwise), they created a preference predictor. Which predicts which of the two given sequence of actions will be preferred by a human.
 
 **The Mathematical Formulation (Equation 1)**
 
@@ -664,6 +658,8 @@ Where:
 - If the human found them equal, then $\mu([1]) = \mu([2]) = 0.5$
 
 This is the standard cross-entropy loss function used in classification problems, measuring how well our predicted probabilities match the actual human judgments.
+
+Consider reading this beautiful blog on [Entropy](https://colah.github.io/posts/2015-09-Visual-Information/) by Christopher Olah, if you wish to gain a deeper understanding of cross-entropy.
 
 **The Bradley-Terry Model Connection**
 
@@ -713,7 +709,7 @@ The core innovation is their clipped probability ratio approach, which constrain
 </details>
 <br/>
 
-Another LLM algo that came out in 2017, and that too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (Atleast in the early days).
+Another LLM algo that came out in 2017, and that too again by OpenAI. Really goes to show how much they tried to advance AI and be public about it (At least in the early days).
 
 This is going to be math heavy so be prepared (Dw, I will guide you in each step)
 
@@ -727,6 +723,8 @@ This is going to be math heavy so be prepared (Dw, I will guide you in each step
 > and is not compatible with architectures that include noise (such as dropout) or parameter sharing
 > (between the policy and value function, or with auxiliary tasks).
 
+Essentially there were a lot of RL algorithms, but none of them worked efficiently at scale.
+
 **Solution**
 
 > This paper seeks to improve the current state of affairs by introducing an algorithm that attains
@@ -734,6 +732,8 @@ This is going to be math heavy so be prepared (Dw, I will guide you in each step
 > We propose a novel objective with clipped probability ratios, which forms a pessimistic estimate
 > (i.e., lower bound) of the performance of the policy. To optimize policies, we alternate between
 > sampling data from the policy and performing several epochs of optimization on the sampled data
+
+The authors found a way to take the best RL algorithm of the time (TRPO) and make it work at scale.
 
 The following blogs & articles helped me write this section
 
@@ -748,7 +748,7 @@ The following blogs & articles helped me write this section
 ![Image of RL](/assets/blog_assets/evolution_of_llms/RL.webp)
 _Image taken from [HuggingFace Course](https://huggingface.co/learn/deep-rl-course/en/unit1/rl-framework)_
 
-In RL we create an Agent (An ML model like Neural networks) give it a defined set of Actions $A_t$ (In this case it would be, move left, move right, Press A to shoot).
+In RL we create an Agent (An ML model like Artificial Neural Network) give it a defined set of Actions $A_t$ (In this case it would be, move left, move right, Press A to shoot).
 
 The agent then chooses an action and interacts with the Environment, which returns a new state as well as reward (positive if we survived or did a favourable outcome, negative if we die or do an unfavourable outcome).
 
@@ -780,7 +780,7 @@ The policy is what we want to train and make an optimum policy π\*, that maximi
 ![Image of RL](/assets/blog_assets/evolution_of_llms/rl_algos.webp)
 _Image taken from [OpenAI Spinning Up](https://spinningup.openai.com/en/latest/spinningup/rl_intro2.html)_
 
-Rhere are many RL algorithms present that we can use to train the policy as you can see from the image above, But most of them are developed from two central methods:
+There are many RL algorithms present that we can use to train the policy as you can see from the image above, But most of them are developed from two central methods:
 
 1. **Policy based methods** : Directly, by teaching the agent to learn which action to take, given the current state
 2. **Value based methods** : Indirectly, teach the agent to learn which state is more valuable and then take the action that leads to the more valuable states
@@ -800,7 +800,7 @@ I am skipping over many other intersting and amazing algorithms like [Q-Learning
 
 ##### Policy Gradient Methods
 
-Policy gradient methods directly optimizes a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
+Policy gradient methods directly optimize a policy function by adjusting its parameters in the direction of greater expected rewards. They work by:
 
 1. Collecting experience (state-action pairs and rewards) using the current policy
 2. Estimating the policy gradient (the direction that would improve the policy)
@@ -976,8 +976,6 @@ To get an intuition behind the idea consider reading the intuition part of this 
 
 So far, we've been working with discrete action spaces, like our super mad bot game where you can move left, move right, or press A to shoot. But what happens when your agent needs to control a robot arm, steer a car, or even select the "best" next token in language model fine-tuning? Welcome to the world of continuous control!
 
-**The Problem with Discrete Thinking**
-
 In discrete spaces, our policy outputs probabilities for each possible action:
 
 - Move left: 30%
@@ -986,7 +984,7 @@ In discrete spaces, our policy outputs probabilities for each possible action:
 
 But in continuous spaces, actions are real numbers. Imagine trying to control a robot arm where the joint angle can be any value between -180° and +180°. You can't enumerate probabilities for every possible angle, there are infinitely many! (like in real numbers, you cannot even count the numbers present between 179 and 180... Where do you even begin?)
 
-The elegant solution is to make our neural network output **parameters of a probability distribution** (eg mean and standard deviation of a [normal distribution](https://en.wikipedia.org/wiki/Normal_distribution)) instead of individual action probabilities. Specifically, we use a Gaussian (normal) distribution.
+The solution is to make our neural network output **parameters of a probability distribution** (eg mean and standard deviation of a [normal distribution](https://en.wikipedia.org/wiki/Normal_distribution)) instead of individual action probabilities. Specifically, we use a Gaussian (normal) distribution.
 
 Here's how it works:
 
@@ -1040,9 +1038,41 @@ Now we can compute the gradient with respect to our network parameters $\theta$:
 
 $$\nabla_\theta \log \pi_\theta(a_t|s_t) = \nabla_\theta \left[-\frac{1}{2}(a_t - f(s_t))^T \Sigma^{-1} (a_t - f(s_t))\right]$$
 
-Using the chain rule:
+Let's define $u = a_t - f(s_t)$ to simplify notation. Our expression becomes:
 
-$$\nabla_\theta \log \pi_\theta(a_t|s_t) = -\frac{1}{2} \Sigma^{-1}(f(s_t) - a_t) \frac{df}{d\theta}$$
+$$\nabla_\theta \log \pi_\theta(a_t|s_t) = \nabla_\theta \left[-\frac{1}{2} u^T \Sigma^{-1} u\right]$$
+
+Since $a_t$ and $\Sigma^{-1}$ don't depend on $\theta$, we have:
+
+$$\frac{\partial u}{\partial \theta} = \frac{\partial}{\partial \theta}(a_t - f(s_t)) = -\frac{\partial f(s_t)}{\partial \theta}$$
+
+For the quadratic form $u^T \Sigma^{-1} u$, using the chain rule:
+
+$$\frac{\partial}{\partial \theta}(u^T \Sigma^{-1} u) = \frac{\partial u^T}{\partial \theta} \Sigma^{-1} u + u^T \Sigma^{-1} \frac{\partial u}{\partial \theta}$$
+
+Since $\Sigma^{-1}$ is symmetric, we can write:
+
+$$\frac{\partial}{\partial \theta}(u^T \Sigma^{-1} u) = 2 u^T \Sigma^{-1} \frac{\partial u}{\partial \theta}$$
+
+Substituting back our expressions:
+
+$$\nabla_\theta \log \pi_\theta(a_t|s_t) = -\frac{1}{2} \cdot 2 \cdot u^T \Sigma^{-1} \frac{\partial u}{\partial \theta}$$
+
+$$= -u^T \Sigma^{-1} \left(-\frac{\partial f(s_t)}{\partial \theta}\right)$$
+
+$$= u^T \Sigma^{-1} \frac{\partial f(s_t)}{\partial \theta}$$
+
+Substituting $u = a_t - f(s_t)$ back:
+
+$$\nabla_\theta \log \pi_\theta(a_t|s_t) = (a_t - f(s_t))^T \Sigma^{-1} \frac{\partial f(s_t)}{\partial \theta}$$
+
+Since $\Sigma^{-1}$ is symmetric, $(a_t - f(s_t))^T \Sigma^{-1} = \Sigma^{-1}(a_t - f(s_t))$ when treated as a row vector, so we can write:
+
+$$\nabla_\theta \log \pi_\theta(a_t|s_t) = \Sigma^{-1}(a_t - f(s_t)) \frac{\partial f(s_t)}{\partial \theta}$$
+
+Rearranging to match the original form:
+
+$$\nabla_\theta \log \pi_\theta(a_t|s_t) = -\Sigma^{-1}(f(s_t) - a_t) \frac{\partial f(s_t)}{\partial \theta}$$
 
 This gradient has a beautiful intuitive interpretation:
 
@@ -1196,7 +1226,7 @@ Recall our policy gradient formula:
 
 $$\nabla_\theta J(\theta) = \mathbb{E}_{\tau \sim \pi_\theta}\left[\sum_{t=1}^{T} \nabla_\theta \log \pi_\theta(a_t|s_t) \cdot A(s_t, a_t)\right]$$
 
-The expectation $\mathbb{E}_{\tau \sim \pi_\theta}$ means we must sample trajectories using the current policy π_θ. When we update θ, this distribution changes, invalidating all our previous samples.
+The expectation $\mathbb{E}_{\tau \sim \pi \theta}$ means we must sample trajectories using the current policy π_θ. When we update θ, this distribution changes, invalidating all our previous samples.
 
 **Importance Sampling**
 
@@ -1242,9 +1272,9 @@ We can use:
 $$\mathbb{E}_{\tau \sim \pi_{\theta_{old}}}\left[\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} f(\tau)\right]$$
 
 Remember that trajectory probabilities factor as:
-$$\pi_\theta(\tau) = \prod_{t=1}^{T} \pi_\theta(a_t\|s_t) \cdot p(s_{t+1}\|s_t, a_t)$$
+$$\pi_\theta(\tau) = {p(s_1) \prod_{t=1}^{T} \pi_\theta(a_t|s_t)p(s_{t+1}|s_t, a_t)}$$
 
-The environment dynamics $p(s\_{t+1}\|s_t, a_t)$ are the same for both policies, so they cancel out in the ratio:
+The environment dynamics $p(s\_{t+1}\|s_t, a_t)$ abd $p(s_1)$ are the same for both policies, so they cancel out in the ratio:
 
 $$\frac{\pi_\theta(\tau)}{\pi_{\theta_{old}}(\tau)} = \frac{\prod_{t=1}^{T} \pi_\theta(a_t\|s_t)}{\prod_{t=1}^{T} \pi_{\theta_{old}}(a_t\|s_t)} = \prod_{t=1}^{T} \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{old}}(a_t|s_t)}$$
 
@@ -1254,11 +1284,9 @@ $$J(\theta) = \mathbb{E}_{\tau \sim \pi_{\theta_{old}}}\left[\prod_{t=1}^{T} \fr
 
 This is huge! We can now:
 
-- **Collect data** with policy π_θ_old
-- **Reuse this data** multiple times to evaluate different policies π_θ
+- **Collect data** with policy ${\pi_{\theta_{old}}}$
+- **Reuse this data** multiple times to evaluate different policies ${\pi_{\theta}}$
 - **Dramatically improve sample efficiency**
-
-**Problem with Importance Sampling**
 
 But there's a catch. Importance sampling works well only when the two distributions are similar. If π*θ becomes very different from π*θ_old, the probability ratios can explode or vanish:
 
@@ -1276,7 +1304,12 @@ Consider what happens if one action has ratio = 100 while others have ratio = 0.
 
 The breakthrough insight: **constrain how much the policy can change** to keep importance sampling ratios well-behaved. This leads us naturally to the concept of trust regions - regions where we trust our importance sampling approximation to be accurate.
 
-But how do we guarantee that our policy updates always improve performance? This is where two key concepts come into play: the Minorize-Maximization (MM) algorithm and trust regions.
+But, we must also ask. How do we guarantee that our policy updates always improve performance?
+
+These observations bring us to two key concepts: 
+
+- The Minorize-Maximization (MM) algorithm 
+- Trust regions
 
 **Minorize-Maximization (MM) Algorithm**
 
