@@ -1315,7 +1315,7 @@ These observations bring us to two key concepts:
 
 Can we guarantee that any policy update always improves the expected rewards? This seems impossible, but it's theoretically achievable through the MM algorithm.
 
-The MM idea: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
+The idea: Instead of directly optimizing the complex true objective η(θ), we iteratively optimize simpler lower bound functions M(θ) that approximate η(θ) locally.
 
 The MM algorithm follows this iterative process:
 
@@ -1335,20 +1335,23 @@ $M(\theta) = g \cdot (\theta - \theta_{old}) - \frac{1}{2}(\theta - \theta_{old}
 This is a quadratic approximation where:
 
 - g is the gradient at θ_old
-- F is a positive definite matrix (often related to the Hessian)
+- F is a positive definite matrix (often related to the [Hessian](https://en.wikipedia.org/wiki/Hessian_matrix))
 
 ![Image of Minorize Maximization algorithm](/assets/blog_assets/evolution_of_llms/9.webp)
 _Image taken from [RL — Trust Region Policy Optimization (TRPO) Explained](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-explained-a6ee04eeeee9)_
-
 
 If M is a lower bound that never crosses η, then maximizing M must improve η.
 
 **Proof sketch**:
 
-- Since M(θ*{old}) = η(θ*{old}) and M(θ) ≤ η(θ) everywhere
-- If we find θ*{new} such that M(θ*{new}) > M(θ\_{old})
-- Then η(θ*{new}) ≥ M(θ*{new}) > M(θ*{old}) = η(θ*{old})
-- Therefore η(θ*{new}) > η(θ*{old}) ✓
+- Since $M(\theta_{\text{old}}) = \eta(\theta_{\text{old}})$ and $M(\theta) \leq \eta(\theta)$ everywhere
+- If we find $\theta_{\text{new}}$ such that $M(\theta_{\text{new}}) > M(\theta_{\text{old}})$
+- Then $\eta(\theta_{\text{new}}) \geq M(\theta_{\text{new}}) > M(\theta_{\text{old}}) = \eta(\theta_{\text{old}})$
+- Therefore $\eta(\theta_{\text{new}}) > \eta(\theta_{\text{old}})$ ✓
+
+In simpler terms, we have a function $\eta(\theta)$ parameterized by $\theta$ (the weights of our neural network). It is not computationally tractable to optimize this function directly. Hence we create a close approximation function $M(\theta)$ using the lower bound function form described above. This approximation comes from the general theory of Minorize-Maximization algorithms (see [Hunter & Lange, 2004](https://doi.org/10.1198/016214504000000113)).
+
+This approximation $M(\theta)$ is computationally feasible and easier to optimize. What we have proved here is that as we improve $M(\theta)$, that improvement guarantees we also improve $\eta(\theta)$.
 
 | **By optimizing a lower bound function approximating η locally, MM guarantees policy improvement every iteration and leads us to the optimal policy eventually.**
 
@@ -1357,7 +1360,7 @@ If M is a lower bound that never crosses η, then maximizing M must improve η.
 There are two major optimization paradigms:
 
 1. **Line Search** (like gradient descent): Choose direction first, then step size
-2. **Trust Region**: Choose maximum step size first, then find optimal point within that region
+2. **Trust Region**: Choose maximum step size first (the size of the trust region), then find optimal point within that region
 
 ![Image of Line search vs Trust Region](/assets/blog_assets/evolution_of_llms/line_search_vs_trust_region.webp)
 
@@ -1388,34 +1391,6 @@ In reinforcement learning, trust regions serve a dual purpose:
 
 When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
 
-**Optimal Importance Sampling**
-
-Before diving into TRPO, let's understand what makes importance sampling work best. The accuracy of our expected value estimate increases with more samples, but what's the optimal sampling distribution?
-
-For computing:
-$$\mathbb{E}_{p(x)}[f(x)]$$
-
-Using importance sampling with distribution q:
-$$\mathbb{E}_{p(x)}[f(x)] \approx \frac{1}{N} \sum_i \frac{p(x_i)}{q(x_i)} f(x_i)$$
-
-The optimal sampling distribution that minimizes variance is:
-$$q^*(x) \propto p(x)|f(x)|$$
-
-Intuitive interpretation: Sample more frequently where the function value \|f(x)\| is large. This concentrates samples where they have the most impact on the expectation.
-
-In many ML applications, we only know unnormalized distributions. For unnormalized distribution $\tilde{p}(x) = p(x) \cdot Z$ where Z is unknown:
-
-$$\mathbb{E}_{p}[f(x)] = \frac{\sum_m f(x^m) w^m}{\sum_m w^m}$$
-
-where $w^m = \frac{\tilde{p}(x^m)}{q(x^m)}$
-
-**Trade-offs:**
-
-- **Unnormalized**: Unbiased but higher variance
-- **Normalized**: Biased but lower variance
-
-In practice, normalized importance sampling often performs better due to reduced variance.
-
 Math Notation Reference
 
 | Symbol                                                                      | Meaning                                             |
@@ -1435,6 +1410,8 @@ Math Notation Reference
 | $F$                                                                         | Positive definite matrix (approximating curvature)  |
 | $g$                                                                         | Policy gradient vector                              |
 
+[EVERYTHING BELOW THIS IS STILL UNDERWORD]
+
 **TRPO**
 
 Now we can finally understand how TRPO elegantly combines all the concepts we've explored:
@@ -1445,11 +1422,17 @@ Now we can finally understand how TRPO elegantly combines all the concepts we've
 
 TRPO represents the culmination of these ideas into a practical, theoretically-grounded algorithm.
 
-TRPO reformulates our policy optimization as maximizing improvement relative to the current policy. Instead of maximizing absolute performance J(π'), we maximize:
+TRPO reformulates our policy optimization as maximizing improvement relative to the current policy. Recall that our original objective was:
 
-$\max_{\pi'} J(\pi') - J(\pi)$
+$$J(\pi) = \mathbb{E}_{\tau \sim \pi}[R(\tau)]$$
 
-This is mathematically equivalent but conceptually important - we're explicitly measuring progress.
+This is the expected return (total reward) when following policy π. Instead of maximizing absolute performance $J(\pi')$, TRPO maximizes the **policy improvement**:
+
+$$\max_{\pi'} J(\pi') - J(\pi)$$
+
+This is mathematically equivalent to maximizing $J(\pi')$ (since $J(\pi)$ is constant), but conceptually important - we're explicitly measuring progress from our current policy.
+
+**Why focus on improvement?** Because we can construct better approximations for the improvement $J(\pi') - J(\pi)$ than for the absolute performance $J(\pi')$. The MM algorithm works by finding lower bounds for this improvement.
 
 To apply the MM algorithm, TRPO constructs a lower bound function ℒ that uses importance sampling:
 
@@ -1472,6 +1455,8 @@ This tells us:
 - **Right side**: Our lower bound estimate minus a penalty term
 
 The penalty term grows with KL divergence, so the bound becomes loose when policies differ too much.
+
+| Consider reading this [blog](https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained) to get a better idea about KLD
 
 TRPO can be formulated in two mathematically equivalent ways:
 
@@ -1498,7 +1483,7 @@ If we:
 2. **Constrain** KL divergence to be small
 3. **Ensure** ℒ_π(π) = 0 (which is always true when π' = π)
 
-Then $\mathcal{L}_\pi(\pi') \geq 0$ implies $J(\pi') \geq J(\pi)$ ✓
+Then $\mathcal{L}_\pi(\pi') \geq 0$ implies $J(\pi') \geq J(\pi)$ (Our new policy will always be better or equal to our current policy)
 
 > **TRPO's guarantee: Every policy update improves performance or leaves it unchanged. We never move backwards.**
 
