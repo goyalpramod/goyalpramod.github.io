@@ -1,7 +1,7 @@
 ---
 layout: blog
 title: "Evolution of LLMs"
-date: 2025-06-18 12:00:00 +0530
+date: 2025-06-21 12:00:00 +0530
 categories: [personal, technology]
 image: assets/blog_assets/evolution_of_llms/download.webp
 ---
@@ -20,17 +20,17 @@ Additionally you can treat this blog as a sort of part 2, to my original blog on
 
 We will go year by year, going through the revolutionary ideas introduced by each paper.
 
-In the beginning of each section, I have added the abstract of each paper, as well as the authors. I have done this to show you, how many people were involved behind one single idea. As well as what they felt like was the main contribution of their paper.
+In the beginning of each section, I have added the abstract, as well as the authors. I have done this to show you, the people were involved behind each idea. As well as what they felt like was the main contribution of their paper.
 
 Below that I have provided the link to the original paper as well as my own implementation of it, subsequently there is a quick summary section which you can skim over if you feel like you know the crux behind the idea.
 
-> Note: All the Quick summaries are AI generated, and may contain some mistakes. The core content is all human generated though, so it definitely contains mistakes :)
+> Note: All the quick summaries are AI generated, and may contain some mistakes. The core content is all human generated though, so it definitely contains mistakes :)
 
 After that, each section contains intuition, code, and mathematical explanation (wherever required) for each idea. I have tried to add all the prerequisite knowledge wherever possible (Like the PPO section contains derivation of policy gradient methods, as well as explanation for TRPO). I have provided links to resources wherever I have felt I cannot provide enough background or do sufficient justice to the source material.
 
-Additionally there has been a lot of innovation in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). AS this is primarily an LLM blog, I will just give quick intro and links to some ground breaking innovations involving other ML papers.
+Additionally there has been a lot of innovation in vision modeling, TTS, Image gen, Video gen etc each of which deserves it's own blog(And there will be!! I promise you that). As this is primarily an LLM blog, I will just give quick intro and links to some ground breaking innovations involving other ML papers.
 
-> Note: Do not take for granted all the hardware, data and benchmark innovations, Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI, Anthropic, Google etc are amazing, not much is known about them to the public. So we will briefly talk about what we know about them, then move on to talk about mostly open source models.
+> Note: Do not take for granted all the hardware, data and benchmark innovations. Though I will briefly mention them. I implore you to explore them further if they interest you. This blog is strictly restricted to breakthroughs in Large Language Models, and mostly open source one's. Even though current models by OpenAI, Anthropic, Google etc are amazing, not much is known about them to the public. So we will only briefly talk about them.
 
 ## The AI timeline
 
@@ -823,6 +823,7 @@ Value-based methods can learn from any data - even old experiences stored in rep
 In discrete action spaces, value-based methods often require just one forward pass to select an action (argmax over Q-values). Policy methods might need to sample from complex probability distributions or solve optimization problems.
 
 **Where Policy Methods Fail:**
+
 - **High-dimensional discrete actions**: Computing argmax becomes intractable
 - **Continuous control**: You can't enumerate all possible actions to find the maximum
 - **Stochastic optimal policies**: Sometimes the best strategy is inherently random (like rock-paper-scissors), which value methods can't represent directly
@@ -868,6 +869,7 @@ We also need to be aware of a few terms and mathematical tricks before moving fo
 
    For continuous distributions:
    $$\mathbb{E}_{x \sim p(x)}[f(x)] = \int_x p(x)f(x) \, dx \tag{2}$$
+
    If you are new to the idea of expectation, Consider checking this amazing [blog](https://www.countbayesie.com/blog/2015/2/20/random-variables-and-expectation) on the topic.
 
 **Deriving the Policy Gradient**
@@ -1139,7 +1141,7 @@ There are two methods in which RL is trained
 2. Temporal Difference Learning: Reward is used to update policy in every step
 
 ![Image of MC vs TD](/assets/blog_assets/evolution_of_llms/mc_vs_td.webp)
-*Image taken from [Reinforcement Learning and Bandits for Speech and Language Processing: Tutorial, Review and Outlook](https://www.researchgate.net/publication/364732848_Reinforcement_Learning_and_Bandits_for_Speech_and_Language_Processing_Tutorial_Review_and_Outlook)*
+_Image taken from [Reinforcement Learning and Bandits for Speech and Language Processing: Tutorial, Review and Outlook](https://www.researchgate.net/publication/364732848_Reinforcement_Learning_and_Bandits_for_Speech_and_Language_Processing_Tutorial_Review_and_Outlook)_
 
 Policy Gradient (PG) uses MC this causes it to have low bias (Expected reward is close to actual reward, as the same policy is used throughout the run) but high variance (Some runs produce great results, some really bad).
 
@@ -1341,9 +1343,9 @@ The breakthrough insight: **constrain how much the policy can change** to keep i
 
 But, we must also ask. How do we guarantee that our policy updates always improve performance?
 
-These observations bring us to two key concepts: 
+These observations bring us to two key concepts:
 
-- The Minorize-Maximization (MM) algorithm 
+- The Minorize-Maximization (MM) algorithm
 - Trust regions
 
 **Minorize-Maximization (MM) Algorithm**
@@ -1426,7 +1428,9 @@ In reinforcement learning, trust regions serve a dual purpose:
 
 When policies change too much, both our lower bound approximation AND our importance sampling become unreliable. Trust regions keep us in the safe zone for both.
 
-Math Notation Reference
+<details>
+<summary markdown="span">Mathematical Notation Reference</summary>
+<div markdown="1">
 
 | Symbol                                                                      | Meaning                                             |
 | --------------------------------------------------------------------------- | --------------------------------------------------- |
@@ -1444,6 +1448,10 @@ Math Notation Reference
 | $\delta$                                                                    | Trust region radius                                 |
 | $F$                                                                         | Positive definite matrix (approximating curvature)  |
 | $g$                                                                         | Policy gradient vector                              |
+
+</div>
+</details>
+<br/>
 
 **Trust Region Policy Optimization (TRPO)**
 
@@ -1481,9 +1489,9 @@ Think of this as a "popularity contest" for states. If γ = 1, this becomes just
 
 The advantage function $A^\pi(s,a)$ we've already met - it tells us how much better taking action $a$ in state $s$ is compared to what the policy would do on average in that state.
 
-But here's where the magic happens. The function ℒ is essentially asking a clever question using importance sampling: "If I reweight all the actions my current policy π took according to how likely my new policy π' would be to take them, what would my expected advantage be?" 
+But here's where the magic happens. The function ℒ is essentially asking a clever question using importance sampling: "If I reweight all the actions my current policy π took according to how likely my new policy π' would be to take them, what would my expected advantage be?"
 
-This is brilliant because it lets us estimate how well policy π' would perform without actually running it in the environment. We just take all our old experience from policy π and reweight it according to the probability ratio $\frac{\pi'(a|s)}{\pi(a|s)}$. When the new policy is more likely to take an action than the old one, we give that experience more weight. When it's less likely, we give it less weight.
+This is brilliant because it lets us estimate how well policy π' would perform without actually running it in the environment. We just take all our old experience from policy π and reweight it according to the probability ratio $\frac{\pi'(a\|s)}{\pi(a\|s)}$. When the new policy is more likely to take an action than the old one, we give that experience more weight. When it's less likely, we give it less weight.
 
 This importance sampling approach is what allows TRPO to reuse old data efficiently - a huge computational win over vanilla policy gradients that throw away all previous experience after each update.
 
@@ -1501,7 +1509,7 @@ The penalty term grows with KL divergence, so the bound becomes loose when polic
 | Consider reading this [blog](https://www.countbayesie.com/blog/2017/5/9/kullback-leibler-divergence-explained) to get a better idea about KLD
 
 ![Image of KLD](/assets/blog_assets/evolution_of_llms/10.webp)
-*Image taken from [Wikipedia](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)*
+_Image taken from [Wikipedia](https://en.wikipedia.org/wiki/Kullback%E2%80%93Leibler_divergence)_
 
 The KL divergence measures how different two probability distributions are:
 
@@ -1528,12 +1536,12 @@ $$J(\pi') - J(\pi) \geq \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[
 
 The unconstrained version simply maximizes this lower bound directly. The constrained version takes a different approach: instead of penalizing large KL divergences, it prevents them entirely by adding a hard constraint.
 
-These are mathematically equivalent due to [**Lagrangian duality**](https://en.wikipedia.org/wiki/Duality_(optimization)) - a beautiful result from optimization theory. For every penalty coefficient C in the unconstrained problem, there exists a constraint threshold δ in the constrained problem that gives the same optimal solution. You can think of it like this: instead of saying "I'll pay a penalty for going over the speed limit," you're saying "I absolutely won't go over the speed limit." Both approaches can lead to the same driving behavior, just with different enforcement mechanisms.
+These are mathematically equivalent due to [**Lagrangian duality**](<https://en.wikipedia.org/wiki/Duality_(optimization)>) - a beautiful result from optimization theory. For every penalty coefficient C in the unconstrained problem, there exists a constraint threshold δ in the constrained problem that gives the same optimal solution. You can think of it like this: instead of saying "I'll pay a penalty for going over the speed limit," you're saying "I absolutely won't go over the speed limit." Both approaches can lead to the same driving behavior, just with different enforcement mechanisms.
 
 The lower bound is what we try to maximize to find the optimum $\theta$
 
 ![Image of lower bound of constrained problem](/assets/blog_assets/evolution_of_llms/11.webp)
-*Image taken from [here](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a)*
+_Image taken from [here](https://jonathan-hui.medium.com/rl-trust-region-policy-optimization-trpo-part-2-f51e3b2e373a)_
 
 However, in practice, the constrained formulation wins by a landslide. Here's why: the penalty coefficient C becomes a nightmare to tune when the discount factor γ gets close to 1. As γ approaches 1, the coefficient explodes, making the algorithm incredibly sensitive to small changes in γ. Imagine trying to tune a parameter that changes by orders of magnitude when you adjust γ from 0.99 to 0.995 - it's practically impossible.
 
@@ -1550,12 +1558,12 @@ $$J(\pi') - J(\pi) \geq \mathcal{L}_\pi(\pi') - C\sqrt{\mathbb{E}_{s\sim d^\pi}[
 TRPO's algorithm ensures three key things happen:
 
 1. **Optimize** $\mathcal{L}_\pi(\pi')$ using importance sampling
-2. **Constrain** the KL divergence to stay small  
+2. **Constrain** the KL divergence to stay small
 3. **Rely** on the fact that $\mathcal{L}_\pi(\pi) = 0$ when $\pi' = \pi$
 
 This last point is crucial and deserves explanation.
 
-Why is ℒ_π(π) = 0? At the current policy, the importance sampling ratio becomes $\frac{\pi(a|s)}{\pi(a|s)} = 1$ for all actions. So we get:
+Why is ℒ_π(π) = 0? At the current policy, the importance sampling ratio becomes $\frac{\pi(a\|s)}{\pi(a\|s)} = 1$ for all actions. So we get:
 
 $$\mathcal{L}_\pi(\pi) = \mathbb{E}_{s\sim d^\pi} \left[ \mathbb{E}_{a \sim \pi} \left[ 1 \cdot A^\pi(s,a) \right] \right] = \mathbb{E}_{s\sim d^\pi} \left[ \mathbb{E}_{a \sim \pi} \left[ A^\pi(s,a) \right] \right]$$
 
@@ -1582,15 +1590,15 @@ $$\text{subject to } \mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'||\pi)[s]] \leq \delta$
 looks intimidating, but we can solve it elegantly using a [**Taylor expansion**](https://en.wikipedia.org/wiki/Taylor_series) around our current policy parameters θ_k. This is where the mathematical beauty of TRPO really shines through.
 
 ![Image of Taylor Series expansion](/assets/blog_assets/evolution_of_llms/12.webp)
-*Definition from Wikipedia*
+_Definition from Wikipedia_
 Let's expand both the objective function and the constraint to second order around $\theta_k$. For the objective function $\mathcal{L}$:
 
 $$\mathcal{L}_{\theta_k}(\theta) \approx \mathcal{L}_{\theta_k}(\theta_k) + g^T (\theta - \theta_k) + \frac{1}{2}(\theta - \theta_k)^T H_{\mathcal{L}} (\theta - \theta_k)$$
 
 Where:
 
-- $g = \nabla_\theta \mathcal{L}_{\theta_k}(\theta) |_{\theta_k}$ (the gradient of the objective at $\theta_k$)
-- $H_{\mathcal{L}} = \nabla^2_\theta \mathcal{L}_{\theta_k}(\theta) |_{\theta_k}$ (the Hessian of the objective at $\theta_k$)
+- g = ∇*θ L*θₖ(θ) \|\_θₖ (the gradient of the objective at θₖ)
+- H*L = ∇²*θ L*θₖ(θ) \|*θₖ (the Hessian of the objective at θₖ)
 
 | We can skip the terms beyond second order because they become negligibly small when $\theta$ is close to $\theta_k$. This is the fundamental assumption of trust region methods - we're making small enough steps that higher-order terms don't significantly affect our approximation quality.
 
@@ -1600,8 +1608,8 @@ $$\overline{D}_{KL}(\theta|\theta_k) \approx \overline{D}_{KL}(\theta_k|\theta_k
 Now comes the key insight that simplifies everything. At the current policy θ_k, several terms vanish:
 
 - $\mathcal{L}_{\theta_k}(\theta_k) = 0$ (we showed this earlier - the advantage has zero expectation)
-- $\overline{D}_{KL}(\theta_k|\theta_k) = 0$ (KL divergence of a distribution with itself is always zero)
-- $\nabla_\theta \overline{D}_{KL}(\theta|\theta_k)|_{\theta_k} = 0$ (the gradient of KL divergence at the reference point is zero)
+- $\overline{D}_{KL}(\theta_k\|\theta_k) = 0$ (KL divergence of a distribution with itself is always zero)
+- ∇*θ D̄_KL(θ||θₖ)|*θₖ = 0 (the gradient of KL divergence at the reference point is zero)
 
 This leaves us with a beautifully clean quadratic optimization problem:
 
@@ -1636,7 +1644,7 @@ Putting it all together, we get the **Natural Policy Gradient** update:
 
 $$\theta_{k+1} = \theta_k + \sqrt{\frac{2\delta}{g^T F^{-1} g}} F^{-1} g$$
 
-**Why "Natural"?** This is where things get philosophically beautiful. Regular gradient descent uses the Euclidean distance in parameter space - it treats all parameter changes as equal. But this is fundamentally wrong for probability distributions! 
+**Why "Natural"?** This is where things get philosophically beautiful. Regular gradient descent uses the Euclidean distance in parameter space - it treats all parameter changes as equal. But this is fundamentally wrong for probability distributions!
 
 Consider two neural networks that represent the same policy but with different parameterizations. Vanilla gradient descent would give them different updates, even though they're the same policy. The Natural Policy Gradient fixes this by using the Fisher Information Matrix to measure distance in the space of probability distributions rather than parameter space.
 
@@ -1646,7 +1654,7 @@ Think of it like this: if you're navigating on a curved surface, you shouldn't u
 
 ![Image of Euclidean gradient descent vs natural gradient descent](/assets/blog_assets/evolution_of_llms/13.webp)
 
-**From Theory to Practice: The Backtracking Line Search**
+**The Backtracking Line Search**
 
 Our elegant mathematical derivation gives us the Natural Policy Gradient update:
 
@@ -1659,8 +1667,9 @@ TRPO's solution is beautifully practical: **backtracking line search**. Instead 
 $$\theta_{k+1} = \theta_k + \alpha^j \sqrt{\frac{2\delta}{g^T F^{-1} g}} F^{-1} g$$
 
 where $\alpha \in (0, 1)$ is the backtracking coefficient (typically 0.5), and $j$ is the smallest nonnegative integer such that the new policy satisfies both:
-1. The KL constraint: $\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi_{\theta_{k+1}}(·|s) \| \pi_{\theta_k}(·|s))] \leq \delta$
-2. Positive improvement: $\mathcal{L}_{\theta_k}(\theta_{k+1}) \geq 0$
+
+1. The KL constraint: 𝔼*{s∼d^π}[D_KL(π*{θ*{k+1}}(·\|s) ‖ π*{θₖ}(·\|s))] ≤ δ
+2. Positive improvement: ℒ*{θₖ}(θ*{k+1}) ≥ 0
 
 This conservative verification ensures TRPO never violates its theoretical guarantees, even when the quadratic approximation becomes inaccurate. It's the algorithm's safety net - systematically reducing the step size until both conditions are met.
 
@@ -1672,7 +1681,7 @@ For modern deep networks with millions of parameters, F is a massive n×n matrix
 
 This computational bottleneck is what led to the development of **Truncated Natural Policy Gradient**, and ultimately to TRPO's clever use of conjugate gradient methods to approximate the matrix inversion without ever computing F⁻¹ explicitly.
 
-**Truncated Natural Policy Gradient: Making the Impractical Practical**
+**Truncated Natural Policy Gradient**
 
 The solution to our computational nightmare is elegantly simple: instead of computing F⁻¹g directly, we use the [**Conjugate Gradient**](https://en.wikipedia.org/wiki/Conjugate_gradient_method) method to solve the linear system:
 
@@ -1695,37 +1704,42 @@ This **Hessian-vector product** gives us exactly what conjugate gradient needs w
 TRPO weaves together all these concepts into a surprisingly elegant algorithm that carefully balances theoretical guarantees with practical implementation:
 
 **Step 1: Data Collection**
+
 - Collect trajectories using the current policy $\pi_k$
 - Estimate the advantage function $A^{\pi_k}$ using any method (GAE, Monte Carlo returns, or temporal difference learning)
 
 **Step 2: Gradient Computation**
-- Compute the policy gradient $g = \nabla_\theta \mathcal{L}_{\theta_k}(\theta) |_{\theta_k}$
+
+- Compute the policy gradient $$g = \nabla_\theta \mathcal{L}_{\theta_k}(\theta) \|_{\theta_k}$$
 - Set up the Fisher Information Matrix function for conjugate gradient operations
 
 **Step 3: Search Direction**
+
 - Solve $Fx = g$ using Conjugate Gradient to get the search direction $x$
 - This gives us the natural gradient direction without explicitly inverting $F$
 
 **Step 4: Step Size Calculation**
+
 - Compute the initial step size to satisfy the trust region constraint
 - Calculate $\alpha = \sqrt{\frac{2\delta}{g^T F^{-1} g}}$
 
 **Step 5: Conservative Verification (Line Search with Exponential Backoff)**
+
 - Propose an update: $\theta' = \theta_k + \alpha \cdot x$
 - Verify two critical conditions:
- - KL divergence constraint: $\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'(·|s) \| \pi(·|s))] \leq \delta$
- - Surrogate improvement: $\mathcal{L}_{\theta_k}(\theta') \geq 0$
+- KL divergence constraint: $$\mathbb{E}_{s\sim d^\pi}[D_{KL}(\pi'(·\|s) \| \pi(·\|s))] \leq \delta$$
+- Surrogate improvement: $\mathcal{L}_{\theta_k}(\theta') \geq 0$
 - If either verification fails: reduce $\alpha$ (typically by half) and try again
 - Only commit to the policy update after both conditions are satisfied
 
 This conservative approach guarantees the theoretical properties we derived, but it also reveals TRPO's fundamental tension between theory and practice. The algorithm is theoretically beautiful but computationally demanding, requiring multiple verification steps and potential backtracking that can make each update quite expensive.
 
-**TRPO's Limitations: The Price of Theoretical Perfection**
+**TRPO's Limitations**
 
 Despite its theoretical elegance, TRPO faces several practical challenges that motivated simpler alternatives:
 
 - **Computational Overhead**: Computing Fisher Information Matrices and running conjugate gradient makes each update significantly more expensive than first-order methods like Adam
-- **Sample Inefficiency**: Requires large batch sizes to accurately estimate the FIM - small batches lead to noisy estimates and unstable training  
+- **Sample Inefficiency**: Requires large batch sizes to accurately estimate the FIM - small batches lead to noisy estimates and unstable training
 - **Scalability Issues**: Second-order computations become impractical for very large neural networks where first-order methods excel
 
 TRPO's story represents a classic tension in machine learning: the trade-off between theoretical rigor and practical utility. While TRPO provided crucial theoretical insights about policy optimization - principled policy updates, trust region concepts, and guaranteed improvement - its computational complexity limited its real-world impact.
@@ -1736,11 +1750,7 @@ As we noted earlier from the PPO paper: _"Q-learning (with function approximatio
 
 PPO's breakthrough was recognizing that you don't need complex second-order methods to implement trust regions effectively. Instead of computing Fisher Information Matrices and running conjugate gradient, PPO simply clips the importance sampling ratios directly. This first-order approach achieves similar practical performance while being orders of magnitude simpler to implement and debug.
 
-The journey from TRPO to PPO exemplifies how the best algorithmic advances often come not from adding complexity, but from finding simpler ways to achieve the same fundamental goals. TRPO laid the theoretical groundwork, but PPO made those insights accessible to practitioners everywhere.
-
 > Note: TRPO in a crux is simple, it is a constrained optimization problem. To solve which we need second order derivatives. Which is computationally expensive and no current ML framework solves it without significant overhead. But do know, it is a tough topic to truly understand. One needs to be well-versed with many prerequisite mathematical knowledge. Do not be dishearted if it takes you time to understand it thorougly. Read slowly, daily, iteratively.
-
-Looking at both your original PPO content and the additional notes, I can see some areas where we can strengthen the mathematical depth and remove redundancy. Let me help refine this section while keeping your style:
 
 **Proximal Policy Optimization (PPO)**
 
@@ -1769,7 +1779,7 @@ But this can lead to destructively large policy updates when $r_t(\theta)$ becom
 $$L^{CLIP}(\theta) = \mathbb{E}_t[\min(r_t(\theta) \cdot A_t, \text{clip}(r_t(\theta), 1-\epsilon, 1+\epsilon) \cdot A_t)]$$
 
 ![Image of Taylor Series expansion](/assets/blog_assets/evolution_of_llms/15.webp)
-*Image taken from paper*
+_Image taken from paper_
 
 Let's unpack this equation with concrete examples to build intuition.
 
@@ -1777,7 +1787,8 @@ Let's unpack this equation with concrete examples to build intuition.
 
 When an action led to better-than-expected rewards, we want to increase its probability. Let's say $A_t = 2$ and $\epsilon = 0.2$.
 
-- If $r_t(\theta) = 0.5$ (new policy half as likely): 
+- If $r_t(\theta) = 0.5$ (new policy half as likely):
+
   - Unclipped objective: $0.5 \times 2 = 1$
   - Clipped objective: $\min(1, 0.8 \times 2) = 1$
   - No clipping occurs since we're making the policy worse for a good action
@@ -1794,6 +1805,7 @@ The key insight: for positive advantages, clipping prevents us from changing the
 When an action led to worse-than-expected rewards, we want to decrease its probability. Let's say $A_t = -2$ and $\epsilon = 0.2$.
 
 - If $r_t(\theta) = 0.5$ (new policy half as likely):
+
   - Unclipped objective: $0.5 \times (-2) = -1$
   - Clipped objective: $\min(-1, 0.8 \times (-2)) = -1.6$
   - Clipping makes the objective more negative, encouraging further reduction
@@ -1841,6 +1853,7 @@ However, this adaptive mechanism proved finicky in practice. The clipped objecti
 A subtle but crucial aspect of PPO is performing multiple epochs of updates on the same data. This seems to violate our earlier concern about importance sampling breaking down when policies diverge. The clipping mechanism is precisely what makes this safe.
 
 Consider what happens over multiple epochs:
+
 1. **Epoch 1**: Policy changes slightly, ratios stay near 1
 2. **Epoch 2**: For trajectories where policy already changed, clipping prevents further movement
 3. **Epochs 3-10**: Most gradients are zero due to clipping, only "unexploited" trajectories contribute
@@ -1850,8 +1863,6 @@ The clipping essentially creates a curriculum where different parts of the data 
 PPO's clipping prevents the fine-tuned model from diverging too far from the base model's distribution, maintaining fluency while optimizing for human preferences. This is why responses from RLHF models feel coherent - they're constrained to stay within a trust region of the original model's behavior.
 
 The journey from policy gradients through TRPO to PPO represents a beautiful example of how complex theoretical insights can be distilled into simple, practical algorithms. PPO takes TRPO's guarantee of monotonic improvement and approximates it with a first-order method that captures the essential insights: prevent destructive updates, enable data reuse, and maintain computational simplicity.
-
-This progression from theoretical understanding to practical implementation exemplifies the best of machine learning research - not just solving problems, but solving them in ways that practitioners can actually use.
 
 ### MoE
 
@@ -1923,19 +1934,9 @@ Let's us go through each question one by one.
 
 > Note: We will see many changes that were made on this idea as we progress, but this was the foundational paper on MoEs for large models. So it is crucial that you understand it well.
 
-
-Note =
-~1. First put sparse and dense MoE~
-~2. Then put how output is calculate dand shows~
-~3. Then explain gating function~
-4. Then explain training 
-5. Then address the problems that the paper solved
-6. Then talk about load balancing
-
 ##### Sparse vs Dense Networks
 
 ![Image of sparse and dense MoE](/assets/blog_assets/evolution_of_llms/sparse_vs_dense_moe.webp)
-
 
 **Dense Networks**: Every parameter is used for every input
 
@@ -1951,25 +1952,23 @@ Note =
 
 **conditional computation** allows us to scale model capacity without proportional compute scaling. It's like having a library with thousands of specialized books, but only reading the few relevant ones for each question.
 
-
 ##### The Gating Network
 
 First let us understand how the output is calculated in a sparse MoE.
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/6.webp)
 
-We begin with an input matrix X, multiple that by the router weights W. We take the softmax of this output to get the probability distribution $G(x)$. This is the likelihood of which experts are best for the given input. 
+We begin with an input matrix X, multiple that by the router weights W. We take the softmax of this output to get the probability distribution $G(x)$. This is the likelihood of which experts are best for the given input.
 
 Depending on how many experts we choose, we take the output of those experts and multiply that with the probability of that output begin chosen (This is done distriute the importance of the output based on which expert is most likely to be chosen). That gives us the output.
 
-When we put it all together, this is how it looks. 
+When we put it all together, this is how it looks.
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/7.webp)
 
 The original paper introduced two key innovations:
 
 **Softmax Gating (Dense Baseline)**
-
 
 ```python
 # Simple dense gating - activates ALL experts with different weights
@@ -2037,7 +2036,7 @@ Modern GPUs have computational power thousands of times greater than network ban
 
 Without intervention, a few experts dominate while others are rarely used. This creates a vicious cycle: popular experts get more training data, become better, and thus get selected even more often. Meanwhile, neglected experts remain undertrained and essentially become dead weight.
 
-Think of it like a classroom where only the brightest students get called on - they get more practice and become even brighter, while others stagnate. The MoE suffers from this problem unless we actively intervene.
+Think of it like a classroom where only the brightest students get called on - they get more practice and become even brighter, while others stagnate.
 
 **The Dual Challenge**
 
@@ -2077,7 +2076,6 @@ $$CV(\text{Importance}(X)) = \frac{\sigma(\text{Importance}(X))}{\mu(\text{Impor
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/18.webp)
 
-
 **Step 3: Measuring Load**
 
 Load measures how many examples each expert actually processes:
@@ -2103,12 +2101,13 @@ $$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{main}} + \mathcal{L}_{\text{au
 Consider these scenarios:
 
 - **Expert A**: Gets selected for 100 examples with average weight 0.01 each
-- **Expert B**: Gets selected for 2 examples with average weight 0.5 each  
+- **Expert B**: Gets selected for 2 examples with average weight 0.5 each
 - **Expert C**: Gets selected for 50 examples with average weight 0.02 each
 
 All have similar total importance (≈ 1.0), but vastly different training dynamics:
+
 - Expert A gets many weak signals → slow learning
-- Expert B gets few strong signals → overfitting risk  
+- Expert B gets few strong signals → overfitting risk
 - Expert C gets balanced signal → healthy learning
 
 The dual loss ensures both the total contribution (importance) and the number of training examples (load) are balanced across experts.
@@ -2116,6 +2115,7 @@ The dual loss ensures both the total contribution (importance) and the number of
 **Practical Impact**
 
 With proper load balancing:
+
 - All experts receive sufficient training signal
 - No expert dominates the computation
 - Model capacity is fully utilized
@@ -2125,10 +2125,9 @@ This auxiliary loss was crucial for making MoE work at scale - without it, the m
 
 **Expert Capacity**
 
-
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/19.webp)
 
-This wasn't introduced in this paper, but let's talk about it too since it's crucial for modern MoE implementations. Even with perfect load balancing, there's another challenge: **token overflow**. In the example above, FFNN 1receive the majority of tokens. To prevent any single expert from being overwhelmed, we set an **Expert Capacity** - a maximum number of tokens each expert can process per batch. When an expert reaches capacity, additional tokens that would have been routed to it are either sent to the next-best expert or bypass the MoE layer entirely (called **token overflow**). This capacity mechanism ensures balanced computational load across experts and prevents memory bottlenecks, though it can sometimes mean tokens don't get processed by their optimal expert. The trade-off between perfect routing and practical constraints is a key engineering challenge in scaling MoE systems.
+This wasn't introduced in this paper, but let's talk about it too since it's crucial for modern MoE implementations. Even with perfect load balancing, there's another challenge: **token overflow**. In the example above, FFNN 1 receives the majority of tokens. To prevent any single expert from being overwhelmed, we set an **Expert Capacity** - a maximum number of tokens each expert can process per batch. When an expert reaches capacity, additional tokens that would have been routed to it are either sent to the next-best expert or bypass the MoE layer entirely (called **token overflow**). This capacity mechanism ensures balanced computational load across experts and prevents memory bottlenecks, though it can sometimes mean tokens don't get processed by their optimal expert. The trade-off between perfect routing and practical constraints is a key engineering challenge in scaling MoE systems.
 
 ##### Training the MoE Model
 
@@ -2144,7 +2143,7 @@ The specialization emerges through training dynamics:
 **What do experts actually learn?** (From the paper's analysis)
 
 ![Image of tokens in MoE layre](/assets/blog_assets/evolution_of_llms/16.webp)
-*Image taken from [Mistral paper](https://arxiv.org/pdf/2401.04088)*
+_Image taken from [Mistral paper](https://arxiv.org/pdf/2401.04088)_
 
 Unlike the intuitive "biology expert" or "math expert", real MoE experts learn much more fine-grained patterns:
 
@@ -2195,7 +2194,7 @@ Today's largest language models increasingly rely on MoE architectures, making t
 
 > Rest of the sections from 2018-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
 
-<!-- 
+<!--
 ## 2018: BERT and Early Innovations
 
 ### ULMFiT
