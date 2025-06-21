@@ -1902,40 +1902,74 @@ A simple intuition behind MoE can be seen as above, A single dense neural networ
 
 But with a MoE layer, a smart router reads the question and directs it to the right expert. That expert gives a focused answer since they only need to worry about their specialty. As we're only activating one small expert instead of the entire large model, we use much less computation while still having access to lots of specialized knowledge.
 
-The above visualization is good for intuition point of view, but that is not how MoEs actually work in practice. For starter each expert is not an expert in a topic but expert in tokens, some can be punctuation experts, some can be noun experts etc. More on this later.
+The above visualization is good for intuition point of view, but that is not how MoEs actually work in practice. For starter each expert is not an expert in a topic but expert in tokens, some can be punctuation experts, some can be noun experts etc.(More on this later)
 
 This work introduced MoEs to LSTMs, so let us proceed forward in understanding that.
 Consider reading the following blog [Understanding LSTM Networks](https://colah.github.io/posts/2015-08-Understanding-LSTMs/) by [Christopher Olah](https://x.com/ch402?lang=en) & [Recurrent Neural Networks (RNNs), Clearly Explained!!!](https://www.youtube.com/watch?v=AsNTP8Kwu80) by [Josh Starmer](https://x.com/joshuastarmer?lang=en) if you need a refresher on the topic.
 
 ![Image of MoE for RNNs](/assets/blog_assets/evolution_of_llms/3.webp)
 
+In an MoE model, the Fully connected neural network(FCNN) (Or the hiddens state in case of RNNs & LSTMs) is replaces with an MoE layer. The MoE layer consists of a gating function which outputs a probability distribution of likely experts. The experts themselves are smaller FCNN. The output of the experts is multiplied with their probability after which it is finally summed over.
+
+![Image of MoE layer](/assets/blog_assets/evolution_of_llms/moe_layer.webp)
+
 The idea seems simple enough, but there are multiple complexities like:
 
-- How do you train the model?
 - How do you create a fair gating function?
 - How many experts do you choose?
+- How many tokens do you send to each expert?
 
 Let's us go through each question one by one.
 
 > Note: We will see many changes that were made on this idea as we progress, but this was the foundational paper on MoEs for large models. So it is crucial that you understand it well.
 
-![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/moe_layer.webp)
 
-![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/sparse_vs_dense_moe.webp)
+Note =
+~1. First put sparse and dense MoE~
+~2. Then put how output is calculate dand shows~
+~3. Then explain gating function~
+4. Then explain training 
+5. Then address the problems that the paper solved
+6. Then talk about load balancing
 
-![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/5.webp)
+##### Sparse vs Dense Networks
+
+![Image of sparse and dense MoE](/assets/blog_assets/evolution_of_llms/sparse_vs_dense_moe.webp)
+
+
+**Dense Networks**: Every parameter is used for every input
+
+- High computational cost that scales linearly with parameters
+- Limited by memory and compute constraints
+- Parameters must be "generalists" handling all types of inputs
+
+**Sparse Networks (MoE)**: Only a subset of parameters are used per input
+
+- Computational cost scales with active experts, not total experts
+- Can have 1000x more parameters with similar compute budget
+- Parameters can be highly specialized for specific patterns
+
+**conditional computation** allows us to scale model capacity without proportional compute scaling. It's like having a library with thousands of specialized books, but only reading the few relevant ones for each question.
+
+
+##### The Gating Network
+
+First let us understand how the output is calculated in a sparse MoE.
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/6.webp)
 
+We begin with an input matrix X, multiple that by the router weights W. We take the softmax of this output to get the probability distribution $G(x)$. This is the likelihood of which experts are best for the given input. 
+
+Depending on how many experts we choose, we take the output of those experts and multiply that with the probability of that output begin chosen (This is done distriute the importance of the output based on which expert is most likely to be chosen). That gives us the output.
+
+When we put it all together, this is how it looks. 
+
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/7.webp)
 
-##### Understanding the Gating Network
-
-"""
-
-The gating network is the "smart router" that decides which experts to activate for each input. The original paper introduced two key innovations:
+The original paper introduced two key innovations:
 
 **Softmax Gating (Dense Baseline)**
+
 
 ```python
 # Simple dense gating - activates ALL experts with different weights
@@ -1967,27 +2001,11 @@ G(x) = Softmax(KeepTopK(H(x), k))
 - **Specialization**: Each expert focuses on specific patterns
 - **Scalability**: We can add thousands of experts without proportional compute increase
 
-##### Sparse vs Dense Networks
-
-**Dense Networks**: Every parameter is used for every input
-
-- High computational cost that scales linearly with parameters
-- Limited by memory and compute constraints
-- Parameters must be "generalists" handling all types of inputs
-
-**Sparse Networks (MoE)**: Only a subset of parameters are used per input
-
-- Computational cost scales with active experts, not total experts
-- Can have 1000x more parameters with similar compute budget
-- Parameters can be highly specialized for specific patterns
-
-This is the key insight: **conditional computation** allows us to scale model capacity without proportional compute scaling. It's like having a library with thousands of specialized books, but only reading the few relevant ones for each question.
-
 ##### Addressing Performance Challenges
 
-The original paper identified several critical challenges that needed solving for MoE to work in practice:
+The paper identified several critical challenges that needed solving for MoE to work in practice:
 
-**1. The Shrinking Batch Problem**
+**The Shrinking Batch Problem**
 
 ```
 Original batch: 1024 examples
@@ -1995,23 +2013,35 @@ With 256 experts, k=4: Each expert sees only ~16 examples
 Small batches = inefficient GPU utilization
 ```
 
-**Solution: Mix Data and Model Parallelism**
+**Solution:**
+
+Mix Data and Model Parallelism
 
 - Combine batches from multiple GPUs before sending to experts
 - Each expert gets larger effective batch size: `(batch_size * num_devices * k) / num_experts`
 - Achieves factor of `d` improvement in expert batch size with `d` devices
 
-**2. Network Bandwidth Bottleneck**
-Modern GPUs have computational power thousands of times greater than network bandwidth. The solution:
+**Network Bandwidth Bottleneck**
+
+Modern GPUs have computational power thousands of times greater than network bandwidth. Meaning most time is spent between I/O operations.
+
+**Solution:**
 
 - Keep experts stationary on devices (don't move the experts)
 - Only send inputs/outputs across network (much smaller)
 - Use larger hidden layers to improve computation-to-communication ratio
 
-**3. Load Balancing Problem**
+| To understand this better, consider reading [Making Deep Learning Go Brrrr From First Principles](https://horace.io/brrr_intro.html)
+
+**Load Balancing Problem**
+
 Without intervention, a few experts dominate while others are rarely used.
 
 **Load Balancing Loss**:
+
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/17.webp)
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/18.webp)
 
 ```python
 # Encourage equal usage across experts
@@ -2027,6 +2057,17 @@ total_loss = main_loss + importance_loss + load_loss
 
 **Why both losses?** One expert might get few examples with large weights, another might get many examples with small weights. Both scenarios cause training issues.
 
+
+
+**Expert Capacity**
+
+
+![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/19.webp)
+
+This wasn't introduced in this paper, but let's talk about it too 
+
+
+
 ##### Training the MoE Model
 
 **Key Challenge**: How do experts specialize without explicit supervision?
@@ -2039,6 +2080,9 @@ The specialization emerges through training dynamics:
 4. **Emergent specialization**: Through this process, experts develop distinct capabilities
 
 **What do experts actually learn?** (From the paper's analysis)
+
+![Image of tokens in MoE layre](/assets/blog_assets/evolution_of_llms/16.webp)
+*Image taken from [Mistral paper](https://arxiv.org/pdf/2401.04088)*
 
 Unlike the intuitive "biology expert" or "math expert", real MoE experts learn much more fine-grained patterns:
 
