@@ -2035,38 +2035,100 @@ Modern GPUs have computational power thousands of times greater than network ban
 
 **Load Balancing Problem**
 
-Without intervention, a few experts dominate while others are rarely used.
+Without intervention, a few experts dominate while others are rarely used. This creates a vicious cycle: popular experts get more training data, become better, and thus get selected even more often. Meanwhile, neglected experts remain undertrained and essentially become dead weight.
 
-**Load Balancing Loss**:
+Think of it like a classroom where only the brightest students get called on - they get more practice and become even brighter, while others stagnate. The MoE suffers from this problem unless we actively intervene.
 
+**The Dual Challenge**
+
+The paper identifies that we need to balance two distinct but related problems:
+
+1. **Importance Imbalance**: Some experts get high gating weights but few examples
+2. **Load Imbalance**: Some experts get many examples but low individual weights
+
+Both scenarios are problematic. An expert with few high-weight examples overfits to specific patterns, while an expert with many low-weight examples receives weak learning signals.
+
+**Mathematical Solution: Auxiliary Loss**
+
+The authors introduce a load balancing loss that uses the **coefficient of variation (CV)** to measure and penalize imbalance:
+
+$$CV = \frac{\sigma}{\mu} = \frac{\text{standard deviation}}{\text{mean}}$$
+
+The CV is beautiful because it's scale-invariant - it measures relative variability regardless of the absolute magnitudes. A CV of 0 means perfect balance, while higher values indicate increasing imbalance.
+
+**Step 1: Measuring Importance**
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/17.webp)
+
+For each expert $i$, we sum its gating probabilities across the entire batch:
+
+$$\text{Importance}(X)_i = \sum_{x \in X} G(x)_i$$
+
+This gives us the "importance scores" - how much each expert contributes regardless of which specific examples it processes.
+
+**Step 2: Computing the Importance Loss**
+
+$$\mathcal{L}_{\text{importance}} = w_{\text{importance}} \cdot CV(\text{Importance}(X))^2$$
+
+Where:
+$$CV(\text{Importance}(X)) = \frac{\sigma(\text{Importance}(X))}{\mu(\text{Importance}(X))}$$
+
+**Why square the CV?** This creates a stronger penalty for large imbalances and makes the gradient more well-behaved during optimization.
+
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/18.webp)
 
-```python
-# Encourage equal usage across experts
-Importance(X) = Σ_{x∈X} G(x)  # Sum gate values per expert
-importance_loss = w_importance * CV(Importance(X))²
 
-# Encourage equal number of examples per expert
-Load(X) = smooth_estimator_of_examples_per_expert(X)
-load_loss = w_load * CV(Load(X))²
+**Step 3: Measuring Load**
 
-total_loss = main_loss + importance_loss + load_loss
-```
+Load measures how many examples each expert actually processes:
 
-**Why both losses?** One expert might get few examples with large weights, another might get many examples with small weights. Both scenarios cause training issues.
+$$\text{Load}(X)_i = \sum_{x \in X} \mathbf{1}[\text{expert } i \text{ is in top-k for } x]$$
 
+In practice, this uses a smooth differentiable approximation rather than the hard indicator function.
 
+**Step 4: Computing the Load Loss**
+
+$$\mathcal{L}_{\text{load}} = w_{\text{load}} \cdot CV(\text{Load}(X))^2$$
+
+**The Complete Auxiliary Loss**
+
+$$\mathcal{L}_{\text{auxiliary}} = w_{\text{importance}} \cdot CV(\text{Importance}(X))^2 + w_{\text{load}} \cdot CV(\text{Load}(X))^2$$
+
+**Final Training Objective**
+
+$$\mathcal{L}_{\text{total}} = \mathcal{L}_{\text{main}} + \mathcal{L}_{\text{auxiliary}}$$
+
+**Why Both Losses Matter**
+
+Consider these scenarios:
+
+- **Expert A**: Gets selected for 100 examples with average weight 0.01 each
+- **Expert B**: Gets selected for 2 examples with average weight 0.5 each  
+- **Expert C**: Gets selected for 50 examples with average weight 0.02 each
+
+All have similar total importance (≈ 1.0), but vastly different training dynamics:
+- Expert A gets many weak signals → slow learning
+- Expert B gets few strong signals → overfitting risk  
+- Expert C gets balanced signal → healthy learning
+
+The dual loss ensures both the total contribution (importance) and the number of training examples (load) are balanced across experts.
+
+**Practical Impact**
+
+With proper load balancing:
+- All experts receive sufficient training signal
+- No expert dominates the computation
+- Model capacity is fully utilized
+- Training stability improves dramatically
+
+This auxiliary loss was crucial for making MoE work at scale - without it, the models would collapse to using only a handful of experts, defeating the entire purpose of conditional computation.
 
 **Expert Capacity**
 
 
 ![Image of MoE paper abstract](/assets/blog_assets/evolution_of_llms/19.webp)
 
-This wasn't introduced in this paper, but let's talk about it too 
-
-
+This wasn't introduced in this paper, but let's talk about it too since it's crucial for modern MoE implementations. Even with perfect load balancing, there's another challenge: **token overflow**. In the example above, FFNN 1receive the majority of tokens. To prevent any single expert from being overwhelmed, we set an **Expert Capacity** - a maximum number of tokens each expert can process per batch. When an expert reaches capacity, additional tokens that would have been routed to it are either sent to the next-best expert or bypass the MoE layer entirely (called **token overflow**). This capacity mechanism ensures balanced computational load across experts and prevents memory bottlenecks, though it can sometimes mean tokens don't get processed by their optimal expert. The trade-off between perfect routing and practical constraints is a key engineering challenge in scaling MoE systems.
 
 ##### Training the MoE Model
 
@@ -2118,35 +2180,7 @@ This emergent specialization is what makes MoE powerful - experts automatically 
 
 ##### From LSTMs to Modern Transformers
 
-While this paper applied MoE to LSTMs (the dominant architecture in 2017), the core insights proved even more powerful when later applied to Transformers:
-
-**Modern MoE Applications**:
-
-- **Switch Transformers (2022)**: Applied MoE to every Transformer layer, achieved 1.6T parameters
-- **PaLM-2**: Uses MoE for efficiency in Google's production models
-- **Mixtral 8x7B**: Open-source MoE that outperforms much larger dense models
-- **GPT-4**: Rumored to use MoE architecture (though not confirmed)
-
-**Why MoE + Transformers Work So Well**:
-
-- Transformers already have clear separation between attention and FFN layers
-- MoE can replace FFN layers without changing attention mechanisms
-- Better parallelization properties than RNNs
-- Attention provides better routing signal for expert selection
-
-**The Evolution Path**:
-
-```
-1991: Original MoE concept
-↓
-2017: Scalable MoE for LSTMs (this paper)
-↓
-2020-2022: MoE + Transformers (Switch, GShard)
-↓
-2023-2024: Production MoE models (PaLM-2, Mixtral, etc.)
-```
-
-##### Looking Forward
+While this paper applied MoE to LSTMs (the dominant architecture in 2017), the core insights proved even more powerful when later applied to Transformers, about which we will learn more about in the later sections.
 
 The path from this 2017 paper to modern LLMs shows how foundational ideas can have delayed but massive impact. Key lessons that influenced later work:
 
@@ -2157,7 +2191,6 @@ The path from this 2017 paper to modern LLMs shows how foundational ideas can ha
 
 Today's largest language models increasingly rely on MoE architectures, making this paper's contributions more relevant than ever. The ability to scale to trillion-parameter models while maintaining reasonable training costs has become essential for pushing the boundaries of AI capabilities.
 
-"""
 ## WORK IN PROGRESS NOTICE
 
 > Rest of the sections from 2018-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
