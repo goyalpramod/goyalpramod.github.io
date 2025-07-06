@@ -2194,12 +2194,12 @@ Today's largest language models increasingly rely on MoE architectures, making t
 
 > Rest of the sections from 2018-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
 
-<!--
+<!-- 
 ## 2018: BERT and Early Innovations
 
 ### ULMFiT
 
-![Image of MoE for RNNs](/assets/blog_assets/evolution_of_llms/ULM_abstract.webp)
+![Image of ULMFiT](/assets/blog_assets/evolution_of_llms/ULM_abstract.webp)
 
 > Link to paper: [Universal Language Model Fine-tuning for Text Classification](https://arxiv.org/pdf/1801.06146)
 
@@ -2238,6 +2238,10 @@ The paper demonstrates that effective transfer learning is possible in NLP witho
 > Inductive transfer learning has greatly impacted computer vision, but existing approaches in NLP still require task-specific
 > modifications and training from scratch.
 
+Before ULMFiT, transfer learning in NLP had a fatal flaw: catastrophic forgetting. When you fine-tuned a pretrained model on a new task, the model would rapidly "forget" its pretrained knowledge and overfit to the small target dataset. It was like teaching a polyglot to speak a new dialect, only to watch them forget all their other languages in the process.
+
+This made transfer learning frustrating and often counterproductive. Researchers would get excited about pretrained models, only to find that fine-tuning destroyed the very knowledge they wanted to leverage.
+
 **Solution**
 
 > ULMFiT, an effective transfer learning method that can be applied to
@@ -2253,21 +2257,115 @@ The first stage is pretty basic and nothing innovative, but the second & third s
 
 So far noone had been able to fine a general purpose model to perform well on target task which was not present in the original modeling of the original model
 
-Let us understand that
+> **Why Transfer Learning Failed in NLP** </br>
+> Unlike computer vision, where you could take ImageNet features and achieve great results on new tasks, NLP models seemed to resist transfer. The problem wasn't the models themselves but how we fine-tuned them. Traditional approaches used the same learning rate for all layers and froze nothing, causing rapid degradation of learned representations.
+> ULMFiT's breakthrough was realizing that different layers need different treatment during fine-tuning.
 
-##### Target task Language Model fine-tuning
+Let us understand each stage one by one
+
+##### 1st stage: General-domain LM pretraining
+
+This is the simplest albeit the most expensive stage. Take a large dataset that has general information on many topics and train your model on it.
+
+| "We pretrain the language model on Wikitext-103
+(Merity et al., 2017b) consisting of 28,595 preprocessed Wikipedia articles and 103 million words."
+
+This helps the model learn general language properties, At this stage it is nothing more than a really good next token predictor.
+
+For example if you asked it the question
+
+"What is the capital of France?"
+
+Instead of getting Paris as the answer you will get. "What is the capital of India ?What is the captial of China" and so on.
+
+That is where the innovative "fine-tuning" part comes in.
+
+##### 2nd Stage: Target task Language Model fine-tuning
+
+Fine-tuning let's us teach the LLM to follow our task specific requirements and control it's behaviour in our target dataset.
 
 **Discriminative fine-tuning**
 
+In any deep neural network, different layers capture different parts of the dataset (This is a very popular [article](https://poloclub.github.io/cnn-explainer/)) visualizing different parts of a CNN model). So it is reasonable to think that it won't be a good idea to use the same learning rate to fine-tune each layer.
+
+That is the idea behind discriminative fine-tuning. In this we have a different learning rate for each layer.
+
+Stochastic Gradient Descent
+
+$$\theta_t = \theta_{t-1} - \eta \cdot \nabla_\theta J(\theta)$$
+
+Stochastic Gradient Descent with different learning rate for each layers
+
+$$\theta_t^l = \theta_{t-1}^l - \eta^l \cdot \nabla_{\theta^l} J(\theta)$$
+
+The authors found that it's best to first find the optimum $\eta^L$ for the last layer, then go downstream following this rule $\eta^{l-1} = \eta^l/2.6$
+
 **Slanted triangular learning rates**
+
+When fine-tuning a pretrained model, we face a fundamental tension. We want the model to quickly adapt to our target task, but we also need to preserve the valuable knowledge it learned during pretraining. Fixed learning rates can't solve this dilemma.
+
+To solve that the authors introduced STLR, an adaptive learning rate that changes with number of iterations.
+
+The idea is, start with a higher learning rate to rapidly adapt the model to the target task's patterns, then gradually decrease it to fine-tune without destroying pretrained representations.
+
+![Image of STLR](/assets/blog_assets/evolution_of_llms/20.webp)
+
+Think of it like learning to drive in a new city. Initially, you drive faster to quickly get oriented and find the general area you need. Once you're close to your destination, you slow down to carefully navigate the final streets and parking.
+
+This was achieved using the following formul
+
+$$\text{cut} = \lfloor T \cdot \text{cut\_frac} \rfloor$$
+
+$$
+p = \begin{cases}
+t/\text{cut}, & \text{if } t < \text{cut} \\
+1 - \frac{t-\text{cut}}{\text{cut} \cdot (1/\text{cut\_frac} - 1)}, & \text{otherwise}
+\end{cases}
+$$
+
+$$\eta_t = \eta_{\max} \cdot \frac{1 + p \cdot (\text{ratio} - 1)}{\text{ratio}}$$
+
+Where:
+
+- $T$ is the total number of training iterations
+- $\text{cut\_frac}$ is the fraction of iterations for learning rate increase (typically 0.1)
+- $\text{cut}$ is the iteration where we switch from increasing to decreasing
+- $p$ is the fraction of iterations in current phase
+- $\text{ratio}$ specifies how much smaller the lowest LR is from maximum (typically 32)
+- $\eta_{\max}$ is the maximum learning rate (typically 0.01)
+- $\eta_t$ is the learning rate at iteration $t$
+
+[Improve the below content, add any visuals if I can think of anyhting]
+
+##### 3rd Stage: Target task classifier fine-tuning
+
+The final stage adds a classifier head to the fine-tuned language model and trains it for the specific task. This stage introduces several crucial techniques that prevent the model from forgetting its pretrained knowledge.
+
+**Gradual Unfreezing**
+
+Rather than fine-tuning all layers at once, which risks catastrophic forgetting, ULMFiT gradually unfreezes layers starting from the last layer. The intuition is elegant: the last layers contain the most task-specific knowledge, while early layers capture universal language features that should change slowly.
+
+The process works like this: First, unfreeze only the classifier head and train for one epoch. Then unfreeze the next layer down and continue training. Repeat this process until all layers are unfrozen. This gradual approach gives the model time to adapt each layer's representations smoothly without destroying the foundation built in earlier layers.
+
+**Concat Pooling**
+
+ULMFiT also introduced concat pooling for text classification. Instead of using only the final hidden state, it concatenates the last hidden state with both max-pooled and mean-pooled representations across all timesteps. This captures information from the entire document, not just the end.
+
+**BPTT for Text Classification (BPT3C)**
+
+For handling long documents, ULMFiT adapts backpropagation through time by dividing documents into fixed-length batches while maintaining hidden state continuity between batches.
+
+**Revolutionary Results**
+
+ULMFiT's results were unprecedented for their time. On six text classification datasets, the method achieved 18-24% error reduction compared to state-of-the-art approaches. More impressively, with just 100 labeled examples, ULMFiT matched the performance of training from scratch with 10-100× more data.
+
+This sample efficiency was the real game-changer. Suddenly, high-quality NLP became accessible to domains with limited labeled data, democratizing the field in ways that hadn't been possible before.
 
 ### ELMo: Embeddings from Language Models
 
 ![Image of ELMo](/assets/blog_assets/evolution_of_llms/ELMO_abstract.webp)
 
 > Link to paper: [Deep contextualized word representations](https://arxiv.org/abs/1802.05365)
-
-https://pythonandml.github.io/dlbook/content/word_embeddings/elmo.html
 
 <details>
 <summary markdown="span">Quick Summary</summary>
@@ -2494,6 +2592,27 @@ All these methods share a fundamental flaw: they assign the same representation 
 ##### Static Word Embeddings
 
 **Word2Vec**
+
+The following are excellect sources to understand Word2Vec in a deeper level. Consider going through them
+
+- [The Illustrated Word2vec](https://jalammar.github.io/illustrated-word2vec/)
+- [Word2Vec Tutorial - The Skip-Gram Model](https://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/)
+
+1. First build intuition
+2. Talk about training
+3. Talk about skip gram model
+4. Talk about heirircal softmax and negative sampling
+
+1 dimension cheesy flavour
+
+What if add wine as well, acidity
+
+But what if we want to talk about penne as well, Then we will need add another dimension
+3d
+
+If you wish to learn more about Hierarchical Softmax consider reading this [blog](https://talbaumel.github.io/blog/softmax/).And for negative sampling consider reading [this](https://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/).
+
+This is a great place to visualize [Word2Vec](https://projector.tensorflow.org/)
 
 **GloVe**
 
@@ -6378,6 +6497,8 @@ The paper demonstrates how careful scaling of both data and training techniques 
 </details>
 <br/>
 
+## RLVR
+
 ## It's all about DeepSeek
 
 This whole section is dedicated just to the geniuses that are DeepSeek
@@ -6408,13 +6529,10 @@ Create a "family tree" showing model lineage
 NOTES TO SELF
 
 - Add a note for hardware, not in the scope of this blog but should not be ignored [DONE]
-- Quick note about benchmark, Not hear to explain these but these are the major ones that are used mostly.
-- Under each paper, add the image of the paper with the name of the authors as well as the abstract
+- Quick note about benchmark, Not hear to explain these but these are the major ones that are used mostly.[DONE]
+- Under each paper, add the image of the paper with the name of the authors as well as the abstract[DONE]
 - Train a hand drawn sketch LORA in flux dev for images
-- Add a reference section in the end which redirects to the papers, Like latex reference and stuff.
-
-[TOP MEME, MOnkey to man evolution yearwise and leave the man with no model (to signify no AGI yet)]
-[Add tree from this paper to clarify that it was not a linear evolution but a tree wise, much like real theory of evolution https://arxiv.org/pdf/2304.13712]
+- Add a reference section in the end which redirects to the papers, Like latex reference and stuff.[DONE]
 
 [add prerequisites section, summary section, skip to section]
 
@@ -6423,37 +6541,6 @@ NOTES TO SELF
 This part is highly influenced by this [video](https://www.youtube.com/watch?v=7xTGNNLPyMI) by andrej karpathy
 
 A paper on pretraining [paper](https://arxiv.org/pdf/2003.08271)
-
-### Architecture
-
-We will be skipping over the internal details about the transformers model (you can read more about it in my previous blog), I will proceed with the assumption that you have a very deep level understanding of atleast the transformer model. Having that that let us proceed.
-
-As we can see the original transformer has two parts, an Encoder and a Decoder. And as is known, it was initially made for the sole purpose of Machine Translation.
-
-But over the years they have been used for a plethora of tasks from
-
-- Question Answering
-- Summarization
-- Tagging
-- Classification
-
-And many more.
-
-LLMs consist of architectures which are solely based on the Encoder like Bert
-
-[ADD_IMAGE_OF_BERT]
-
-LLMs consist of architectures which are solely based on the Decoder like gpt-1
-
-[ADD_IMAGE_OF_GPT1]
-
-There are LLMs which use the good ol Encoder Decoder layer together too like T5
-
-[WITH_IMAGE]
-
-One thing to be mindful of is, that the development of LLMs have been done on the transformers. There was no radical shift, only gradual and slow incremental changes. As you read more about them you will understand them better.
-
-In crux you only need to understand the basic Transformer architecture to understand most if not all LLMs.
 
 ### Training
 
