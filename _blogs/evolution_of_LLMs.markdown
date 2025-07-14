@@ -2605,10 +2605,79 @@ The following are excellect sources to understand Word2Vec in a deeper level. Co
 
 1 dimension cheesy flavour
 
-What if add wine as well, acidity
+**Intuition**
 
-But what if we want to talk about penne as well, Then we will need add another dimension
-3d
+We are going to start with the old and cheesy explanation of Word2vec. Talking about similarity of vector representation in space. (If you do not understand what I am talking about, Most explanations of Word2vec use the explanation I am about to give. Fret not, for we will dive deeper too!)
+
+I absolutely love cheese. And I have scale in which I measure how cheesy a piece of cheese is.
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/21.webp)
+
+Anytime I find a new cheese, I taste it and put it on my scale. I use this scale to choose which cheese to eat based on my mood.
+
+![Image of word2vec ex5planation](/assets/blog_assets/evolution_of_llms/22.webp)
+
+But one day I ran into a cheese (yellow cheese) which had the same cheesiness as the white cheese. Now how do I differntiate between the two? well cheese has many other properties (or features from the ML perspective). Like protein!!
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/23.webp)
+
+I can add that as another axis and I can use that as another metric to choose the kind of cheese I want to eat.
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/24.webp)
+
+This way of plotting cheese based on different properties provides with another amazing way. One day a friend of mine came and said he really liked red cheese, but I was out of red cheese :( 
+because I love it too.
+
+So I can just find the cheese which is most similar to it, using cosine similarity!!
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/25.webp)
+
+That is essentially the idea of word2vec, We plot multiple words in an n dimensional space (I used 2 dimensional because I can plot it. I can't plot a 7d space, I will love to meet you if you can tho!!!). And find similar words based on cosine similarity. 
+
+There is a popular example that shows the distance between king and woman is same as the distance between man and woman. This essentially shows that both the pair of words share very similar ideas with only a few differences (maybe in royalty).
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/26.webp)
+
+In reality Word2vec looks something more like the below image (ouch!!).
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/27.webp)
+*Image taken from [Embedding Projector](https://projector.tensorflow.org/)*
+
+**Skip gram model**
+
+Now that we understand the idea behind word2vec, it's time to understand how it is implemented. I will be skipping Continous Bag of words, an idea introduced in the original paper as it is not essential in my opinion. You can read more about it in the sources I have provided.
+
+| Skip gram in 1 sentence -> Given a word, find it's nearby words (context words).
+| CBOW in 1 sentence -> Given context words, find the target word.
+
+One of the many beautiful thing about NLP is, you can create a labelled dataset using an unlabelled dataset. Our objective is to build a model that finds words nearby a target word. 
+
+Let us understand how the training dataset is created using a sample sentence. We first define a window, we have our target word with the relevant context words around it. 
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/28.webp)
+
+Now that we have our training data, let us understand how the model itself is constructed. Remember how we talked about cheesiness as a feature for our cheese, then protein, well both of them can be described as their own individual neuron. So in the example below we have an embedding model with 300 as it's dimension (In modern embedding model when you talk about dimensions, it is essentially talking about how many features can be used to describe one particular token, as a rule of thumb higher the dimension, more complex is it's representation)
+
+So for any given word, we can create a one hot encoding, then pass it through our embedding model. Which is then passed to the final Softmax layer which gives the probability of all the words which are likely to be a context word. 
+
+> I have a question for you, What is the difference between nn.Embedding and nn.Sequential?
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/29.webp)
+
+One thing I found interesting was, we talk about "Embedding Matrix" but the above image describes a typical neural network model, what is going on over here?
+
+Well if we look below, it becomes much easier to understand. The word vector represents the OHE encoding of the chosen work. 
+
+Each row of the embedding matrix represents the weights of every word in that neuron. So when we do a matrix multiplication, we get the weight for that word from different neurons. 
+
+It's easier to visualize as different embedding vectors for each token of a fixed dimension.
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/30.webp)
+
+Now we just run a training loop and voila, the hidden layer, is our embedding matrix. But we have a problem. As this was an example we used a vocabulary of a 100 words, but in reality the vocabulary is 100 times larger. And calculating softmax of so many tokens is a very expensive operation.
+
+There is two solutions to fix this problems of ours Hierarical Softmax and Negative sampling. Let's briefly go through both. 
+
+
 
 If you wish to learn more about Hierarchical Softmax consider reading this [blog](https://talbaumel.github.io/blog/softmax/).And for negative sampling consider reading [this](https://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/).
 
