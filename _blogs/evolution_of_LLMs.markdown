@@ -2193,7 +2193,6 @@ Today's largest language models increasingly rely on MoE architectures, making t
 ## WORK IN PROGRESS NOTICE
 
 > Rest of the sections from 2018-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
-
 <!-- 
 ## 2018: BERT and Early Innovations
 
@@ -2624,14 +2623,14 @@ I can add that as another axis and I can use that as another metric to choose th
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/24.webp)
 
-This way of plotting cheese based on different properties provides with another amazing way. One day a friend of mine came and said he really liked red cheese, but I was out of red cheese :( 
+This way of plotting cheese based on different properties provides with another amazing way. One day a friend of mine came and said he really liked red cheese, but I was out of red cheese :(
 because I love it too.
 
 So I can just find the cheese which is most similar to it, using cosine similarity!!
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/25.webp)
 
-That is essentially the idea of word2vec, We plot multiple words in an n dimensional space (I used 2 dimensional because I can plot it. I can't plot a 7d space, I will love to meet you if you can tho!!!). And find similar words based on cosine similarity. 
+That is essentially the idea of word2vec, We plot multiple words in an n dimensional space (I used 2 dimensional because I can plot it. I can't plot a 7d space, I will love to meet you if you can tho!!!). And find similar words based on cosine similarity.
 
 There is a popular example that shows the distance between king and woman is same as the distance between man and woman. This essentially shows that both the pair of words share very similar ideas with only a few differences (maybe in royalty).
 
@@ -2640,7 +2639,7 @@ There is a popular example that shows the distance between king and woman is sam
 In reality Word2vec looks something more like the below image (ouch!!).
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/27.webp)
-*Image taken from [Embedding Projector](https://projector.tensorflow.org/)*
+_Image taken from [Embedding Projector](https://projector.tensorflow.org/)_
 
 **Skip gram model**
 
@@ -2649,15 +2648,15 @@ Now that we understand the idea behind word2vec, it's time to understand how it 
 | Skip gram in 1 sentence -> Given a word, find it's nearby words (context words).
 | CBOW in 1 sentence -> Given context words, find the target word.
 
-One of the many beautiful thing about NLP is, you can create a labelled dataset using an unlabelled dataset. Our objective is to build a model that finds words nearby a target word. 
+One of the many beautiful thing about NLP is, you can create a labelled dataset using an unlabelled dataset. Our objective is to build a model that finds words nearby a target word.
 
-Let us understand how the training dataset is created using a sample sentence. We first define a window, we have our target word with the relevant context words around it. 
+Let us understand how the training dataset is created using a sample sentence. We first define a window (here it's 2), we have our target word with the relevant context words around it.
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/28.webp)
 
 Now that we have our training data, let us understand how the model itself is constructed. Remember how we talked about cheesiness as a feature for our cheese, then protein, well both of them can be described as their own individual neuron. So in the example below we have an embedding model with 300 as it's dimension (In modern embedding model when you talk about dimensions, it is essentially talking about how many features can be used to describe one particular token, as a rule of thumb higher the dimension, more complex is it's representation)
 
-So for any given word, we can create a one hot encoding, then pass it through our embedding model. Which is then passed to the final Softmax layer which gives the probability of all the words which are likely to be a context word. 
+So for any given word, we can create a one hot encoding, then pass it through our embedding model. Which is then passed to the final Softmax layer which gives the probability of all the words which are likely to be a context word.
 
 > I have a question for you, What is the difference between nn.Embedding and nn.Sequential?
 
@@ -2665,21 +2664,57 @@ So for any given word, we can create a one hot encoding, then pass it through ou
 
 One thing I found interesting was, we talk about "Embedding Matrix" but the above image describes a typical neural network model, what is going on over here?
 
-Well if we look below, it becomes much easier to understand. The word vector represents the OHE encoding of the chosen work. 
+Well if we look below, it becomes much easier to understand. The word vector represents the OHE encoding of the chosen work.
 
-Each row of the embedding matrix represents the weights of every word in that neuron. So when we do a matrix multiplication, we get the weight for that word from different neurons. 
+Each row of the embedding matrix represents the weights of every word in that neuron. So when we do a matrix multiplication, we get the weight for that word from different neurons.
 
 It's easier to visualize as different embedding vectors for each token of a fixed dimension.
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/30.webp)
 
-Now we just run a training loop and voila, the hidden layer, is our embedding matrix. But we have a problem. As this was an example we used a vocabulary of a 100 words, but in reality the vocabulary is 100 times larger. And calculating softmax of so many tokens is a very expensive operation.
+Now we just run a training loop and voila, the hidden layer, is our embedding matrix. But we have a problem. As this was an example we used a vocabulary of a 100 words, but in reality the vocabulary is 100x times larger. And calculating softmax of so many tokens is a very expensive operation.
 
-There is two solutions to fix this problems of ours Hierarical Softmax and Negative sampling. Let's briefly go through both. 
+imagine a vocabulary of 10,000 tokens (quite small from modern vocabs) with 500 dimensional embedding model. That's 5 million training parameter!!!
 
+There are a few solutions proposed by the researchers to overcome this problem. Interestingly the [original paper](https://arxiv.org/pdf/1301.3781) only mentions Hierarical Softmax, but the [code](https://code.google.com/archive/p/word2vec/) shared by researches talks about sub-sampling and Negative Sampling. So let's talk about all three!
 
+> [UPDATE] I later found out that they introduced these ideas in there follow up paper [here](https://arxiv.org/pdf/1310.4546). (Have a look at the authors... it is something haha)
 
-If you wish to learn more about Hierarchical Softmax consider reading this [blog](https://talbaumel.github.io/blog/softmax/).And for negative sampling consider reading [this](https://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/).
+This [blog](https://www.ruder.io/word-embeddings-softmax/#negativesampling) covered the mentioned topics quite well and I have taken inspiration from it while writing this section.
+
+**Sub-Sampling**
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/31.webp)
+
+If we look at one particular example from our dataset generation step, paticularly the 3rd line. We will see that `is` is a word that must be quite common in sentences. And hence we can expect to run into many pairs of `is, ...`
+
+To fix this problem, the authors introduced a sampling rate.
+
+$$P(w_i) = 1 - \sqrt{t/f(w_i)}$$
+
+Where $f(w_i)$ is the frequency of the word and $t$ is a chosen threshold.
+
+**Negative Sampling (better for frequent words, better with low dimensional vectors)**
+
+The idea is quite intersting, If we go back to the example that we started with. I.e training on a vocab of 100 words. Our main problem was that it was very expensive to calculate the softmax of so many tokens.
+
+So what if instead of training on all the tokens, we took a small subset of the negative samples. I.e tokens which are not related to our target word, and take a bunch of context words. And train it using logistic regression. In other words, tell if two words are neighbours or not.
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/32.webp)
+
+This greatly simplifies training, and reduces the cost significantly too. One interesting thing to note is the authors used a `unigram distribution` to pull the negative samples out of.
+
+$$P(w_i) = {f(w_i)}^{3/4}/\sum({f(w_i)}^{3/4})$$
+
+If you wish to learn more about negative sampling consider reading [this](https://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/).
+
+I find "why this even works" more interesting than the fact that it works (And this produces better results than our original method). It's actual name is noise contrastive estimation and the way I imagine it is, we are pulling similar words together while pushing dissilar words away. Now if we pushed all of the dissimilar words away as we were doing we inevitably pushed away similar words for different pairs too.
+
+Consider reading about contrastive loss. (This is a good [medium article](https://medium.com/@maksym.bekuzarov/losses-explained-contrastive-loss-f8f57fe32246) on the topic, Consider looking at the author of contrastive loss too... it's somehting haha)
+
+**Hierarical Softmax (better for infrequent words)**
+
+If you wish to learn more about Hierarchical Softmax consider reading this [blog](https://talbaumel.github.io/blog/softmax/).
 
 This is a great place to visualize [Word2Vec](https://projector.tensorflow.org/)
 
@@ -2875,6 +2910,20 @@ Another one being, characters by themselves do not hold any meaning. This remove
 [ADD_E_MEME](Unless it's E ofc)
 
 There have been innovations made to fix these problems, let's look into them one by one.
+
+##### Subword Tokenization
+
+The idea is quite simple, In our previous word level tokenization. `Fun`, `Funny`, `Funniest` ,and other variations of the word `Fun` will be treated as different tokens. So in sub-word tokenization. We break down the words, something like `Fun` + `niest`.
+
+The reason being in english we add a lot of different pre-fixes (Like `un` to `funny` that makes it `unfunny`) and suffixes (Like `niest` to `Fun` to get `Funniest`). The techniques of forming these subwords varies from different techniques to different techniques. Let's explore them
+
+**Byte-pair encoding**
+
+**Wordpiece**
+
+**Unigram**
+
+**SentencePiece**
 
 ### BERT
 
@@ -6567,6 +6616,8 @@ The paper demonstrates how careful scaling of both data and training techniques 
 <br/>
 
 ## RLVR
+
+## Kimi AI
 
 ## It's all about DeepSeek
 
