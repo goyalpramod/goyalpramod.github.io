@@ -2714,17 +2714,72 @@ Consider reading about contrastive loss. (This is a good [medium article](https:
 
 **Hierarical Softmax (better for infrequent words)**
 
-If you wish to learn more about Hierarchical Softmax consider reading this [blog](https://talbaumel.github.io/blog/softmax/).
+Let's start with an example, because that really drives the idea home. 
 
-This is a great place to visualize [Word2Vec](https://projector.tensorflow.org/)
+"I can have pizza every day" 
+
+If we used the standard softmax to calculate the probability of "pizza" given some context, we would do something like:
+
+$$P(pizza|context) = \frac{e^{v'_{pizza} \cdot h}}{\sum_{w \in V} e^{v'_w \cdot h}}$$
+
+Where $h$ is the hidden layer output (context vector) and $v'_w$ are the output embeddings.
+
+But Hierarchical Softmax constructs a binary tree and we get a structure like below:
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/33.webp)
+
+> Understanding how the binary tree is constructed is beyond the scope of this article, but if you understand how [Huffman Encoding](https://en.wikipedia.org/wiki/Huffman_coding) works, that is one way of creating the tree. More frequent words get shorter paths, less frequent words get longer paths.
+
+The equation then becomes:
+
+$$P(pizza|context) = \sigma(v'_{root} \cdot h) \times \sigma(-v'_{n_1} \cdot h) \times \sigma(v'_{n_4} \cdot h)$$
+
+Where:
+- $\sigma(x) = \frac{1}{1 + e^{-x}}$ is the sigmoid function
+- $v'_{n_i}$ are the learned vectors for internal nodes
+- The negative sign appears when we take the left branch at a node
+
+This reduces the computation from $O(|V|)$ to $O(\log|V|)$, where $V$ is the size of the vocabulary.
+
+If you wish to learn more about Hierarchical Softmax consider reading this [blog](https://talbaumel.github.io/blog/softmax/).
 
 **GloVe**
 
-**FastText**
+This [blog](https://wandb.ai/authors/embeddings-2/reports/An-Introduction-to-the-Global-Vectors-GloVe-Algorithm--VmlldzozNDg2NTQ) helped me considerably while writing this section.
+
+GloVe stands for Global Vectors for Word Representation, it is seemingly an improvement over Word2Vec as it considers global statistics over local statistics. 
+
+Well what does that mean, Put simply. We leverage the global co-occurance matrix instead of using a local context window like we did in Word2Vec. 
+
+The main innovation behind GloVe is the idea that we only need to calculate the ratio of probability of the occurence of two words to capture their semantic relation.
+
+First we create a co-occurence matrix $X$ based on the available corpus
+
+{take image from the paper and explain how it works}
+
+To understand more about the code and training consider reading the original paper and this [article](https://cran.r-project.org/web/packages/text2vec/vignettes/glove.html?ref=ruder.io).
 
 ##### Contextual Word Embeddings
 
-**Embeddings from Language Models**
+**Embeddings from Language Models (ELMo)**
+
+We more or less now have a complete understanding of how different embedding models work, so it's time to understand the model of the hour: ELMo. 
+
+There are two things we need to understand: how it's trained and how it's used. 
+
+Training is quite simple - we train a two-layer bi-directional LSTM on a language modeling task. 
+
+The language modeling task basically means: given all these words, what's the most likely word that comes next? It is exactly how GPT-1 was trained, which we will be covering next.
+
+[Insert first image here - showing the training setup]
+
+Now I had a question while reading this: ELMo is an embedding model, right? But what we are doing is next token prediction here. How is it used with other NLP models then? If you have the same question, you are on the right track. It is quite an innovative solution in my opinion.
+
+Let us first start with the very essence of any NLP task: We begin with a sentence, right? We can use this sentence, pass it to our trained ELMo model, and extract representations from different layers. **The key insight is that we don't just use the final layer - we combine representations from all layers (character embeddings + both LSTM layers) using learned weights.**
+
+[Insert second image here - showing the layer combination process]
+
+We can then give these combined embeddings to any other NLP model. Voila! This understanding will prove to be extremely useful as we move to bigger LLMs. While modern embedding models don't use ELMo's specific bidirectional LSTM approach, ELMo's key innovation of contextual embeddings and the concept of using pre-trained language models for embeddings laid the groundwork for today's transformer-based embedding models.
 
 ### GPT-1
 
@@ -2983,6 +3038,8 @@ to create state-of-the-art models for a wide
 range of tasks, such as question answering and
 language inference, without substan
 """
+
+All the papers I have mentioned in this blog are great, but the BERT paper is particularly awesome. It stands out even today, and the sheer amount of innovations from one paper is astounding. I implore you to check it out. 
 
 ## 2019: Scaling and Efficiency
 
