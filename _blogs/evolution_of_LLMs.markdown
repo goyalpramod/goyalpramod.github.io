@@ -2504,8 +2504,6 @@ N-grams extend the BOW concept by considering sequences of $n$ consecutive words
 - **Bigrams (n=2)**: Word pairs → ["this is", "is the", "the first"]
 - **Trigrams (n=3)**: Word triplets → ["this is the", "is the first"]
 
-> _[Image suggestion: A visual breakdown showing how "this is the first document" gets split into unigrams, bigrams, and trigrams with connecting arrows]_
-
 The mathematical formulation for n-gram probability:
 $$P(w_n|w_1, w_2, ..., w_{n-1}) \approx P(w_n|w_{n-k+1}, ..., w_{n-1})$$
 
@@ -2749,17 +2747,40 @@ This [blog](https://wandb.ai/authors/embeddings-2/reports/An-Introduction-to-the
 
 GloVe stands for Global Vectors for Word Representation, it is seemingly an improvement over Word2Vec as it considers global statistics over local statistics. 
 
-Well what does that mean, Put simply. We leverage the global co-occurance matrix instead of using a local context window like we did in Word2Vec. 
+Well what does that mean? Put simply, we leverage the global co-occurrence matrix instead of using a local context window like we did in Word2Vec.
 
-The main innovation behind GloVe is the idea that we only need to calculate the ratio of probability of the occurence of two words to capture their semantic relation.
+The main innovation behind GloVe is the idea that we only need to calculate the ratio of probability of the occurrence of two words to capture their semantic relation. This ratio-based approach helps filter out noise from non-discriminative words and highlights meaningful relationships.
 
-First we create a co-occurence matrix $X$ based on the available corpus
+First we create a co-occurrence matrix $X$ based on the available corpus. The notation $X_{ij}$ refers to number of times word j has appeared in the context of word i. We calculate the probability of a word j occurring given i as $P(j|i) = X_{ij}/X_i$, where $X_i$ is the sum of all co-occurrence counts for word i (i.e., $X_i = \sum_k X_{ik}$).
 
-{take image from the paper and explain how it works}
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/35.webp)
 
-To understand more about the code and training consider reading the original paper and this [article](https://cran.r-project.org/web/packages/text2vec/vignettes/glove.html?ref=ruder.io).
+Let's understand it with an example.
 
+We created the co-occurrence matrix for two sentences "Pizza is the best" and "Margherita is my favorite" using a window size of 1 (immediate neighbors only).
+
+Let's calculate the probability of "Pizza" given "is" (this is from a very small corpus only to show how it is calculated, it is not reminiscent of the actual results).
+
+From our matrix, "is" co-occurs with three words: "Pizza" (1 time), "the" (1 time), and "Margherita" (1 time).
+
+$$P(Pizza|is) = X_{is,Pizza}/X_{is}$$
+$$P(Pizza|is) = 1/3 = 0.33$$
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/34.webp)
+*Image taken from the original paper*
+
+If we look at the example provided by the authors from a real corpus, the power of ratios becomes clear. It is pretty intuitive that $P(solid|ice)$ will have a higher value than $P(solid|steam)$, because "solid" is more likely to appear in the context of "ice" than "steam". Hence their ratio $P(solid|ice)/P(solid|steam) = 8.9$ has a large value, indicating "solid" is discriminative for "ice".
+
+For "gas", we see the opposite: $P(gas|ice)/P(gas|steam) = 0.085$, a small ratio indicating "gas" is discriminative for "steam".
+
+Whereas for "water", both ice and steam are likely to co-occur with it, so the ratio $P(water|ice)/P(water|steam) = 1.36$ is close to 1, indicating "water" doesn't discriminate between ice and steam. More interesting is "fashion" with a ratio of 0.96 ≈ 1, because both ice and steam are unlikely to be related to fashion. This ratio-based approach elegantly filters out such neutral co-occurrences that don't provide semantic information.
+
+This insight - that ratios of co-occurrence probabilities capture semantic relationships better than raw probabilities - forms the mathematical foundation of GloVe's log-bilinear regression model.
+
+To understand more about the implementation and training details, consider reading the original [paper](https://nlp.stanford.edu/pubs/glove.pdf) and this [article](https://cran.r-project.org/web/packages/text2vec/vignettes/glove.html).
 ##### Contextual Word Embeddings
+
+> I have skipped a lot of the different parts, like training, eval, results etc. Because this is ultimately a section on ELMo and not GloVe. But the idea is fascinating enough to garner some time spent on it. 
 
 **Embeddings from Language Models (ELMo)**
 
