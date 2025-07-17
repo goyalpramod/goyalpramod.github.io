@@ -7,6 +7,11 @@ image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
 
 [Include GANS as well]
+[Include search like BM25, RAG etc too ]
+[Include RNNs, LSTMs, CNNs, computer vision, traditional NLP stuff too]
+Sit, read diffusion step by step paper and code it out 
+Read Introduction to VAE and code it out 
+Read GAN paper and code it out
 
 # Revolutionary Research Papers in Generative AI (Outside LLMs)
 

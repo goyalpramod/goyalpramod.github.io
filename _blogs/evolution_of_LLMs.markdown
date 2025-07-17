@@ -2504,6 +2504,7 @@ N-grams extend the BOW concept by considering sequences of $n$ consecutive words
 - **Bigrams (n=2)**: Word pairs → ["this is", "is the", "the first"]
 - **Trigrams (n=3)**: Word triplets → ["this is the", "is the first"]
 
+
 The mathematical formulation for n-gram probability:
 $$P(w_n|w_1, w_2, ..., w_{n-1}) \approx P(w_n|w_{n-k+1}, ..., w_{n-1})$$
 
@@ -2792,13 +2793,14 @@ Training is quite simple - we train a two-layer bi-directional LSTM on a languag
 
 The language modeling task basically means: given all these words, what's the most likely word that comes next? It is exactly how GPT-1 was trained, which we will be covering next.
 
-[Insert first image here - showing the training setup]
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/36.webp)
+*image inspired from this [blog](https://jalammar.github.io/illustrated-bert/)*
 
 Now I had a question while reading this: ELMo is an embedding model, right? But what we are doing is next token prediction here. How is it used with other NLP models then? If you have the same question, you are on the right track. It is quite an innovative solution in my opinion.
 
 Let us first start with the very essence of any NLP task: We begin with a sentence, right? We can use this sentence, pass it to our trained ELMo model, and extract representations from different layers. **The key insight is that we don't just use the final layer - we combine representations from all layers (character embeddings + both LSTM layers) using learned weights.**
 
-[Insert second image here - showing the layer combination process]
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/37.webp)
 
 We can then give these combined embeddings to any other NLP model. Voila! This understanding will prove to be extremely useful as we move to bigger LLMs. While modern embedding models don't use ELMo's specific bidirectional LSTM approach, ELMo's key innovation of contextual embeddings and the concept of using pre-trained language models for embeddings laid the groundwork for today's transformer-based embedding models.
 
@@ -2851,19 +2853,6 @@ This was the beginning of the era we live in now
 - Zero-shot capabilities
 - Language modeling objective
 
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/openai-gpt
-Family: GPT
-Pretraining Architecture: Decoder
-Pretraining Task: LM
-Extension:
-Application: Text generation, but adaptable to many other NLP tasks when fine tuned.
-Date (of first known publication): 06/2018
-Num. Params:117M
-Corpus: Unsupervised Pretraining on BookCorpus dataset. Supervised Finetuning on several task-specific datasets including SNLI, RACE, Quora…
-License: N/A
-Lab: OpenAI
-"""
 
 """
 Our system works in two stages; first we train a transformer model on a very large amount of data in an unsupervised manner—using language modeling as a training signal—then we fine-tune this model on much smaller supervised datasets to help it solve specific tasks.
@@ -2872,8 +2861,6 @@ Our system works in two stages; first we train a transformer model on a very lar
 Training a GPT
 
 Semi-supervised Sequence Learning
-
-blog - https://towardsdatascience.com/understanding-the-evolution-of-gpt-part-1-an-in-depth-look-at-gpt-1-and-what-inspired-it-b7388a32e87d/#:~:text=GPT%2D1%20is%20the%20first,standard%20procedure%20for%20NLP%20tasks.
 
 Unsupervised pre-training
 
@@ -2899,6 +2886,15 @@ to clean the raw text in BooksCorpus, standardize some punctuation and
 whitespace, and use the spaCy tokenizer.3
 
 """
+
+As funny as it sounds, I do not have a lot to add in this section. Because we have already talked about the majority things. Let's talk about the terms we popularly associate with LLMs like 
+Top k, Top p, Temperature, Sampling. 
+
+And spend a bit of time on self attention as well as masked attention
+
+If you still wish to get a quick recap of everything you have learned so far about Language models. Consider reading this fabulous [blog](https://jalammar.github.io/illustrated-gpt2/) by [Jay Alammar](https://x.com/JayAlammar). (you may say that this blog is on gpt-2 and not gpt-1. Well truth be told there is not much difference in gpt, gpt-2 and gpt-3 beside their obvious scale.)
+
+![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/38.webp)
 
 ### Sentencepiece
 
