@@ -2890,6 +2890,8 @@ whitespace, and use the spaCy tokenizer.3
 As funny as it sounds, I do not have a lot to add in this section. Because we have already talked about the majority things. Let's talk about the terms we popularly associate with LLMs like 
 Top k, Top p, Temperature, Sampling. 
 
+Also, in our transformers blog, We mostly talked about self attention and not masked self attention. Also in our transformers decoder the Q and K matrices come from the encoder, then how does it work in a decoder only model?
+
 And spend a bit of time on self attention as well as masked attention
 
 If you still wish to get a quick recap of everything you have learned so far about Language models. Consider reading this fabulous [blog](https://jalammar.github.io/illustrated-gpt2/) by [Jay Alammar](https://x.com/JayAlammar). (you may say that this blog is on gpt-2 and not gpt-1. Well truth be told there is not much difference in gpt, gpt-2 and gpt-3 beside their obvious scale.)
@@ -2943,12 +2945,6 @@ The following articles helped me write this section
 - [Transformers Documentation](https://huggingface.co/docs/transformers/en/tokenizer_summary)
 - [Sentencepiece tokenizer demystified](https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/)
 
-Wordpiece
-
-Unigram
-
-BPE https://arxiv.org/abs/1508.07909
-
 ##### What are tokenizers?
 
 As we have discussed earlier. Machines do not understand words, They understand numbers. Tokens are basically words represented as numbers that Language Models use to communicate. (You will see why this is an oversimplification in a minute?)
@@ -2991,11 +2987,68 @@ The reason being in english we add a lot of different pre-fixes (Like `un` to `f
 
 **Byte-pair encoding**
 
+This [blog](https://huggingface.co/docs/transformers/en/tokenizer_summary) helped me immensely with this section.
+
+Byte-pair encoding (BPE) was introduced in [Neural Machine Translation of Rare Words with Subword Units (Sennrich et al., 2015)](https://arxiv.org/abs/1508.07909). This is the encoding method the famous tiktoken tokenizer of OpenAI uses.
+
+It essentially follows two steps, the pretokenization then merging. Let's understand each.
+
+In the pretokenization step, we determine the set of unique words in the training data along with their frequency. Using this unique set, BPE breaks the words down into it's individual characters, which are then merged to form the final vocabulary. Let's understand it with an example. 
+{What is the pre-tokenziation step, I do not understand it?}
+Suppose after the pre-tokenization step, we have the following words with their frequencies that we got from the training data 
+
+```python
+("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)
+```
+
+Consequently, the base vocabulary is `["b", "g", "h", "n", "p", "s", "u"]`. Splitting all words into characters of the base vocabulary, we get:
+
+```python
+("h" "u" "g", 10), ("p" "u" "g", 5), ("p" "u" "n", 12), ("b" "u" "n", 4), ("h" "u" "g" "s", 5)
+```
+
+BPE then counts the character pair with the high frequencies and then pairs them up. Like here it will first pair up `u` and `g` as they occur the most together (10 times in hug, 5 times in pug and 5 more times in hugs. Totalling 20 times). This pair `ug` is then added to the vocabulary.
+
+```python
+("h" "ug", 10), ("p" "ug", 5), ("p" "u" "n", 12), ("b" "u" "n", 4), ("h" "ug" "s", 5)
+```
+
+Then we identify the next most frequent pair, that will be `u` and `n` that occur 16 times together. Then the next most frequent pair interestingly is `h` with `ug` which occur together 15 times. (This teaches an important lesson, we do not only consider characters or symbols while pairing them up. But the frequency pairs that exist in the vocabulary).
+
+Now our entire vocabulary looks something like this `["b", "g", "h", "n", "p", "s", "u", "ug", "un", "hug"]`  and our set of unique words 
+
+```python
+("hug", 10), ("p" "ug", 5), ("p" "un", 12), ("b" "un", 4), ("hug" "s", 5)
+```
+Assuming we stop our merging at this point. Our new vocabulary will be used to tokenize new words (Unless they were not present in our training data). For example, `"bug"` will be tokenized to `["b", "ug"]` but "mug" would be tokenized as  `["<unk>", "ug"]` since the symbol `"m"` is not in the base vocabulary.
+
+In general, single letters such as "m" are not replaced by the "<unk>" symbol because the training data usually includes at least one occurrence of each letter, but it is likely to happen for very special characters like emojis.
+
+Using BPE the vocab size is the base vocabulary size + the number of merges, which is a hyperparameter we can choose. For instance GPT has a vocabulary size of 40,478 since they have 478 base characters and chose to stop training after 40,000 merges.
+
 **Wordpiece**
+
+Wordpiece is very similar to our BPE algorith. It start with the same idea of pre-tokenization followed by merging. It differs in the way it merges, intead of following the highest frequency. It merges based on the pairs that maximize the likelihood of the training data once added to the vocabulary.
+
+Let me elaborate, 
+
+"""
+maximizing the likelihood of the training data is equivalent to finding the symbol pair, whose probability divided by the probabilities of its first symbol followed by its second symbol is the greatest among all symbol pairs. E.g. "u", followed by "g" would have only been merged if the probability of "ug" divided by "u", "g" would have been greater than for any other symbol pair. Intuitively, WordPiece is slightly different to BPE in that it evaluates what it loses by merging two symbols to ensure it’s worth it.
+"""
+
+
+If you are interested, I will recommed reading this [blog](https://research.google/blog/a-fast-wordpiece-tokenization-system/) by google which talks about Wordpiece more in depth.
 
 **Unigram**
 
+
+
+
 **SentencePiece**
+
+This is a fabulous [blog](https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/) on the topic, it explains everything along with the implementation code. Consider checking it out.
+
+
 
 ### BERT
 
@@ -3057,6 +3110,10 @@ language inference, without substan
 """
 
 All the papers I have mentioned in this blog are great, but the BERT paper is particularly awesome. It stands out even today, and the sheer amount of innovations from one paper is astounding. I implore you to check it out. 
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/39.webp)
+![Image of BERT](/assets/blog_assets/evolution_of_llms/40.webp)
+
 
 ## 2019: Scaling and Efficiency
 
