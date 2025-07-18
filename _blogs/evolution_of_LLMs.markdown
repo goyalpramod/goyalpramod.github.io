@@ -3036,10 +3036,20 @@ Let me elaborate,
 maximizing the likelihood of the training data is equivalent to finding the symbol pair, whose probability divided by the probabilities of its first symbol followed by its second symbol is the greatest among all symbol pairs. E.g. "u", followed by "g" would have only been merged if the probability of "ug" divided by "u", "g" would have been greater than for any other symbol pair. Intuitively, WordPiece is slightly different to BPE in that it evaluates what it loses by merging two symbols to ensure it’s worth it.
 """
 
+$$score = (freq\_of\_pair)/{(freq\_of\_first\_element*freq\_of\_second\_element)}$$
+
+HF also has a [short course](https://huggingface.co/learn/llm-course/en/chapter6/6?fw=pt) on LLMs where they talk about wordpiece pretty well.
+
+Taking an excerpt from the said course explains it well 
+
+> By dividing the frequency of the pair by the product of the frequencies of each of its parts, the algorithm prioritizes the merging of pairs where the individual parts are less frequent in the vocabulary. For instance, it won’t necessarily merge ("un", "##able") even if that pair occurs very frequently in the vocabulary, because the two pairs "un" and "##able" will likely each appear in a lot of other words and have a high frequency. In contrast, a pair like ("hu", "##gging") will probably be merged faster (assuming the word “hugging” appears often in the vocabulary) since "hu" and "##gging" are likely to be less frequent individually.
 
 If you are interested, I will recommed reading this [blog](https://research.google/blog/a-fast-wordpiece-tokenization-system/) by google which talks about Wordpiece more in depth.
 
 **Unigram**
+
+The same [course](https://huggingface.co/learn/llm-course/en/chapter6/7) talks about Unigram as well.
+
 
 
 
@@ -3048,6 +3058,17 @@ If you are interested, I will recommed reading this [blog](https://research.goog
 
 This is a fabulous [blog](https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/) on the topic, it explains everything along with the implementation code. Consider checking it out.
 
+"""
+SentencePiece addresses the fact that not all languages use spaces to separate words. Instead, SentencePiece treats the input as a raw input stream which includes the space in the set of characters to use. Then it can use the Unigram algorithm to construct the appropriate vocabulary.
+"""
+
+"""
+All tokenization algorithms described so far have the same problem: It is assumed that the input text uses spaces to separate words. However, not all languages use spaces to separate words. One possible solution is to use language specific pre-tokenizers, e.g. XLM uses a specific Chinese, Japanese, and Thai pre-tokenizer. To solve this problem more generally, SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing (Kudo et al., 2018) treats the input as a raw input stream, thus including the space in the set of characters to use. It then uses the BPE or unigram algorithm to construct the appropriate vocabulary.
+
+The XLNetTokenizer uses SentencePiece for example, which is also why in the example earlier the "▁" character was included in the vocabulary. Decoding with SentencePiece is very easy since all tokens can just be concatenated and "▁" is replaced by a space.
+
+All transformers models in the library that use SentencePiece use it in combination with unigram. Examples of models using SentencePiece are ALBERT, XLNet, Marian, and T5.
+"""
 
 
 ### BERT
@@ -6749,6 +6770,8 @@ The paper demonstrates how careful scaling of both data and training techniques 
 ## RLVR
 
 ## Kimi AI
+
+Talk about optimizers here, Muon and stuff
 
 ## It's all about DeepSeek
 
