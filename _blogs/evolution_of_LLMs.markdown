@@ -3096,45 +3096,59 @@ The paper demonstrated significant improvements over previous methods on eleven 
 </details>
 <br/>
 
-https://jalammar.github.io/illustrated-bert/
-https://jalammar.github.io/a-visual-guide-to-using-bert-for-the-first-time/
-https://huggingface.co/blog/bert-101
+These two blogs helped me immensely with this section: 
+- [The illustrated BERT](https://jalammar.github.io/illustrated-bert/) 
+- [BERT 101](https://huggingface.co/blog/bert-101)
 
-- Bidirectional encoder
-- WordPiece tokenization
-- [CLS] and [SEP] tokens
-- NSP and MLM objectives
+This paper wasn't trying to find a problem then solve it per say. It is more of an innovation, taking an excerpt from the paper.
 
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/bert
-Family: BERT
-Pretraining Architecture: Encoder
-Pretraining Task: MLM/NSP
-Extension:It can be seen as a generalization of BERT and GPT in that it combines ideas from both in the encoder and decoder
-Application:General Language Understanding and Question Answering. Many other language applications followed
-Date (of first known publication): 10/2018
-Num. Params:Base = 110M, Large = 340MT
-Corpus:Toronto Book Corpus and Wikipedia (3.3B Tokens)
-License: Open, Apache-2.0
-Lab:Google
-"""
+> BERT is designed to pretrain deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be finetuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substan
 
-This paper wasn't trying to find a problem then solve it per say. It is more of an innovation
+All the papers I have mentioned in this blog are great, but the BERT paper is particularly awesome. It stands out even today, and the sheer amount of innovations from one paper is astounding. I implore you to check it out.
 
-"""
-BERT is designed to pretrain deep bidirectional representations from
-unlabeled text by jointly conditioning on both
-left and right context in all layers. As a result, the pre-trained BERT model can be finetuned with just one additional output layer
-to create state-of-the-art models for a wide
-range of tasks, such as question answering and
-language inference, without substan
-"""
+Let's first answer the question **what is BERT?**
 
-All the papers I have mentioned in this blog are great, but the BERT paper is particularly awesome. It stands out even today, and the sheer amount of innovations from one paper is astounding. I implore you to check it out. 
+BERT stands for Bi-directional Encoder Representation from Transformers. That's a mounthful, the name aside. It is quite simple, Remember our Transformers, Well this is essentially that but only the encoder (Quite the opposite of GPT). Bi-directional means that it looks both ways, forward and backward. Remember in GPT we used masked self-attention which only got representation for current and previous token, well the encoder uses vanilla self-attention which gets representation from both sides. The transformer part is pretty self explanatory. 
+
+**What is it used for?**
+
+This is the most amazing thing about BERT, it can be used for a plethora of NLP tasks like question answering, Parts of speech taging, Sentiment analysis, Classification etc. This is due to the way it is trained. 
+
+**How is it trained?**
+
+Much the way we have discussed before, it has a pre-training phase in which we feed it lots and lots of data for it to learn a representation. Then fine-tune it for the particular task we would like it for.
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/39.webp)
+*Image taken from the paper*
+
+There are a lot of new terms from the above image like CLS, Masked LM, NSP etc that may not make sense at first. But they are quite simple once we understand them. Let us begin
+
+**Masked Language Modeling**
+
+This is one of the methods of pre-training BERT. We take the input sentence and randomly mask out 15% of the sentences, then using the output of the position we try to predict what could have been the possible text. 
+
+In practice, 80% of the times the token is masked, 10% of the times it is replaced with a random token and other 10% of the time it's left unchanged.
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/41.webp)
+
+**Next Sentence Prediction**
+
+Next Sentence Prediction is exactly what it sounds like, but instead of predicting the next sentence. We predict if the given next sentence will come after the first sentence. 
+
+The special token CLS learns representation from the both the sentences and the output from it's position is used to predict whether the sentence comes next or not. In practice, the CLS token is fine tuned for classification, sentiment analysis etc.
+SEP is a special token that acts as a seperator between both the sentences. 
+
+In reality, both NSP and MLM are done simultaneously.
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/42.webp)
+
+**Fine-Tuning**
+
+The BERT paper is quite accessible, and has great visuals too. The below image is directly taken from it and shows that to fine tune we just use a small set of training data with labels to fine-tune bert for a specific task.
+
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/40.webp)
 
+We can use bert to generate embeddings too!! Much like the way we did with ELMo. How? well I leave that upto you to explore.
 
 ## 2019: Scaling and Efficiency
 
