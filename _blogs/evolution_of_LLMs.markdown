@@ -38,7 +38,7 @@ This is a timeline of the most influential work. To read about more architecture
 
 The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
 
-| Links post 2017 are broken as it's still work in progress
+| Links post 2018 are broken as it's still work in progress
 
 <details>
 <summary markdown="span">2017</summary>
@@ -2190,10 +2190,8 @@ The path from this 2017 paper to modern LLMs shows how foundational ideas can ha
 
 Today's largest language models increasingly rely on MoE architectures, making this paper's contributions more relevant than ever. The ability to scale to trillion-parameter models while maintaining reasonable training costs has become essential for pushing the boundaries of AI capabilities.
 
-## WORK IN PROGRESS NOTICE
+[I was supposed to finish 2018 section today but I need a day or two though. You can read it if you wish, but it's not refined.]
 
-> Rest of the sections from 2018-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
-<!-- 
 ## 2018: BERT and Early Innovations
 
 ### ULMFiT
@@ -2232,6 +2230,8 @@ The paper demonstrates that effective transfer learning is possible in NLP witho
 </details>
 <br/>
 
+It is unfortunate that such an amazing paper which was a direct influence on the way GPT-1 was trained is often not talked about enough when it comes to LLM. Let's do justice to that and understand more about Universal Language Model Fine-tuning or ULMFiT!!!
+
 **Problem**
 
 > Inductive transfer learning has greatly impacted computer vision, but existing approaches in NLP still require task-specific
@@ -2248,7 +2248,7 @@ This made transfer learning frustrating and often counterproductive. Researchers
 > that are key for fine-tuning a language
 > model.
 
-Everyone has heard of GPT, but did you wonder which paper was the inspiration behind it? Well look no further, Because this is the paper that laid the foundation that has changed our present world forever.
+This is the paper that laid the foundation that has changed our present world forever.
 
 ![Image of ULMFiT training](/assets/blog_assets/evolution_of_llms/4.webp)
 
@@ -2256,7 +2256,7 @@ The first stage is pretty basic and nothing innovative, but the second & third s
 
 So far noone had been able to fine a general purpose model to perform well on target task which was not present in the original modeling of the original model
 
-> **Why Transfer Learning Failed in NLP** </br>
+> **Why Transfer Learning Failed in NLP** <br/>
 > Unlike computer vision, where you could take ImageNet features and achieve great results on new tasks, NLP models seemed to resist transfer. The problem wasn't the models themselves but how we fine-tuned them. Traditional approaches used the same learning rate for all layers and froze nothing, causing rapid degradation of learned representations.
 > ULMFiT's breakthrough was realizing that different layers need different treatment during fine-tuning.
 
@@ -2266,8 +2266,7 @@ Let us understand each stage one by one
 
 This is the simplest albeit the most expensive stage. Take a large dataset that has general information on many topics and train your model on it.
 
-| "We pretrain the language model on Wikitext-103
-(Merity et al., 2017b) consisting of 28,595 preprocessed Wikipedia articles and 103 million words."
+> "We pretrain the language model on Wikitext-103 (Merity et al., 2017b) consisting of 28,595 preprocessed Wikipedia articles and 103 million words."
 
 This helps the model learn general language properties, At this stage it is nothing more than a really good next token predictor.
 
@@ -2281,11 +2280,11 @@ That is where the innovative "fine-tuning" part comes in.
 
 ##### 2nd Stage: Target task Language Model fine-tuning
 
-Fine-tuning let's us teach the LLM to follow our task specific requirements and control it's behaviour in our target dataset.
+Fine-tuning let us teach the LLM to follow our task specific requirements and control it's behaviour in our target dataset.
 
 **Discriminative fine-tuning**
 
-In any deep neural network, different layers capture different parts of the dataset (This is a very popular [article](https://poloclub.github.io/cnn-explainer/)) visualizing different parts of a CNN model). So it is reasonable to think that it won't be a good idea to use the same learning rate to fine-tune each layer.
+In any deep neural network, different layers capture different parts of the dataset (This is a very popular [article](https://poloclub.github.io/cnn-explainer/) visualizing different parts of a CNN model). So it is reasonable to think that it won't be a good idea to use the same learning rate to fine-tune each layer.
 
 That is the idea behind discriminative fine-tuning. In this we have a different learning rate for each layer.
 
@@ -2313,12 +2312,12 @@ Think of it like learning to drive in a new city. Initially, you drive faster to
 
 This was achieved using the following formul
 
-$$\text{cut} = \lfloor T \cdot \text{cut\_frac} \rfloor$$
+$$\text{cut} = \lfloor T \cdot \text{cut/_frac} \rfloor$$
 
 $$
 p = \begin{cases}
 t/\text{cut}, & \text{if } t < \text{cut} \\
-1 - \frac{t-\text{cut}}{\text{cut} \cdot (1/\text{cut\_frac} - 1)}, & \text{otherwise}
+1 - \frac{t-\text{cut}}{\text{cut} \cdot (1/\text{cut/_frac} - 1)}, & \text{otherwise}
 \end{cases}
 $$
 
@@ -2334,13 +2333,13 @@ Where:
 - $\eta_{\max}$ is the maximum learning rate (typically 0.01)
 - $\eta_t$ is the learning rate at iteration $t$
 
-[Improve the below content, add any visuals if I can think of anyhting]
-
 ##### 3rd Stage: Target task classifier fine-tuning
 
 The final stage adds a classifier head to the fine-tuned language model and trains it for the specific task. This stage introduces several crucial techniques that prevent the model from forgetting its pretrained knowledge.
 
 **Gradual Unfreezing**
+
+![Image of Gradual Unfreezing](/assets/blog_assets/evolution_of_llms/44.webp)
 
 Rather than fine-tuning all layers at once, which risks catastrophic forgetting, ULMFiT gradually unfreezes layers starting from the last layer. The intuition is elegant: the last layers contain the most task-specific knowledge, while early layers capture universal language features that should change slowly.
 
@@ -2348,9 +2347,14 @@ The process works like this: First, unfreeze only the classifier head and train 
 
 **Concat Pooling**
 
+![Image of Gradual Unfreezing](/assets/blog_assets/evolution_of_llms/45.webp)
+
+
 ULMFiT also introduced concat pooling for text classification. Instead of using only the final hidden state, it concatenates the last hidden state with both max-pooled and mean-pooled representations across all timesteps. This captures information from the entire document, not just the end.
 
 **BPTT for Text Classification (BPT3C)**
+
+![Image of Gradual Unfreezing](/assets/blog_assets/evolution_of_llms/46.webp)
 
 For handling long documents, ULMFiT adapts backpropagation through time by dividing documents into fixed-length batches while maintaining hidden state continuity between batches.
 
@@ -2380,7 +2384,11 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 </details>
 <br/>
 
+Embeddings are a vital part of LLMs, because they determine the very understanding of tokens. [ADD_CONTENT]
+
 **Problem**
+
+[ADD_CONTENT]
 
 > learning high quality representations can be challenging. They should ideally
 > model both (1) complex characteristics of word
@@ -2389,6 +2397,8 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 > polysemy).
 
 **Solution**
+
+[ADD_CONTENT]
 
 > Our representations differ from traditional word
 > type embeddings in that each token is assigned a
@@ -2422,8 +2432,6 @@ Think of BOW as the most straightforward way to convert text into numbers - it's
 
 BOW creates a document-term matrix where each row represents a document and each column represents a word from our vocabulary. Each cell contains the frequency of that word in that specific document.
 
-> _[Image suggestion: A clean document-term matrix visualization showing 4 documents × 8 vocabulary words with frequency counts, highlighting how "document" appears 2 times in Document-2]_
-
 ```python
 # Simple BOW implementation
 documents = ['this is the first document',
@@ -2446,6 +2454,15 @@ for doc in documents:
 
 print("Vocab:", vocab)
 print("BOW Matrix:", bow_matrix)
+
+# Vocab: 
+# ['this', 'is', 'the', 'first', 'document', 'second', 'third', 'one']
+
+#BOW Matrix: 
+# [[1, 1, 1, 1, 1, 0, 0, 0], 
+#  [1, 1, 1, 0, 2, 1, 0, 0], 
+#  [1, 1, 1, 0, 0, 0, 1, 1], 
+#  [1, 1, 1, 1, 1, 0, 0, 0]]
 ```
 
 The problem? BOW treats "The cat sat on the mat" and "The mat sat on the cat" as identical because it only cares about word counts, not context or order. Plus, common words like "the" and "is" get the same weight as meaningful words.
@@ -2456,7 +2473,7 @@ Instead of just counting words in documents, what if we count how often words ap
 
 A co-occurrence matrix shows how frequently word pairs appear within a defined window (like within the same sentence). If "learning" and "machine" often appear together, they'll have a high co-occurrence score.
 
-> _[Image suggestion: A symmetric 8×8 co-occurrence matrix with highlighted cells showing high co-occurrence values, with annotations explaining why "is" and "the" have a value of 4]_
+![Image of One Hot Vector](/assets/blog_assets/evolution_of_llms/35.webp)
 
 The mathematical representation: For words $w_i$ and $w_j$, the co-occurrence count $C_{ij}$ represents how many times they appear together within a context window.
 
@@ -2533,59 +2550,73 @@ Where:
 - $\text{TF}(t,d) = \frac{\text{count of term } t \text{ in document } d}{\text{total words in document } d}$
 - $\text{IDF}(t) = \log\left(\frac{\text{total documents}}{\text{documents containing term } t}\right)$
 
-> _[Image suggestion: A side-by-side comparison showing BOW vs TF-IDF matrices for the same documents, highlighting how common words like "the" get reduced scores in TF-IDF]_
-
 ```python
-import math
+import numpy as np
+import pandas as pd
 
-def compute_tf_idf(documents):
-    # Tokenize documents
-    doc_words = [doc.split() for doc in documents]
+documents_name = ["Document-1", "Document-2", "Document-3", "Document-4"]
 
-    # Build vocabulary
-    vocab = set()
-    for words in doc_words:
-        vocab.update(words)
-    vocab = list(vocab)
+documents = ['this is the first document',
+             'this document is the second document',
+             'this is the third one',
+             'is this the first document']
 
-    # Compute TF matrix
-    tf_matrix = []
-    for words in doc_words:
-        tf_row = []
-        total_words = len(words)
-        for word in vocab:
-            tf = words.count(word) / total_words
-            tf_row.append(tf)
-        tf_matrix.append(tf_row)
+word_tokens = []
 
-    # Compute IDF vector
-    num_docs = len(documents)
-    idf_vector = []
-    for word in vocab:
-        docs_with_word = sum(1 for words in doc_words if word in words)
-        idf = math.log(num_docs / docs_with_word)
-        idf_vector.append(idf)
+for document in documents:
+    words = []
+    for word in document.split(" "):
+        words.append(word)
+    word_tokens.append(words)
 
-    # Compute TF-IDF matrix
-    tfidf_matrix = []
-    for i, tf_row in enumerate(tf_matrix):
-        tfidf_row = [tf * idf for tf, idf in zip(tf_row, idf_vector)]
-        tfidf_matrix.append(tfidf_row)
+vocab = set()
 
-    return tfidf_matrix, vocab
+for document in word_tokens:
+    for word in document:
+        vocab.add(word)
 
-# Usage
-tfidf_matrix, vocab = compute_tf_idf(documents)
-print("TF-IDF Matrix shape:", len(tfidf_matrix), "x", len(vocab))
+vocab = list(vocab)
+
+TF = [[0 for j in range(len(vocab))] for i in range(len(word_tokens))]
+
+for i, document in enumerate(word_tokens):
+    for word in document:
+        j = vocab.index(word)
+        TF[i][j] += 1 / len(word_tokens[i])
+
+idf = [0 for i in range(len(vocab))]
+D = len(word_tokens)
+
+for j, word_vocab in enumerate(vocab):
+    df = 0
+    for document in word_tokens:
+        for word in document:
+            if word_vocab == word:
+                df += 1 
+                break
+    idf[j] = np.log(D/df)
+
+TFIDF = [[0 for j in range(len(vocab))] for i in range(len(word_tokens))]
+
+for i in range(len(word_tokens)):
+    for j in range(len(vocab)):
+        TFIDF[i][j] = TF[i][j] * idf[j]
+
+data = pd.DataFrame(TFIDF, columns=vocab, index=documents_name).round(3)
+data
 ```
+*Code taken from [here](https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html#)*
+
+if we calculate tf-idf of the same example as before we get an output like below
+
+![Image of One Hot Vector](/assets/blog_assets/evolution_of_llms/47.webp)
 
 Notice how common words like "this", "is", "the" get lower TF-IDF scores because they appear in most documents, while specific words like "second" or "third" get higher scores.
 
-> _[Image suggestion: A heatmap visualization of the final TF-IDF matrix showing how common words have darker (lower) values while specific words have brighter (higher) values]_
 
 **The Limitation of Traditional Embeddings**
 
-All these methods share a fundamental flaw: they assign the same representation to a word regardless of context. The word "bank" gets the same vector whether we're talking about a river bank or a financial institution. This is where contextual embeddings like ELMo come to the rescue...
+All these methods share a fundamental flaw: they assign the same representation to a word regardless of context. The word "bank" gets the same vector whether we're talking about a river bank or a financial institution. This is where contextual embeddings like ELMo come to the rescue.
 
 ##### Static Word Embeddings
 
@@ -2595,13 +2626,6 @@ The following are excellect sources to understand Word2Vec in a deeper level. Co
 
 - [The Illustrated Word2vec](https://jalammar.github.io/illustrated-word2vec/)
 - [Word2Vec Tutorial - The Skip-Gram Model](https://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/)
-
-1. First build intuition
-2. Talk about training
-3. Talk about skip gram model
-4. Talk about heirircal softmax and negative sampling
-
-1 dimension cheesy flavour
 
 **Intuition**
 
@@ -2614,7 +2638,7 @@ Anytime I find a new cheese, I taste it and put it on my scale. I use this scale
 
 ![Image of word2vec ex5planation](/assets/blog_assets/evolution_of_llms/22.webp)
 
-But one day I ran into a cheese (yellow cheese) which had the same cheesiness as the white cheese. Now how do I differntiate between the two? well cheese has many other properties (or features from the ML perspective). Like protein!!
+But one day I ran into a cheese (yellow cheese) which had the same cheesiness as the white cheese. Now how do I differentiate between the two? well cheese has many other properties (or features from the ML perspective). Like protein!!
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/23.webp)
 
@@ -2630,6 +2654,8 @@ So I can just find the cheese which is most similar to it, using cosine similari
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/25.webp)
 
 That is essentially the idea of word2vec, We plot multiple words in an n dimensional space (I used 2 dimensional because I can plot it. I can't plot a 7d space, I will love to meet you if you can tho!!!). And find similar words based on cosine similarity.
+
+[ADD_COSINE_SIMILARITY_MATH_HERE]
 
 There is a popular example that shows the distance between king and woman is same as the distance between man and woman. This essentially shows that both the pair of words share very similar ideas with only a few differences (maybe in royalty).
 
@@ -2738,7 +2764,7 @@ Where:
 - $v'_{n_i}$ are the learned vectors for internal nodes
 - The negative sign appears when we take the left branch at a node
 
-This reduces the computation from $O(|V|)$ to $O(\log|V|)$, where $V$ is the size of the vocabulary.
+This reduces the computation from $O(\|V\|)$ to $O(\log\|V\|)$, where $V$ is the size of the vocabulary.
 
 If you wish to learn more about Hierarchical Softmax consider reading this [blog](https://talbaumel.github.io/blog/softmax/).
 
@@ -2752,7 +2778,7 @@ Well what does that mean? Put simply, we leverage the global co-occurrence matri
 
 The main innovation behind GloVe is the idea that we only need to calculate the ratio of probability of the occurrence of two words to capture their semantic relation. This ratio-based approach helps filter out noise from non-discriminative words and highlights meaningful relationships.
 
-First we create a co-occurrence matrix $X$ based on the available corpus. The notation $X_{ij}$ refers to number of times word j has appeared in the context of word i. We calculate the probability of a word j occurring given i as $P(j|i) = X_{ij}/X_i$, where $X_i$ is the sum of all co-occurrence counts for word i (i.e., $X_i = \sum_k X_{ik}$).
+First we create a co-occurrence matrix $X$ based on the available corpus. The notation $X_{ij}$ refers to number of times word j has appeared in the context of word i. We calculate the probability of a word j occurring given i as $P(j\|i) = X_{ij}/X_i$, where $X_i$ is the sum of all co-occurrence counts for word i (i.e., $X_i = \sum_k X_{ik}$).
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/35.webp)
 
@@ -2764,24 +2790,27 @@ Let's calculate the probability of "Pizza" given "is" (this is from a very small
 
 From our matrix, "is" co-occurs with three words: "Pizza" (1 time), "the" (1 time), and "Margherita" (1 time).
 
+[ADD_FIX_THIS]
+
 $$P(Pizza|is) = X_{is,Pizza}/X_{is}$$
 $$P(Pizza|is) = 1/3 = 0.33$$
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/34.webp)
 *Image taken from the original paper*
 
-If we look at the example provided by the authors from a real corpus, the power of ratios becomes clear. It is pretty intuitive that $P(solid|ice)$ will have a higher value than $P(solid|steam)$, because "solid" is more likely to appear in the context of "ice" than "steam". Hence their ratio $P(solid|ice)/P(solid|steam) = 8.9$ has a large value, indicating "solid" is discriminative for "ice".
+If we look at the example provided by the authors from a real corpus, the power of ratios becomes clear. It is pretty intuitive that $P(solid\|ice)$ will have a higher value than $P(solid\|steam)$, because "solid" is more likely to appear in the context of "ice" than "steam". Hence their ratio $P(solid\|ice)/P(solid\|steam) = 8.9$ has a large value, indicating "solid" is discriminative for "ice".
 
-For "gas", we see the opposite: $P(gas|ice)/P(gas|steam) = 0.085$, a small ratio indicating "gas" is discriminative for "steam".
+For "gas", we see the opposite: $P(gas\|ice)/P(gas\|steam) = 0.085$, a small ratio indicating "gas" is discriminative for "steam".
 
-Whereas for "water", both ice and steam are likely to co-occur with it, so the ratio $P(water|ice)/P(water|steam) = 1.36$ is close to 1, indicating "water" doesn't discriminate between ice and steam. More interesting is "fashion" with a ratio of 0.96 ≈ 1, because both ice and steam are unlikely to be related to fashion. This ratio-based approach elegantly filters out such neutral co-occurrences that don't provide semantic information.
+Whereas for "water", both ice and steam are likely to co-occur with it, so the ratio $P(water\|ice)/P(water\|steam) = 1.36$ is close to 1, indicating "water" doesn't discriminate between ice and steam. More interesting is "fashion" with a ratio of 0.96 ≈ 1, because both ice and steam are unlikely to be related to fashion. This ratio-based approach elegantly filters out such neutral co-occurrences that don't provide semantic information.
 
 This insight - that ratios of co-occurrence probabilities capture semantic relationships better than raw probabilities - forms the mathematical foundation of GloVe's log-bilinear regression model.
 
 To understand more about the implementation and training details, consider reading the original [paper](https://nlp.stanford.edu/pubs/glove.pdf) and this [article](https://cran.r-project.org/web/packages/text2vec/vignettes/glove.html).
-##### Contextual Word Embeddings
 
 > I have skipped a lot of the different parts, like training, eval, results etc. Because this is ultimately a section on ELMo and not GloVe. But the idea is fascinating enough to garner some time spent on it. 
+
+##### Contextual Word Embeddings
 
 **Embeddings from Language Models (ELMo)**
 
@@ -2833,6 +2862,8 @@ This paper laid important groundwork for later transformer-based language models
 </details>
 <br/>
 
+[ADD_CONTENT]
+
 **Problem**
 
 > The ability to learn effectively from raw text is crucial to alleviating the dependence on supervised
@@ -2840,11 +2871,13 @@ This paper laid important groundwork for later transformer-based language models
 > amounts of manually labeled data, which restricts their applicability in many domains that suffer
 > from a dearth of annotated resources
 
+[ADD_CONTENT]
+
 **Solution**
 
 > In this paper, we explore a semi-supervised approach for language understanding tasks using a combination of unsupervised pre-training and supervised fine-tuning. Our goal is to learn a universal representation that transfers with little adaptation to a wide range of tasks. We assume access to a large corpus of unlabeled text and several datasets with manually annotated training examples (target tasks). Our setup does not require these target tasks to be in the same domain as the unlabeled corpus. We employ a two-stage training procedure. First, we use a language modeling objective on the unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.
 
-This was the beginning of the era we live in now. As funny as it may sound, I do not have a lot to add in this section. Because we have already talked about the majority things, the architecture and important concepts like attention in our transformers blog and the training method in our [ULMFit](#ulmfit) section.
+This was the beginning of the era we live in now. As funny as it may sound, I do not have a lot to add in this section. Because we have already talked about the majority things, the architecture and important concepts like attention in our [transformers blog](https://goyalpramod.github.io/blogs/Transformers_laid_out/) and the training method in our [ULMFit](#ulmfit) section.
 
 So let's use this section, to talk about the terms we popularly associate with LLMs like 
 Top k, Top p, Temperature, Sampling etc.
@@ -2896,6 +2929,8 @@ Even before I begin I NEED to mention all these amazing blogs that helped me bui
 - [Transformers from scratch](https://peterbloem.nl/blog/transformers) by [Peter Bloem](https://peterbloem.nl/) a different approach but equally amazing
 - [Some Intuition on Attention and the Transformer](https://eugeneyan.com/writing/attention/) by [Eugene Yan](https://eugeneyan.com/) if you are short on time, just read this.
 
+[ADD_IMAGES]
+
 Let's forget about Q,K,V for a moment and just focus on a single matrix X. Which contains different tokens (these tokens can be anything. Words, image patches, audio segments, anything that can be embedded and represented by numbers) 
 
 This matrix consists of vectors X1, X2, X2.... Xn That make up the matrix X 
@@ -2946,19 +2981,36 @@ In a matrix representation is looks something like this, It is very vital. Becau
 What this is -> A mathematical foundation for terms commonly used during LLM inference
 What this is not -> A guide to deciding the best values for your use case
 
+[ADD_SIMPLIFY_THIS_BELOW_TEXT]
+
 **Temperature**
-
-
+Temperature controls the randomness of token selection by scaling the logits before applying softmax. The probability distribution becomes: $P(token_i) = \frac{e^{logit_i/T}}{\sum_j e^{logit_j/T}}$ where T is temperature. When T=1, we get the original distribution. As T approaches 0, the model becomes deterministic (always picks the highest probability token). Higher T values (>1) flatten the distribution, making the model more creative but potentially less coherent.
 
 **Top K**
 
+Top-k sampling restricts token selection to only the k most probable tokens, setting all other probabilities to zero before renormalization. If the original probabilities are $[p_1, p_2, ..., p_n]$ sorted in descending order, top-k keeps only $[p_1, p_2, ..., p_k]$ and renormalizes: $P_{new}(token_i) = \frac{p_i}{\sum_{j=1}^k p_j}$ for $i \leq k$, and 0 otherwise. This prevents the model from selecting very unlikely tokens while maintaining some randomness.
 
+**Top P (Nucleus Sampling)**
 
-**Top P**
+Top-p sampling dynamically selects the smallest set of tokens whose cumulative probability exceeds threshold p. Given sorted probabilities $[p_1, p_2, ..., p_n]$, we find the smallest k such that $\sum_{i=1}^k p_i \geq p$, then renormalize only these k tokens. Unlike top-k which uses a fixed number of tokens, top-p adapts to the confidence of the model - using fewer tokens when the model is confident and more when uncertain.
 
+**Sampling vs Greedy Decoding**
 
-**Sampling**
+Greedy decoding always selects the token with highest probability: $token = \arg\max_i P(token_i)$. While deterministic and fast, this can lead to repetitive text and suboptimal sequences due to the exposure bias problem. Sampling methods introduce controlled randomness by selecting tokens according to their probability distribution, often producing more diverse and human-like text at the cost of potential coherence.
 
+**Repetition Penalty**
+
+Repetition penalty reduces the probability of tokens that have already appeared in the generated sequence. The modified logit for a token that appeared n times is: $logit_{new} = \frac{logit_{original}}{penalty^n}$ if penalty > 1, which decreases the likelihood of selecting repeated tokens. This helps prevent the model from getting stuck in repetitive loops while maintaining natural language flow.
+
+**Frequency Penalty**
+
+Similar to repetition penalty but applies a linear reduction based on token frequency: $logit_{new} = logit_{original} - \alpha \times count(token)$ where α is the penalty coefficient and count(token) is how many times the token appeared. This provides more nuanced control over repetition compared to the exponential scaling of repetition penalty.
+
+**Presence Penalty**
+
+A binary version of frequency penalty that applies a fixed penalty regardless of how many times a token appeared: $logit_{new} = logit_{original} - \alpha$ if the token was seen before, unchanged otherwise. This encourages the model to use new vocabulary without heavily penalizing natural repetitions that occur in coherent text.
+
+That wraps up our section on GPT, don't worry as we move forward to the future years we will talk about how LLMs work with RL, How different architectures affect different things, talk about optimizers and so much more. For now I feel like these are the most we should keep for this year. 
 
 ### Sentencepiece
 
@@ -2986,9 +3038,13 @@ They validate their approach through experiments on English-Japanese translation
 </details>
 <br/>
 
+[ADD_CONTENT]
+
 **Problem**
 
 > Tough to make NMT language independent
+
+[ADD_CONTENT]
 
 **Solution**
 
@@ -3269,6 +3325,11 @@ The BERT paper is quite accessible, and has great visuals too. The below image i
 
 We can use bert to generate embeddings too!! Much like the way we did with ELMo. How? well I leave that upto you to explore.
 
+## WORK IN PROGRESS NOTICE
+
+> Rest of the sections from 2019-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
+
+<!-- 
 ## 2019: Scaling and Efficiency
 
 ### GPT-2
