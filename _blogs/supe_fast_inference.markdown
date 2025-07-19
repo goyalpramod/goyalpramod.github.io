@@ -39,6 +39,12 @@ Understanding the difference between .view() and .reshape() is crucial:
 
 * .view() only works with contiguous tensors
 * .reshape() works with both, but creates a copy for non-contiguous data
+* .transpose()
+* unsqueeze
+
+https://stackoverflow.com/questions/49643225/whats-the-difference-between-reshape-and-view-in-pytorch -> 2ndanswer 
+
+https://stackoverflow.com/questions/57237352/what-does-unsqueeze-do-in-pytorch
 
 Changes in a .view() tensor reflect in the original, making it memory-efficient
 
@@ -133,6 +139,9 @@ https://eli.thegreenplace.net/2025/understanding-numpys-einsum/
 https://ajcr.net/Basic-guide-to-einsum/
 https://ejenner.com/post/einsum/
 https://theaisummer.com/einsum-attention/
+
+What is nn.Module? 
+Why do we always do super()__init__() whenever we start a new class in PyTorch
 
 ## The Questions, with their answers
 

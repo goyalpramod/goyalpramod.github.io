@@ -2842,61 +2842,123 @@ This paper laid important groundwork for later transformer-based language models
 
 **Solution**
 
-> """
+> In this paper, we explore a semi-supervised approach for language understanding tasks using a combination of unsupervised pre-training and supervised fine-tuning. Our goal is to learn a universal representation that transfers with little adaptation to a wide range of tasks. We assume access to a large corpus of unlabeled text and several datasets with manually annotated training examples (target tasks). Our setup does not require these target tasks to be in the same domain as the unlabeled corpus. We employ a two-stage training procedure. First, we use a language modeling objective on the unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.
 
-"""
+This was the beginning of the era we live in now. As funny as it may sound, I do not have a lot to add in this section. Because we have already talked about the majority things, the architecture and important concepts like attention in our transformers blog and the training method in our [ULMFit](#ulmfit) section.
 
-This was the beginning of the era we live in now
+So let's use this section, to talk about the terms we popularly associate with LLMs like 
+Top k, Top p, Temperature, Sampling etc.
 
-- Unidirectional decoder
-- BPE tokenization
-- Zero-shot capabilities
-- Language modeling objective
+Also, since I wrote the transformers blog I have gained a deeper and better understanding of self-attention and masked attention, so we will spend a bit of time on that too.
+
+I will be skipping most of the thing we have already talked about, but if you still wish to get a quick recap of everything you have learned so far about Language models. Consider reading this fabulous [blog](https://jalammar.github.io/illustrated-gpt2/) by [Jay Alammar](https://x.com/JayAlammar). (you may say that this blog is on gpt-2 and not gpt-1. Well truth be told there is not much difference in gpt, gpt-2 and gpt-3 beside their obvious scale.)
+
+##### GPT ASAP
+
+Generative Pre-trained Transformer is a decoder only auto-regressive model which was first pre-trained on a humongous amount of data using a language modeling method then fine-tuned on a much smaller supervised dataset to help solve specific tasks
+
+That is a lot of ML jargon way of saying that, the authors took the transformer, got rid of the encoder, put up a lot of layers of decoder, trained it on lots of data, then fine tuned it for specific use cases. 
+
+Langaguage modeling is pretty straight forward, given a context, predict the next word. The amazing part is that it is unsupervised. We can create a dataset using any sentence/document/text data. We break it down to it's individual tokens, then we create a dataset by shifting the tokens by 1.
+
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/43.webp)
 
 
-"""
-Our system works in two stages; first we train a transformer model on a very large amount of data in an unsupervised manner—using language modeling as a training signal—then we fine-tune this model on much smaller supervised datasets to help it solve specific tasks.
-"""
+**Model Specification**
 
-Training a GPT
+I took this excerpt directly from the paper as I cannot add anything else to it.
 
-Semi-supervised Sequence Learning
+> Model specifications Our model largely follows the original transformer work [62]. We trained a
+>12-layer decoder-only transformer with masked self-attention heads (768 dimensional states and 12
+>attention heads). For the position-wise feed-forward networks, we used 3072 dimensional inner states.
+>We used the Adam optimization scheme [27] with a max learning rate of 2.5e-4. The learning rate
+>was increased linearly from zero over the first 2000 updates and annealed to 0 using a cosine schedule.
+>We train for 100 epochs on minibatches of 64 randomly sampled, contiguous sequences of 512 tokens.
+>Since layernorm [2] is used extensively throughout the model, a simple weight initialization of
+>N(0, 0.02) was sufficient. We used a bytepair encoding (BPE) vocabulary with 40,000 merges [53]
+>and residual, embedding, and attention dropouts with a rate of 0.1 for regularization. We also
+>employed a modified version of L2 regularization proposed in [37], with w = 0.01 on all non bias or
+>gain weights. For the activation function, we used the Gaussian Error Linear Unit (GELU) [18]. We
+>used learned position embeddings instead of the sinusoidal version proposed in the original work.
+>We use the ftfy library2
+>to clean the raw text in BooksCorpus, standardize some punctuation and
+>whitespace, and use the spaCy tokenizer.
 
-Unsupervised pre-training
+##### Why does attention work
 
-Supervised fine-tuning
+I am almost giddy writing this section because I find it astounding that this question never came to my mind. Why the heck does attention even work, we all know it works. But why?
 
-Model Specification
+Even before I begin I NEED to mention all these amazing blogs that helped me build an intuition behind the idea
 
-"""
-Model specifications Our model largely follows the original transformer work [62]. We trained a
-12-layer decoder-only transformer with masked self-attention heads (768 dimensional states and 12
-attention heads). For the position-wise feed-forward networks, we used 3072 dimensional inner states.
-We used the Adam optimization scheme [27] with a max learning rate of 2.5e-4. The learning rate
-was increased linearly from zero over the first 2000 updates and annealed to 0 using a cosine schedule.
-We train for 100 epochs on minibatches of 64 randomly sampled, contiguous sequences of 512 tokens.
-Since layernorm [2] is used extensively throughout the model, a simple weight initialization of
-N(0, 0.02) was sufficient. We used a bytepair encoding (BPE) vocabulary with 40,000 merges [53]
-and residual, embedding, and attention dropouts with a rate of 0.1 for regularization. We also
-employed a modified version of L2 regularization proposed in [37], with w = 0.01 on all non bias or
-gain weights. For the activation function, we used the Gaussian Error Linear Unit (GELU) [18]. We
-used learned position embeddings instead of the sinusoidal version proposed in the original work.
-We use the ftfy library2
-to clean the raw text in BooksCorpus, standardize some punctuation and
-whitespace, and use the spaCy tokenizer.3
+- [Understanding the attention mechanism in sequence models](https://www.jeremyjordan.me/attention/) by [Jeremy Jordan](https://x.com/jeremyjordan)
+- [Additive attention](https://arxiv.org/pdf/1409.0473v7) the paper that introduced the idea of attention
+- [Transformers from Scratch](https://e2eml.school/transformers.html) by [Brandon Rohrer](https://www.brandonrohrer.com/blog.html) this is attention explained each matrix multiplication at a time
+- [Transformers from scratch](https://peterbloem.nl/blog/transformers) by [Peter Bloem](https://peterbloem.nl/) a different approach but equally amazing
+- [Some Intuition on Attention and the Transformer](https://eugeneyan.com/writing/attention/) by [Eugene Yan](https://eugeneyan.com/) if you are short on time, just read this.
 
-"""
+Let's forget about Q,K,V for a moment and just focus on a single matrix X. Which contains different tokens (these tokens can be anything. Words, image patches, audio segments, anything that can be embedded and represented by numbers) 
 
-As funny as it sounds, I do not have a lot to add in this section. Because we have already talked about the majority things. Let's talk about the terms we popularly associate with LLMs like 
-Top k, Top p, Temperature, Sampling. 
+This matrix consists of vectors X1, X2, X2.... Xn That make up the matrix X 
 
-Also, in our transformers blog, We mostly talked about self attention and not masked self attention. Also in our transformers decoder the Q and K matrices come from the encoder, then how does it work in a decoder only model?
+(X vectors are embedded so they occupy a specific place in space) 
 
-And spend a bit of time on self attention as well as masked attention
+Now assume u want to see how close X1 is relative to every other word. What do you do? Take dot product, because we all know that gives us the distance between different vectors in space. 
 
-If you still wish to get a quick recap of everything you have learned so far about Language models. Consider reading this fabulous [blog](https://jalammar.github.io/illustrated-gpt2/) by [Jay Alammar](https://x.com/JayAlammar). (you may say that this blog is on gpt-2 and not gpt-1. Well truth be told there is not much difference in gpt, gpt-2 and gpt-3 beside their obvious scale.)
+Now let's say you want to see, how different vectors relate to X1, I.e How far is X2 from X1 (notice how we went from how far X1 is from X2, X3 and so on. To how far X2 is from X1). 
+
+Both of the above dot products will give us the same result. I.E how far each vector is relative to each other. This is ATTENTION. Distance between different words. We can think of like this. 
+
+In a sentence, "Steve is an amazing person, who loves Machine Learning". After applying attention, a lot of words will basically get filtered out because we are not paying attention to them anymore 
+
+So the sentence becomes 
+
+"Steve ... amazing .... Machine learning" 
+
+Now we need to apply these masks to something right, Hence we need to know the original sentence as well
+
+So we multiply this mask with X. This gives us an attention mask over the original matrix. 
+
+We just calculated Self-attention. With 1 sentence. Without using the terms Q,K,V. 
+
+Now the question arrises of W_q, W_k, W_v. 
+
+These are linear transformations, they are present to change the position of our X in the vector space. 
+
+But dot product will always give us the distance, by changing representations. We are getting the similarity score from different angels. 
+
+This proves that attention works, because dot product is just giving us the similarity in space. What about "but which layer gives us what" 
+
+Think of it this way, lets assume our W matrices are all identity matrix. (so no transformation), Now when we do our attention scoring. If any token is more close to any other token it will get a very high score. This essentially gives us the attention of that pair. This will be represented in the first layer, the second layer will then calculate the attention of pairs (much like how CNNs work and are visualized. U start with small lines, then move on to more complex geometric figures) 
+
+Now by changing our W matrices in all different ways, we get different representation. And make pairs of different tokens stronger.
+
+**Masked Attention**
+
+Masked Attention is much like attention itself, but here we get rid of the bi-directional nature. 
+The current token can only look at itself and the tokens before it.
 
 ![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/38.webp)
+
+In a matrix representation is looks something like this, It is very vital. Because our inference is auto-regressive so if during training we can look at the future tokens we run into {mention the problem}
+
+##### LLM Glossary 
+
+What this is -> A mathematical foundation for terms commonly used during LLM inference
+What this is not -> A guide to deciding the best values for your use case
+
+**Temperature**
+
+
+
+**Top K**
+
+
+
+**Top P**
+
+
+**Sampling**
+
 
 ### Sentencepiece
 
@@ -2932,7 +2994,7 @@ They validate their approach through experiments on English-Japanese translation
 
 > SentencePiece comprises four main components:
 > Normalizer, Trainer, Encoder, and Decoder.
-> Normalizer is a module to normalize semanticallyequivalent Unicode characters into canonical
+> Normalizer is a module to normalize semanticallymequivalent Unicode characters into canonical
 > forms. Trainer trains the subword segmentation
 > model from the normalized corpus. We specify a
 > type of subword model as the parameter of Trainer.
@@ -3028,31 +3090,88 @@ Using BPE the vocab size is the base vocabulary size + the number of merges, whi
 
 **Wordpiece**
 
-Wordpiece is very similar to our BPE algorith. It start with the same idea of pre-tokenization followed by merging. It differs in the way it merges, intead of following the highest frequency. It merges based on the pairs that maximize the likelihood of the training data once added to the vocabulary.
+Wordpiece is very similar to our BPE algorithm. It starts with the same idea of pre-tokenization followed by merging. It differs in the way it merges - instead of following the highest frequency, it merges based on a scoring system that considers how valuable each merge is.
 
-Let me elaborate, 
+The key difference is in how pairs are selected for merging:
 
-"""
-maximizing the likelihood of the training data is equivalent to finding the symbol pair, whose probability divided by the probabilities of its first symbol followed by its second symbol is the greatest among all symbol pairs. E.g. "u", followed by "g" would have only been merged if the probability of "ug" divided by "u", "g" would have been greater than for any other symbol pair. Intuitively, WordPiece is slightly different to BPE in that it evaluates what it loses by merging two symbols to ensure it’s worth it.
-"""
+WordPiece doesn't just pick the most frequent pair like BPE does. Instead, it calculates a score for each pair by dividing how often the pair appears together by how often each part appears separately. This means it prefers to merge pairs where the individual parts are rare on their own, but common when together. This approach ensures that merges actually improve the tokenization rather than just combining frequent but unrelated pieces.
 
-$$score = (freq\_of\_pair)/{(freq\_of\_first\_element*freq\_of\_second\_element)}$$
+$$score = \frac{freq\_of\_pair}{freq\_of\_first\_element \times freq\_of\_second\_element}$$
 
 HF also has a [short course](https://huggingface.co/learn/llm-course/en/chapter6/6?fw=pt) on LLMs where they talk about wordpiece pretty well.
 
 Taking an excerpt from the said course explains it well 
 
-> By dividing the frequency of the pair by the product of the frequencies of each of its parts, the algorithm prioritizes the merging of pairs where the individual parts are less frequent in the vocabulary. For instance, it won’t necessarily merge ("un", "##able") even if that pair occurs very frequently in the vocabulary, because the two pairs "un" and "##able" will likely each appear in a lot of other words and have a high frequency. In contrast, a pair like ("hu", "##gging") will probably be merged faster (assuming the word “hugging” appears often in the vocabulary) since "hu" and "##gging" are likely to be less frequent individually.
+> By dividing the frequency of the pair by the product of the frequencies of each of its parts, the algorithm prioritizes the merging of pairs where the individual parts are less frequent in the vocabulary. For instance, it won't necessarily merge ("un", "##able") even if that pair occurs very frequently in the vocabulary, because the two pairs "un" and "##able" will likely each appear in a lot of other words and have a high frequency. In contrast, a pair like ("hu", "##gging") will probably be merged faster (assuming the word "hugging" appears often in the vocabulary) since "hu" and "##gging" are likely to be less frequent individually.
 
-If you are interested, I will recommed reading this [blog](https://research.google/blog/a-fast-wordpiece-tokenization-system/) by google which talks about Wordpiece more in depth.
+If you are interested, I will recommend reading this [blog](https://research.google/blog/a-fast-wordpiece-tokenization-system/) by google which talks about Wordpiece more in depth.
 
 **Unigram**
 
 The same [course](https://huggingface.co/learn/llm-course/en/chapter6/7) talks about Unigram as well.
 
+Unigram is quite different from our previously discussed tokenization methods like BPE and WordPiece. Instead of expanding the vocabulary, it starts with a big vocabulary and gradually trims down irrelevant tokens.
+
+At each step of training, the Unigram model computes the loss over the entire corpus. Then, for each token it calculates how much the loss will increase if the token is removed, and removes the ones which increase the loss the least.
+
+Note that we never remove the base characters, to make sure any word can be tokenized.
+
+Using the same example as above we start with a sample corpus 
+
+```python
+("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)
+```
+
+We calculate the frequencies of all the subwords as below 
+
+```python
+("h", 15) ("u", 36) ("g", 20) ("hu", 15) ("ug", 20) ("p", 17) ("pu", 17) ("n", 16)
+("un", 16) ("b", 4) ("bu", 4) ("s", 5) ("hug", 15) ("gs", 5) ("ugs", 5)
+```
+
+To tokenize a given word, we look at all possible subwords and calculate their probabilities. All the tokens are considered independent of each other so we can just multiply all sub-tokens as below 
+
+For the word `hug`, by tokenizing it as `h`,`u`, and `g`
+
+$$P("h") \times P("u") \times P("g")$$
+$$\frac{15}{210} \times \frac{36}{210} \times \frac{20}{210} = 0.000389$$
+
+It is also tokenized as `hu`, `g` and `h`, `ug`, and `hug`. The scores are
+
+```python
+["h", "u", "g"] = 0.000389
+["hu", "g"] = (15/210) × (20/210) = 0.0095
+["h", "ug"] = (15/210) × (20/210) = 0.0095  
+["hug"] = 15/210 = 0.071
+```
+Hence `hug` will be tokenized as **["hug"]** as it has the highest probability. 
+
+In practice this iterative process is not used, but rather [Viterbi algorithm](https://en.wikipedia.org/wiki/Viterbi_algorithm) is used to find the subword tokenization with the maximum probability. 
+
+Using this same method a score is calculated for all the words, as below 
+
+```python
+"hug": ["hug"] (score 0.071428)
+"pug": ["pu", "g"] (score 0.007710)
+"pun": ["pu", "n"] (score 0.006168)
+"bun": ["bu", "n"] (score 0.001451)
+"hugs": ["hug", "s"] (score 0.001701)
+```
+
+We want to calculate the negative log likelihood of the whole corpus and that becomes 
+
+```python
+freq("hug") × (-log(P("hug"))) + freq("pug") × (-log(P("pug"))) + freq("pun") × (-log(P("pun"))) + freq("bun") × (-log(P("bun"))) + freq("hugs") × (-log(P("hugs")))
+10 × (-log(0.071428)) + 5 × (-log(0.007710)) + 12 × (-log(0.006168)) + 4 × (-log(0.001451)) + 5 × (-log(0.001701)) = 169.8
+```
+
+Now each token is removed to see how that affects the overall loss as below 
+
+Removing token "pu": Loss change = 0 (since "pug" can use ["p", "ug"] with same score)
+Removing token "hug": Loss increases by 23.5 (forces less optimal tokenizations)
 
 
-
+Tokens with the smallest loss increase are removed first until the desired vocabulary size is reached.
 
 **SentencePiece**
 
@@ -6786,6 +6905,8 @@ The paper demonstrates how careful scaling of both data and training techniques 
 ## Kimi AI
 
 Talk about optimizers here, Muon and stuff
+
+https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison
 
 ## It's all about DeepSeek
 
