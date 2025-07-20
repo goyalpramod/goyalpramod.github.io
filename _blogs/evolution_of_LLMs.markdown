@@ -2985,7 +2985,7 @@ The image shows how masked attention works in practice. First we calculate the a
 
 ##### LLM Glossary 
 
-What this is -> A mathematical foundation for terms commonly used during LLM inference
+What this is -> A mathematical foundation for terms commonly used during LLM inference <br/>
 What this is not -> A guide to deciding the best values for your use case
 
 **Temperature**
@@ -3122,8 +3122,8 @@ Taking back what I said, they aren't exactly words. Let us understand why.
 
 Let's start with a simple sentence and tokenize (converting words in a document to token) it.
 
-**Example:** "I love machine learning"
-**Tokens:** ["I", "love", "machine", "learning"]
+**Example:** "I love machine learning" <br/>
+**Tokens:** ["I", "love", "machine", "learning"] <br/>
 **Token IDs:** [1, 234, 5678, 9012]
 
 Now imagine instead of a sentence, it was a page, or a whole book. It will contain thousands if not hundreds of thousands of unique words. There are languages which have more than a [million unique words](https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words). It will be unfeasible to tokenize each word.
@@ -3134,8 +3134,8 @@ Also what if we run into a word we have never seen during training. That will br
 
 Let's again start with the same sentence
 
-**Example:** "I love machine learning"
-**Tokens:** ["I", " ", "l", "o", "v", "e", " ", "m", "a", "c", "h", "i", "n", "e", " ", "l", "e", "a", "r", "n", "i", "n", "g"]
+**Example:** "I love machine learning" <br/>
+**Tokens:** ["I", " ", "l", "o", "v", "e", " ", "m", "a", "c", "h", "i", "n", "e", " ", "l", "e", "a", "r", "n", "i", "n", "g"] <br/>
 **Token IDs:** [1, 2, 12, 15, 22, 5, 2, 13, 1, 3, 8, 9, 14, 5, 2, 12, 5, 1, 18, 14, 9, 14, 7]
 
 This fixes our problem of a huge vocabulary, but we run into another issue. Characters by themselves do not hold any meaning. This removes any semantic relation.
@@ -3236,7 +3236,7 @@ To tokenize a given word, we look at all possible subwords and calculate their p
 
 For the word `hug`, by tokenizing it as `h`,`u`, and `g`
 
-$$P("h") \times P("u") \times P("g")$$
+$$P(h) \times P(u) \times P(g)$$
 $$\frac{15}{210} \times \frac{36}{210} \times \frac{20}{210} = 0.000389$$
 
 It is also tokenized as `hu`, `g` and `h`, `ug`, and `hug`. The scores are
@@ -3324,9 +3324,11 @@ This paper wasn't trying to find a problem then solve it per se. It is more of a
 > BERT is designed to pretrain deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be finetuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference
 
 **Problem**
+
 Previous language models like GPT-1 and ELMo had a fundamental limitation: they could only look in one direction. GPT-1 used masked attention (only seeing previous tokens), while ELMo concatenated separate left-to-right and right-to-left models. But human language understanding is inherently bidirectional - to understand "The animal didn't cross the street because it was too [tired/wide]," you need context from both sides to know whether "it" refers to the animal or the street.
 
 **Solution**
+
 BERT solved this by using the encoder portion of the Transformer architecture, which allows true bidirectional attention. Instead of predicting the next word (like GPT), BERT learns by predicting masked words using context from both directions simultaneously.
 
 All the papers I have mentioned in this blog are great, but the BERT paper is particularly awesome. It stands out even today, and the sheer amount of innovations from one paper is astounding. I implore you to check it out.
@@ -7159,4 +7161,7 @@ Now let's understand how a usual Encoder is trained, We will talk about BERT her
 
 Now let's do the same for T5
 
-### Inference -->
+### Inference
+
+[Expand SENTENCE PIECE WHEN IT MAKES SENE] -->
+
