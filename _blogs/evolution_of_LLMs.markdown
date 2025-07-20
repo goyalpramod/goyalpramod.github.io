@@ -1881,7 +1881,7 @@ Key highlights:
 
 - The authors achieve over 1000x improvements in model capacity while maintaining computational efficiency
 - Their approach addresses several challenges of conditional computation, including GPU utilization and load balancing
-- When applied to language modeling and machine translation tasks, their MoE models significantly outperform state-of-the-art models with lower computational cost
+- When applied to Language Modeling and machine translation tasks, their MoE models significantly outperform state-of-the-art models with lower computational cost
 - Their largest model contains up to 137 billion parameters and demonstrates continued performance improvements with increased capacity
 
 This paper represents a significant advancement in scaling neural networks efficiently, presaging some of the techniques that would later become important in very large language models.
@@ -2816,9 +2816,9 @@ We more or less now have a complete understanding of how different embedding mod
 
 There are two things we need to understand: how it's trained and how it's used. 
 
-Training is quite simple - we train a two-layer bi-directional LSTM on a language modeling task. 
+Training is quite simple - we train a two-layer bi-directional LSTM on a Language Modeling task. 
 
-The language modeling task basically means: given all these words, what's the most likely word that comes next? It is exactly how GPT-1 was trained, which we will be covering next.
+The Language Modeling task basically means: given all these words, what's the most likely word that comes next? It is exactly how GPT-1 was trained, which we will be covering next.
 
 ![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/36.webp)
 *image inspired from this [blog](https://jalammar.github.io/illustrated-bert/)*
@@ -2871,7 +2871,7 @@ GPT-1 was the moment when everything clicked. While ULMFiT showed that transfer 
 
 **Solution**
 
-> In this paper, we explore a semi-supervised approach for language understanding tasks using a combination of unsupervised pre-training and supervised fine-tuning. Our goal is to learn a universal representation that transfers with little adaptation to a wide range of tasks. We assume access to a large corpus of unlabeled text and several datasets with manually annotated training examples (target tasks). Our setup does not require these target tasks to be in the same domain as the unlabeled corpus. We employ a two-stage training procedure. First, we use a language modeling objective on the unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.
+> In this paper, we explore a semi-supervised approach for language understanding tasks using a combination of unsupervised pre-training and supervised fine-tuning. Our goal is to learn a universal representation that transfers with little adaptation to a wide range of tasks. We assume access to a large corpus of unlabeled text and several datasets with manually annotated training examples (target tasks). Our setup does not require these target tasks to be in the same domain as the unlabeled corpus. We employ a two-stage training procedure. First, we use a Language Modeling objective on the unlabeled data to learn the initial parameters of a neural network model. Subsequently, we adapt these parameters to a target task using the corresponding supervised objective.
 
 This was the beginning of the era we live in now. As funny as it may sound, I do not have a lot to add in this section. Because we have already talked about the majority things, the architecture and important concepts like attention in our [transformers blog](https://goyalpramod.github.io/blogs/Transformers_laid_out/) and the training method in our [ULMFit](#ulmfit) section.
 
@@ -2884,7 +2884,7 @@ I will be skipping most of the thing we have already talked about, but if you st
 
 ##### GPT ASAP
 
-Generative Pre-trained Transformer is a decoder only auto-regressive model which was first pre-trained on a humongous amount of data using a language modeling method then fine-tuned on a much smaller supervised dataset to help solve specific tasks
+Generative Pre-trained Transformer is a decoder only auto-regressive model which was first pre-trained on a humongous amount of data using a Language Modeling method then fine-tuned on a much smaller supervised dataset to help solve specific tasks
 
 That is a lot of ML jargon way of saying that, the authors took the transformer, got rid of the encoder, put up a lot of layers of decoder, trained it on lots of data, then fine tuned it for specific use cases. 
 
@@ -2935,7 +2935,7 @@ This matrix consists of vectors X1, X2, X2.... Xn That make up the matrix X
 
 ![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/49.webp)
 
-Now assume you want to see how close X1 is relative to every other word. What do you do? Take dot product, because we all know that gives us the distance between different vectors in space. 
+Now assume you want to see how close X1 is relative to every other word. What do you do? Take dot product, which gives us similarity scores between vectors - the higher the dot product, the more similar (or 'closer') the vectors are in the semantic space.
 
 Now let's say you want to see, how different vectors relate to X1, I.e How far is X2 from X1 (notice how we went from how far X1 is from X2, X3 and so on. To how far X2 is from X1). 
 
@@ -3414,7 +3414,7 @@ Key contributions:
 3. Demonstration that a single unsupervised language model can perform multiple NLP tasks without task-specific training
 4. Evidence that model performance scales in a log-linear fashion with model size
 
-The paper shows that GPT-2 achieves state-of-the-art results on 7 out of 8 tested language modeling datasets in a zero-shot setting. It also demonstrates promising zero-shot performance on tasks like reading comprehension, summarization, translation, and question answering without any task-specific fine-tuning.
+The paper shows that GPT-2 achieves state-of-the-art results on 7 out of 8 tested Language Modeling datasets in a zero-shot setting. It also demonstrates promising zero-shot performance on tasks like reading comprehension, summarization, translation, and question answering without any task-specific fine-tuning.
 
 This work represents a significant step toward building more general NLP systems that can learn to perform tasks from naturally occurring demonstrations in text, rather than requiring task-specific datasets and architectures for each application.
 
@@ -3488,7 +3488,7 @@ Key contributions:
 
 2. The researchers collect a larger dataset (including a new CC-NEWS corpus) to better control for training set size effects.
 
-3. Through extensive experimentation, they show that when properly optimized, BERT's masked language modeling objective is competitive with newer approaches like XLNet.
+3. Through extensive experimentation, they show that when properly optimized, BERT's masked Language Modeling objective is competitive with newer approaches like XLNet.
 
 4. RoBERTa achieves state-of-the-art results on GLUE, RACE, and SQuAD benchmarks without multi-task fine-tuning for GLUE or additional data for SQuAD.
 
@@ -3580,7 +3580,7 @@ Key contributions:
 
 2. DistilBERT is built using knowledge distillation during the pre-training phase (rather than task-specific distillation), using a triple loss function that combines:
 
-   - The standard masked language modeling loss
+   - The standard masked Language Modeling loss
    - A distillation loss using the teacher's soft target probabilities
    - A cosine embedding loss to align the directions of the student and teacher hidden states
 
@@ -3698,7 +3698,7 @@ a back-translation system for machine translation, with only target language pre
 <div markdown="1">
 XLNet is a novel approach to pretraining language models that combines the advantages of both autoregressive (AR) language models like GPT and autoencoding (AE) models like BERT, while avoiding their limitations.
 
-The key innovation of XLNet is its **permutation language modeling objective**. Rather than using a fixed left-to-right order like traditional autoregressive models, XLNet maximizes the expected log likelihood over all possible permutations of the factorization order for a sequence. This allows each token to effectively see context from both directions while maintaining the autoregressive property.
+The key innovation of XLNet is its **permutation Language Modeling objective**. Rather than using a fixed left-to-right order like traditional autoregressive models, XLNet maximizes the expected log likelihood over all possible permutations of the factorization order for a sequence. This allows each token to effectively see context from both directions while maintaining the autoregressive property.
 
 XLNet addresses two key limitations of BERT:
 
@@ -3722,7 +3722,7 @@ In empirical evaluations, XLNet outperforms BERT on 20 tasks including question 
 
 """
 With the capability of modeling bidirectional contexts, denoising autoencoding
-based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive language modeling. However, relying on corrupting the input with masks, BERT neglects dependency between the masked positions
+based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive Language Modeling. However, relying on corrupting the input with masks, BERT neglects dependency between the masked positions
 and suffers from a pretrain-finetune discrepancy. In light of these pros and cons, we
 propose XLNet, a generalized autoregressive pretraining method that (1) enables
 learning bidirectional contexts by maximizing the expected likelihood over all
@@ -3950,7 +3950,7 @@ The Longformer paper addresses a key limitation of traditional Transformer model
 
 3. **Performance**: Longformer achieves:
 
-   - State-of-the-art results on character-level language modeling (text8 and enwik8)
+   - State-of-the-art results on character-level Language Modeling (text8 and enwik8)
    - Outperforms RoBERTa on long document tasks
    - Sets new state-of-the-art results on WikiHop and TriviaQA
 
@@ -4303,14 +4303,14 @@ https://www.youtube.com/watch?v=KgoHyMGpxBU&ab_channel=nPlan
 
 > Link to paper: [ELECTRA: Pre-training Text Encoders as Discriminators Rather Than Generators](https://arxiv.org/abs/2003.10555)
 
-Google's model that used a discriminative approach instead of masked language modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
+Google's model that used a discriminative approach instead of masked Language Modeling, providing more efficient training As noted, "Electra deploys a 'Masked Language Modeling' approach that masks certain words and trains the model to predict them. Additionally, Electra incorporates a 'Discriminator' network that aids in comprehending language without the need to memorize the training data."
 
 <details>
 
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-ELECTRA presents a more efficient alternative to masked language modeling (MLM) pre-training methods like BERT. Instead of masking tokens and training a model to predict the original ones, ELECTRA proposes "replaced token detection" - a discriminative task where:
+ELECTRA presents a more efficient alternative to masked Language Modeling (MLM) pre-training methods like BERT. Instead of masking tokens and training a model to predict the original ones, ELECTRA proposes "replaced token detection" - a discriminative task where:
 
 1. A small generator model replaces some tokens with plausible alternatives
 2. A discriminator model (ELECTRA) learns to distinguish between original and replaced tokens
@@ -4461,7 +4461,7 @@ This approach is particularly interesting because it challenges conventional wis
 <summary markdown="span">Quick Summary</summary>
 <div markdown="1">
 
-This 2021 paper from DeepMind introduces Retrieval-Enhanced Transformer (RETRO), a novel approach to language modeling that enhances traditional transformer architectures with retrieval capabilities from massive text databases.
+This 2021 paper from DeepMind introduces Retrieval-Enhanced Transformer (RETRO), a novel approach to Language Modeling that enhances traditional transformer architectures with retrieval capabilities from massive text databases.
 
 **Key Innovations:**
 
@@ -4764,7 +4764,7 @@ these effects?
 
 This paper introduces "speculative decoding," a technique to accelerate inference from large autoregressive Transformer models without changing their architecture, training procedure, or output distribution.
 
-The key insight is that language modeling often contains easier subtasks that can be approximated by smaller, more efficient models. The authors use these smaller models to "speculate" on the next few tokens that the larger model would generate, and then run the larger model in parallel to verify these speculations.
+The key insight is that Language Modeling often contains easier subtasks that can be approximated by smaller, more efficient models. The authors use these smaller models to "speculate" on the next few tokens that the larger model would generate, and then run the larger model in parallel to verify these speculations.
 
 When the smaller model's predictions match what the larger model would have produced, they accept multiple tokens at once, significantly reducing the number of sequential calls to the large model. The authors introduce a novel sampling method called "speculative sampling" that preserves the exact output distribution of the original model.
 
@@ -5905,7 +5905,7 @@ This work represents a paradigm shift in preference learning by showing that the
 
 **Core Contribution**
 
-PaLM 2 achieves **better performance than its much larger predecessor** while being significantly more compute-efficient. This challenges the "bigger is always better" paradigm in language modeling.
+PaLM 2 achieves **better performance than its much larger predecessor** while being significantly more compute-efficient. This challenges the "bigger is always better" paradigm in Language Modeling.
 
 **Key Technical Insights**
 
@@ -5917,7 +5917,7 @@ PaLM 2 achieves **better performance than its much larger predecessor** while be
 **2. Three-Pronged Improvement Strategy**
 
 - **Better data mixture**: More multilingual, diverse, and higher-quality training data
-- **Improved architecture**: Uses a mixture of training objectives (not just standard language modeling)
+- **Improved architecture**: Uses a mixture of training objectives (not just standard Language Modeling)
 - **Compute-optimal scaling**: Smaller model trained on more tokens rather than just scaling up parameters
 
 **3. Multilingual Excellence**
@@ -6081,7 +6081,7 @@ Traditional SSMs are "linear time-invariant" - they process all inputs the same 
 
 The paper demonstrates that Mamba:
 
-- Matches or exceeds Transformer performance on language modeling
+- Matches or exceeds Transformer performance on Language Modeling
 - Handles sequences up to 1 million tokens
 - Achieves 5× higher inference throughput than Transformers
 - Works well across multiple domains (language, DNA, audio)
