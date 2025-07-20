@@ -3319,9 +3319,15 @@ These two blogs helped me immensely with this section:
 - [The illustrated BERT](https://jalammar.github.io/illustrated-bert/) 
 - [BERT 101](https://huggingface.co/blog/bert-101)
 
-This paper wasn't trying to find a problem then solve it per say. It is more of an innovation, taking an excerpt from the paper.
+This paper wasn't trying to find a problem then solve it per se. It is more of an innovation, taking an excerpt from the paper.
 
-> BERT is designed to pretrain deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be finetuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference, without substan
+> BERT is designed to pretrain deep bidirectional representations from unlabeled text by jointly conditioning on both left and right context in all layers. As a result, the pre-trained BERT model can be finetuned with just one additional output layer to create state-of-the-art models for a wide range of tasks, such as question answering and language inference
+
+**Problem**
+Previous language models like GPT-1 and ELMo had a fundamental limitation: they could only look in one direction. GPT-1 used masked attention (only seeing previous tokens), while ELMo concatenated separate left-to-right and right-to-left models. But human language understanding is inherently bidirectional - to understand "The animal didn't cross the street because it was too [tired/wide]," you need context from both sides to know whether "it" refers to the animal or the street.
+
+**Solution**
+BERT solved this by using the encoder portion of the Transformer architecture, which allows true bidirectional attention. Instead of predicting the next word (like GPT), BERT learns by predicting masked words using context from both directions simultaneously.
 
 All the papers I have mentioned in this blog are great, but the BERT paper is particularly awesome. It stands out even today, and the sheer amount of innovations from one paper is astounding. I implore you to check it out.
 
@@ -3344,9 +3350,16 @@ There are a lot of new terms from the above image like CLS, Masked LM, NSP etc t
 
 **Masked Language Modeling**
 
-This is one of the methods of pre-training BERT. We take the input sentence and randomly mask out 15% of the sentences, then using the output of the position we try to predict what could have been the possible text. 
+This is one of the methods of pre-training BERT. We take the input sentence and randomly mask out 15% of the tokens, then using the output of the position we try to predict what could have been the possible text. 
 
 In practice, 80% of the times the token is masked, 10% of the times it is replaced with a random token and other 10% of the time it's left unchanged.
+
+Let's see this in action:
+- Original: "The cat sat on the mat"
+- Masked: "The cat [MASK] on the mat" 
+- BERT sees both "The cat" and "on the mat" to predict "sat"
+
+This bidirectional context is why BERT became so powerful for understanding tasks.
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/41.webp)
 
@@ -3368,6 +3381,12 @@ The BERT paper is quite accessible, and has great visuals too. The below image i
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/40.webp)
 
 We can use bert to generate embeddings too!! Much like the way we did with ELMo. How? well I leave that upto you to explore.
+
+**Why BERT was Revolutionary**
+
+Before BERT, each NLP task needed its own specialized architecture. Question answering systems, sentiment classifiers, and named entity recognizers all looked completely different. BERT changed this by providing a universal representation that could be fine-tuned for any task with just a small additional layer.
+
+And that concludes BERT too, now we have talked about the two big architectures of LLMs, moving forward we will mostly be talking about the innovations done in the architecture and the solutions found to increase the scale at which to train them. 
 
 ## WORK IN PROGRESS NOTICE
 
