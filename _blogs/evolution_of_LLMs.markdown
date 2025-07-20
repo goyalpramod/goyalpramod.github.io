@@ -3085,19 +3085,19 @@ They validate their approach through experiments on English-Japanese translation
 </details>
 <br/>
 
-[ADD_CONTENT]
+Tokenization might seem like a boring preprocessing step, but it's actually one of the most crucial components of any language model. Think of it as teaching a computer how to "read" - before a model can understand Shakespeare or debug your code, it needs to know how to break text into meaningful chunks. SentencePiece was a game-changer because it made this process truly language-agnostic.
 
 **Problem**
 
 > Tough to make NMT language independent
 
-[ADD_CONTENT]
+Before SentencePiece, building multilingual NLP systems was a nightmare. Each language needed its own custom preprocessing pipeline - Japanese needed special word segmentation, Chinese required different tokenization rules, and languages like Thai had their own complexities. This meant you couldn't easily train one model across multiple languages, severely limiting the scope and efficiency of NLP systems.
 
 **Solution**
 
 > SentencePiece comprises four main components:
 > Normalizer, Trainer, Encoder, and Decoder.
-> Normalizer is a module to normalize semanticallymequivalent Unicode characters into canonical
+> Normalizer is a module to normalize semantically equivalent Unicode characters into canonical
 > forms. Trainer trains the subword segmentation
 > model from the normalized corpus. We specify a
 > type of subword model as the parameter of Trainer.
@@ -3122,9 +3122,11 @@ Taking back what I said, they aren't exactly words. Let us understand why.
 
 Let's start with a simple sentence and tokenize (converting words in a document to token) it.
 
-[Add_IMAGE]
+**Example:** "I love machine learning"
+**Tokens:** ["I", "love", "machine", "learning"]
+**Token IDs:** [1, 234, 5678, 9012]
 
-Now imagine instead of a sentence, it was a page, or a whole book. It will contain thoughsands if hundred thousands of unique words. There are languages which have more than a [million unique words](https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words). It will be unfeasible to tokenize each word.
+Now imagine instead of a sentence, it was a page, or a whole book. It will contain thousands if not hundreds of thousands of unique words. There are languages which have more than a [million unique words](https://en.wikipedia.org/wiki/List_of_dictionaries_by_number_of_words). It will be unfeasible to tokenize each word.
 
 Also what if we run into a word we have never seen during training. That will break our model, to overcome this, we can use something called Character Level Tokenization.
 
@@ -3132,15 +3134,13 @@ Also what if we run into a word we have never seen during training. That will br
 
 Let's again start with the same sentence
 
-[ADD_IMAGE]
+**Example:** "I love machine learning"
+**Tokens:** ["I", " ", "l", "o", "v", "e", " ", "m", "a", "c", "h", "i", "n", "e", " ", "l", "e", "a", "r", "n", "i", "n", "g"]
+**Token IDs:** [1, 2, 12, 15, 22, 5, 2, 13, 1, 3, 8, 9, 14, 5, 2, 12, 5, 1, 18, 14, 9, 14, 7]
 
-This fixes our problem of a huge vocabulary, but we run into other issues. First being, it is highly inefficient. There are words that repeat often in a page and it's inefficient to write the same long sequence of tokens to represent them
+This fixes our problem of a huge vocabulary, but we run into another issue. Characters by themselves do not hold any meaning. This removes any semantic relation.
 
-[ADD_IMAGE]
-
-Another one being, characters by themselves do not hold any meaning. This removes any semantic relation
-
-[ADD_E_MEME](Unless it's E ofc)
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/e.jpeg)[(Unless it's E ofc)](https://knowyourmeme.com/memes/lord-marquaad-e)
 
 There have been innovations made to fix these problems, let's look into them one by one.
 
@@ -3159,7 +3159,7 @@ Byte-pair encoding (BPE) was introduced in [Neural Machine Translation of Rare W
 It essentially follows two steps, the pretokenization then merging. Let's understand each.
 
 In the pretokenization step, we determine the set of unique words in the training data along with their frequency. Using this unique set, BPE breaks the words down into it's individual characters, which are then merged to form the final vocabulary. Let's understand it with an example. 
-{What is the pre-tokenziation step, I do not understand it?}
+
 Suppose after the pre-tokenization step, we have the following words with their frequencies that we got from the training data 
 
 ```python
@@ -3280,7 +3280,7 @@ Tokens with the smallest loss increase are removed first until the desired vocab
 
 This is a fabulous [blog](https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/) on the topic, it explains everything along with the implementation code. Consider checking it out.
 
-This sub-section will be the shortest even though this section is about sentencepiece, you know why? well because sentencepiece is not a tokenizer at all, it's a pre-tokenization algorithm used in conjucture with unigram or BPE.
+This sub-section will be the shortest even though this section is about sentencepiece, you know why? well because sentencepiece is not a tokenizer at all, it's a pre-tokenization algorithm used in conjunction with unigram or BPE.
 
 All tokenization methods talked about so far have the same problem, they assume that the input text uses spaces to separate words. However, not all languages use spaces to separate words. One possible solution is to use language specific pre-tokenizers, e.g. XLM uses a specific Chinese, Japanese, and Thai pre-tokenizer. To solve this problem more generally, SentencePiece treats the input as a raw input stream, thus including the space in the set of characters to use. It then uses the BPE or unigram algorithm to construct the appropriate vocabulary.
 
