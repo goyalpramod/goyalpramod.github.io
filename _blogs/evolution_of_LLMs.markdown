@@ -796,7 +796,7 @@ As this section is dedicated to PPO, I will primarily be talking about the topic
 2. TRPO
 3. PPO
 
-I am skipping over many other intersting and amazing algorithms like [Q-Learning](https://en.wikipedia.org/wiki/Q-learning#:~:text=Q%2Dlearning%20can%20identify%20an,taken%20in%20a%20given%20state.), [DQN](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html), [Actor-critic](https://en.wikipedia.org/wiki/Actor-critic_algorithm) etc. As they are not relevant to this section. I still implore you to explore them through the links I have provided to get a better, broader and deeper grasp of RL.
+I am skipping over many other interesting and amazing algorithms like [Q-Learning](https://en.wikipedia.org/wiki/Q-learning#:~:text=Q%2Dlearning%20can%20identify%20an,taken%20in%20a%20given%20state.), [DQN](https://docs.pytorch.org/tutorials/intermediate/reinforcement_q_learning.html), [Actor-critic](https://en.wikipedia.org/wiki/Actor-critic_algorithm) etc. As they are not relevant to this section. I still implore you to explore them through the links I have provided to get a better, broader and deeper grasp of RL.
 
 Before we move to the next section, I want to talk about a question that baffled me when I started learning about RL.
 
@@ -2190,8 +2190,6 @@ The path from this 2017 paper to modern LLMs shows how foundational ideas can ha
 
 Today's largest language models increasingly rely on MoE architectures, making this paper's contributions more relevant than ever. The ability to scale to trillion-parameter models while maintaining reasonable training costs has become essential for pushing the boundaries of AI capabilities.
 
-[I was supposed to finish 2018 section today but I need a day or two though. You can read it if you wish, but it's not refined.]
-
 ## 2018: BERT and Early Innovations
 
 ### ULMFiT
@@ -2248,13 +2246,13 @@ This made transfer learning frustrating and often counterproductive. Researchers
 > that are key for fine-tuning a language
 > model.
 
-This is the paper that laid the foundation that has changed our present world forever.
+This paper laid crucial groundwork for the LLM revolution we see today.
 
 ![Image of ULMFiT training](/assets/blog_assets/evolution_of_llms/4.webp)
 
 The first stage is pretty basic and nothing innovative, but the second & third stage is where the innovation lies.
 
-So far noone had been able to fine a general purpose model to perform well on target task which was not present in the original modeling of the original model
+So far noone had been able to fine tune a general purpose model to perform well on target task which was not present in the original modeling of the original model
 
 > **Why Transfer Learning Failed in NLP** <br/>
 > Unlike computer vision, where you could take ImageNet features and achieve great results on new tasks, NLP models seemed to resist transfer. The problem wasn't the models themselves but how we fine-tuned them. Traditional approaches used the same learning rate for all layers and froze nothing, causing rapid degradation of learned representations.
@@ -2310,14 +2308,13 @@ The idea is, start with a higher learning rate to rapidly adapt the model to the
 
 Think of it like learning to drive in a new city. Initially, you drive faster to quickly get oriented and find the general area you need. Once you're close to your destination, you slow down to carefully navigate the final streets and parking.
 
-This was achieved using the following formul
+This was achieved using the following formula
 
-$$\text{cut} = \lfloor T \cdot \text{cut/_frac} \rfloor$$
-
+$$\text{cut} = \lfloor T \cdot \text{cut\_frac} \rfloor$$
 $$
 p = \begin{cases}
 t/\text{cut}, & \text{if } t < \text{cut} \\
-1 - \frac{t-\text{cut}}{\text{cut} \cdot (1/\text{cut/_frac} - 1)}, & \text{otherwise}
+1 - \frac{t-\text{cut}}{\text{cut} \cdot (1/\text{cut\_frac} - 1)}, & \text{otherwise}
 \end{cases}
 $$
 
@@ -2347,14 +2344,14 @@ The process works like this: First, unfreeze only the classifier head and train 
 
 **Concat Pooling**
 
-![Image of Gradual Unfreezing](/assets/blog_assets/evolution_of_llms/45.webp)
+![Image of Concat Pooling](/assets/blog_assets/evolution_of_llms/45.webp)
 
 
 ULMFiT also introduced concat pooling for text classification. Instead of using only the final hidden state, it concatenates the last hidden state with both max-pooled and mean-pooled representations across all timesteps. This captures information from the entire document, not just the end.
 
 **BPTT for Text Classification (BPT3C)**
 
-![Image of Gradual Unfreezing](/assets/blog_assets/evolution_of_llms/46.webp)
+![Image of BPT3C](/assets/blog_assets/evolution_of_llms/46.webp)
 
 For handling long documents, ULMFiT adapts backpropagation through time by dividing documents into fixed-length batches while maintaining hidden state continuity between batches.
 
@@ -2384,11 +2381,11 @@ The authors demonstrate that adding ELMo to existing models significantly improv
 </details>
 <br/>
 
-Embeddings are a vital part of LLMs, because they determine the very understanding of tokens. [ADD_CONTENT]
+Embeddings are a vital part of LLMs, because they determine the very understanding of tokens. Think of them as the language that allows machines to understand and work with human text. Just like how we might describe a person using various characteristics (height, age, personality), embeddings describe words using hundreds of numerical features that capture their meaning, relationships, and usage patterns.
 
 **Problem**
 
-[ADD_CONTENT]
+Before ELMo, word embeddings had a major limitation: each word had only one representation regardless of context. The word "bank" would have the same vector whether you're talking about a financial institution or the side of a river. This is called the polysemy problem - one word, multiple meanings, but only one embedding.
 
 > learning high quality representations can be challenging. They should ideally
 > model both (1) complex characteristics of word
@@ -2398,7 +2395,7 @@ Embeddings are a vital part of LLMs, because they determine the very understandi
 
 **Solution**
 
-[ADD_CONTENT]
+ELMo's breakthrough was making embeddings contextual. Instead of giving "bank" the same representation everywhere, ELMo creates different representations based on the surrounding words. When "bank" appears near "loan" and "mortgage," it gets a finance-related representation. When it appears near "river" and "water," it gets a geography-related representation.
 
 > Our representations differ from traditional word
 > type embeddings in that each token is assigned a
@@ -2624,51 +2621,55 @@ All these methods share a fundamental flaw: they assign the same representation 
 
 The following are excellect sources to understand Word2Vec in a deeper level. Consider going through them
 
-- [The Illustrated Word2vec](https://jalammar.github.io/illustrated-word2vec/)
-- [Word2Vec Tutorial - The Skip-Gram Model](https://mccormickml.com/2016/04/19/word2vec-tutorial-the-skip-gram-model/)
+- [The Illustrated Word2Vec](https://jalammar.github.io/illustrated-Word2Vec/)
+- [Word2Vec Tutorial - The Skip-Gram Model](https://mccormickml.com/2016/04/19/Word2Vec-tutorial-the-skip-gram-model/)
 
 **Intuition**
 
-We are going to start with the old and cheesy explanation of Word2vec. Talking about similarity of vector representation in space. (If you do not understand what I am talking about, Most explanations of Word2vec use the explanation I am about to give. Fret not, for we will dive deeper too!)
+We are going to start with the old and cheesy explanation of Word2Vec. Talking about similarity of vector representation in space. (If you do not understand what I am talking about, Most explanations of Word2Vec use the explanation I am about to give. Fret not, for we will dive deeper too!)
 
 I absolutely love cheese. And I have scale in which I measure how cheesy a piece of cheese is.
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/21.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/21.webp)
 
 Anytime I find a new cheese, I taste it and put it on my scale. I use this scale to choose which cheese to eat based on my mood.
 
-![Image of word2vec ex5planation](/assets/blog_assets/evolution_of_llms/22.webp)
+![Image of Word2Vec ex5planation](/assets/blog_assets/evolution_of_llms/22.webp)
 
 But one day I ran into a cheese (yellow cheese) which had the same cheesiness as the white cheese. Now how do I differentiate between the two? well cheese has many other properties (or features from the ML perspective). Like protein!!
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/23.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/23.webp)
 
 I can add that as another axis and I can use that as another metric to choose the kind of cheese I want to eat.
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/24.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/24.webp)
 
 This way of plotting cheese based on different properties provides with another amazing way. One day a friend of mine came and said he really liked red cheese, but I was out of red cheese :(
 because I love it too.
 
 So I can just find the cheese which is most similar to it, using cosine similarity!!
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/25.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/25.webp)
 
-That is essentially the idea of word2vec, We plot multiple words in an n dimensional space (I used 2 dimensional because I can plot it. I can't plot a 7d space, I will love to meet you if you can tho!!!). And find similar words based on cosine similarity.
+That is essentially the idea of Word2Vec, We plot multiple words in an n dimensional space (I used 2 dimensional because I can plot it. I can't plot a 7d space, I will love to meet you if you can tho!!!). And find similar words based on cosine similarity.
 
-[ADD_COSINE_SIMILARITY_MATH_HERE]
+The cosine similarity between two vectors A and B is calculated as:
+
+$$\cos(\theta) = \frac{A \cdot B}{||A|| ||B||} = \frac{\sum_{i=1}^{n} A_i B_i}{\sqrt{\sum_{i=1}^{n} A_i^2} \sqrt{\sum_{i=1}^{n} B_i^2}}$$
+
+This gives us a value between -1 and 1, where 1 means the vectors point in exactly the same direction (very similar), 0 means they're perpendicular (unrelated), and -1 means they point in opposite directions (very different).
 
 There is a popular example that shows the distance between king and woman is same as the distance between man and woman. This essentially shows that both the pair of words share very similar ideas with only a few differences (maybe in royalty).
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/26.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/26.webp)
 
-In reality Word2vec looks something more like the below image (ouch!!).
+In reality Word2Vec looks something more like the below image (ouch!!).
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/27.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/27.webp)
 _Image taken from [Embedding Projector](https://projector.tensorflow.org/)_
 
 **Skip gram model**
 
-Now that we understand the idea behind word2vec, it's time to understand how it is implemented. I will be skipping Continous Bag of words, an idea introduced in the original paper as it is not essential in my opinion. You can read more about it in the sources I have provided.
+Now that we understand the idea behind Word2Vec, it's time to understand how it is implemented. I will be skipping Continous Bag of words, an idea introduced in the original paper as it is not essential in my opinion. You can read more about it in the sources I have provided.
 
 | Skip gram in 1 sentence -> Given a word, find it's nearby words (context words).
 | CBOW in 1 sentence -> Given context words, find the target word.
@@ -2677,7 +2678,7 @@ One of the many beautiful thing about NLP is, you can create a labelled dataset 
 
 Let us understand how the training dataset is created using a sample sentence. We first define a window (here it's 2), we have our target word with the relevant context words around it.
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/28.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/28.webp)
 
 Now that we have our training data, let us understand how the model itself is constructed. Remember how we talked about cheesiness as a feature for our cheese, then protein, well both of them can be described as their own individual neuron. So in the example below we have an embedding model with 300 as it's dimension (In modern embedding model when you talk about dimensions, it is essentially talking about how many features can be used to describe one particular token, as a rule of thumb higher the dimension, more complex is it's representation)
 
@@ -2685,7 +2686,7 @@ So for any given word, we can create a one hot encoding, then pass it through ou
 
 > I have a question for you, What is the difference between nn.Embedding and nn.Sequential?
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/29.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/29.webp)
 
 One thing I found interesting was, we talk about "Embedding Matrix" but the above image describes a typical neural network model, what is going on over here?
 
@@ -2695,13 +2696,13 @@ Each row of the embedding matrix represents the weights of every word in that ne
 
 It's easier to visualize as different embedding vectors for each token of a fixed dimension.
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/30.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/30.webp)
 
 Now we just run a training loop and voila, the hidden layer, is our embedding matrix. But we have a problem. As this was an example we used a vocabulary of a 100 words, but in reality the vocabulary is 100x times larger. And calculating softmax of so many tokens is a very expensive operation.
 
 imagine a vocabulary of 10,000 tokens (quite small from modern vocabs) with 500 dimensional embedding model. That's 5 million training parameter!!!
 
-There are a few solutions proposed by the researchers to overcome this problem. Interestingly the [original paper](https://arxiv.org/pdf/1301.3781) only mentions Hierarical Softmax, but the [code](https://code.google.com/archive/p/word2vec/) shared by researches talks about sub-sampling and Negative Sampling. So let's talk about all three!
+There are a few solutions proposed by the researchers to overcome this problem. Interestingly the [original paper](https://arxiv.org/pdf/1301.3781) only mentions Hierarical Softmax, but the [code](https://code.google.com/archive/p/Word2Vec/) shared by researches talks about sub-sampling and Negative Sampling. So let's talk about all three!
 
 > [UPDATE] I later found out that they introduced these ideas in there follow up paper [here](https://arxiv.org/pdf/1310.4546). (Have a look at the authors... it is something haha)
 
@@ -2709,9 +2710,9 @@ This [blog](https://www.ruder.io/word-embeddings-softmax/#negativesampling) cove
 
 **Sub-Sampling**
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/31.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/31.webp)
 
-If we look at one particular example from our dataset generation step, paticularly the 3rd line. We will see that `is` is a word that must be quite common in sentences. And hence we can expect to run into many pairs of `is, ...`
+If we look at one particular example from our dataset generation step, particularly the 3rd line. We will see that `is` is a word that must be quite common in sentences. And hence we can expect to run into many pairs of `is, ...`
 
 To fix this problem, the authors introduced a sampling rate.
 
@@ -2721,19 +2722,19 @@ Where $f(w_i)$ is the frequency of the word and $t$ is a chosen threshold.
 
 **Negative Sampling (better for frequent words, better with low dimensional vectors)**
 
-The idea is quite intersting, If we go back to the example that we started with. I.e training on a vocab of 100 words. Our main problem was that it was very expensive to calculate the softmax of so many tokens.
+The idea is quite interesting, If we go back to the example that we started with. I.e training on a vocab of 100 words. Our main problem was that it was very expensive to calculate the softmax of so many tokens.
 
 So what if instead of training on all the tokens, we took a small subset of the negative samples. I.e tokens which are not related to our target word, and take a bunch of context words. And train it using logistic regression. In other words, tell if two words are neighbours or not.
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/32.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/32.webp)
 
 This greatly simplifies training, and reduces the cost significantly too. One interesting thing to note is the authors used a `unigram distribution` to pull the negative samples out of.
 
 $$P(w_i) = {f(w_i)}^{3/4}/\sum({f(w_i)}^{3/4})$$
 
-If you wish to learn more about negative sampling consider reading [this](https://mccormickml.com/2017/01/11/word2vec-tutorial-part-2-negative-sampling/).
+If you wish to learn more about negative sampling consider reading [this](https://mccormickml.com/2017/01/11/Word2Vec-tutorial-part-2-negative-sampling/).
 
-I find "why this even works" more interesting than the fact that it works (And this produces better results than our original method). It's actual name is noise contrastive estimation and the way I imagine it is, we are pulling similar words together while pushing dissilar words away. Now if we pushed all of the dissimilar words away as we were doing we inevitably pushed away similar words for different pairs too.
+I find "why this even works" more interesting than the fact that it works (And this produces better results than our original method). It's actual name is noise contrastive estimation and the way I imagine it is, we are pulling similar words together while pushing dissimilar words away. Now if we pushed all of the dissimilar words away as we were doing we inevitably pushed away similar words for different pairs too.
 
 Consider reading about contrastive loss. (This is a good [medium article](https://medium.com/@maksym.bekuzarov/losses-explained-contrastive-loss-f8f57fe32246) on the topic, Consider looking at the author of contrastive loss too... it's somehting haha)
 
@@ -2751,7 +2752,7 @@ Where $h$ is the hidden layer output (context vector) and $v'_w$ are the output 
 
 But Hierarchical Softmax constructs a binary tree and we get a structure like below:
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/33.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/33.webp)
 
 > Understanding how the binary tree is constructed is beyond the scope of this article, but if you understand how [Huffman Encoding](https://en.wikipedia.org/wiki/Huffman_coding) works, that is one way of creating the tree. More frequent words get shorter paths, less frequent words get longer paths.
 
@@ -2780,7 +2781,7 @@ The main innovation behind GloVe is the idea that we only need to calculate the 
 
 First we create a co-occurrence matrix $X$ based on the available corpus. The notation $X_{ij}$ refers to number of times word j has appeared in the context of word i. We calculate the probability of a word j occurring given i as $P(j\|i) = X_{ij}/X_i$, where $X_i$ is the sum of all co-occurrence counts for word i (i.e., $X_i = \sum_k X_{ik}$).
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/35.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/35.webp)
 
 Let's understand it with an example.
 
@@ -2788,14 +2789,11 @@ We created the co-occurrence matrix for two sentences "Pizza is the best" and "M
 
 Let's calculate the probability of "Pizza" given "is" (this is from a very small corpus only to show how it is calculated, it is not reminiscent of the actual results).
 
-From our matrix, "is" co-occurs with three words: "Pizza" (1 time), "the" (1 time), and "Margherita" (1 time).
+From our matrix, "is" co-occurs with three words: "Pizza" (1 time), "the" (1 time), and "Margherita" (1 time). So the total count for "is" is 3.
 
-[ADD_FIX_THIS]
+$$P(\text{Pizza}|\text{is}) = \frac{X_{\text{is,Pizza}}}{X_{\text{is}}} = \frac{1}{3} = 0.33$$
 
-$$P(Pizza|is) = X_{is,Pizza}/X_{is}$$
-$$P(Pizza|is) = 1/3 = 0.33$$
-
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/34.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/34.webp)
 *Image taken from the original paper*
 
 If we look at the example provided by the authors from a real corpus, the power of ratios becomes clear. It is pretty intuitive that $P(solid\|ice)$ will have a higher value than $P(solid\|steam)$, because "solid" is more likely to appear in the context of "ice" than "steam". Hence their ratio $P(solid\|ice)/P(solid\|steam) = 8.9$ has a large value, indicating "solid" is discriminative for "ice".
@@ -2822,14 +2820,14 @@ Training is quite simple - we train a two-layer bi-directional LSTM on a languag
 
 The language modeling task basically means: given all these words, what's the most likely word that comes next? It is exactly how GPT-1 was trained, which we will be covering next.
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/36.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/36.webp)
 *image inspired from this [blog](https://jalammar.github.io/illustrated-bert/)*
 
 Now I had a question while reading this: ELMo is an embedding model, right? But what we are doing is next token prediction here. How is it used with other NLP models then? If you have the same question, you are on the right track. It is quite an innovative solution in my opinion.
 
 Let us first start with the very essence of any NLP task: We begin with a sentence, right? We can use this sentence, pass it to our trained ELMo model, and extract representations from different layers. **The key insight is that we don't just use the final layer - we combine representations from all layers (character embeddings + both LSTM layers) using learned weights.**
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/37.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/37.webp)
 
 We can then give these combined embeddings to any other NLP model. Voila! This understanding will prove to be extremely useful as we move to bigger LLMs. While modern embedding models don't use ELMo's specific bidirectional LSTM approach, ELMo's key innovation of contextual embeddings and the concept of using pre-trained language models for embeddings laid the groundwork for today's transformer-based embedding models.
 
@@ -2862,7 +2860,7 @@ This paper laid important groundwork for later transformer-based language models
 </details>
 <br/>
 
-[ADD_CONTENT]
+GPT-1 was the moment when everything clicked. While ULMFiT showed that transfer learning could work in NLP and BERT demonstrated the power of bidirectional representations, GPT-1 proved that a simple, scalable approach just predicting the next word could create surprisingly capable language models. This paper didn't just introduce a new model, it established the blueprint that lead to GPT-2, GPT-3, and the entire generative AI revolution.
 
 **Problem**
 
@@ -2870,8 +2868,6 @@ This paper laid important groundwork for later transformer-based language models
 > learning in natural language processing (NLP). Most deep learning methods require substantial
 > amounts of manually labeled data, which restricts their applicability in many domains that suffer
 > from a dearth of annotated resources
-
-[ADD_CONTENT]
 
 **Solution**
 
@@ -2919,7 +2915,7 @@ I took this excerpt directly from the paper as I cannot add anything else to it.
 
 ##### Why does attention work
 
-I am almost giddy writing this section because I find it astounding that this question never came to my mind. Why the heck does attention even work, we all know it works. But why?
+I am almost giddy writing this section because I find it astounding that this question never came to my mind. Why does attention even work, we all know it works. But why?
 
 Even before I begin I NEED to mention all these amazing blogs that helped me build an intuition behind the idea
 
@@ -2929,7 +2925,7 @@ Even before I begin I NEED to mention all these amazing blogs that helped me bui
 - [Transformers from scratch](https://peterbloem.nl/blog/transformers) by [Peter Bloem](https://peterbloem.nl/) a different approach but equally amazing
 - [Some Intuition on Attention and the Transformer](https://eugeneyan.com/writing/attention/) by [Eugene Yan](https://eugeneyan.com/) if you are short on time, just read this.
 
-[ADD_IMAGES]
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/48.webp)
 
 Let's forget about Q,K,V for a moment and just focus on a single matrix X. Which contains different tokens (these tokens can be anything. Words, image patches, audio segments, anything that can be embedded and represented by numbers) 
 
@@ -2937,7 +2933,9 @@ This matrix consists of vectors X1, X2, X2.... Xn That make up the matrix X
 
 (X vectors are embedded so they occupy a specific place in space) 
 
-Now assume u want to see how close X1 is relative to every other word. What do you do? Take dot product, because we all know that gives us the distance between different vectors in space. 
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/49.webp)
+
+Now assume you want to see how close X1 is relative to every other word. What do you do? Take dot product, because we all know that gives us the distance between different vectors in space. 
 
 Now let's say you want to see, how different vectors relate to X1, I.e How far is X2 from X1 (notice how we went from how far X1 is from X2, X3 and so on. To how far X2 is from X1). 
 
@@ -2949,21 +2947,25 @@ So the sentence becomes
 
 "Steve ... amazing .... Machine learning" 
 
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/50.webp)
+
 Now we need to apply these masks to something right, Hence we need to know the original sentence as well
 
 So we multiply this mask with X. This gives us an attention mask over the original matrix. 
 
 We just calculated Self-attention. With 1 sentence. Without using the terms Q,K,V. 
 
-Now the question arrises of W_q, W_k, W_v. 
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/51.webp)
+
+Now the question arises of W_q, W_k, W_v. 
 
 These are linear transformations, they are present to change the position of our X in the vector space. 
 
-But dot product will always give us the distance, by changing representations. We are getting the similarity score from different angels. 
+But dot product gives us the similarity between different vectors in space, by changing representations. We are getting the similarity score from different angles. 
 
 This proves that attention works, because dot product is just giving us the similarity in space. What about "but which layer gives us what" 
 
-Think of it this way, lets assume our W matrices are all identity matrix. (so no transformation), Now when we do our attention scoring. If any token is more close to any other token it will get a very high score. This essentially gives us the attention of that pair. This will be represented in the first layer, the second layer will then calculate the attention of pairs (much like how CNNs work and are visualized. U start with small lines, then move on to more complex geometric figures) 
+Think of it this way, lets assume our W matrices are all identity matrix. (so no transformation), Now when we do our attention scoring. If any token is more close to any other token it will get a very high score. This essentially gives us the attention of that pair. This will be represented in the first layer, the second layer will then calculate the attention of pairs (much like how CNNs work and are visualized. You start with small lines, then move on to more complex geometric figures) 
 
 Now by changing our W matrices in all different ways, we get different representation. And make pairs of different tokens stronger.
 
@@ -2972,43 +2974,88 @@ Now by changing our W matrices in all different ways, we get different represent
 Masked Attention is much like attention itself, but here we get rid of the bi-directional nature. 
 The current token can only look at itself and the tokens before it.
 
-![Image of word2vec explanation](/assets/blog_assets/evolution_of_llms/38.webp)
+![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/38.webp)
 
-In a matrix representation is looks something like this, It is very vital. Because our inference is auto-regressive so if during training we can look at the future tokens we run into {mention the problem}
+In a matrix representation is looks something like this, It is very vital. Because our inference is auto-regressive so if during training we can look at the future tokens we run into data leakage, the model would essentially be "cheating" by seeing the answer during training, making it unable to generate text properly during inference when it only has access to previous tokens.
+
+![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/masked_attention.webp)
+*Image taken from this beautiful [visualizer](https://poloclub.github.io/transformer-explainer/)*
+
+The image shows how masked attention works in practice. First we calculate the attention score by multiplying Q and K, then a mask is applied to it. Each token (represented by the colored circles) can only attend to itself and the tokens that came before it. The connections show which tokens each position can "see", notice how the connections always flow backwards or stay at the same position, never forward. This creates the triangular pattern you see in attention matrices, ensuring the model learns to predict based only on past context.
 
 ##### LLM Glossary 
 
 What this is -> A mathematical foundation for terms commonly used during LLM inference
 What this is not -> A guide to deciding the best values for your use case
 
-[ADD_SIMPLIFY_THIS_BELOW_TEXT]
-
 **Temperature**
-Temperature controls the randomness of token selection by scaling the logits before applying softmax. The probability distribution becomes: $P(token_i) = \frac{e^{logit_i/T}}{\sum_j e^{logit_j/T}}$ where T is temperature. When T=1, we get the original distribution. As T approaches 0, the model becomes deterministic (always picks the highest probability token). Higher T values (>1) flatten the distribution, making the model more creative but potentially less coherent.
+
+$$P(token_i) = \frac{e^{logit_i/T}}{\sum_j e^{logit_j/T}}$$
+
+where T is temperature.
+
+Temperature controls the randomness of token selection by scaling the logits before applying softmax. When T=1, we get the original distribution. As T approaches 0, the model becomes deterministic (always picks the highest probability token). Higher T values (>1) flatten the distribution, making the model more creative but potentially less coherent.
+
+For example if Temperatur is 0, we will always get the same response from the model no matter how many times we run it, for Temperature = 1 we will get varied results.
 
 **Top K**
 
-Top-k sampling restricts token selection to only the k most probable tokens, setting all other probabilities to zero before renormalization. If the original probabilities are $[p_1, p_2, ..., p_n]$ sorted in descending order, top-k keeps only $[p_1, p_2, ..., p_k]$ and renormalizes: $P_{new}(token_i) = \frac{p_i}{\sum_{j=1}^k p_j}$ for $i \leq k$, and 0 otherwise. This prevents the model from selecting very unlikely tokens while maintaining some randomness.
+$$P_{new}(token_i) = \frac{p_i}{\sum_{j=1}^k p_j}$$
+
+for $i \leq k$, and 0 otherwise
+
+Top-k sampling restricts token selection to only the k most probable tokens, setting all other probabilities to zero before renormalization. If the original probabilities are $[p_1, p_2, ..., p_n]$ sorted in descending order, top-k keeps only $[p_1, p_2, ..., p_k]$ and renormalizes the tokens using the above formula. This prevents the model from selecting very unlikely tokens while maintaining some randomness.
+
+For example,if the model earlier had 10 most likely options to choose from, by setting Top k=3 we are liminting those options to only 3 most likely options.
 
 **Top P (Nucleus Sampling)**
 
-Top-p sampling dynamically selects the smallest set of tokens whose cumulative probability exceeds threshold p. Given sorted probabilities $[p_1, p_2, ..., p_n]$, we find the smallest k such that $\sum_{i=1}^k p_i \geq p$, then renormalize only these k tokens. Unlike top-k which uses a fixed number of tokens, top-p adapts to the confidence of the model - using fewer tokens when the model is confident and more when uncertain.
+$$\sum_{i=1}^k p_i \geq p$$
 
-**Sampling vs Greedy Decoding**
+Top-p sampling dynamically selects the smallest set of tokens whose cumulative probability exceeds threshold p. Given sorted probabilities $[p_1, p_2, ..., p_n]$, we find the smallest k such that helps us clear the above criteria, then renormalize only these k tokens. Unlike top-k which uses a fixed number of tokens, top-p adapts to the confidence of the model - using fewer tokens when the model is confident and more when uncertain.
 
-Greedy decoding always selects the token with highest probability: $token = \arg\max_i P(token_i)$. While deterministic and fast, this can lead to repetitive text and suboptimal sequences due to the exposure bias problem. Sampling methods introduce controlled randomness by selecting tokens according to their probability distribution, often producing more diverse and human-like text at the cost of potential coherence.
+for example, if the model is fairly certain we will have the top token probabilities like [70%, 20%, 4%, 1% ...] and if we set top p threshold as 93% we will make the model choose from the top 3 tokens only 
+But if the model is uncertain and we get probabilities like [30%,29%,7%,5%,3%...] the model will have many tokens to choose from.
+
+**Sampling Methods**
+
+Sampling methods introduce controlled randomness by selecting tokens according to their probability distribution, often producing more diverse and human-like text at the cost of potential coherence.
+
+$$token = \arg\max_i P(token_i)$$
+
+Greedy sampling always selects the token with highest probability. While deterministic and fast, this can lead to repetitive text and suboptimal sequences due to the exposure bias problem. 
+
+$$score(sequence) = \frac{1}{|sequence|^\alpha} \sum_{i=1}^{|sequence|} \log P(token_i|context_i)$$
+
+Where α is a length penalty to prevent bias toward shorter sequences.
+
+Beam search maintains multiple candidate sequences simultaneously and explores the most promising ones. Instead of greedily picking the best token at each step, it keeps track of the top k sequences (beams) and expands each one.
+
+Random sampling selects tokens according to their probability distribution without any constraints. While this can produce creative outputs, it often leads to incoherent text as low-probability tokens get selected too frequently.
 
 **Repetition Penalty**
 
-Repetition penalty reduces the probability of tokens that have already appeared in the generated sequence. The modified logit for a token that appeared n times is: $logit_{new} = \frac{logit_{original}}{penalty^n}$ if penalty > 1, which decreases the likelihood of selecting repeated tokens. This helps prevent the model from getting stuck in repetitive loops while maintaining natural language flow.
+Repetition penalty reduces the probability of tokens that have already appeared in the generated sequence. The modified logit for a token that appeared n times is: 
+
+$$logit_{new} = \frac{logit_{original}}{penalty^n}$$ 
+
+if penalty > 1, which decreases the likelihood of selecting repeated tokens. This helps prevent the model from getting stuck in repetitive loops while maintaining natural language flow.
 
 **Frequency Penalty**
 
-Similar to repetition penalty but applies a linear reduction based on token frequency: $logit_{new} = logit_{original} - \alpha \times count(token)$ where α is the penalty coefficient and count(token) is how many times the token appeared. This provides more nuanced control over repetition compared to the exponential scaling of repetition penalty.
+Similar to repetition penalty but applies a linear reduction based on token frequency
+
+$$logit_{new} = logit_{original} - \alpha \times count(token)$$
+
+where α is the penalty coefficient and count(token) is how many times the token appeared. This provides more nuanced control over repetition compared to the exponential scaling of repetition penalty.
 
 **Presence Penalty**
 
-A binary version of frequency penalty that applies a fixed penalty regardless of how many times a token appeared: $logit_{new} = logit_{original} - \alpha$ if the token was seen before, unchanged otherwise. This encourages the model to use new vocabulary without heavily penalizing natural repetitions that occur in coherent text.
+A binary version of frequency penalty that applies a fixed penalty regardless of how many times a token appeared
+
+$$logit_{new} = logit_{original} - \alpha$$ 
+
+if the token was seen before, unchanged otherwise. This encourages the model to use new vocabulary without heavily penalizing natural repetitions that occur in coherent text.
 
 That wraps up our section on GPT, don't worry as we move forward to the future years we will talk about how LLMs work with RL, How different architectures affect different things, talk about optimizers and so much more. For now I feel like these are the most we should keep for this year. 
 
@@ -3233,18 +3280,15 @@ Tokens with the smallest loss increase are removed first until the desired vocab
 
 This is a fabulous [blog](https://towardsdatascience.com/sentencepiece-tokenizer-demystified-d0a3aac19b15/) on the topic, it explains everything along with the implementation code. Consider checking it out.
 
-"""
-SentencePiece addresses the fact that not all languages use spaces to separate words. Instead, SentencePiece treats the input as a raw input stream which includes the space in the set of characters to use. Then it can use the Unigram algorithm to construct the appropriate vocabulary.
-"""
+This sub-section will be the shortest even though this section is about sentencepiece, you know why? well because sentencepiece is not a tokenizer at all, it's a pre-tokenization algorithm used in conjucture with unigram or BPE.
 
-"""
-All tokenization algorithms described so far have the same problem: It is assumed that the input text uses spaces to separate words. However, not all languages use spaces to separate words. One possible solution is to use language specific pre-tokenizers, e.g. XLM uses a specific Chinese, Japanese, and Thai pre-tokenizer. To solve this problem more generally, SentencePiece: A simple and language independent subword tokenizer and detokenizer for Neural Text Processing (Kudo et al., 2018) treats the input as a raw input stream, thus including the space in the set of characters to use. It then uses the BPE or unigram algorithm to construct the appropriate vocabulary.
+All tokenization methods talked about so far have the same problem, they assume that the input text uses spaces to separate words. However, not all languages use spaces to separate words. One possible solution is to use language specific pre-tokenizers, e.g. XLM uses a specific Chinese, Japanese, and Thai pre-tokenizer. To solve this problem more generally, SentencePiece treats the input as a raw input stream, thus including the space in the set of characters to use. It then uses the BPE or unigram algorithm to construct the appropriate vocabulary.
 
-The XLNetTokenizer uses SentencePiece for example, which is also why in the example earlier the "▁" character was included in the vocabulary. Decoding with SentencePiece is very easy since all tokens can just be concatenated and "▁" is replaced by a space.
+Decoding with SentencePiece is very easy since all tokens can just be concatenated and "▁" is replaced by a space.
 
-All transformers models in the library that use SentencePiece use it in combination with unigram. Examples of models using SentencePiece are ALBERT, XLNet, Marian, and T5.
-"""
+All transformers models in the library that use SentencePiece use it in combination with unigram. Examples of models using SentencePiece are ALBERT, XLNet, LLama2, etc.
 
+Well that is all there is to know about SentencePiece really, if you want to know how it is implemented you can check out the blog I mentioned above. 
 
 ### BERT
 
