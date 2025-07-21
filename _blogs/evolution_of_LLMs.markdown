@@ -3453,19 +3453,9 @@ for other datasets and could complicate analysis due to over
 """
 
 https://jalammar.github.io/illustrated-gpt2/
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/gpt2
-Family: GPT
-Pretraining Architecture: Decoder
-Pretraining Task: LM
-Extension: Minor extensions to the GPT architecture (e.g. layer normalization moved to the input of each sub-layer, or increased context size from 512 to 1024)
-Application: Text generation, but adaptable to many other NLP tasks when fine tuned.
-Date (of first known publication): 02/2019
-Num. Params: 124M, 355M, 774M, 1.5B
-Corpus: 8 million web pages (40 GB). 10X GPT . WebText dataset is created by crawling all links at Reddit with at least 3 Karma points.
-License: Open, Modified MIT license
-Lab: OpenAI
-"""
+
+- KV Cache
+- Prodcuring such huge datasets and what should u do if you are at this stage
 
 ### RoBERTa
 
@@ -3508,20 +3498,6 @@ The paper is particularly notable for its thorough empirical analysis of trainin
 - Extended training
 
 """
-Link: https://huggingface.co/docs/transformers/model_doc/roberta
-Family: BERT
-Pretraining Architecture: Encoder
-Pretraining Task: MLM (Dynamic)
-Extension: Extension of BERT with optimized training procedure and more data
-Application: Same as BERT
-Date (of first known publication): 07/2019
-Num. Params: 356M
-Corpus: Same as BERT + CC News + OpenWebText + Stories ( 33B Tokens)
-License: N/A
-Lab: UW/Google
-"""
-
-"""
 Language model pretraining has led to significant performance gains but careful comparison between different approaches is challenging. Training is computationally expensive, often done on private datasets of different
 sizes, and, as we will show, hyperparameter
 choices have significant impact on the final results. We present a replication study of BERT
@@ -3535,7 +3511,6 @@ state-of-the-art results on GLUE, RACE and
 SQuAD. These results highlight the importance of previously overlooked design choices,
 and raise questions about the source of recently reported improvements. We release our
 models and code.
-
 """
 
 """
@@ -3655,20 +3630,6 @@ The paper presents a thorough ablation study comparing BART to other pretraining
 </div>
 </details>
 <br/>
-
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/bart
-Family: BERT for encoder, GPT for Decoder
-Pretraining Architecture: Encoder/Decoder
-Pretraining Task: DAE
-Extension: It can be seen as a generalization of BERT and GPT in that it combines ideas from both in the encoder and decoder
-Application: Mostly text generation but also some text understanding tasks
-Date (of first known publication): 10/2019
-Num. Params: Base = 140M, Large = 400M. In general, roughly 10% larger than BART for equivalent architectures.
-Corpus:Same as RoBERTa (160Gb of news, books, stories)
-License: Open, Apache-2.0
-Lab:Facebook
-"""
 
 """
 We present BART, a denoising autoencoder
@@ -3838,6 +3799,12 @@ The paper demonstrates that with the right implementation approach, training mul
 - Model parallelism for efficient large model training
 
 This is a great time to talk about data, model and pipeline paralism and how massively large LLMs are trained across GPUs
+
+https://huggingface.co/docs/transformers/v4.13.0/en/parallelism
+https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
+https://alessiodevoto.github.io/parallelism/
+(the paper has some nice images)
+
 
 ### Sparse Attention Patterns
 
@@ -7163,5 +7130,5 @@ Now let's do the same for T5
 
 ### Inference
 
-[Expand SENTENCE PIECE WHEN IT MAKES SENE] -->
-
+[Expand SENTENCE PIECE WHEN IT MAKES SENE]
+ -->
