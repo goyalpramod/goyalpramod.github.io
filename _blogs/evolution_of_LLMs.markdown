@@ -3033,6 +3033,8 @@ Beam search maintains multiple candidate sequences simultaneously and explores t
 
 Random sampling selects tokens according to their probability distribution without any constraints. While this can produce creative outputs, it often leads to incoherent text as low-probability tokens get selected too frequently.
 
+Consider checking out the [transformers documentation](https://huggingface.co/docs/transformers/main/en/generation_strategies) by HF.
+
 **Repetition Penalty**
 
 Repetition penalty reduces the probability of tokens that have already appeared in the generated sequence. The modified logit for a token that appeared n times is: 
@@ -3422,40 +3424,43 @@ This work represents a significant step toward building more general NLP systems
 
 </div>
 </details>
-<br/>"""
-Common Crawl. Trinh & Le (2018)’s best results were
-achieved using a small subsample of Common Crawl which
-included only documents most similar to their target dataset,
-the Winograd Schema Challenge. While this is a pragmatic
-approach to improve performance on a specific task, we
-want to avoid making assumptions about the tasks to be
-performed ahead of time.
-Instead, we created a new web scrape which emphasizes
-document quality. To do this we only scraped web pages
-which have been curated/filtered by humans. Manually
-filtering a full web scrape would be exceptionally expensive
-so as a starting point, we scraped all outbound links from
-Reddit, a social media platform, which received at least 3
-karma. This can be thought of as a heuristic indicator for
-whether other users found the link interesting, educational,
-or just funny.
-The resulting dataset, WebText, contains the text subset
-of these 45 million links. To extract the text from HTML
-responses we use a combination of the Dragnet (Peters &
-Lecocq, 2013) and Newspaper1
-content extractors. All results presented in this paper use a preliminary version of
-WebText which does not include links created after Dec
-2017 and which after de-duplication and some heuristic
-based cleaning contains slightly over 8 million documents
-for a total of 40 GB of text. We removed all Wikipedia
-documents from WebText since it is a common data source
-for other datasets and could complicate analysis due to over
-"""
+<br/>
 
-https://jalammar.github.io/illustrated-gpt2/
+This was paper was an improvement over the original GPT, and a huge scaling of it
+
+[ADD_IMAGE_showing_difference_in_scale]
+
+In this section I would like to explore two questions that I find very interesting, How do you inference such large models economically? and How do you procure such huge datasets? 
 
 - KV Cache
+
+https://huggingface.co/blog/not-lain/kv-caching 
+https://medium.com/@joaolages/kv-caching-explained-276520203249
+
+Before we start understanding KV Cache, let us revisit our inference to see what happens. 
+
+Let's say we ask the LLM a question. "Captial of India?" (we already know what happens inside an LLM so I have skipped a lot of the blocks except the essential ones)
+
+Using that, a matrix is formed, for each token id we have embeddings, using which Q,K, and V matrices are made. That gives us our attention values, That is fed to a feed forward network which outputs a vector of logits vocab size, after passing it through softmax let's say we take the token id with the maximum probability. This gives us a vector output, of token id. (Here I am showing the embeddings)
+
+
+
+The embedding of this token is then appended to our original input X, and this operation is repeated till we run into the <EOS> token (End of sentence token)
+
+Now if we do not cache anything, these values need to be calculated again and again whenever a new token is added as shown above 
+
+But we only need to get the attention value for the latest query, we can save the previously calculated queries. 
+
+I had two interesting discoveries during this,
+- We only cache K and V not Q. Because there is no point storing it [EXPAND_THIS]
+- when we append another vector, the shape of K and V also change. But we do not calculate the values of old Q with these because of our masking (We do not need to see the future values), Q1 has no point being multiplied with K4 as that will be masked as infiti anyhoo. 
+
+The second point also gives us another amazing point, KV caching is not possible in models like BERT
+
+
 - Prodcuring such huge datasets and what should u do if you are at this stage
+
+>Common Crawl. Trinh & Le (2018)’s best results were achieved using a small subsample of Common Crawl which included only documents most similar to their target dataset, the Winograd Schema Challenge. While this is a pragmatic approach to improve performance on a specific task, we want to avoid making assumptions about the tasks to be performed ahead of time. Instead, we created a new web scrape which emphasizes document quality. To do this we only scraped web pages which have been curated/filtered by humans. Manually filtering a full web scrape would be exceptionally expensive so as a starting point, we scraped all outbound links from Reddit, a social media platform, which received at least 3 karma. This can be thought of as a heuristic indicator for whether other users found the link interesting, educational, or just funny. The resulting dataset, WebText, contains the text subset of these 45 million links. To extract the text from HTML responses we use a combination of the Dragnet (Peters & Lecocq, 2013) and Newspaper1 content extractors. All results presented in this paper use a preliminary version of WebText which does not include links created after Dec 2017 and which after de-duplication and some heuristic based cleaning contains slightly over 8 million documents for a total of 40 GB of text. We removed all Wikipedia documents from WebText since it is a common data source for other datasets and could complicate analysis due to over
 
 ### RoBERTa
 
@@ -3525,16 +3530,72 @@ the right design choices, is competitive with all
 other recently published methods. We release our
 model, pretraining and fine-tuning code implemented in PyTorch (Paszke et al., 2017).
 """
+
 """
-8Large batch training can improve training efficiency even
+Large batch training can improve training efficiency even
 without large scale parallel hardware through gradient accumulation, whereby gradients from multiple mini-batches
-are accumulated locally before each optimization step. T
+are accumulated locally before each optimization step.
 """
 
-https://kozodoi.me/blog/20210219/gradient-accumulation
 https://aman.ai/primers/ai/grad-accum-checkpoint/
 https://blog.dailydoseofds.com/p/gradient-accumulation-increase-batch
-https://www.mindspore.cn/tutorials/experts/en/r2.2/optimize/gradient_accumulation.html
+
+
+- Gradient Accumulation 
+
+It is well known that mini-batch descent produces good results, but sometimes even the mini batch is large in some cases. Like for CV on a 4k image etc. In those scenarios when we lack memory we use Gradient Accumulation to overcome that issue. 
+
+[ADD_IMAGE]
+
+Instead of updating the model in every mini batch, we accumulate the gradient over the course of a few batches then update it. 
+
+[ADD_IMAGE]
+
+This essentially acts like a bigger batch
+
+A typical training loop looks like this 
+
+```python
+for inputs, labels in data_loader:
+    output = model(input)
+
+    loss = criterion(output,labels)
+
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+```
+
+But when we do gradient accumulation it looks something like this 
+
+```python
+acc_steps = 3
+
+for idx, (inputs, labels) in enumerate(data_loader):
+    output = model(input)
+
+    loss = criterion(output,labels)
+
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+
+    if ((idx + 1) % acc_steps == 0) or (idx + 1 == len(data_loader)):
+        optimizer.step()
+        optimizer.zero_grad()
+```
+
+- Gradient Checkpointing
+
+There really is no reason to mention this here, But this is a popular method to overcome memory limitations too. So I though I will briefly talk about it 
+
+[ADD_IMAGE] (back prop, show one specific node does not store grad but is calculated again)
+
+"""
+Gradient checkpointing is a technique used to trade off memory usage for computation time during backpropagation. In deep neural networks, backpropagation requires storing intermediate activations for computing gradients during the backward pass. However, for models with a large number of layers or limited memory, storing all the intermediate activations can be memory-intensive.
+
+Gradient checkpointing addresses this issue by selectively recomputing a subset of intermediate activations during backpropagation. Instead of storing all activations, only a subset of them, typically those necessary for computing gradients, are cached. The remaining intermediate activations are recomputed on-the-fly during the backward pass. By recomputing rather than storing all intermediate activations, memory usage is reduced at the cost of increased computation time.
+"""
 
 **Problem**
 
@@ -3597,7 +3658,6 @@ Lab: Huggingface
 """
 
 https://blog.roboflow.com/what-is-knowledge-distillation/
-https://datasciencedojo.com/blog/understanding-knowledge-distillation/
 https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html
 https://huggingface.co/blog/Kseniase/kd
 https://medium.com/huggingface/distilbert-8cf3380435b5
