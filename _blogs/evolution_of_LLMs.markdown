@@ -3643,24 +3643,35 @@ This work demonstrates that through careful distillation, smaller and more effic
 - Pruning strategies
 - Quantization methods
 
-"""
-Link: https://huggingface.co/docs/transformers/model_doc/distilbert
-Family: BERT
-Pretraining Architecture: Encoder
-Pretraining Task: MLM/NSP
-Extension: Compressed version of BERT using distillation, which is much more efficient given the same number of parameters
-Application: Same as BERT
-Date (of first known publication): 10/2019
-Num. Params:66M
-Corpus: Same as BERT
-License: Open, Apache-2.0
-Lab: Huggingface
-"""
 
-https://blog.roboflow.com/what-is-knowledge-distillation/
-https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html
+https://arxiv.org/pdf/2006.05525
+
 https://huggingface.co/blog/Kseniase/kd
-https://medium.com/huggingface/distilbert-8cf3380435b5
+
+[distillbert by the creators of distillbert](https://medium.com/huggingface/distilbert-8cf3380435b5)
+
+##### What is Knowledge Distillation
+
+The idea is quite simple we have a big heavy model trained for long period of time on a lot of data, and we want a smaller model to learn from the bigger model.
+
+There are many reasons we may wish to do this,
+
+##### Types of Knowledge Distillation
+
+- Response Based 
+- Feature Based 
+- Instance Based 
+
+
+- Trying to improve the algorithm 
+
+As there are many algorithms I will be skipping them and I will suggest you check out the survey if you are interested, Let's briefly talk about the one's I liked 
+
+
+
+##### Distillation scaling laws
+
+if you would like to distill a model, this is a [good tutorial](https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html) by PyTorch.
 
 ### BART
 
@@ -3864,6 +3875,10 @@ https://huggingface.co/docs/transformers/v4.13.0/en/parallelism
 https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
 https://alessiodevoto.github.io/parallelism/
 (the paper has some nice images)
+
+https://distributedlexicon.com/ 
+
+https://docs.pytorch.org/tutorials/distributed.html
 
 
 ### Sparse Attention Patterns
@@ -4780,7 +4795,9 @@ hardware chips? How does the optimal partitioning strategy
 change when trading off between latency and throughput?
 What is the intuitive and mathematical reasoning behind
 these effects?
+
 """
+https://rasa.com/blog/compressing-bert-for-faster-prediction-2/
 
 ### Fast Inference from Transformers via Speculative Decoding
 
@@ -5327,6 +5344,8 @@ The authors demonstrate QLORA's effectiveness by developing Guanaco, a family of
 
 [paper](https://arxiv.org/abs/2312.12148)
 
+https://huggingface.co/blog/diffusers-quantization
+
 <details>
 
 <summary markdown="span">Quick Summary</summary>
@@ -5703,6 +5722,8 @@ The instruction-tuned version (Mixtral 8x7B - Instruct) performs exceptionally w
 <br/>
 
 ### LLaMA 2
+
+https://yeokhengmeng.com/2025/04/llama2-llm-on-dos/
 
 [paper](https://arxiv.org/abs/2307.09288)
 
@@ -6552,6 +6573,7 @@ The paper shows that pure Mamba struggles with in-context learning (following fo
 <br/>
 
 ### LLaMA 3
+https://github.com/naklecha/llama3-from-scratch
 
 [paper](https://arxiv.org/abs/2407.21783)
 
@@ -7053,6 +7075,10 @@ The paper demonstrates how careful scaling of both data and training techniques 
 </details>
 <br/>
 
+https://hkunlp.github.io/blog/2025/dream/
+
+https://arxiv.org/pdf/2502.09992
+
 ## RLVR
 
 ## Kimi AI
@@ -7062,6 +7088,8 @@ Talk about optimizers here, Muon and stuff
 https://magazine.sebastianraschka.com/p/the-big-llm-architecture-comparison
 
 ## It's all about DeepSeek
+
+https://www.alphaxiv.org/abs/2505.09343
 
 This whole section is dedicated just to the geniuses that are DeepSeek
 

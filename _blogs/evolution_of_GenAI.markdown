@@ -19,6 +19,10 @@ A comprehensive chronological list of the most influential research papers that 
 
 ## 1. Diffusion Models
 
+https://iclr-blogposts.github.io/2024/blog/diffusion-theory-from-scratch/
+https://sander.ai/2024/02/28/paradox.html
+https://arxiv.org/abs/2406.08929
+
 ### Foundational Works
 * [Auto-Encoding Variational Bayes](https://arxiv.org/abs/1312.6114) (December 2013)  
   Introduced the Variational Autoencoder (VAE) framework and the reparameterization trick, creating the foundation for modern generative models.
@@ -204,6 +208,12 @@ A comprehensive chronological list of the most influential research papers that 
 
 ## 5. Vision-Language Models (VLM)
 
+https://github.com/huggingface/nanoVLM 
+
+https://huggingface.co/blog/kv-cache
+
+https://huggingface.co/blog/vlms-2025?s=08
+
 * [ViLBERT: Pretraining Task-Agnostic Visiolinguistic Representations](https://arxiv.org/abs/1908.02265) (August 2019)  
   Pioneered two-stream architecture for joint vision-language representation learning.
 
@@ -323,7 +333,10 @@ A comprehensive chronological list of the most influential research papers that 
   Introduced comprehensive benchmark for comparing text-to-image models.
 
 
+SCALING LLMs 
 
+https://howtoscalenn.github.io/
+https://huggingface.co/spaces/nanotron/ultrascale-playbook?section=memory_coalescing&s=08
 
 I'll review the list of papers in the "Evolution of GenAI" report to identify if any important papers are missing. Let me analyze the content chronologically and by domain.
 

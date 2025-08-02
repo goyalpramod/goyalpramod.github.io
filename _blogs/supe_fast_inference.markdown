@@ -12,7 +12,11 @@ image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 
 https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
 
+https://zeux.io/2024/03/15/llm-inference-sol/?s=08
+
 https://github.com/mlvu/worksheets/blob/master/Worksheet%205%2C%20Pytorch.ipynb
+
+https://pytorch.org/blog/pytorch-vllm-%E2%99%A5%EF%B8%8F/
 
 A few month's ago, I saw this [tweet](https://x.com/danielhanchen/status/1891194528931209644) by Daniel Han and it absolutely blew my mind. Not because of how much they were willing to offer, but because I couldn't solve any of the problems. That is when I decided, I will spend days and nights till 1 day I can confidently say I can solve each of those problems, and with ease. This Blog was originally me trying to solve them. But it evolved into more of a general guide into how to make your ML models more efficient. So we will role with that. 
 
