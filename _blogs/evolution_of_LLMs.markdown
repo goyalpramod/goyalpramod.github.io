@@ -3396,7 +3396,7 @@ And that concludes BERT too, now we have talked about the two big architectures 
 
 > Rest of the sections from 2019-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
 
-<!-- 
+
 ## 2019: Scaling and Efficiency
 
 ### GPT-2
@@ -3654,19 +3654,59 @@ https://huggingface.co/blog/Kseniase/kd
 
 The idea is quite simple we have a big heavy model trained for long period of time on a lot of data, and we want a smaller model to learn from the bigger model.
 
-There are many reasons we may wish to do this,
+There are many reasons we may wish to do this, they are cheaper and faster to inference. They can on edge devices like mobiles, watches, drones etc.
 
 ##### Types of Knowledge Distillation
 
-- Response Based 
-- Feature Based 
-- Instance Based 
+**Response Based**
+
+In this method, we take a sample of training data. Run it by both our models. And then make the smaller model learn the soft labels of the bigger model
+
+Now one may question what are soft labels, Lets see it with an example 
+
+`
+[0,1,0,0] -> hard labels
+`
+`
+[0.1,0.3,0.5,0.1] -> soft labels
+`
+
+A model outputs an array of probabilities, out of which many are near zero probabilities. These near zero probabilities still hold a lot of knowledge
+
+For instance an apple can be confused for a red ball, but it should not be confused for the moon.
+
+This is known as [dark knowledge](https://www.ttic.edu/dl/dark14.pdf). We are essentially trying to make our smaller model learn this dark knowledge.
+
+[EXPLAIN]
+
+[ADD_IMAGE]
+
+
+**Feature Based**
+
+In this, we hope to replicate the weights of the bigger model in our smaller model 
+[EXPLAIN]
+
+[ADD_IMAGE]
+
+
+**Instance Based**
+
+
 
 
 - Trying to improve the algorithm 
 
+[ADD_IMAGE_OF_MULTIPLE_METHODS]
+
 As there are many algorithms I will be skipping them and I will suggest you check out the survey if you are interested, Let's briefly talk about the one's I liked 
 
+
+##### How was diltillbert trained
+
+Distillbert was trained using the response based distillation method. 
+
+[EXPLAIN]
 
 
 ##### Distillation scaling laws
@@ -3720,6 +3760,30 @@ on GLUE and SQuAD, achieves new stateof-the-art results on a range of abstractiv
 BART also provides a 1.1 BLEU increase over
 a back-translation system for machine translation, with only target language pretraining
 """
+
+![alt text](image.png)
+
+In simple terms BART is just BERT + GPT. The novel idea it introduced was in it's training. Where corrupted data was given as the input and using reconstruction loss (Cross entropy over predicted and original data distribution), the outputs were predicted. 
+
+![alt text](image-1.png)
+
+most of the noise and corruption is self explanatory from the above image, About text infillinf 
+
+"""
+Text Infilling A number of text spans are sampled,
+with span lengths drawn from a Poisson distribution
+(λ = 3). Each span is replaced with a single [MASK]
+token. 0-length spans correspond to the insertion of
+[MASK] tokens. Text infilling is inspired by SpanBERT (Joshi et al., 2019), but SpanBERT samples
+span lengths from a different (clamped geometric) distribution, and replaces each span with a sequence of
+[MASK] tokens of exactly the same length. Text infilling teaches the model to
+"""
+
+In the current age, The BART architecture never gained popularity. I believe partly due to it's complexity. There is nothing novel or new to discuss so I'll be skipping the fine-tuning method. If you wish to know more about it, consider going through the paper. 
+
+### Transformer-XL
+
+[ADD_STUFF]
 
 ### XLNet
 
@@ -3816,6 +3880,8 @@ In their example with "New York is a city" using a permutation order [is, a, cit
 
 This captures the dependency between "New" and "York" while training on uncorrupted sequences.
 """
+
+
 
 ### Megatron
 
@@ -4309,6 +4375,8 @@ This work provided an important evaluation framework showing that while large la
 <br/>
 
 ### ZeRO (Zero Redundancy Optimizer)
+
+https://dev.to/lewis_won/data-parallelism-4g3m
 
 ![Image of ZeRO](/assets/blog_assets/evolution_of_llms/zero_abstract.webp)
 
@@ -7219,4 +7287,4 @@ Now let's do the same for T5
 ### Inference
 
 [Expand SENTENCE PIECE WHEN IT MAKES SENE]
- -->
+

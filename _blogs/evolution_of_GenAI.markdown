@@ -335,6 +335,8 @@ https://huggingface.co/blog/vlms-2025?s=08
 
 SCALING LLMs 
 
+https://jax-ml.github.io/scaling-book/?s=08
+
 https://howtoscalenn.github.io/
 https://huggingface.co/spaces/nanotron/ultrascale-playbook?section=memory_coalescing&s=08
 
