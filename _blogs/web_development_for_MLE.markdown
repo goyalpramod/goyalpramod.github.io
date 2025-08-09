@@ -476,4 +476,33 @@ Future will tell if I am correct as I build projects.
 >To find something, it’s often convenient to use an internet search “WHATWG [term]” or “MDN [term]”, e.g https://google.com?q=whatwg+localstorage, https://google.com?q=mdn+localstorage.
 >
 >Now, we’ll get down to learning the DOM, because the document plays the central role in the UI.
-- Started with ts as well. It do be simple honestly. -->
+- Started with ts as well. It do be simple honestly. 
+
+Starting again: 
+
+I spend 2 weeks learning ts and other things but I did not practice so I forgot about it. 
+
+https://developer.mozilla.org/en-US/docs/Learn_web_development -> This was extremely useful to learn about web development in general 
+
+I believe one first needs to learn [how the web works](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_the_web_works) 
+ 
+After which you have to understand how the stuff are loaded 
+[get img from here](https://developer.mozilla.org/en-US/docs/Learn_web_development/Getting_started/Web_standards/How_browsers_load_websites)
+ 
+
+Then it's vital to understand DOM 
+
+https://developer.mozilla.org/en-US/docs/Learn_web_development/Core/Design_for_developers -> some great design resources mentioned in the bottom 
+
+https://practicaltypography.com/free-fonts.html -> Beautiful free fonts
+
+https://anthonyhobday.com/sideprojects/saferules/ -> read these visual design rules 
+
+https://jzhao.xyz/thoughts/react -> this was nice
+
+https://nextjs.org/learn/react-foundations/rendering-ui
+
+https://www.react-graph-gallery.com/
+
+
+ -->
