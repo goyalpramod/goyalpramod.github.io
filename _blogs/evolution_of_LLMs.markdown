@@ -3783,7 +3783,22 @@ In the current age, The BART architecture never gained popularity. I believe par
 
 ### Transformer-XL
 
-[ADD_STUFF]
+[Add abstract]
+[Add ai summary]
+[Add problem  & Solution]
+
+Language models are trained on a fixed context length, limiting their knowledge to that context length.
+
+Introduce relative positional encoding instead of absolute one's to train on longer sequences 
+
+"""
+Our main technical contributions include introducing the notion of recurrence in a purely selfattentive model and deriving a novel positional encoding scheme. These two techniques form a complete set of solutions, as any one of them alone
+does not address the issue of fixed-length contexts. Transformer-XL is the first self-attention
+model that achieves substantially better results
+than RNNs on both character-level and word-level
+language modeling.
+"""
+
 
 ### XLNet
 
