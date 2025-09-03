@@ -3392,6 +3392,8 @@ Before BERT, each NLP task needed its own specialized architecture. Question ans
 
 And that concludes BERT too, now we have talked about the two big architectures of LLMs, moving forward we will mostly be talking about the innovations done in the architecture and the solutions found to increase the scale at which to train them. 
 
+[Add info on Token type embedding https://stackoverflow.com/questions/57960995/how-are-the-tokenembeddings-in-bert-created]
+
 ## WORK IN PROGRESS NOTICE
 
 > Rest of the sections from 2019-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
@@ -3540,6 +3542,9 @@ are accumulated locally before each optimization step.
 https://aman.ai/primers/ai/grad-accum-checkpoint/
 https://blog.dailydoseofds.com/p/gradient-accumulation-increase-batch
 
+[TALK ABOUT dynamic masking]
+
+[TALK ABOUT LARGER BATCH SIZE AND EXTENDED TRAINING]
 
 - Gradient Accumulation 
 
@@ -3652,15 +3657,24 @@ https://huggingface.co/blog/Kseniase/kd
 
 ##### What is Knowledge Distillation
 
+![Image of Knowledge Distillation](/assets/blog_assets/evolution_of_llms/52.webp)
+
 The idea is quite simple we have a big heavy model trained for long period of time on a lot of data, and we want a smaller model to learn from the bigger model.
 
 There are many reasons we may wish to do this, they are cheaper and faster to inference. They can on edge devices like mobiles, watches, drones etc.
 
 ##### Types of Knowledge Distillation
 
+![alt text](image-3.png)
+*Image taken from [paper](https://arxiv.org/pdf/2006.05525)* 
+
+There are definitely many kinds of distillation methods available to us (the above image makes it quite obvious). We will not be able to talk about all of them, So I will touch on the most popular one's and ask you to explore the one's you find interesting.
+
 **Response Based**
 
-In this method, we take a sample of training data. Run it by both our models. And then make the smaller model learn the soft labels of the bigger model
+In this method, we take a sample of training data. Run it by both our models. And then make the smaller model learn the soft labels of the bigger model.
+
+We are essentially trying to make the smaller model predict `like` the bigger model.
 
 Now one may question what are soft labels, Lets see it with an example 
 
@@ -3678,10 +3692,15 @@ For instance an apple can be confused for a red ball, but it should not be confu
 This is known as [dark knowledge](https://www.ttic.edu/dl/dark14.pdf). We are essentially trying to make our smaller model learn this dark knowledge.
 
 [EXPLAIN]
+[ADD IMAGES FROM HERE https://zilliz.com/learn/distilbert-distilled-version-of-bert]
 
 [ADD_IMAGE]
 
+[Hinton et al](https://arxiv.org/pdf/1503.02531) introduced an idea of temperature to control the importance of these soft labels. As T tends to inifity all latels have the same value
 
+[ADD EQUATION]
+
+> NOTE: In many places of distillation Cross-entropy and KLD are used interchangeably. They are not the same, but produce the same result when comparing distributions. Let us see how [EXPAND]
 **Feature Based**
 
 In this, we hope to replicate the weights of the bigger model in our smaller model 
@@ -3689,29 +3708,78 @@ In this, we hope to replicate the weights of the bigger model in our smaller mod
 
 [ADD_IMAGE]
 
-
-**Instance Based**
-
+![alt text](image-4.png)
 
 
+"""where ft(x) and fs(x) are the feature maps of the
+intermediate layers of teacher and student models, respectively. The transformation functions, Φt(ft(x)) and
+Φs(fs(x))"" and Lf represents the loss used. 
+
+**Relation Based**
+
+
+Take a pair of feature maps from both the models, and minimize the loss between their relationship
 
 - Trying to improve the algorithm 
 
 [ADD_IMAGE_OF_MULTIPLE_METHODS]
 
-As there are many algorithms I will be skipping them and I will suggest you check out the survey if you are interested, Let's briefly talk about the one's I liked 
+As mentioned earlier, there are a lot of methods available for KD. If you are further intersted, checkout the survey!
 
+>NOTE: Even though feature maps is used both in featured based and realtion based KD, they are quite different. For example in Feature based we are trying to map the exact features to be in the same distribution. But in realtion based, the indiividual values do not matter, the realtion between them does. For example  in feature based if Ft(Xt) = 5 then we want Fs(X) = 5 as well. But in Relation Ft(x1,x2) = 5 then Fs(x3,x4) = 5 where the feature maps x by themselves can be quite different
 
 ##### How was diltillbert trained
 
+
 Distillbert was trained using the response based distillation method. 
+
+KLD is used as the loss because ..[EXPAND]
 
 [EXPLAIN]
 
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch.optim import Optimizer
 
-##### Distillation scaling laws
+KD_loss = nn.KLDivLoss(reduction='batchmean')
 
-if you would like to distill a model, this is a [good tutorial](https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html) by PyTorch.
+def kd_step(teacher: nn.Module,
+            student: nn.Module,
+            temperature: float,
+            inputs: torch.tensor,
+            optimizer: Optimizer):
+    teacher.eval() # Notice teacher model is in eval mode
+    student.train()
+    
+    with torch.no_grad():
+        logits_t = teacher(inputs=inputs) # Do not store the gradients of teacher
+    logits_s = student(inputs=inputs)
+    
+    loss = KD_loss(input=F.log_softmax(logits_s/temperature, dim=-1),
+                   target=F.softmax(logits_t/temperature, dim=-1)) # KLD loss on teacher output with student output. 
+                   # Notice how the student output is a log softmax
+    
+    loss.backward()
+    optimizer.step()
+    optimizer.zero_grad()
+```
+*Code modified from [gist](https://gist.github.com/VictorSanh/db90644aae5094654db87f9769c2e5ae)*
+
+
+![Architecture difference](image-2.png)
+*[Source](https://www.researchgate.net/publication/382939584_A_novel_iteration_scheme_with_conjugate_gradient_for_faster_pruning_on_transformer_models)*
+
+The architecture of distillbert is very similar to BERT, they have reduced the number of layers. Significantly decreasing the amount of parameters (From 110M to 66M), While maintaing 95% performance of BERT. The authors additionally removed  the token-type embeddings and the pooler (as there is no Next sentence predition here) 
+
+It is interesting to talk about the initialization and training as well. As noted by the author they initialized distillbert by taking the weights of every other layer (as they had common hidden size namely 768). They also trained the model on very large batches, using gradient accumulation, with dynamic masking and NSP removed. 
+
+##### Distillation in practice & Scalling Laws
+
+If you would like to distill a model, this is a [good tutorial](https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html) by PyTorch.
+
+[Read and expand on tis https://arxiv.org/pdf/2502.08606]
 
 ### BART
 
@@ -4014,8 +4082,74 @@ useful for many problems of interest.
 
 """
 
+https://llmmodels.org/blog/sparse-attention-in-transformers-step-by-step-implementation/
 https://reinforcedknowledge.com/sparse-transformers/
 https://lilianweng.github.io/posts/2018-06-24-attention/
+
+
+If you have read this far, I am going to assume you have a fair bit of knowledge about computer science. And one of the earliest ideas talked about in CS101 classes is the idea of Big O notation. So let us calculate the Big O of Self-Attention.
+
+The self-attention mechanism can be expressed as:
+
+$$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
+
+"""
+Let's break down the computational complexity step by step:
+
+## Step 1: Computing $QK^T$
+
+- $Q$ has dimensions $[N \times d_k]$ (N sequence positions, $d_k$ key dimension)
+- $K^T$ has dimensions $[d_k \times N]$ 
+- The matrix multiplication $QK^T$ results in an $[N \times N]$ matrix
+
+**Complexity**: $O(N \times d_k \times N) = O(N^2 \cdot d_k)$
+
+Since $d_k$ is typically treated as a constant (independent of sequence length), this simplifies to **$O(N^2)$**.
+
+## Step 2: Scaling by $\sqrt{d_k}$
+
+Dividing each element of the $[N \times N]$ matrix by $\sqrt{d_k}$ is an element-wise operation.
+
+**Complexity**: $O(N^2)$
+
+## Step 3: Softmax Operation
+
+The softmax is applied row-wise to the $[N \times N]$ matrix. For each of the $N$ rows, we:
+- Compute the exponential of each element: $O(N)$
+- Sum all exponentials in the row: $O(N)$
+- Normalize each element: $O(N)$
+
+**Complexity**: $O(N \times N) = O(N^2)$
+
+## Step 4: Multiplying with V
+
+- Attention weights: $[N \times N]$
+- $V$ matrix: $[N \times d_v]$
+- Result: $[N \times d_v]$
+
+**Complexity**: $O(N \times N \times d_v) = O(N^2 \cdot d_v)$
+
+Again, treating $d_v$ as a constant, this is **$O(N^2)$**.
+
+## Overall Complexity
+
+All steps are $O(N^2)$, so the overall complexity of self-attention is:
+
+$$O(N^2)$$
+
+## Why Not $O(N^3)$?
+
+The key insight is that we're not performing $N$ separate $N \times N$ matrix multiplications. Instead:
+
+1. We compute **one** $N \times N$ attention matrix ($QK^T$)
+2. We then multiply this $N \times N$ matrix with the $N \times d_v$ values matrix
+
+The quadratic complexity arises because each token must attend to every other token in the sequence, creating the $N \times N$ attention pattern that scales quadratically with sequence length.
+
+This $O(N^2)$ scaling is precisely why transformers struggle with very long sequences and why much research focuses on developing more efficient attention mechanisms.
+"""
+
+And as we all know $O(N^2)$ is fairly expensive computationally, That is where Sparse Attention comes in. This reduces our attention calculation to $O(N\sqrt{N})$ (With a tradeoff in perfomance of course).
 
 ## 2020: The Scale Revolution
 
@@ -4212,6 +4346,8 @@ their full attention mechanism.
 , BIGBIRD, a sparse
 attention mechanism that reduces this quadratic dependency to linear
 """
+
+https://huggingface.co/blog/big-bird
 
 ### GPT-3
 
