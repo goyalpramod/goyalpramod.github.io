@@ -4018,7 +4018,7 @@ The paper demonstrates that with the right implementation approach, training mul
 
 - Model parallelism for efficient large model training
 
-This is a great time to talk about data, model and pipeline paralism and how massively large LLMs are trained across GPUs
+This is a great time to talk about data, model and pipeline paralism and how massively large LLMs are trained across GPUs, Because that is what essential the NVIDIA team did with megatron and shared how they did it!
 
 https://huggingface.co/docs/transformers/v4.13.0/en/parallelism
 https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
@@ -4029,6 +4029,215 @@ https://distributedlexicon.com/
 
 https://docs.pytorch.org/tutorials/distributed.html
 
+Obviously Parallel training of huge models on large clusters is a MEGA topic, and we can write books on it. (There are companies and books made on it). 
+So my objective here will be to introduce you to the various concepts of model parallalism, going a bit overboard on what was done in megatron too (for brevity's sake)
+
+
+Let us start with the idea of megatron training and we can build on top of that
+
+>note: the paper talks about two main ideas, training & how they improved performance on BERT. We will only focus on training in this blog. If you are curious about BERT modifications. Check out the paper!
+
+Data and model parallism 
+
+"""
+There are two central paradigms for scaling out deep neural network training to numerous hardware accelerators:
+data parallelism (Valiant, 1990) where a training minibatch
+is split across multiple workers, and model parallelism in
+which the memory usage and computation of a model is
+distributed across multiple workers. By increasing the minibatch size proportionally to the number of available workers (i.e. weak scaling), one observes near linear scaling
+in training data throughput. However, large batch training introduces complications into the optimization process
+that can result in reduced accuracy or longer time to convergence, offsetting the benefit of increased training throughput Further research (Goyal et al., 2017;
+You et al., 2017; 2019) has developed techniques to mitigate these effects and drive down the training time of large
+neural networks. To scale out training even further, parallel
+work (Chen et al., 2016) has combined data parallelism with
+activation checkpointing: recomputing activations in the
+backward pass without storing them in the forward pass to
+reduce memory requirements.
+However, these techniques have one fundamental limitation
+in the problem size they can tackle: the model must fit
+entirely on one worker. With language models of increasing
+size and complexity like BERT and GPT-2, neural networks
+have approached the memory capacity of modern hardware
+accelerators. One solution to this problem is to employ
+parameter sharing to reduce the memory footprint of the
+model (Lan et al., 2019), but this limits the overall capacity
+of the model. Our approach is to utilize model parallelism
+to split the model across multiple accelerators. This not
+only alleviates the memory pressure, but also increases the
+amount of parallelism independently of the microbatch size.
+"""
+
+"""
+Within model parallelism, there are two further paradigms:
+layer-wise pipeline parallelism, and more general distributed
+tensor computation. In pipeline model parallelism, groups
+of operations are performed on one device before the outputs
+are passed to the next device in the pipeline where a different group of operations are performed. Some approaches
+(Harlap et al., 2018; Chen et al., 2018) use a parameter
+server (Li et al., 2014) in conjunction with pipeline parallelism. However these suffer from inconsistency issues.
+The GPipe framework for TensorFlow (Huang et al., 2018)
+overcomes this inconsistency issue by using synchronous
+gradient decent. This approach requires additional logic to
+handle the efficient pipelining of these communication and
+computation operations, and suffers from pipeline bubbles
+that reduce efficiency, or changes to the optimizer itself
+which impact accuracy.
+Distributed tensor computation is an orthogonal and more
+general approach that partitions a tensor operation across
+multiple devices to accelerate computation or increase
+model size. FlexFlow (Jia et al., 2018), a deep learning
+framework orchestrating such parallel computation, provides a method to pick the best parallelization strategy. Recently, Mesh-TensorFlow (Shazeer et al., 2018) introduced
+a language for specifying a general class of distributed tensor computations in TensorFlow (Abadi et al., 2015). The
+parallel dimensions are specified in the language by the
+end user and the resulting graph is compiled with proper
+collective primitives. We utilize similar insights to those
+leveraged in Mesh-TensorFlow and exploit parallelism in
+computing the transformer’s attention heads to parallelize
+our transformer model. However, rather than implementing
+a framework and compiler for model parallelism, we make
+only a few targeted modifications to existing PyTorch transformer implementations. Our approach is simple, does notrequire any new compiler or code re-writing, and can be
+fully implemented by inserting a few simple primitives, as
+described in the next section.
+"""
+
+Read page 4 for implementation detail, Then add here 
+
+
+Now to be complete, We also need to talk about how we can calculate the amount of VRAM required before we start with distributed training. Lest you get too many or too less GPU (Compute is extremely expensive, so we gotta be mindful of what we have)
+
+https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
+"""
+Before you use the SageMaker model parallel library, consider the following to get a sense of the memory requirements of training large DL models.
+
+For a training job that uses AMP (FP16) and Adam optimizers, the required GPU memory per parameter is about 20 bytes, which we can break down as follows:
+
+An FP16 parameter ~ 2 bytes
+
+An FP16 gradient ~ 2 bytes
+
+An FP32 optimizer state ~ 8 bytes based on the Adam optimizers
+
+An FP32 copy of parameter ~ 4 bytes (needed for the optimizer apply (OA) operation)
+
+An FP32 copy of gradient ~ 4 bytes (needed for the OA operation)
+
+Even for a relatively small DL model with 10 billion parameters, it can require at least 200GB of memory, which is much larger than the typical GPU memory (for example, NVIDIA A100 with 40GB/80GB memory and V100 with 16/32 GB) available on a single GPU. Note that on top of the memory requirements for model and optimizer states, there are other memory consumers such as activations generated in the forward pass. The memory required can be a lot greater than 200GB.
+"""
+
+HF has a good estimator, https://huggingface.co/docs/accelerate/en/usage_guides/model_size_estimator
+https://swsmith.cc/posts/gpu-memory.html
+https://huggingface.co/docs/transformers/en/perf_hardware
+https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/#RTX_4090s_and_Melting_Power_Connectors_How_to_Prevent_Problems
+
+
+Good animations and practical -> https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
+
+This [blog](https://alessiodevoto.github.io/parallelism/) gave a great TL;DR with pseudocode
+
+USE THIS BLOG FOR IMAGES AND SOME CONCEPTS 
+https://huggingface.co/docs/transformers/v4.15.0/parallelism
+
+##### Naive Parallalism
+
+
+
+##### Data Parallelism
+
+"""
+Split your dataset across multiple GPUs, each with a full model copy. Synchronize gradients after each pass.
+"""
+
+"""
+Data parallelism is simple to implement, and scales well with number of devices for smaller model. It is especially effective for large datasets. On the other hand, it introduces a lot of communication overhead for gradient synchronization. Additionally, because a full copy of the model is stored on each device, it also causes memory redundancy.
+"""
+
+```python
+# On each device
+for batch in dataloader:
+    outputs = model(batch)
+    loss = criterion(outputs, targets)
+    loss.backward()
+    
+    # Synchronize gradients across devices
+    all_reduce(model.parameters.grad)
+    
+    optimizer.step()
+```
+
+##### Model Parallelism
+"""
+
+Divide your model across devices, each processes the same input at different stages.
+
+Model parallelism is perfect for handling models too large for a single device. In doing so, it also reduces the memory required for a single device. Unfortunately, it might be complex to implement efficiently, because of potential load imbalance: it usually needs pipelining to avoid GPUs from remaining idle.
+
+Pseudocode:
+```python
+# Define model portions
+model_part1 = nn.Sequential(layer1, layer2).to('cuda:0')
+model_part2 = nn.Sequential(layer3, layer4).to('cuda:1')
+
+# Forward pass
+def forward(x):
+    x = model_part1(x)
+    x = x.to('cuda:1')
+    return model_part2(x)
+```
+"""
+
+##### Pipeline Parallelism
+"""
+Split your model into stages on different devices. Data flows through the pipeline, with multiple batches processed simultaneously.
+
+This is the solution to the imbalancing problem for plain model parallel. A nice explanation of model parallel + pipeline parallel can be found here. Pipeline parallel balances computation and communication and makes model parallelism more efficient. As a drawback, it requires a potentially complex scheduling: you have to deal with splitting the input across GPUs and schedule the pipeline. If you do this the wrong way, you might cause “bubble” periods of idle time.
+
+
+```python
+# Define stages
+stage1 = nn.Sequential(layer1, layer2).to('cuda:0')
+stage2 = nn.Sequential(layer3, layer4).to('cuda:1')
+
+# Pipeline forward
+def pipeline_forward(batches):
+    for i, batch in enumerate(batches):
+        x = stage1(batch)
+        x = x.to('cuda:1')
+        if i > 0:
+            yield stage2(prev_x)
+        prev_x = x
+    yield stage2(prev_x)
+```
+"""
+
+##### Tensor Parallelism
+"""
+Partition individual tensors (weights, activations) across devices. Each computes a portion of tensor operations.
+
+This is somewhat on another level of abstraction wrt to Data and Model parallel, as tensor can represent anything in a deep learning pipeline. In other words, tensor parallel includes model and data parallel.
+
+```python
+# Simplified tensor parallel linear layer
+class TPLinear(nn.Module):
+    def __init__(self, in_features, out_features, n_devices):
+        super().__init__()
+        self.weight = nn.Parameter(torch.randn(out_features // n_devices, in_features))
+        
+    def forward(self, x):
+        local_out = F.linear(x, self.weight)Z
+        return all_gather(local_out)
+```
+"""
+
+There is also ZeRO but we will talk about it when we get to that section.
+
+##### 2d parallalism
+
+https://distributedlexicon.com/ -> Use this blog, along with other ideas 
+
+
+For a deeper dive into how to implement each and use them in your application, check out the documentation by the [PyTorch Team](https://docs.pytorch.org/tutorials/distributed.html).
+
+The code behind [Megatron-LM](https://github.com/NVIDIA/Megatron-LM)
 
 ### Sparse Attention Patterns
 
@@ -4085,7 +4294,7 @@ useful for many problems of interest.
 https://llmmodels.org/blog/sparse-attention-in-transformers-step-by-step-implementation/
 https://reinforcedknowledge.com/sparse-transformers/
 https://lilianweng.github.io/posts/2018-06-24-attention/
-
+https://openai.com/index/sparse-transformer/
 
 If you have read this far, I am going to assume you have a fair bit of knowledge about computer science. And one of the earliest ideas talked about in CS101 classes is the idea of Big O notation. So let us calculate the Big O of Self-Attention.
 
@@ -4150,6 +4359,80 @@ This $O(N^2)$ scaling is precisely why transformers struggle with very long sequ
 """
 
 And as we all know $O(N^2)$ is fairly expensive computationally, That is where Sparse Attention comes in. This reduces our attention calculation to $O(N\sqrt{N})$ (With a tradeoff in perfomance of course).
+
+"""
+
+Even computing a single attention matrix, however, can become impractical for very large inputs. We instead use sparse attention patterns, where each output position only computes weightings from a subset of input positions. When the subset is small relative to the full set of inputs (say, 
+N
+N
+​
+ ​ elements instead of 
+ 
+N
+ N elements), the resulting attention computation becomes tractable even for very long sequences, with an algorithmic complexity of 
+O
+(
+N
+N
+)
+O(N 
+N
+​
+ ) instead of 
+O
+(
+N
+2
+)
+O(N 
+2
+ ).
+"""
+
+https://github.com/openai/sparse_attention
+
+
+There are 3 types of sparse attention:
+* Local
+* Global 
+* Random
+
+The objective of this blog (or any other blog I have written for that matter), is to get you to believe how you could have come up with the idea on your own. So let us first begin by understanding the rationale of the researchers 
+
+![Attention mask img](/assets/blog_assets/evolution_of_llms/53.webp)
+*image taken from the [paper](https://arxiv.org/pdf/1904.10509)*
+
+
+
+a)
+
+
+https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers -> Good images explaining sparse attention well 
+
+
+
+
+##### Factorized self-attention
+
+
+
+Some other ideas introduced in the paper 
+
+**Recomputation of matrices**
+
+**Fast Attention Kernels**
+https://github.com/openai/blocksparse/
+
+
+"""
+Additionally, we introduce several other changes to the
+Transformer, including:
+• A restructured residual block and weight initialization
+to improve training of very deep networks
+• A set of sparse attention kernels which efficiently compute subsets of the attention matrix
+• Recomputation of attention weights during the backwards pass to reduce memory usage
+"""
+
 
 ## 2020: The Scale Revolution
 
@@ -4559,6 +4842,13 @@ The paper presents an elegant solution to a fundamental bottleneck in large mode
 https://oracle-oci-ocas.medium.com/zero-redundancy-optimizers-a-method-for-training-machine-learning-models-with-billion-parameter-472e8f4e7a5b
 
 https://www.youtube.com/watch?v=KgoHyMGpxBU&ab_channel=nPlan
+
+https://alessiodevoto.github.io/parallelism/ -> Great blog on ZeRO
+
+https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/
+
+https://huggingface.co/docs/transformers/v4.15.0/parallelism
+
 
 ### ELECTRA
 
