@@ -2311,6 +2311,7 @@ Think of it like learning to drive in a new city. Initially, you drive faster to
 This was achieved using the following formula
 
 $$\text{cut} = \lfloor T \cdot \text{cut\_frac} \rfloor$$
+
 $$
 p = \begin{cases}
 t/\text{cut}, & \text{if } t < \text{cut} \\
@@ -2345,7 +2346,6 @@ The process works like this: First, unfreeze only the classifier head and train 
 **Concat Pooling**
 
 ![Image of Concat Pooling](/assets/blog_assets/evolution_of_llms/45.webp)
-
 
 ULMFiT also introduced concat pooling for text classification. Instead of using only the final hidden state, it concatenates the last hidden state with both max-pooled and mean-pooled representations across all timesteps. This captures information from the entire document, not just the end.
 
@@ -2452,13 +2452,13 @@ for doc in documents:
 print("Vocab:", vocab)
 print("BOW Matrix:", bow_matrix)
 
-# Vocab: 
+# Vocab:
 # ['this', 'is', 'the', 'first', 'document', 'second', 'third', 'one']
 
-#BOW Matrix: 
-# [[1, 1, 1, 1, 1, 0, 0, 0], 
-#  [1, 1, 1, 0, 2, 1, 0, 0], 
-#  [1, 1, 1, 0, 0, 0, 1, 1], 
+#BOW Matrix:
+# [[1, 1, 1, 1, 1, 0, 0, 0],
+#  [1, 1, 1, 0, 2, 1, 0, 0],
+#  [1, 1, 1, 0, 0, 0, 1, 1],
 #  [1, 1, 1, 1, 1, 0, 0, 0]]
 ```
 
@@ -2517,7 +2517,6 @@ N-grams extend the BOW concept by considering sequences of $n$ consecutive words
 - **Unigrams (n=1)**: Individual words → ["this", "is", "the", "first"]
 - **Bigrams (n=2)**: Word pairs → ["this is", "is the", "the first"]
 - **Trigrams (n=3)**: Word triplets → ["this is the", "is the first"]
-
 
 The mathematical formulation for n-gram probability:
 $$P(w_n|w_1, w_2, ..., w_{n-1}) \approx P(w_n|w_{n-k+1}, ..., w_{n-1})$$
@@ -2589,7 +2588,7 @@ for j, word_vocab in enumerate(vocab):
     for document in word_tokens:
         for word in document:
             if word_vocab == word:
-                df += 1 
+                df += 1
                 break
     idf[j] = np.log(D/df)
 
@@ -2602,14 +2601,14 @@ for i in range(len(word_tokens)):
 data = pd.DataFrame(TFIDF, columns=vocab, index=documents_name).round(3)
 data
 ```
-*Code taken from [here](https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html#)*
+
+_Code taken from [here](https://pythonandml.github.io/dlbook/content/word_embeddings/traditional_word_embeddings.html#)_
 
 if we calculate tf-idf of the same example as before we get an output like below
 
 ![Image of One Hot Vector](/assets/blog_assets/evolution_of_llms/47.webp)
 
 Notice how common words like "this", "is", "the" get lower TF-IDF scores because they appear in most documents, while specific words like "second" or "third" get higher scores.
-
 
 **The Limitation of Traditional Embeddings**
 
@@ -2740,9 +2739,9 @@ Consider reading about contrastive loss. (This is a good [medium article](https:
 
 **Hierarical Softmax (better for infrequent words)**
 
-Let's start with an example, because that really drives the idea home. 
+Let's start with an example, because that really drives the idea home.
 
-"I can have pizza every day" 
+"I can have pizza every day"
 
 If we used the standard softmax to calculate the probability of "pizza" given some context, we would do something like:
 
@@ -2761,6 +2760,7 @@ The equation then becomes:
 $$P(pizza|context) = \sigma(v'_{root} \cdot h) \times \sigma(-v'_{n_1} \cdot h) \times \sigma(v'_{n_4} \cdot h)$$
 
 Where:
+
 - $\sigma(x) = \frac{1}{1 + e^{-x}}$ is the sigmoid function
 - $v'_{n_i}$ are the learned vectors for internal nodes
 - The negative sign appears when we take the left branch at a node
@@ -2773,7 +2773,7 @@ If you wish to learn more about Hierarchical Softmax consider reading this [blog
 
 This [blog](https://wandb.ai/authors/embeddings-2/reports/An-Introduction-to-the-Global-Vectors-GloVe-Algorithm--VmlldzozNDg2NTQ) helped me considerably while writing this section.
 
-GloVe stands for Global Vectors for Word Representation, it is seemingly an improvement over Word2Vec as it considers global statistics over local statistics. 
+GloVe stands for Global Vectors for Word Representation, it is seemingly an improvement over Word2Vec as it considers global statistics over local statistics.
 
 Well what does that mean? Put simply, we leverage the global co-occurrence matrix instead of using a local context window like we did in Word2Vec.
 
@@ -2794,7 +2794,7 @@ From our matrix, "is" co-occurs with three words: "Pizza" (1 time), "the" (1 tim
 $$P(\text{Pizza}|\text{is}) = \frac{X_{\text{is,Pizza}}}{X_{\text{is}}} = \frac{1}{3} = 0.33$$
 
 ![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/34.webp)
-*Image taken from the original paper*
+_Image taken from the original paper_
 
 If we look at the example provided by the authors from a real corpus, the power of ratios becomes clear. It is pretty intuitive that $P(solid\|ice)$ will have a higher value than $P(solid\|steam)$, because "solid" is more likely to appear in the context of "ice" than "steam". Hence their ratio $P(solid\|ice)/P(solid\|steam) = 8.9$ has a large value, indicating "solid" is discriminative for "ice".
 
@@ -2806,22 +2806,22 @@ This insight - that ratios of co-occurrence probabilities capture semantic relat
 
 To understand more about the implementation and training details, consider reading the original [paper](https://nlp.stanford.edu/pubs/glove.pdf) and this [article](https://cran.r-project.org/web/packages/text2vec/vignettes/glove.html).
 
-> I have skipped a lot of the different parts, like training, eval, results etc. Because this is ultimately a section on ELMo and not GloVe. But the idea is fascinating enough to garner some time spent on it. 
+> I have skipped a lot of the different parts, like training, eval, results etc. Because this is ultimately a section on ELMo and not GloVe. But the idea is fascinating enough to garner some time spent on it.
 
 ##### Contextual Word Embeddings
 
 **Embeddings from Language Models (ELMo)**
 
-We more or less now have a complete understanding of how different embedding models work, so it's time to understand the model of the hour: ELMo. 
+We more or less now have a complete understanding of how different embedding models work, so it's time to understand the model of the hour: ELMo.
 
-There are two things we need to understand: how it's trained and how it's used. 
+There are two things we need to understand: how it's trained and how it's used.
 
-Training is quite simple - we train a two-layer bi-directional LSTM on a Language Modeling task. 
+Training is quite simple - we train a two-layer bi-directional LSTM on a Language Modeling task.
 
 The Language Modeling task basically means: given all these words, what's the most likely word that comes next? It is exactly how GPT-1 was trained, which we will be covering next.
 
 ![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/36.webp)
-*image inspired from this [blog](https://jalammar.github.io/illustrated-bert/)*
+_image inspired from this [blog](https://jalammar.github.io/illustrated-bert/)_
 
 Now I had a question while reading this: ELMo is an embedding model, right? But what we are doing is next token prediction here. How is it used with other NLP models then? If you have the same question, you are on the right track. It is quite an innovative solution in my opinion.
 
@@ -2875,7 +2875,7 @@ GPT-1 was the moment when everything clicked. While ULMFiT showed that transfer 
 
 This was the beginning of the era we live in now. As funny as it may sound, I do not have a lot to add in this section. Because we have already talked about the majority things, the architecture and important concepts like attention in our [transformers blog](https://goyalpramod.github.io/blogs/Transformers_laid_out/) and the training method in our [ULMFit](#ulmfit) section.
 
-So let's use this section, to talk about the terms we popularly associate with LLMs like 
+So let's use this section, to talk about the terms we popularly associate with LLMs like
 Top k, Top p, Temperature, Sampling etc.
 
 Also, since I wrote the transformers blog I have gained a deeper and better understanding of self-attention and masked attention, so we will spend a bit of time on that too.
@@ -2886,32 +2886,31 @@ I will be skipping most of the thing we have already talked about, but if you st
 
 Generative Pre-trained Transformer is a decoder only auto-regressive model which was first pre-trained on a humongous amount of data using a Language Modeling method then fine-tuned on a much smaller supervised dataset to help solve specific tasks
 
-That is a lot of ML jargon way of saying that, the authors took the transformer, got rid of the encoder, put up a lot of layers of decoder, trained it on lots of data, then fine tuned it for specific use cases. 
+That is a lot of ML jargon way of saying that, the authors took the transformer, got rid of the encoder, put up a lot of layers of decoder, trained it on lots of data, then fine tuned it for specific use cases.
 
 Langaguage modeling is pretty straight forward, given a context, predict the next word. The amazing part is that it is unsupervised. We can create a dataset using any sentence/document/text data. We break it down to it's individual tokens, then we create a dataset by shifting the tokens by 1.
 
 ![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/43.webp)
-
 
 **Model Specification**
 
 I took this excerpt directly from the paper as I cannot add anything else to it.
 
 > Model specifications Our model largely follows the original transformer work [62]. We trained a
->12-layer decoder-only transformer with masked self-attention heads (768 dimensional states and 12
->attention heads). For the position-wise feed-forward networks, we used 3072 dimensional inner states.
->We used the Adam optimization scheme [27] with a max learning rate of 2.5e-4. The learning rate
->was increased linearly from zero over the first 2000 updates and annealed to 0 using a cosine schedule.
->We train for 100 epochs on minibatches of 64 randomly sampled, contiguous sequences of 512 tokens.
->Since layernorm [2] is used extensively throughout the model, a simple weight initialization of
->N(0, 0.02) was sufficient. We used a bytepair encoding (BPE) vocabulary with 40,000 merges [53]
->and residual, embedding, and attention dropouts with a rate of 0.1 for regularization. We also
->employed a modified version of L2 regularization proposed in [37], with w = 0.01 on all non bias or
->gain weights. For the activation function, we used the Gaussian Error Linear Unit (GELU) [18]. We
->used learned position embeddings instead of the sinusoidal version proposed in the original work.
->We use the ftfy library2
->to clean the raw text in BooksCorpus, standardize some punctuation and
->whitespace, and use the spaCy tokenizer.
+> 12-layer decoder-only transformer with masked self-attention heads (768 dimensional states and 12
+> attention heads). For the position-wise feed-forward networks, we used 3072 dimensional inner states.
+> We used the Adam optimization scheme [27] with a max learning rate of 2.5e-4. The learning rate
+> was increased linearly from zero over the first 2000 updates and annealed to 0 using a cosine schedule.
+> We train for 100 epochs on minibatches of 64 randomly sampled, contiguous sequences of 512 tokens.
+> Since layernorm [2] is used extensively throughout the model, a simple weight initialization of
+> N(0, 0.02) was sufficient. We used a bytepair encoding (BPE) vocabulary with 40,000 merges [53]
+> and residual, embedding, and attention dropouts with a rate of 0.1 for regularization. We also
+> employed a modified version of L2 regularization proposed in [37], with w = 0.01 on all non bias or
+> gain weights. For the activation function, we used the Gaussian Error Linear Unit (GELU) [18]. We
+> used learned position embeddings instead of the sinusoidal version proposed in the original work.
+> We use the ftfy library2
+> to clean the raw text in BooksCorpus, standardize some punctuation and
+> whitespace, and use the spaCy tokenizer.
 
 ##### Why does attention work
 
@@ -2927,51 +2926,51 @@ Even before I begin I NEED to mention all these amazing blogs that helped me bui
 
 ![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/48.webp)
 
-Let's forget about Q,K,V for a moment and just focus on a single matrix X. Which contains different tokens (these tokens can be anything. Words, image patches, audio segments, anything that can be embedded and represented by numbers) 
+Let's forget about Q,K,V for a moment and just focus on a single matrix X. Which contains different tokens (these tokens can be anything. Words, image patches, audio segments, anything that can be embedded and represented by numbers)
 
-This matrix consists of vectors X1, X2, X2.... Xn That make up the matrix X 
+This matrix consists of vectors X1, X2, X2.... Xn That make up the matrix X
 
-(X vectors are embedded so they occupy a specific place in space) 
+(X vectors are embedded so they occupy a specific place in space)
 
 ![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/49.webp)
 
 Now assume you want to see how close X1 is relative to every other word. What do you do? Take dot product, which gives us similarity scores between vectors - the higher the dot product, the more similar (or 'closer') the vectors are in the semantic space.
 
-Now let's say you want to see, how different vectors relate to X1, I.e How far is X2 from X1 (notice how we went from how far X1 is from X2, X3 and so on. To how far X2 is from X1). 
+Now let's say you want to see, how different vectors relate to X1, I.e How far is X2 from X1 (notice how we went from how far X1 is from X2, X3 and so on. To how far X2 is from X1).
 
-Both of the above dot products will give us the same result. I.E how far each vector is relative to each other. This is ATTENTION. Distance between different words. We can think of like this. 
+Both of the above dot products will give us the same result. I.E how far each vector is relative to each other. This is ATTENTION. Distance between different words. We can think of like this.
 
-In a sentence, "Steve is an amazing person, who loves Machine Learning". After applying attention, a lot of words will basically get filtered out because we are not paying attention to them anymore 
+In a sentence, "Steve is an amazing person, who loves Machine Learning". After applying attention, a lot of words will basically get filtered out because we are not paying attention to them anymore
 
-So the sentence becomes 
+So the sentence becomes
 
-"Steve ... amazing .... Machine learning" 
+"Steve ... amazing .... Machine learning"
 
 ![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/50.webp)
 
 Now we need to apply these masks to something right, Hence we need to know the original sentence as well
 
-So we multiply this mask with X. This gives us an attention mask over the original matrix. 
+So we multiply this mask with X. This gives us an attention mask over the original matrix.
 
-We just calculated Self-attention. With 1 sentence. Without using the terms Q,K,V. 
+We just calculated Self-attention. With 1 sentence. Without using the terms Q,K,V.
 
 ![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/51.webp)
 
-Now the question arises of W_q, W_k, W_v. 
+Now the question arises of W_q, W_k, W_v.
 
-These are linear transformations, they are present to change the position of our X in the vector space. 
+These are linear transformations, they are present to change the position of our X in the vector space.
 
-But dot product gives us the similarity between different vectors in space, by changing representations. We are getting the similarity score from different angles. 
+But dot product gives us the similarity between different vectors in space, by changing representations. We are getting the similarity score from different angles.
 
-This proves that attention works, because dot product is just giving us the similarity in space. What about "but which layer gives us what" 
+This proves that attention works, because dot product is just giving us the similarity in space. What about "but which layer gives us what"
 
-Think of it this way, lets assume our W matrices are all identity matrix. (so no transformation), Now when we do our attention scoring. If any token is more close to any other token it will get a very high score. This essentially gives us the attention of that pair. This will be represented in the first layer, the second layer will then calculate the attention of pairs (much like how CNNs work and are visualized. You start with small lines, then move on to more complex geometric figures) 
+Think of it this way, lets assume our W matrices are all identity matrix. (so no transformation), Now when we do our attention scoring. If any token is more close to any other token it will get a very high score. This essentially gives us the attention of that pair. This will be represented in the first layer, the second layer will then calculate the attention of pairs (much like how CNNs work and are visualized. You start with small lines, then move on to more complex geometric figures)
 
 Now by changing our W matrices in all different ways, we get different representation. And make pairs of different tokens stronger.
 
 **Masked Attention**
 
-Masked Attention is much like attention itself, but here we get rid of the bi-directional nature. 
+Masked Attention is much like attention itself, but here we get rid of the bi-directional nature.
 The current token can only look at itself and the tokens before it.
 
 ![Image of Word2Vec explanation](/assets/blog_assets/evolution_of_llms/38.webp)
@@ -2979,11 +2978,11 @@ The current token can only look at itself and the tokens before it.
 In a matrix representation is looks something like this, It is very vital. Because our inference is auto-regressive so if during training we can look at the future tokens we run into data leakage, the model would essentially be "cheating" by seeing the answer during training, making it unable to generate text properly during inference when it only has access to previous tokens.
 
 ![Image of SentencePiece abstract](/assets/blog_assets/evolution_of_llms/masked_attention.webp)
-*Image taken from this beautiful [visualizer](https://poloclub.github.io/transformer-explainer/)*
+_Image taken from this beautiful [visualizer](https://poloclub.github.io/transformer-explainer/)_
 
 The image shows how masked attention works in practice. First we calculate the attention score by multiplying Q and K, then a mask is applied to it. Each token (represented by the colored circles) can only attend to itself and the tokens that came before it. The connections show which tokens each position can "see", notice how the connections always flow backwards or stay at the same position, never forward. This creates the triangular pattern you see in attention matrices, ensuring the model learns to predict based only on past context.
 
-##### LLM Glossary 
+##### LLM Glossary
 
 What this is -> A mathematical foundation for terms commonly used during LLM inference <br/>
 What this is not -> A guide to deciding the best values for your use case
@@ -3014,7 +3013,7 @@ $$\sum_{i=1}^k p_i \geq p$$
 
 Top-p sampling dynamically selects the smallest set of tokens whose cumulative probability exceeds threshold p. Given sorted probabilities $[p_1, p_2, ..., p_n]$, we find the smallest k such that helps us clear the above criteria, then renormalize only these k tokens. Unlike top-k which uses a fixed number of tokens, top-p adapts to the confidence of the model - using fewer tokens when the model is confident and more when uncertain.
 
-for example, if the model is fairly certain we will have the top token probabilities like [70%, 20%, 4%, 1% ...] and if we set top p threshold as 93% we will make the model choose from the top 3 tokens only 
+for example, if the model is fairly certain we will have the top token probabilities like [70%, 20%, 4%, 1% ...] and if we set top p threshold as 93% we will make the model choose from the top 3 tokens only
 But if the model is uncertain and we get probabilities like [30%,29%,7%,5%,3%...] the model will have many tokens to choose from.
 
 **Sampling Methods**
@@ -3023,7 +3022,7 @@ Sampling methods introduce controlled randomness by selecting tokens according t
 
 $$token = \arg\max_i P(token_i)$$
 
-Greedy sampling always selects the token with highest probability. While deterministic and fast, this can lead to repetitive text and suboptimal sequences due to the exposure bias problem. 
+Greedy sampling always selects the token with highest probability. While deterministic and fast, this can lead to repetitive text and suboptimal sequences due to the exposure bias problem.
 
 $$score(sequence) = \frac{1}{|sequence|^\alpha} \sum_{i=1}^{|sequence|} \log P(token_i|context_i)$$
 
@@ -3037,9 +3036,9 @@ Consider checking out the [transformers documentation](https://huggingface.co/do
 
 **Repetition Penalty**
 
-Repetition penalty reduces the probability of tokens that have already appeared in the generated sequence. The modified logit for a token that appeared n times is: 
+Repetition penalty reduces the probability of tokens that have already appeared in the generated sequence. The modified logit for a token that appeared n times is:
 
-$$logit_{new} = \frac{logit_{original}}{penalty^n}$$ 
+$$logit_{new} = \frac{logit_{original}}{penalty^n}$$
 
 if penalty > 1, which decreases the likelihood of selecting repeated tokens. This helps prevent the model from getting stuck in repetitive loops while maintaining natural language flow.
 
@@ -3055,11 +3054,11 @@ where α is the penalty coefficient and count(token) is how many times the token
 
 A binary version of frequency penalty that applies a fixed penalty regardless of how many times a token appeared
 
-$$logit_{new} = logit_{original} - \alpha$$ 
+$$logit_{new} = logit_{original} - \alpha$$
 
 if the token was seen before, unchanged otherwise. This encourages the model to use new vocabulary without heavily penalizing natural repetitions that occur in coherent text.
 
-That wraps up our section on GPT, don't worry as we move forward to the future years we will talk about how LLMs work with RL, How different architectures affect different things, talk about optimizers and so much more. For now I feel like these are the most we should keep for this year. 
+That wraps up our section on GPT, don't worry as we move forward to the future years we will talk about how LLMs work with RL, How different architectures affect different things, talk about optimizers and so much more. For now I feel like these are the most we should keep for this year.
 
 ### Sentencepiece
 
@@ -3160,9 +3159,9 @@ Byte-pair encoding (BPE) was introduced in [Neural Machine Translation of Rare W
 
 It essentially follows two steps, the pretokenization then merging. Let's understand each.
 
-In the pretokenization step, we determine the set of unique words in the training data along with their frequency. Using this unique set, BPE breaks the words down into it's individual characters, which are then merged to form the final vocabulary. Let's understand it with an example. 
+In the pretokenization step, we determine the set of unique words in the training data along with their frequency. Using this unique set, BPE breaks the words down into it's individual characters, which are then merged to form the final vocabulary. Let's understand it with an example.
 
-Suppose after the pre-tokenization step, we have the following words with their frequencies that we got from the training data 
+Suppose after the pre-tokenization step, we have the following words with their frequencies that we got from the training data
 
 ```python
 ("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)
@@ -3182,12 +3181,13 @@ BPE then counts the character pair with the high frequencies and then pairs them
 
 Then we identify the next most frequent pair, that will be `u` and `n` that occur 16 times together. Then the next most frequent pair interestingly is `h` with `ug` which occur together 15 times. (This teaches an important lesson, we do not only consider characters or symbols while pairing them up. But the frequency pairs that exist in the vocabulary).
 
-Now our entire vocabulary looks something like this `["b", "g", "h", "n", "p", "s", "u", "ug", "un", "hug"]`  and our set of unique words 
+Now our entire vocabulary looks something like this `["b", "g", "h", "n", "p", "s", "u", "ug", "un", "hug"]` and our set of unique words
 
 ```python
 ("hug", 10), ("p" "ug", 5), ("p" "un", 12), ("b" "un", 4), ("hug" "s", 5)
 ```
-Assuming we stop our merging at this point. Our new vocabulary will be used to tokenize new words (Unless they were not present in our training data). For example, `"bug"` will be tokenized to `["b", "ug"]` but "mug" would be tokenized as  `["<unk>", "ug"]` since the symbol `"m"` is not in the base vocabulary.
+
+Assuming we stop our merging at this point. Our new vocabulary will be used to tokenize new words (Unless they were not present in our training data). For example, `"bug"` will be tokenized to `["b", "ug"]` but "mug" would be tokenized as `["<unk>", "ug"]` since the symbol `"m"` is not in the base vocabulary.
 
 In general, single letters such as "m" are not replaced by the "<unk>" symbol because the training data usually includes at least one occurrence of each letter, but it is likely to happen for very special characters like emojis.
 
@@ -3205,7 +3205,7 @@ $$score = \frac{freq\_of\_pair}{freq\_of\_first\_element \times freq\_of\_second
 
 HF also has a [short course](https://huggingface.co/learn/llm-course/en/chapter6/6?fw=pt) on LLMs where they talk about wordpiece pretty well.
 
-Taking an excerpt from the said course explains it well 
+Taking an excerpt from the said course explains it well
 
 > By dividing the frequency of the pair by the product of the frequencies of each of its parts, the algorithm prioritizes the merging of pairs where the individual parts are less frequent in the vocabulary. For instance, it won't necessarily merge ("un", "##able") even if that pair occurs very frequently in the vocabulary, because the two pairs "un" and "##able" will likely each appear in a lot of other words and have a high frequency. In contrast, a pair like ("hu", "##gging") will probably be merged faster (assuming the word "hugging" appears often in the vocabulary) since "hu" and "##gging" are likely to be less frequent individually.
 
@@ -3221,20 +3221,20 @@ At each step of training, the Unigram model computes the loss over the entire co
 
 Note that we never remove the base characters, to make sure any word can be tokenized.
 
-Using the same example as above we start with a sample corpus 
+Using the same example as above we start with a sample corpus
 
 ```python
 ("hug", 10), ("pug", 5), ("pun", 12), ("bun", 4), ("hugs", 5)
 ```
 
-We calculate the frequencies of all the subwords as below 
+We calculate the frequencies of all the subwords as below
 
 ```python
 ("h", 15) ("u", 36) ("g", 20) ("hu", 15) ("ug", 20) ("p", 17) ("pu", 17) ("n", 16)
 ("un", 16) ("b", 4) ("bu", 4) ("s", 5) ("hug", 15) ("gs", 5) ("ugs", 5)
 ```
 
-To tokenize a given word, we look at all possible subwords and calculate their probabilities. All the tokens are considered independent of each other so we can just multiply all sub-tokens as below 
+To tokenize a given word, we look at all possible subwords and calculate their probabilities. All the tokens are considered independent of each other so we can just multiply all sub-tokens as below
 
 For the word `hug`, by tokenizing it as `h`,`u`, and `g`
 
@@ -3246,14 +3246,15 @@ It is also tokenized as `hu`, `g` and `h`, `ug`, and `hug`. The scores are
 ```python
 ["h", "u", "g"] = 0.000389
 ["hu", "g"] = (15/210) × (20/210) = 0.0095
-["h", "ug"] = (15/210) × (20/210) = 0.0095  
+["h", "ug"] = (15/210) × (20/210) = 0.0095
 ["hug"] = 15/210 = 0.071
 ```
-Hence `hug` will be tokenized as **["hug"]** as it has the highest probability. 
 
-In practice this iterative process is not used, but rather [Viterbi algorithm](https://en.wikipedia.org/wiki/Viterbi_algorithm) is used to find the subword tokenization with the maximum probability. 
+Hence `hug` will be tokenized as **["hug"]** as it has the highest probability.
 
-Using this same method a score is calculated for all the words, as below 
+In practice this iterative process is not used, but rather [Viterbi algorithm](https://en.wikipedia.org/wiki/Viterbi_algorithm) is used to find the subword tokenization with the maximum probability.
+
+Using this same method a score is calculated for all the words, as below
 
 ```python
 "hug": ["hug"] (score 0.071428)
@@ -3263,18 +3264,17 @@ Using this same method a score is calculated for all the words, as below
 "hugs": ["hug", "s"] (score 0.001701)
 ```
 
-We want to calculate the negative log likelihood of the whole corpus and that becomes 
+We want to calculate the negative log likelihood of the whole corpus and that becomes
 
 ```python
 freq("hug") × (-log(P("hug"))) + freq("pug") × (-log(P("pug"))) + freq("pun") × (-log(P("pun"))) + freq("bun") × (-log(P("bun"))) + freq("hugs") × (-log(P("hugs")))
 10 × (-log(0.071428)) + 5 × (-log(0.007710)) + 12 × (-log(0.006168)) + 4 × (-log(0.001451)) + 5 × (-log(0.001701)) = 169.8
 ```
 
-Now each token is removed to see how that affects the overall loss as below 
+Now each token is removed to see how that affects the overall loss as below
 
 Removing token "pu": Loss change = 0 (since "pug" can use ["p", "ug"] with same score)
 Removing token "hug": Loss increases by 23.5 (forces less optimal tokenizations)
-
 
 Tokens with the smallest loss increase are removed first until the desired vocabulary size is reached.
 
@@ -3290,7 +3290,7 @@ Decoding with SentencePiece is very easy since all tokens can just be concatenat
 
 All transformers models in the library that use SentencePiece use it in combination with unigram. Examples of models using SentencePiece are ALBERT, XLNet, LLama2, etc.
 
-Well that is all there is to know about SentencePiece really, if you want to know how it is implemented you can check out the blog I mentioned above. 
+Well that is all there is to know about SentencePiece really, if you want to know how it is implemented you can check out the blog I mentioned above.
 
 ### BERT
 
@@ -3317,8 +3317,9 @@ The paper demonstrated significant improvements over previous methods on eleven 
 </details>
 <br/>
 
-These two blogs helped me immensely with this section: 
-- [The illustrated BERT](https://jalammar.github.io/illustrated-bert/) 
+These two blogs helped me immensely with this section:
+
+- [The illustrated BERT](https://jalammar.github.io/illustrated-bert/)
 - [BERT 101](https://huggingface.co/blog/bert-101)
 
 This paper wasn't trying to find a problem then solve it per se. It is more of an innovation, taking an excerpt from the paper.
@@ -3337,30 +3338,31 @@ All the papers I have mentioned in this blog are great, but the BERT paper is pa
 
 Let's first answer the question **what is BERT?**
 
-BERT stands for Bi-directional Encoder Representation from Transformers. That's a mounthful, the name aside. It is quite simple, Remember our Transformers, Well this is essentially that but only the encoder (Quite the opposite of GPT). Bi-directional means that it looks both ways, forward and backward. Remember in GPT we used masked self-attention which only got representation for current and previous token, well the encoder uses vanilla self-attention which gets representation from both sides. The transformer part is pretty self explanatory. 
+BERT stands for Bi-directional Encoder Representation from Transformers. That's a mounthful, the name aside. It is quite simple, Remember our Transformers, Well this is essentially that but only the encoder (Quite the opposite of GPT). Bi-directional means that it looks both ways, forward and backward. Remember in GPT we used masked self-attention which only got representation for current and previous token, well the encoder uses vanilla self-attention which gets representation from both sides. The transformer part is pretty self explanatory.
 
 **What is it used for?**
 
-This is the most amazing thing about BERT, it can be used for a plethora of NLP tasks like question answering, Parts of speech taging, Sentiment analysis, Classification etc. This is due to the way it is trained. 
+This is the most amazing thing about BERT, it can be used for a plethora of NLP tasks like question answering, Parts of speech taging, Sentiment analysis, Classification etc. This is due to the way it is trained.
 
 **How is it trained?**
 
 Much the way we have discussed before, it has a pre-training phase in which we feed it lots and lots of data for it to learn a representation. Then fine-tune it for the particular task we would like it for.
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/39.webp)
-*Image taken from the paper*
+_Image taken from the paper_
 
 There are a lot of new terms from the above image like CLS, Masked LM, NSP etc that may not make sense at first. But they are quite simple once we understand them. Let us begin
 
 **Masked Language Modeling**
 
-This is one of the methods of pre-training BERT. We take the input sentence and randomly mask out 15% of the tokens, then using the output of the position we try to predict what could have been the possible text. 
+This is one of the methods of pre-training BERT. We take the input sentence and randomly mask out 15% of the tokens, then using the output of the position we try to predict what could have been the possible text.
 
 In practice, 80% of the times the token is masked, 10% of the times it is replaced with a random token and other 10% of the time it's left unchanged.
 
 Let's see this in action:
+
 - Original: "The cat sat on the mat"
-- Masked: "The cat [MASK] on the mat" 
+- Masked: "The cat [MASK] on the mat"
 - BERT sees both "The cat" and "on the mat" to predict "sat"
 
 This bidirectional context is why BERT became so powerful for understanding tasks.
@@ -3369,10 +3371,10 @@ This bidirectional context is why BERT became so powerful for understanding task
 
 **Next Sentence Prediction**
 
-Next Sentence Prediction is exactly what it sounds like, but instead of predicting the next sentence. We predict if the given next sentence will come after the first sentence. 
+Next Sentence Prediction is exactly what it sounds like, but instead of predicting the next sentence. We predict if the given next sentence will come after the first sentence.
 
 The special token CLS learns representation from the both the sentences and the output from it's position is used to predict whether the sentence comes next or not. In practice, the CLS token is fine tuned for classification, sentiment analysis etc.
-SEP is a special token that acts as a seperator between both the sentences. 
+SEP is a special token that acts as a seperator between both the sentences.
 
 In reality, both NSP and MLM are done simultaneously.
 
@@ -3390,14 +3392,13 @@ We can use bert to generate embeddings too!! Much like the way we did with ELMo.
 
 Before BERT, each NLP task needed its own specialized architecture. Question answering systems, sentiment classifiers, and named entity recognizers all looked completely different. BERT changed this by providing a universal representation that could be fine-tuned for any task with just a small additional layer.
 
-And that concludes BERT too, now we have talked about the two big architectures of LLMs, moving forward we will mostly be talking about the innovations done in the architecture and the solutions found to increase the scale at which to train them. 
+And that concludes BERT too, now we have talked about the two big architectures of LLMs, moving forward we will mostly be talking about the innovations done in the architecture and the solutions found to increase the scale at which to train them.
 
 [Add info on Token type embedding https://stackoverflow.com/questions/57960995/how-are-the-tokenembeddings-in-bert-created]
 
 ## WORK IN PROGRESS NOTICE
 
 > Rest of the sections from 2019-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
-
 
 ## 2019: Scaling and Efficiency
 
@@ -3432,9 +3433,9 @@ This was paper was an improvement over the original GPT, and a huge scaling of i
 
 ![Image of scale difference between gpt-1 and gpt 2](/assets/blog_assets/evolution_of_llms/54.webp)
 
-My first question was how did one even get so much data? The authours have underlined that well. So quoting the paper 
+My first question was how did one even get so much data? The authours have underlined that well. So quoting the paper
 
->Common Crawl. Trinh & Le (2018)’s best results were achieved using a small subsample of Common Crawl which included only documents most similar to their target dataset, the Winograd Schema Challenge. While this is a pragmatic approach to improve performance on a specific task, we want to avoid making assumptions about the tasks to be performed ahead of time. Instead, we created a new web scrape which emphasizes document quality. To do this we only scraped web pages which have been curated/filtered by humans. Manually filtering a full web scrape would be exceptionally expensive so as a starting point, we scraped all outbound links from Reddit, a social media platform, which received at least 3 karma. This can be thought of as a heuristic indicator for whether other users found the link interesting, educational, or just funny. The resulting dataset, WebText, contains the text subset of these 45 million links. To extract the text from HTML responses we use a combination of the Dragnet (Peters & Lecocq, 2013) and Newspaper1 content extractors. All results presented in this paper use a preliminary version of WebText which does not include links created after Dec 2017 and which after de-duplication and some heuristic based cleaning contains slightly over 8 million documents for a total of 40 GB of text. We removed all Wikipedia documents from WebText since it is a common data source for other datasets and could complicate analysis due to over...
+> Common Crawl. Trinh & Le (2018)’s best results were achieved using a small subsample of Common Crawl which included only documents most similar to their target dataset, the Winograd Schema Challenge. While this is a pragmatic approach to improve performance on a specific task, we want to avoid making assumptions about the tasks to be performed ahead of time. Instead, we created a new web scrape which emphasizes document quality. To do this we only scraped web pages which have been curated/filtered by humans. Manually filtering a full web scrape would be exceptionally expensive so as a starting point, we scraped all outbound links from Reddit, a social media platform, which received at least 3 karma. This can be thought of as a heuristic indicator for whether other users found the link interesting, educational, or just funny. The resulting dataset, WebText, contains the text subset of these 45 million links. To extract the text from HTML responses we use a combination of the Dragnet (Peters & Lecocq, 2013) and Newspaper1 content extractors. All results presented in this paper use a preliminary version of WebText which does not include links created after Dec 2017 and which after de-duplication and some heuristic based cleaning contains slightly over 8 million documents for a total of 40 GB of text. We removed all Wikipedia documents from WebText since it is a common data source for other datasets and could complicate analysis due to over...
 
 My second question was how do you run such large models economically?
 
@@ -3446,12 +3447,12 @@ And the answer came in the form of ...
 
 These two blogs helped me immensely while writing this section, check'em out!!! (they have very nice animations)
 
-* [HF Blog](https://huggingface.co/blog/not-lain/kv-caching)
-* [Medium Blog](https://medium.com/@joaolages/kv-caching-explained-276520203249)
+- [HF Blog](https://huggingface.co/blog/not-lain/kv-caching)
+- [Medium Blog](https://medium.com/@joaolages/kv-caching-explained-276520203249)
 
 ![Image of quick inference in LLMs](/assets/blog_assets/evolution_of_llms/57.webp)
 
-Before we start understanding KV Cache, let us revisit our inference to see what happens. 
+Before we start understanding KV Cache, let us revisit our inference to see what happens.
 
 Let's say we ask the LLM a question. "Captial of India?" (we already know what happens inside an LLM so I have skipped a lot of the blocks except the essential ones)
 
@@ -3471,16 +3472,14 @@ But we do not need to do this for a decoder, as previous tokens never attend to 
 
 ![Image of inference with KV cache](/assets/blog_assets/evolution_of_llms/56.webp)
 
-
 I had two interesting discoveries during this:
 
 - We only cache $K$ and $V$ not $Q$. Because there is no point storing it. To calculate the latest attention score we need the entire $K$ and $V$, but not $Q$. For nth token $Q$, we need the entire of K to calculate $QK^t$. Then we need to multiple the entire $V$ to get the latest attention score. (This is definitely tough to think about, pause take a moment and image it)
-  
 - When we append another vector, the shape of $K$ and $V$ also change. But we do not calculate the values of old $Q$ with these because of our masking (We do not need to see the future values), $Q_1$ has no point being multiplied with $K_4$ as that will be masked as infiti anyhoo (We have already talked about this).
 
 The second point also gives us another amazing point, KV caching is not possible in models like BERT (Think why?)
 
->P.S. KV-Cache was not introduced in gpt-2 but became wildly popular after it. I am not able to find the source of the idea. Comment down below if you know about it!!!
+> P.S. KV-Cache was not introduced in gpt-2 but became wildly popular after it. I am not able to find the source of the idea. Comment down below if you know about it!!!
 
 That pretty much covers the amazing things that the GPT-2 paper talked about,
 Let's move on to see how we can train such big models.
@@ -3525,61 +3524,37 @@ The paper is particularly notable for its thorough empirical analysis of trainin
 - Larger batch sizes
 - Extended training
 
-"""
-Language model pretraining has led to significant performance gains but careful comparison between different approaches is challenging. Training is computationally expensive, often done on private datasets of different
-sizes, and, as we will show, hyperparameter
-choices have significant impact on the final results. We present a replication study of BERT
-pretraining (Devlin et al.
-, 2019) that carefully
-measures the impact of many key hyperparameters and training data size. We find that BERT
-was significantly undertrained, and can match
-or exceed the performance of every model
-published after it. Our best model achieves
-state-of-the-art results on GLUE, RACE and
-SQuAD. These results highlight the importance of previously overlooked design choices,
-and raise questions about the source of recently reported improvements. We release our
-models and code.
-"""
+**Problem**
 
-"""
-In summary, the contributions of this paper
-are: (1) We present a set of important BERT design choices and training strategies and introduce 2
-It is possible that these other methods could also improve
-with more tuning. We leave this exploration to future work.
-alternatives that lead to better downstream task
-performance; (2) We use a novel dataset, CCNEWS, and confirm that using more data for pretraining further improves performance on downstream tasks; (3) Our training improvements show
-that masked language model pretraining, under
-the right design choices, is competitive with all
-other recently published methods. We release our
-model, pretraining and fine-tuning code implemented in PyTorch (Paszke et al., 2017).
-"""
+The authors found that most of the models released post BERT were challenging to train, hard to compare and they were mostly working as a black box and it was difficult to tell which hyper-parameter were significant. RoBERTa was a replication study on BERT to better understand it. And they unearthed that BERT was significantly under trained.
 
-"""
-Large batch training can improve training efficiency even
-without large scale parallel hardware through gradient accumulation, whereby gradients from multiple mini-batches
-are accumulated locally before each optimization step.
-"""
+**Solution**
 
-https://aman.ai/primers/ai/grad-accum-checkpoint/
-https://blog.dailydoseofds.com/p/gradient-accumulation-increase-batch
+1. Present a set of important BERT design and training strategies
+2. Introduction of a novel dataset (CCNEWS)
 
-[TALK ABOUT dynamic masking]
+**Dynamic Masking**
 
-[TALK ABOUT LARGER BATCH SIZE AND EXTENDED TRAINING]
+While training BERT a static masking strategy is employed. I.e the same words are masked throughout training, This can lead to the model memorizing these positions instead of generalizing and learning the relationship between words.
 
-- Gradient Accumulation 
+Dynamic masking was a method made to mitigate this issue by varying the masked positions in each epoch. This lead to greater generalization and better performance.
 
-It is well known that mini-batch descent produces good results, but sometimes even the mini batch is large in some cases. Like for CV on a 4k image etc. In those scenarios when we lack memory we use Gradient Accumulation to overcome that issue. 
+**Gradient Accumulation**
 
-[ADD_IMAGE]
+These two blogs helped me out with this part:
 
-Instead of updating the model in every mini batch, we accumulate the gradient over the course of a few batches then update it. 
+- [Blog 1](https://blog.dailydoseofds.com/p/gradient-accumulation-increase-batch)
+- [Blog 2](https://aman.ai/primers/ai/grad-accum-checkpoint/)
 
-[ADD_IMAGE]
+It is well known that mini-batch descent produces good results, but sometimes even the mini batch is large in some cases. Like for CV on a 4k image etc. In those scenarios when we lack memory we use Gradient Accumulation to overcome that issue.
+
+Instead of updating the model in every mini batch, we accumulate the gradient over the course of a few batches then update it.
+
+![Image of grad accumulation](/assets/blog_assets/evolution_of_llms/70.webp)
 
 This essentially acts like a bigger batch
 
-A typical training loop looks like this 
+A typical training loop looks like this
 
 ```python
 for inputs, labels in data_loader:
@@ -3592,7 +3567,7 @@ for inputs, labels in data_loader:
     optimizer.zero_grad()
 ```
 
-But when we do gradient accumulation it looks something like this 
+But when we do gradient accumulation it looks something like this
 
 ```python
 acc_steps = 3
@@ -3603,29 +3578,28 @@ for idx, (inputs, labels) in enumerate(data_loader):
     loss = criterion(output,labels)
 
     loss.backward()
-    optimizer.step()
-    optimizer.zero_grad()
 
     if ((idx + 1) % acc_steps == 0) or (idx + 1 == len(data_loader)):
         optimizer.step()
         optimizer.zero_grad()
 ```
 
-- Gradient Checkpointing
+**Large Batch Training**
 
-There really is no reason to mention this here, But this is a popular method to overcome memory limitations too. So I though I will briefly talk about it 
+The authors also noted that large batch training can improve training without the need to do complex techniques.
 
-[ADD_IMAGE] (back prop, show one specific node does not store grad but is calculated again)
+A quote from the paper
 
-"""
-Gradient checkpointing is a technique used to trade off memory usage for computation time during backpropagation. In deep neural networks, backpropagation requires storing intermediate activations for computing gradients during the backward pass. However, for models with a large number of layers or limited memory, storing all the intermediate activations can be memory-intensive.
+> Large batch training can improve training efficiency even
+> without large scale parallel hardware through gradient accumulation, whereby gradients from multiple mini-batches
+> are accumulated locally before each optimization step.
 
-Gradient checkpointing addresses this issue by selectively recomputing a subset of intermediate activations during backpropagation. Instead of storing all activations, only a subset of them, typically those necessary for computing gradients, are cached. The remaining intermediate activations are recomputed on-the-fly during the backward pass. By recomputing rather than storing all intermediate activations, memory usage is reduced at the cost of increased computation time.
-"""
+**Gradient Checkpointing**
 
-**Problem**
+There really is no reason to mention this here, But this is a popular method to overcome memory limitations too. So I though I will briefly talk about it.
 
-**Solution**
+It is rather straightforward, We know when we train a NN, we need to store the gradients for backpropagation. For large models this can get quite big.S
+So for some layers instead of storing it, we re-compute it during backprop.
 
 ### DistilBERT and Model Compression
 
@@ -3666,9 +3640,9 @@ This work demonstrates that through careful distillation, smaller and more effic
 
 The following sources helped me immensely while writing this section.
 
-* [Survey paper](https://arxiv.org/pdf/2006.05525) on Knowledge Distillation
-* [HuggingFace Blog](https://huggingface.co/blog/Kseniase/kd) on Knowledge distillation
-* [Blog by the creators of distillbert](https://medium.com/huggingface/distilbert-8cf3380435b5)
+- [Survey paper](https://arxiv.org/pdf/2006.05525) on Knowledge Distillation
+- [HuggingFace Blog](https://huggingface.co/blog/Kseniase/kd) on Knowledge distillation
+- [Blog by the creators of distillbert](https://medium.com/huggingface/distilbert-8cf3380435b5)
 
 ##### What is Knowledge Distillation
 
@@ -3681,7 +3655,7 @@ There are many reasons we may wish to do this, they are cheaper and faster to in
 ##### Types of Knowledge Distillation
 
 ![Image of different types of knowledge distillation](/assets/blog_assets/evolution_of_llms/60.webp)
-*Image taken from [paper](https://arxiv.org/pdf/2006.05525)* 
+_Image taken from [paper](https://arxiv.org/pdf/2006.05525)_
 
 There are definitely many kinds of distillation methods available to us (the above image makes it quite obvious). We will not be able to talk about all of them, So I will touch on the most popular one's and ask you to explore the one's you find interesting.
 
@@ -3693,7 +3667,7 @@ In this method, we take a sample of training data. Run it by both our models. An
 
 We are essentially trying to make the smaller model predict `like` the bigger model.
 
-Now one may question what are soft labels, Lets see it with an example 
+Now one may question what are soft labels, Lets see it with an example
 
 `[0,1,0,0] -> hard labels`
 
@@ -3710,12 +3684,13 @@ This is known as [dark knowledge](https://www.ttic.edu/dl/dark14.pdf). We are es
 $$p_i = \frac{\exp(z_i/T)}{\sum_j \exp(z_j/T)}$$
 
 Where:
+
 - $p_i$ is the probability of class $i$
-- $z_i$ is the logit for class $i$ 
+- $z_i$ is the logit for class $i$
 - $T$ is the temperature parameter
 
 Temperature $T$ controls how "soft" the probability distribution becomes. When $T = 1$, we get the normal softmax. As $T$ increases, the distribution becomes more uniform (softer), revealing the relative similarities between classes that the teacher model has learned. When $T → ∞$, all probabilities approach equal values. During distillation, we use $T > 1$ to extract this "dark knowledge" from near-zero probabilities.
- 
+
 **Feature Based**
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/64.webp)
@@ -3725,6 +3700,7 @@ In this, we hope to replicate the weights of the bigger model in our smaller mod
 $$L_{FeaD}(f_t(x), f_s(x)) = L_F(\Phi_t(f_t(x)), \Phi_s(f_s(x)))$$
 
 where:
+
 - $L_{FeaD}$ is the feature distillation loss
 - $f_t(x)$ and $f_s(x)$ are the teacher and student feature representations
 - $\Phi_t$ and $\Phi_s$ are transformation functions for the teacher and student features
@@ -3734,15 +3710,13 @@ where:
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/65.webp)
 
-
 Take a pair of feature maps from both the models, and minimize the loss between their relationship.
 
->NOTE: Even though feature maps is used both in featured based and realtion based KD, they are quite different. For example in Feature based we are trying to map the exact features to be in the same distribution. But in realtion based, the indiividual values do not matter, the realtion between them does. For example  in feature based if Ft(Xt) = 5 then we want Fs(X) = 5 as well. But in Relation Ft(x1,x2) = 5 then Fs(x3,x4) = 5 where the feature maps x by themselves can be quite different
+> NOTE: Even though feature maps is used both in featured based and realtion based KD, they are quite different. For example in Feature based we are trying to map the exact features to be in the same distribution. But in realtion based, the indiividual values do not matter, the realtion between them does. For example in feature based if Ft(Xt) = 5 then we want Fs(X) = 5 as well. But in Relation Ft(x1,x2) = 5 then Fs(x3,x4) = 5 where the feature maps x by themselves can be quite different
 
 As mentioned earlier, there are a lot of methods available for KD. If you are further intersted, checkout the survey!
 
 ##### How was diltillbert trained
-
 
 Distillbert was trained using the response based distillation method. KLD is used as the distillation Loss.
 
@@ -3761,41 +3735,40 @@ def kd_step(teacher: nn.Module,
             optimizer: Optimizer):
     teacher.eval() # Notice teacher model is in eval mode
     student.train()
-    
+
     with torch.no_grad():
         logits_t = teacher(inputs=inputs) # Do not store the gradients of teacher
     logits_s = student(inputs=inputs)
-    
+
     loss = KD_loss(input=F.log_softmax(logits_s/temperature, dim=-1),
-                   target=F.softmax(logits_t/temperature, dim=-1)) # KLD loss on teacher output with student output. 
+                   target=F.softmax(logits_t/temperature, dim=-1)) # KLD loss on teacher output with student output.
                    # Notice how the student output is a log softmax, because we are training it
-    
+
     loss.backward()
     optimizer.step()
     optimizer.zero_grad()
 ```
-*Code modified from [gist](https://gist.github.com/VictorSanh/db90644aae5094654db87f9769c2e5ae)*
 
+_Code modified from [gist](https://gist.github.com/VictorSanh/db90644aae5094654db87f9769c2e5ae)_
 
 ![Architecture difference](/assets/blog_assets/evolution_of_llms/62.webp)
-*[Source](https://www.researchgate.net/publication/382939584_A_novel_iteration_scheme_with_conjugate_gradient_for_faster_pruning_on_transformer_models)*
+_[Source](https://www.researchgate.net/publication/382939584_A_novel_iteration_scheme_with_conjugate_gradient_for_faster_pruning_on_transformer_models)_
 
-The architecture of distillbert is very similar to BERT, they have reduced the number of layers. Significantly decreasing the amount of parameters (From 110M to 66M), While maintaing 95% performance of BERT. The authors additionally removed  the token-type embeddings and the pooler (as there is no Next sentence predition here) 
+The architecture of distillbert is very similar to BERT, they have reduced the number of layers. Significantly decreasing the amount of parameters (From 110M to 66M), While maintaing 95% performance of BERT. The authors additionally removed the token-type embeddings and the pooler (as there is no Next sentence predition here)
 
-It is interesting to talk about the initialization and training as well. As noted by the author they initialized distillbert by taking the weights of every other layer (as they had common hidden size namely 768). They also trained the model on very large batches, using gradient accumulation, with dynamic masking and NSP removed. 
+It is interesting to talk about the initialization and training as well. As noted by the author they initialized distillbert by taking the weights of every other layer (as they had common hidden size namely 768). They also trained the model on very large batches, using gradient accumulation, with dynamic masking and NSP removed.
 
-Now let's talk about the loss used to train DistillBert. They used a triple loss which is a combination of MLM Loss, Distillation Loss & Similarity Loss. 
+Now let's talk about the loss used to train DistillBert. They used a triple loss which is a combination of MLM Loss, Distillation Loss & Similarity Loss.
 
 > These Beautiful images were taken from this [blog](https://towardsdatascience.com/distilbert-11c8810d29fc/)
 
-
 ![Image of MLM Loss](/assets/blog_assets/evolution_of_llms/66.webp)
-*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+_[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)_
 
 Masked Language Modeling Loss is pretty straight forward and we have already talked about it in our [BERT](#bert) section. In this we do cross entropy over predicted distribution and true distribution.
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/67.webp)
-*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+_[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)_
 
 Distillation loss is an idea that is new here, it is a response based loss, In which we compare the KLD between the Teacher's output distribution and the Student's output distribution.
 
@@ -3809,21 +3782,19 @@ $$= \sum_i p_{teacher}(i) \log p_{teacher}(i) - \sum_i p_{teacher}(i) \log p_{st
 
 Since the teacher's distribution is fixed during training, the first term $\sum_i p_{teacher}(i) \log p_{teacher}(i)$ is constant and can be ignored for optimization purposes. The remaining term $-\sum_i p_{teacher}(i) \log p_{student}(i)$ is exactly the cross-entropy loss. Therefore, minimizing KLD is equivalent to minimizing cross-entropy in this context.
 
-
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/68.webp)
-*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+_[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)_
 
-Cosine embedding loss is straight forward as well, here we just take the cosine distance between the embedding vector. 
+Cosine embedding loss is straight forward as well, here we just take the cosine distance between the embedding vector.
 
 Remember the embedding matrix is also a learned parameter!
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/69.webp)
-*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+_[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)_
 
 In the end, we put all of it together and train DistillBERT!!!
 
 If you would like to distill a model, this is a [good tutorial](https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html) by PyTorch.
-
 Furthermore this was a nice [paper](https://arxiv.org/pdf/2502.08606) on distillation scalling laws, consider checking it out!
 
 ### BART
@@ -3855,20 +3826,19 @@ The paper presents a thorough ablation study comparing BART to other pretraining
 </details>
 <br/>
 
-BART is not as complex as the ideas we have discussed so far, reading the summary above should be enough. 
+BART is not as complex as the ideas we have discussed so far, reading the summary above should be enough.
 
 ![Image of BART](/assets/blog_assets/evolution_of_llms/58.webp)
 
-In simple terms BART is just BERT + GPT. The novel idea it introduced was in it's training. Where corrupted data was given as the input and using reconstruction loss (Cross entropy over predicted and original data distribution), the outputs were predicted. 
+In simple terms BART is just BERT + GPT. The novel idea it introduced was in it's training. Where corrupted data was given as the input and using reconstruction loss (Cross entropy over predicted and original data distribution), the outputs were predicted.
 
 ![Image of BART](/assets/blog_assets/evolution_of_llms/59.webp)
 
 Most of the noise and corruption is self explanatory from the above image, except text infilling. So let us talk about that for a moment.
 
-
 In it we take a text (Pizza is the most delicious dish in the world) and we sample a span, whose length is drawn from a Poisson distribution ($\lambda=3$). These spans (Pizza is/delicious/in the world) are then masked ([MASK] the most [MASK] dish [MASK]).
 
-In the current age, The BART architecture never gained popularity. I believe partly due to it's complexity. There is nothing else left to discuss so I'll be skipping the fine-tuning method. If you wish to know more about it, consider going through the paper. 
+In the current age, The BART architecture never gained popularity. I believe partly due to it's complexity. There is nothing else left to discuss so I'll be skipping the fine-tuning method. If you wish to know more about it, consider going through the paper.
 
 ### Transformer-XL
 
@@ -3890,11 +3860,13 @@ Key Problems Solved
 **Main Innovations**
 
 1. Segment-Level Recurrence Mechanism
+
 - Reuses hidden states from previous segments as extended context for the current segment
 - Enables modeling of much longer dependencies (80% longer than RNNs, 450% longer than vanilla Transformers)
 - Creates a recurrent connection between segments while maintaining the parallelization benefits of self-attention
 
 2. Relative Positional Encoding
+
 - Replaces absolute positional encodings with relative ones to enable state reuse
 - Decomposes attention into four intuitive terms: content-based addressing, content-dependent positional bias, global content bias, and global positional bias
 - Allows models trained on shorter sequences to generalize to longer ones during evaluation
@@ -3902,6 +3874,7 @@ Key Problems Solved
 **Results**
 
 Transformer-XL achieved state-of-the-art results across multiple datasets:
+
 - **WikiText-103**: 18.3 perplexity (previous best: 20.5)
 - **enwiki8**: 0.99 bits per character (first to break 1.0)
 - **One Billion Word**: 21.8 perplexity
@@ -3924,7 +3897,7 @@ The paper represents a significant step forward in extending the effective conte
 
 Language models are trained on a fixed context length, limiting their knowledge to that context length.
 
-Introduce relative positional encoding instead of absolute one's to train on longer sequences 
+Introduce relative positional encoding instead of absolute one's to train on longer sequences
 
 """
 Our main technical contributions include introducing the notion of recurrence in a purely selfattentive model and deriving a novel positional encoding scheme. These two techniques form a complete set of solutions, as any one of them alone
@@ -4049,8 +4022,6 @@ In their example with "New York is a city" using a permutation order [is, a, cit
 This captures the dependency between "New" and "York" while training on uncorrupted sequences.
 """
 
-
-
 ### Megatron
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/megatron_abstract.webp)
@@ -4110,19 +4081,18 @@ https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
 https://alessiodevoto.github.io/parallelism/
 (the paper has some nice images)
 
-https://distributedlexicon.com/ 
+https://distributedlexicon.com/
 
 https://docs.pytorch.org/tutorials/distributed.html
 
-Obviously Parallel training of huge models on large clusters is a MEGA topic, and we can write books on it. (There are companies and books made on it). 
+Obviously Parallel training of huge models on large clusters is a MEGA topic, and we can write books on it. (There are companies and books made on it).
 So my objective here will be to introduce you to the various concepts of model parallalism, going a bit overboard on what was done in megatron too (for brevity's sake)
-
 
 Let us start with the idea of megatron training and we can build on top of that
 
->note: the paper talks about two main ideas, training & how they improved performance on BERT. We will only focus on training in this blog. If you are curious about BERT modifications. Check out the paper!
+> note: the paper talks about two main ideas, training & how they improved performance on BERT. We will only focus on training in this blog. If you are curious about BERT modifications. Check out the paper!
 
-Data and model parallism 
+Data and model parallism
 
 """
 There are two central paradigms for scaling out deep neural network training to numerous hardware accelerators:
@@ -4185,8 +4155,7 @@ fully implemented by inserting a few simple primitives, as
 described in the next section.
 """
 
-Read page 4 for implementation detail, Then add here 
-
+Read page 4 for implementation detail, Then add here
 
 Now to be complete, We also need to talk about how we can calculate the amount of VRAM required before we start with distributed training. Lest you get too many or too less GPU (Compute is extremely expensive, so we gotta be mindful of what we have)
 
@@ -4214,17 +4183,14 @@ https://swsmith.cc/posts/gpu-memory.html
 https://huggingface.co/docs/transformers/en/perf_hardware
 https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/#RTX_4090s_and_Melting_Power_Connectors_How_to_Prevent_Problems
 
-
 Good animations and practical -> https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
 
 This [blog](https://alessiodevoto.github.io/parallelism/) gave a great TL;DR with pseudocode
 
-USE THIS BLOG FOR IMAGES AND SOME CONCEPTS 
+USE THIS BLOG FOR IMAGES AND SOME CONCEPTS
 https://huggingface.co/docs/transformers/v4.15.0/parallelism
 
 ##### Naive Parallalism
-
-
 
 ##### Data Parallelism
 
@@ -4242,14 +4208,15 @@ for batch in dataloader:
     outputs = model(batch)
     loss = criterion(outputs, targets)
     loss.backward()
-    
+
     # Synchronize gradients across devices
     all_reduce(model.parameters.grad)
-    
+
     optimizer.step()
 ```
 
 ##### Model Parallelism
+
 """
 
 Divide your model across devices, each processes the same input at different stages.
@@ -4257,6 +4224,7 @@ Divide your model across devices, each processes the same input at different sta
 Model parallelism is perfect for handling models too large for a single device. In doing so, it also reduces the memory required for a single device. Unfortunately, it might be complex to implement efficiently, because of potential load imbalance: it usually needs pipelining to avoid GPUs from remaining idle.
 
 Pseudocode:
+
 ```python
 # Define model portions
 model_part1 = nn.Sequential(layer1, layer2).to('cuda:0')
@@ -4268,14 +4236,15 @@ def forward(x):
     x = x.to('cuda:1')
     return model_part2(x)
 ```
+
 """
 
 ##### Pipeline Parallelism
+
 """
 Split your model into stages on different devices. Data flows through the pipeline, with multiple batches processed simultaneously.
 
 This is the solution to the imbalancing problem for plain model parallel. A nice explanation of model parallel + pipeline parallel can be found here. Pipeline parallel balances computation and communication and makes model parallelism more efficient. As a drawback, it requires a potentially complex scheduling: you have to deal with splitting the input across GPUs and schedule the pipeline. If you do this the wrong way, you might cause “bubble” periods of idle time.
-
 
 ```python
 # Define stages
@@ -4292,9 +4261,11 @@ def pipeline_forward(batches):
         prev_x = x
     yield stage2(prev_x)
 ```
+
 """
 
 ##### Tensor Parallelism
+
 """
 Partition individual tensors (weights, activations) across devices. Each computes a portion of tensor operations.
 
@@ -4306,19 +4277,19 @@ class TPLinear(nn.Module):
     def __init__(self, in_features, out_features, n_devices):
         super().__init__()
         self.weight = nn.Parameter(torch.randn(out_features // n_devices, in_features))
-        
+
     def forward(self, x):
         local_out = F.linear(x, self.weight)Z
         return all_gather(local_out)
 ```
+
 """
 
 There is also ZeRO but we will talk about it when we get to that section.
 
 ##### 2d parallalism
 
-https://distributedlexicon.com/ -> Use this blog, along with other ideas 
-
+https://distributedlexicon.com/ -> Use this blog, along with other ideas
 
 For a deeper dive into how to implement each and use them in your application, check out the documentation by the [PyTorch Team](https://docs.pytorch.org/tutorials/distributed.html).
 
@@ -4393,7 +4364,7 @@ Let's break down the computational complexity step by step:
 ## Step 1: Computing $QK^T$
 
 - $Q$ has dimensions $[N \times d_k]$ (N sequence positions, $d_k$ key dimension)
-- $K^T$ has dimensions $[d_k \times N]$ 
+- $K^T$ has dimensions $[d_k \times N]$
 - The matrix multiplication $QK^T$ results in an $[N \times N]$ matrix
 
 **Complexity**: $O(N \times d_k \times N) = O(N^2 \cdot d_k)$
@@ -4409,6 +4380,7 @@ Dividing each element of the $[N \times N]$ matrix by $\sqrt{d_k}$ is an element
 ## Step 3: Softmax Operation
 
 The softmax is applied row-wise to the $[N \times N]$ matrix. For each of the $N$ rows, we:
+
 - Compute the exponential of each element: $O(N)$
 - Sum all exponentials in the row: $O(N)$
 - Normalize each element: $O(N)$
@@ -4447,67 +4419,58 @@ And as we all know $O(N^2)$ is fairly expensive computationally, That is where S
 
 """
 
-Even computing a single attention matrix, however, can become impractical for very large inputs. We instead use sparse attention patterns, where each output position only computes weightings from a subset of input positions. When the subset is small relative to the full set of inputs (say, 
+Even computing a single attention matrix, however, can become impractical for very large inputs. We instead use sparse attention patterns, where each output position only computes weightings from a subset of input positions. When the subset is small relative to the full set of inputs (say,
 N
 N
 ​
- ​ elements instead of 
- 
+​ elements instead of
+
 N
- N elements), the resulting attention computation becomes tractable even for very long sequences, with an algorithmic complexity of 
+N elements), the resulting attention computation becomes tractable even for very long sequences, with an algorithmic complexity of
 O
 (
 N
 N
 )
-O(N 
+O(N
 N
 ​
- ) instead of 
+) instead of
 O
 (
 N
 2
 )
-O(N 
+O(N
 2
- ).
+).
 """
 
 https://github.com/openai/sparse_attention
 
-
 There are 3 types of sparse attention:
-* Local
-* Global 
-* Random
 
-The objective of this blog (or any other blog I have written for that matter), is to get you to believe how you could have come up with the idea on your own. So let us first begin by understanding the rationale of the researchers 
+- Local
+- Global
+- Random
+
+The objective of this blog (or any other blog I have written for that matter), is to get you to believe how you could have come up with the idea on your own. So let us first begin by understanding the rationale of the researchers
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/53.webp)
-*image taken from the [paper](https://arxiv.org/pdf/1904.10509)*
-
-
+_image taken from the [paper](https://arxiv.org/pdf/1904.10509)_
 
 a)
 
-
-https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers -> Good images explaining sparse attention well 
-
-
-
+https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers -> Good images explaining sparse attention well
 
 ##### Factorized self-attention
 
-
-
-Some other ideas introduced in the paper 
+Some other ideas introduced in the paper
 
 **Recomputation of matrices**
 
 **Fast Attention Kernels**
 https://github.com/openai/blocksparse/
-
 
 """
 Additionally, we introduce several other changes to the
@@ -4517,7 +4480,6 @@ to improve training of very deep networks
 • A set of sparse attention kernels which efficiently compute subsets of the attention matrix
 • Recomputation of attention weights during the backwards pass to reduce memory usage
 """
-
 
 ## 2020: The Scale Revolution
 
@@ -4933,7 +4895,6 @@ https://alessiodevoto.github.io/parallelism/ -> Great blog on ZeRO
 https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/
 
 https://huggingface.co/docs/transformers/v4.15.0/parallelism
-
 
 ### ELECTRA
 
@@ -7167,6 +7128,7 @@ The paper shows that pure Mamba struggles with in-context learning (following fo
 <br/>
 
 ### LLaMA 3
+
 https://github.com/naklecha/llama3-from-scratch
 
 [paper](https://arxiv.org/abs/2407.21783)
@@ -7813,4 +7775,3 @@ Now let's do the same for T5
 ### Inference
 
 [Expand SENTENCE PIECE WHEN IT MAKES SENE]
-
