@@ -3851,8 +3851,54 @@ In the current age, The BART architecture never gained popularity. I believe par
 
 ### Transformer-XL
 
-[Add abstract]
-[Add ai summary]
+![Image of Transformer-XL](/assets/blog_assets/evolution_of_llms/transformer_xl.webp)
+
+> Link to paper: [Transformer-XL: Attentive Language Models Beyond a Fixed-Length Context](https://arxiv.org/abs/1901.02860)
+
+<details>
+<summary markdown="span">Quick Summary</summary>
+<div markdown="1">
+This paper introduces **Transformer-XL**, a novel neural architecture that addresses a key limitation of standard Transformers in language modeling: their inability to capture dependencies beyond a fixed context length.
+
+#### Key Problems Solved
+
+**Context Fragmentation**: Traditional Transformers process text in fixed-length segments without information flow between segments, leading to inefficient optimization and poor prediction of tokens at segment boundaries.
+
+**Limited Dependency Length**: Vanilla Transformers can only model dependencies within their fixed context window, typically a few hundred tokens.
+
+#### Main Innovations
+
+##### 1. Segment-Level Recurrence Mechanism
+- Reuses hidden states from previous segments as extended context for the current segment
+- Enables modeling of much longer dependencies (80% longer than RNNs, 450% longer than vanilla Transformers)
+- Creates a recurrent connection between segments while maintaining the parallelization benefits of self-attention
+
+##### 2. Relative Positional Encoding
+- Replaces absolute positional encodings with relative ones to enable state reuse
+- Decomposes attention into four intuitive terms: content-based addressing, content-dependent positional bias, global content bias, and global positional bias
+- Allows models trained on shorter sequences to generalize to longer ones during evaluation
+
+#### Results
+
+Transformer-XL achieved state-of-the-art results across multiple datasets:
+- **WikiText-103**: 18.3 perplexity (previous best: 20.5)
+- **enwiki8**: 0.99 bits per character (first to break 1.0)
+- **One Billion Word**: 21.8 perplexity
+- Up to **1,874x faster** evaluation speed compared to vanilla Transformers
+
+#### Technical Contributions
+
+The architecture maintains gradient flow within segments while allowing information to propagate across segments through cached hidden states. The relative positional encoding scheme ensures temporal coherence when reusing states and generalizes well to longer contexts than seen during training.
+
+#### Impact
+
+Transformer-XL demonstrated the ability to generate coherent text spanning thousands of tokens and established new benchmarks for long-range dependency modeling. The techniques introduced became influential for subsequent developments in large language models, particularly for handling longer contexts efficiently.
+
+The paper represents a significant step forward in extending the effective context length of Transformer-based models while maintaining computational efficiency.
+
+</div>
+</details>
+<br/>
 [Add problem  & Solution]
 
 Language models are trained on a fixed context length, limiting their knowledge to that context length.
@@ -3867,6 +3913,24 @@ than RNNs on both character-level and word-level
 language modeling.
 """
 
+"""
+Transformer-XL (meaning extra long).
+We introduce the notion of recurrence into our
+arXiv:1901.02860v3 [cs.LG] 2 Jun 2019
+deep self-attention network. In particular, instead
+of computing the hidden states from scratch for
+each new segment, we reuse the hidden states obtained in previous segments. The reused hidden
+states serve as memory for the current segment,
+which builds up a recurrent connection between
+the segments. As a result, modeling very longterm dependency becomes possible because information can be propagated through the recurrent connections. Meanwhile, passing information from the previous segment can also resolve
+the problem of context fragmentation. More importantly, we show the necessity of using relative
+positional encodings rather than absolute ones, in
+order to enable state reuse without causing temporal confusion. Hence, as an additional technical contribution, we introduce a simple but more
+effective relative positional encoding formulation
+that generalizes to attention lengths longer than the
+one observed during training.
+Transformer-XL obtained strong resul
+"""
 
 ### XLNet
 
