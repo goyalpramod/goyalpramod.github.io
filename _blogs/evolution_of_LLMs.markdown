@@ -3664,17 +3664,11 @@ This work demonstrates that through careful distillation, smaller and more effic
 </details>
 <br/>
 
-- Knowledge distillation techniques
-- Parameter sharing
-- Pruning strategies
-- Quantization methods
+The following sources helped me immensely while writing this section.
 
-
-https://arxiv.org/pdf/2006.05525
-
-https://huggingface.co/blog/Kseniase/kd
-
-[distillbert by the creators of distillbert](https://medium.com/huggingface/distilbert-8cf3380435b5)
+* [Survey paper](https://arxiv.org/pdf/2006.05525) on Knowledge Distillation
+* [HuggingFace Blog](https://huggingface.co/blog/Kseniase/kd) on Knowledge distillation
+* [Blog by the creators of distillbert](https://medium.com/huggingface/distilbert-8cf3380435b5)
 
 ##### What is Knowledge Distillation
 
@@ -3682,11 +3676,11 @@ https://huggingface.co/blog/Kseniase/kd
 
 The idea is quite simple we have a big heavy model trained for long period of time on a lot of data, and we want a smaller model to learn from the bigger model.
 
-There are many reasons we may wish to do this, they are cheaper and faster to inference. They can on edge devices like mobiles, watches, drones etc.
+There are many reasons we may wish to do this, they are cheaper and faster to inference. They can on edge devices like mobiles, watches, drones etc. And most of the times they retain 90+ performance of the original model while being significally smaller.
 
 ##### Types of Knowledge Distillation
 
-![alt text](/assets/blog_assets/evolution_of_llms/60.webp)
+![Image of different types of knowledge distillation](/assets/blog_assets/evolution_of_llms/60.webp)
 *Image taken from [paper](https://arxiv.org/pdf/2006.05525)* 
 
 There are definitely many kinds of distillation methods available to us (the above image makes it quite obvious). We will not be able to talk about all of them, So I will touch on the most popular one's and ask you to explore the one's you find interesting.
@@ -3711,32 +3705,30 @@ For instance an apple can be confused for a red ball, but it should not be confu
 
 This is known as [dark knowledge](https://www.ttic.edu/dl/dark14.pdf). We are essentially trying to make our smaller model learn this dark knowledge.
 
-[EXPLAIN]
-[ADD IMAGES FROM HERE https://zilliz.com/learn/distilbert-distilled-version-of-bert]
-
-[ADD_IMAGE]
-
 [Hinton et al](https://arxiv.org/pdf/1503.02531) introduced an idea of temperature to control the importance of these soft labels. As T tends to inifity all latels have the same value
 
-[ADD EQUATION]
+$$p_i = \frac{\exp(z_i/T)}{\sum_j \exp(z_j/T)}$$
 
-> NOTE: In many places of distillation Cross-entropy and KLD are used interchangeably. They are not the same, but produce the same result when comparing distributions. Let us see how [EXPAND]
+Where:
+- $p_i$ is the probability of class $i$
+- $z_i$ is the logit for class $i$ 
+- $T$ is the temperature parameter
+
+Temperature $T$ controls how "soft" the probability distribution becomes. When $T = 1$, we get the normal softmax. As $T$ increases, the distribution becomes more uniform (softer), revealing the relative similarities between classes that the teacher model has learned. When $T → ∞$, all probabilities approach equal values. During distillation, we use $T > 1$ to extract this "dark knowledge" from near-zero probabilities.
  
 **Feature Based**
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/64.webp)
 
-In this, we hope to replicate the weights of the bigger model in our smaller model 
-[EXPLAIN]
+In this, we hope to replicate the weights of the bigger model in our smaller model. Instead of matching final outputs, we match intermediate representations (feature maps) from corresponding layers of teacher and student models. The student learns to produce similar internal representations as the teacher, capturing how the teacher processes information at different depths. Transformation functions $\Phi_t$ and $\Phi_s$ may be needed when teacher and student have different dimensions.
 
-[ADD_IMAGE]
+$$L_{FeaD}(f_t(x), f_s(x)) = L_F(\Phi_t(f_t(x)), \Phi_s(f_s(x)))$$
 
-![alt text](/assets/blog_assets/evolution_of_llms/61.webp)
-
-
-"""where ft(x) and fs(x) are the feature maps of the
-intermediate layers of teacher and student models, respectively. The transformation functions, Φt(ft(x)) and
-Φs(fs(x))"" and Lf represents the loss used. 
+where:
+- $L_{FeaD}$ is the feature distillation loss
+- $f_t(x)$ and $f_s(x)$ are the teacher and student feature representations
+- $\Phi_t$ and $\Phi_s$ are transformation functions for the teacher and student features
+- $L_F$ is the loss function applied to the transformed features
 
 **Relation Based**
 
@@ -3807,7 +3799,15 @@ Masked Language Modeling Loss is pretty straight forward and we have already tal
 
 Distillation loss is an idea that is new here, it is a response based loss, In which we compare the KLD between the Teacher's output distribution and the Student's output distribution.
 
-Here KLD and Cross-Entropy has been used interchangably, but that is usually not the case. [EXPLAIN]
+Here KLD and Cross-Entropy has been used interchangably, but that is usually not the case.
+
+KLD and cross-entropy can be used interchangeably only when the one distribution is fixed (Here the teacher distribution). Here's why:
+
+$$\text{KLD}(p_{teacher} || p_{student}) = \sum_i p_{teacher}(i) \log \frac{p_{teacher}(i)}{p_{student}(i)}$$
+
+$$= \sum_i p_{teacher}(i) \log p_{teacher}(i) - \sum_i p_{teacher}(i) \log p_{student}(i)$$
+
+Since the teacher's distribution is fixed during training, the first term $\sum_i p_{teacher}(i) \log p_{teacher}(i)$ is constant and can be ignored for optimization purposes. The remaining term $-\sum_i p_{teacher}(i) \log p_{student}(i)$ is exactly the cross-entropy loss. Therefore, minimizing KLD is equivalent to minimizing cross-entropy in this context.
 
 
 ![Image of BERT](/assets/blog_assets/evolution_of_llms/68.webp)
