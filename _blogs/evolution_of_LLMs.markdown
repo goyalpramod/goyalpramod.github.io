@@ -3430,14 +3430,26 @@ This work represents a significant step toward building more general NLP systems
 
 This was paper was an improvement over the original GPT, and a huge scaling of it
 
-[ADD_IMAGE_showing_difference_in_scale]
+![Image of scale difference between gpt-1 and gpt 2](/assets/blog_assets/evolution_of_llms/54.webp)
 
-In this section I would like to explore two questions that I find very interesting, How do you inference such large models economically? and How do you procure such huge datasets? 
+My first question was how did one even get so much data? The authours have underlined that well. So quoting the paper 
 
-- KV Cache
+>Common Crawl. Trinh & Le (2018)’s best results were achieved using a small subsample of Common Crawl which included only documents most similar to their target dataset, the Winograd Schema Challenge. While this is a pragmatic approach to improve performance on a specific task, we want to avoid making assumptions about the tasks to be performed ahead of time. Instead, we created a new web scrape which emphasizes document quality. To do this we only scraped web pages which have been curated/filtered by humans. Manually filtering a full web scrape would be exceptionally expensive so as a starting point, we scraped all outbound links from Reddit, a social media platform, which received at least 3 karma. This can be thought of as a heuristic indicator for whether other users found the link interesting, educational, or just funny. The resulting dataset, WebText, contains the text subset of these 45 million links. To extract the text from HTML responses we use a combination of the Dragnet (Peters & Lecocq, 2013) and Newspaper1 content extractors. All results presented in this paper use a preliminary version of WebText which does not include links created after Dec 2017 and which after de-duplication and some heuristic based cleaning contains slightly over 8 million documents for a total of 40 GB of text. We removed all Wikipedia documents from WebText since it is a common data source for other datasets and could complicate analysis due to over...
 
-https://huggingface.co/blog/not-lain/kv-caching 
-https://medium.com/@joaolages/kv-caching-explained-276520203249
+My second question was how do you run such large models economically?
+
+(Obviously I have skipped how do you "train" such large models, as we will be talking about that in the next section)
+
+And the answer came in the form of ...
+
+##### KV Cache!!!
+
+These two blogs helped me immensely while writing this section, check'em out!!! (they have very nice animations)
+
+* [HF Blog](https://huggingface.co/blog/not-lain/kv-caching)
+* [Medium Blog](https://medium.com/@joaolages/kv-caching-explained-276520203249)
+
+![Image of quick inference in LLMs](/assets/blog_assets/evolution_of_llms/57.webp)
 
 Before we start understanding KV Cache, let us revisit our inference to see what happens. 
 
@@ -3445,24 +3457,33 @@ Let's say we ask the LLM a question. "Captial of India?" (we already know what h
 
 Using that, a matrix is formed, for each token id we have embeddings, using which Q,K, and V matrices are made. That gives us our attention values, That is fed to a feed forward network which outputs a vector of logits vocab size, after passing it through softmax let's say we take the token id with the maximum probability. This gives us a vector output, of token id. (Here I am showing the embeddings)
 
-
-
 The embedding of this token is then appended to our original input X, and this operation is repeated till we run into the <EOS> token (End of sentence token)
 
-Now if we do not cache anything, these values need to be calculated again and again whenever a new token is added as shown above 
+Now if we do not cache anything, these values need to be calculated again and again whenever a new token is added as shown above
 
-But we only need to get the attention value for the latest query, we can save the previously calculated queries. 
+But we only need to get the attention value for the latest query, we can save the previously calculated queries. (If you are having a hard time thinking why? I will explain it in a while. Hint: Masked Causal attention)
 
-I had two interesting discoveries during this,
-- We only cache K and V not Q. Because there is no point storing it [EXPAND_THIS]
-- when we append another vector, the shape of K and V also change. But we do not calculate the values of old Q with these because of our masking (We do not need to see the future values), Q1 has no point being multiplied with K4 as that will be masked as infiti anyhoo. 
+![Image of inference without KV cache](/assets/blog_assets/evolution_of_llms/55.webp)
 
-The second point also gives us another amazing point, KV caching is not possible in models like BERT
+Let's look closer at the attention calculation itself, If we go vector by vector. We can see that we need to compute $QK^t$ again and again, each time a new token is calculated.
+
+But we do not need to do this for a decoder, as previous tokens never attend to the future tokens. We can just cache the attention of previous tokens and compute the attention score for the latest token!
+
+![Image of inference with KV cache](/assets/blog_assets/evolution_of_llms/56.webp)
 
 
-- Prodcuring such huge datasets and what should u do if you are at this stage
+I had two interesting discoveries during this:
 
->Common Crawl. Trinh & Le (2018)’s best results were achieved using a small subsample of Common Crawl which included only documents most similar to their target dataset, the Winograd Schema Challenge. While this is a pragmatic approach to improve performance on a specific task, we want to avoid making assumptions about the tasks to be performed ahead of time. Instead, we created a new web scrape which emphasizes document quality. To do this we only scraped web pages which have been curated/filtered by humans. Manually filtering a full web scrape would be exceptionally expensive so as a starting point, we scraped all outbound links from Reddit, a social media platform, which received at least 3 karma. This can be thought of as a heuristic indicator for whether other users found the link interesting, educational, or just funny. The resulting dataset, WebText, contains the text subset of these 45 million links. To extract the text from HTML responses we use a combination of the Dragnet (Peters & Lecocq, 2013) and Newspaper1 content extractors. All results presented in this paper use a preliminary version of WebText which does not include links created after Dec 2017 and which after de-duplication and some heuristic based cleaning contains slightly over 8 million documents for a total of 40 GB of text. We removed all Wikipedia documents from WebText since it is a common data source for other datasets and could complicate analysis due to over
+- We only cache $K$ and $V$ not $Q$. Because there is no point storing it. To calculate the latest attention score we need the entire $K$ and $V$, but not $Q$. For nth token $Q$, we need the entire of K to calculate $QK^t$. Then we need to multiple the entire $V$ to get the latest attention score. (This is definitely tough to think about, pause take a moment and image it)
+  
+- When we append another vector, the shape of $K$ and $V$ also change. But we do not calculate the values of old $Q$ with these because of our masking (We do not need to see the future values), $Q_1$ has no point being multiplied with $K_4$ as that will be masked as infiti anyhoo (We have already talked about this).
+
+The second point also gives us another amazing point, KV caching is not possible in models like BERT (Think why?)
+
+>P.S. KV-Cache was not introduced in gpt-2 but became wildly popular after it. I am not able to find the source of the idea. Comment down below if you know about it!!!
+
+That pretty much covers the amazing things that the GPT-2 paper talked about,
+Let's move on to see how we can train such big models.
 
 ### RoBERTa
 
@@ -3665,12 +3686,14 @@ There are many reasons we may wish to do this, they are cheaper and faster to in
 
 ##### Types of Knowledge Distillation
 
-![alt text](image-3.png)
+![alt text](/assets/blog_assets/evolution_of_llms/60.webp)
 *Image taken from [paper](https://arxiv.org/pdf/2006.05525)* 
 
 There are definitely many kinds of distillation methods available to us (the above image makes it quite obvious). We will not be able to talk about all of them, So I will touch on the most popular one's and ask you to explore the one's you find interesting.
 
 **Response Based**
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/63.webp)
 
 In this method, we take a sample of training data. Run it by both our models. And then make the smaller model learn the soft labels of the bigger model.
 
@@ -3678,12 +3701,9 @@ We are essentially trying to make the smaller model predict `like` the bigger mo
 
 Now one may question what are soft labels, Lets see it with an example 
 
-`
-[0,1,0,0] -> hard labels
-`
-`
-[0.1,0.3,0.5,0.1] -> soft labels
-`
+`[0,1,0,0] -> hard labels`
+
+`[0.1,0.3,0.5,0.1] -> soft labels`
 
 A model outputs an array of probabilities, out of which many are near zero probabilities. These near zero probabilities still hold a lot of knowledge
 
@@ -3701,14 +3721,17 @@ This is known as [dark knowledge](https://www.ttic.edu/dl/dark14.pdf). We are es
 [ADD EQUATION]
 
 > NOTE: In many places of distillation Cross-entropy and KLD are used interchangeably. They are not the same, but produce the same result when comparing distributions. Let us see how [EXPAND]
+ 
 **Feature Based**
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/64.webp)
 
 In this, we hope to replicate the weights of the bigger model in our smaller model 
 [EXPLAIN]
 
 [ADD_IMAGE]
 
-![alt text](image-4.png)
+![alt text](/assets/blog_assets/evolution_of_llms/61.webp)
 
 
 """where ft(x) and fs(x) are the feature maps of the
@@ -3717,25 +3740,19 @@ intermediate layers of teacher and student models, respectively. The transformat
 
 **Relation Based**
 
+![Image of BERT](/assets/blog_assets/evolution_of_llms/65.webp)
 
-Take a pair of feature maps from both the models, and minimize the loss between their relationship
 
-- Trying to improve the algorithm 
-
-[ADD_IMAGE_OF_MULTIPLE_METHODS]
-
-As mentioned earlier, there are a lot of methods available for KD. If you are further intersted, checkout the survey!
+Take a pair of feature maps from both the models, and minimize the loss between their relationship.
 
 >NOTE: Even though feature maps is used both in featured based and realtion based KD, they are quite different. For example in Feature based we are trying to map the exact features to be in the same distribution. But in realtion based, the indiividual values do not matter, the realtion between them does. For example  in feature based if Ft(Xt) = 5 then we want Fs(X) = 5 as well. But in Relation Ft(x1,x2) = 5 then Fs(x3,x4) = 5 where the feature maps x by themselves can be quite different
+
+As mentioned earlier, there are a lot of methods available for KD. If you are further intersted, checkout the survey!
 
 ##### How was diltillbert trained
 
 
-Distillbert was trained using the response based distillation method. 
-
-KLD is used as the loss because ..[EXPAND]
-
-[EXPLAIN]
+Distillbert was trained using the response based distillation method. KLD is used as the distillation Loss.
 
 ```python
 import torch
@@ -3759,7 +3776,7 @@ def kd_step(teacher: nn.Module,
     
     loss = KD_loss(input=F.log_softmax(logits_s/temperature, dim=-1),
                    target=F.softmax(logits_t/temperature, dim=-1)) # KLD loss on teacher output with student output. 
-                   # Notice how the student output is a log softmax
+                   # Notice how the student output is a log softmax, because we are training it
     
     loss.backward()
     optimizer.step()
@@ -3768,18 +3785,46 @@ def kd_step(teacher: nn.Module,
 *Code modified from [gist](https://gist.github.com/VictorSanh/db90644aae5094654db87f9769c2e5ae)*
 
 
-![Architecture difference](image-2.png)
+![Architecture difference](/assets/blog_assets/evolution_of_llms/62.webp)
 *[Source](https://www.researchgate.net/publication/382939584_A_novel_iteration_scheme_with_conjugate_gradient_for_faster_pruning_on_transformer_models)*
 
 The architecture of distillbert is very similar to BERT, they have reduced the number of layers. Significantly decreasing the amount of parameters (From 110M to 66M), While maintaing 95% performance of BERT. The authors additionally removed  the token-type embeddings and the pooler (as there is no Next sentence predition here) 
 
 It is interesting to talk about the initialization and training as well. As noted by the author they initialized distillbert by taking the weights of every other layer (as they had common hidden size namely 768). They also trained the model on very large batches, using gradient accumulation, with dynamic masking and NSP removed. 
 
-##### Distillation in practice & Scalling Laws
+Now let's talk about the loss used to train DistillBert. They used a triple loss which is a combination of MLM Loss, Distillation Loss & Similarity Loss. 
+
+> These Beautiful images were taken from this [blog](https://towardsdatascience.com/distilbert-11c8810d29fc/)
+
+
+![Image of MLM Loss](/assets/blog_assets/evolution_of_llms/66.webp)
+*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+
+Masked Language Modeling Loss is pretty straight forward and we have already talked about it in our [BERT](#bert) section. In this we do cross entropy over predicted distribution and true distribution.
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/67.webp)
+*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+
+Distillation loss is an idea that is new here, it is a response based loss, In which we compare the KLD between the Teacher's output distribution and the Student's output distribution.
+
+Here KLD and Cross-Entropy has been used interchangably, but that is usually not the case. [EXPLAIN]
+
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/68.webp)
+*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+
+Cosine embedding loss is straight forward as well, here we just take the cosine distance between the embedding vector. 
+
+Remember the embedding matrix is also a learned parameter!
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/69.webp)
+*[Source](https://towardsdatascience.com/distilbert-11c8810d29fc/)*
+
+In the end, we put all of it together and train DistillBERT!!!
 
 If you would like to distill a model, this is a [good tutorial](https://docs.pytorch.org/tutorials/beginner/knowledge_distillation_tutorial.html) by PyTorch.
 
-[Read and expand on tis https://arxiv.org/pdf/2502.08606]
+Furthermore this was a nice [paper](https://arxiv.org/pdf/2502.08606) on distillation scalling laws, consider checking it out!
 
 ### BART
 
@@ -3810,44 +3855,20 @@ The paper presents a thorough ablation study comparing BART to other pretraining
 </details>
 <br/>
 
-"""
-We present BART, a denoising autoencoder
-for pretraining sequence-to-sequence models.
-BART is trained by (1) corrupting text with an
-arbitrary noising function, and (2) learning a
-model to reconstruct the original text. It uses
-a standard Tranformer-based neural machine
-translation architecture which, despite its simplicity, can be seen as generalizing BERT (due
-to the bidirectional encoder), GPT (with the
-left-to-right decoder), and many other more recent pretraining schemes. We evaluate a number of noising approaches, finding the best performance by both randomly shuffling the order of the original sentences and using a novel
-in-filling scheme, where spans of text are replaced with a single mask token. BART is
-particularly effective when fine tuned for text
-generation but also works well for comprehension tasks. It matches the performance of
-RoBERTa with comparable training resources
-on GLUE and SQuAD, achieves new stateof-the-art results on a range of abstractive dialogue, question answering, and summarization tasks, with gains of up to 6 ROUGE.
-BART also provides a 1.1 BLEU increase over
-a back-translation system for machine translation, with only target language pretraining
-"""
+BART is not as complex as the ideas we have discussed so far, reading the summary above should be enough. 
 
-![alt text](image.png)
+![Image of BART](/assets/blog_assets/evolution_of_llms/58.webp)
 
 In simple terms BART is just BERT + GPT. The novel idea it introduced was in it's training. Where corrupted data was given as the input and using reconstruction loss (Cross entropy over predicted and original data distribution), the outputs were predicted. 
 
-![alt text](image-1.png)
+![Image of BART](/assets/blog_assets/evolution_of_llms/59.webp)
 
-most of the noise and corruption is self explanatory from the above image, About text infillinf 
+Most of the noise and corruption is self explanatory from the above image, except text infilling. So let us talk about that for a moment.
 
-"""
-Text Infilling A number of text spans are sampled,
-with span lengths drawn from a Poisson distribution
-(λ = 3). Each span is replaced with a single [MASK]
-token. 0-length spans correspond to the insertion of
-[MASK] tokens. Text infilling is inspired by SpanBERT (Joshi et al., 2019), but SpanBERT samples
-span lengths from a different (clamped geometric) distribution, and replaces each span with a sequence of
-[MASK] tokens of exactly the same length. Text infilling teaches the model to
-"""
 
-In the current age, The BART architecture never gained popularity. I believe partly due to it's complexity. There is nothing novel or new to discuss so I'll be skipping the fine-tuning method. If you wish to know more about it, consider going through the paper. 
+In it we take a text (Pizza is the most delicious dish in the world) and we sample a span, whose length is drawn from a Poisson distribution ($\lambda=3$). These spans (Pizza is/delicious/in the world) are then masked ([MASK] the most [MASK] dish [MASK]).
+
+In the current age, The BART architecture never gained popularity. I believe partly due to it's complexity. There is nothing else left to discuss so I'll be skipping the fine-tuning method. If you wish to know more about it, consider going through the paper. 
 
 ### Transformer-XL
 
@@ -3860,25 +3881,25 @@ In the current age, The BART architecture never gained popularity. I believe par
 <div markdown="1">
 This paper introduces **Transformer-XL**, a novel neural architecture that addresses a key limitation of standard Transformers in language modeling: their inability to capture dependencies beyond a fixed context length.
 
-#### Key Problems Solved
+Key Problems Solved
 
 **Context Fragmentation**: Traditional Transformers process text in fixed-length segments without information flow between segments, leading to inefficient optimization and poor prediction of tokens at segment boundaries.
 
 **Limited Dependency Length**: Vanilla Transformers can only model dependencies within their fixed context window, typically a few hundred tokens.
 
-#### Main Innovations
+**Main Innovations**
 
-##### 1. Segment-Level Recurrence Mechanism
+1. Segment-Level Recurrence Mechanism
 - Reuses hidden states from previous segments as extended context for the current segment
 - Enables modeling of much longer dependencies (80% longer than RNNs, 450% longer than vanilla Transformers)
 - Creates a recurrent connection between segments while maintaining the parallelization benefits of self-attention
 
-##### 2. Relative Positional Encoding
+2. Relative Positional Encoding
 - Replaces absolute positional encodings with relative ones to enable state reuse
 - Decomposes attention into four intuitive terms: content-based addressing, content-dependent positional bias, global content bias, and global positional bias
 - Allows models trained on shorter sequences to generalize to longer ones during evaluation
 
-#### Results
+**Results**
 
 Transformer-XL achieved state-of-the-art results across multiple datasets:
 - **WikiText-103**: 18.3 perplexity (previous best: 20.5)
@@ -3886,11 +3907,11 @@ Transformer-XL achieved state-of-the-art results across multiple datasets:
 - **One Billion Word**: 21.8 perplexity
 - Up to **1,874x faster** evaluation speed compared to vanilla Transformers
 
-#### Technical Contributions
+**Technical Contributions**
 
 The architecture maintains gradient flow within segments while allowing information to propagate across segments through cached hidden states. The relative positional encoding scheme ensures temporal coherence when reusing states and generalizes well to longer contexts than seen during training.
 
-#### Impact
+**Impact**
 
 Transformer-XL demonstrated the ability to generate coherent text spanning thousands of tokens and established new benchmarks for long-range dependency modeling. The techniques introduced became influential for subsequent developments in large language models, particularly for handling longer contexts efficiently.
 
