@@ -3579,6 +3579,7 @@ for idx, (inputs, labels) in enumerate(data_loader):
 
     loss.backward()
 
+    # Only do update the weights if it the last mini batch
     if ((idx + 1) % acc_steps == 0) or (idx + 1 == len(data_loader)):
         optimizer.step()
         optimizer.zero_grad()
@@ -3600,6 +3601,8 @@ There really is no reason to mention this here, But this is a popular method to 
 
 It is rather straightforward, We know when we train a NN, we need to store the gradients for backpropagation. For large models this can get quite big.S
 So for some layers instead of storing it, we re-compute it during backprop.
+
+(Obviously much more goes into training the large scale LLMs we use nowdays, we will talk about them as we move forward)
 
 ### DistilBERT and Model Compression
 
@@ -3893,19 +3896,19 @@ The paper represents a significant step forward in extending the effective conte
 </div>
 </details>
 <br/>
-[Add problem  & Solution]
 
-Language models are trained on a fixed context length, limiting their knowledge to that context length.
+**Problem**
+The big problem with transformers were that they could not attend to tokens longer than a fixed window (context length) both during training and inferencing. This paper was an exploration to fix this limted context length problem.
 
-Introduce relative positional encoding instead of absolute one's to train on longer sequences
+This segmentation also causes fragmantetion in the dataflow, Where previous segment data is not flowed during training. (dw if this sounds complex, the problem statement is meant to be information dense. I will simplify it as we move forward)
 
-"""
-Our main technical contributions include introducing the notion of recurrence in a purely selfattentive model and deriving a novel positional encoding scheme. These two techniques form a complete set of solutions, as any one of them alone
-does not address the issue of fixed-length contexts. Transformer-XL is the first self-attention
-model that achieves substantially better results
-than RNNs on both character-level and word-level
-language modeling.
-"""
+**Solution**
+
+1. A method to pass information through the segments
+2. Novel Positional Encoding Scheme
+
+![Image of Fixed context window](/assets/blog_assets/evolution_of_llms/71.webp)
+*[Source](https://arxiv.org/pdf/1901.02860)*
 
 """
 Transformer-XL (meaning extra long).
@@ -3925,6 +3928,16 @@ that generalizes to attention lengths longer than the
 one observed during training.
 Transformer-XL obtained strong resul
 """
+
+
+**Segment-level Recurrence**
+![Image of Fixed context window](/assets/blog_assets/evolution_of_llms/71.webp)
+*[Source](https://arxiv.org/pdf/1901.02860)*
+
+
+
+**Relative Positional Encodings**
+
 
 ### XLNet
 
