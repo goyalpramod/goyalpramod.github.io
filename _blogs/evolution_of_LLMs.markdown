@@ -4016,8 +4016,27 @@ In empirical evaluations, XLNet outperforms BERT on 20 tasks including question 
 </details>
 <br/>
 
-- Permutation-based training approach
-- Surpassed BERT on multiple benchmarks
+It's hard to break this paper down into a problem and solution segment, As the broader idea was "Both Auto-regressive (Decoder only) & Auto-Encoding (Encoder Only) have their pros and cons, but how do we bring the best of both worlds together". This is not an easy paper by a long shot. I will try my best to explain it as well as I can.
+
+First we need to understand the pros and cons of AR & AE models as identified by the authors
+
+**AE Pros & Cons**
+
+Pros:
+* It is bidirectional by nature, so it can understnad information from both direction 
+
+Cons:
+* **Independence Assumption**, during training 15% of the tokens are masked and training is done. But this assumes that the target token is independent of other tokens. For example assume a sentence "New York is a city" if we mask out "New", BERT does not capture the joint dependency of "New York", as that is most likely to occur together.
+
+* **Pretrain-Finetune Discrepancy**, Pre-training is done by masking out tokens. But during fine-tuning no such masked data is encountered. This leads to a mismatch which hampers generalization.
+
+**AR Pros & Cons**
+
+Pros:
+* Captures the sequential nature of natural language, i.e one word comes after the other. 
+
+Cons:
+* 
 
 """
 With the capability of modeling bidirectional contexts, denoising autoencoding
@@ -4034,39 +4053,8 @@ inference, sentiment analysis, and document ranking.1
 .
 """
 
+
 """
-
-BERT's Limitations According to XLNet
-
-The XLNet paper identifies two key limitations in BERT's pretraining approach:
-
-1. Independence Assumption
-
-**What it means:** When BERT predicts masked tokens, it assumes they are conditionally independent of each other given the unmasked tokens.
-
-**Concrete example:**
-Let's say we have the sentence "New York is a city" and BERT masks "New" and "York". BERT would predict:
-
-- p(New | is a city)
-- p(York | is a city)
-
-But it fails to model the joint dependency: p(New, York | is a city). BERT doesn't capture that "York" is much more likely to follow "New" than some other word.
-
-**Why it's a problem:** Natural language has high-order dependencies between words. When multiple tokens are masked in a sequence, BERT can't model how these tokens depend on each other. This limits its ability to capture the complex dependencies that exist in language.
-
-2. Pretrain-Finetune Discrepancy
-
-**What it means:** During pretraining, BERT uses artificial [MASK] tokens that never appear during finetuning on downstream tasks.
-
-**Concrete example:**
-
-- During pretraining: "The [MASK] is on the [MASK]" → BERT learns to predict masked tokens
-- During finetuning: "The cat is on the mat" → No masks are present
-
-**Why it's a problem:** This creates a mismatch between pretraining and finetuning. The model is trained to handle artificial [MASK] tokens but then must work with fully visible text during actual use. BERT attempts to mitigate this by sometimes replacing [MASK] with the original token (80% mask, 10% random word, 10% unchanged), but this is a partial solution that still creates a discrepancy.
-
-How XLNet Addresses These Limitations
-
 - **For the independence issue:** XLNet uses autoregressive factorization, which naturally models the joint probability using the product rule without independence assumptions.
 
 - **For the pretrain-finetune discrepancy:** XLNet doesn't rely on masking or corrupting the input at all. It trains on the original data directly but with different permutations of the factorization order.
@@ -4081,6 +4069,13 @@ In their example with "New York is a city" using a permutation order [is, a, cit
 
 This captures the dependency between "New" and "York" while training on uncorrupted sequences.
 """
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/73.webp)
+*[Source](https://arxiv.org/pdf/1906.08237)*
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/74.webp)
+*[Source](https://arxiv.org/pdf/1906.08237)*
+
 
 ### Megatron
 
