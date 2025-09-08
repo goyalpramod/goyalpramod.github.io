@@ -3908,7 +3908,7 @@ This method of splitting text into rigid segments also caused context fragmentat
 2. Novel Positional Encoding Scheme
 
 ![Image of Fixed context window](/assets/blog_assets/evolution_of_llms/71.webp)
-*[Source](https://arxiv.org/pdf/1901.02860)*
+_[Source](https://arxiv.org/pdf/1901.02860)_
 
 The above image is of a traditional model during it's train and evaluation phase. Notice the segments, you will see that Segment 2 [$X_5$ to $X_8$] have no information passed from Segment 1 [$X_1$ to $X_4$]. This leads to two problems, first being we can only use our model withing a limited context window, Outside which we won't be able to run it. The other being of data fragmentation, I.E text data is highly connected and breaking it into segments can break the flow of information (Something present in the first segment which is relevant to the third segment won't be present in it!)
 
@@ -3917,7 +3917,7 @@ To solve this problem, the authors introduced two ideas
 **Segment-level Recurrence**
 
 ![Image of Fixed context window](/assets/blog_assets/evolution_of_llms/72.webp)
-*[Source](https://arxiv.org/pdf/1901.02860)*
+_[Source](https://arxiv.org/pdf/1901.02860)_
 
 In this during the train phase, after a segment is processed, its calculated hidden states are cached and reused as an extended context for the next segment. When the model processes the new segment, it can attend to both its own tokens and the tokens from the previous segment's cache.
 
@@ -3929,12 +3929,12 @@ There is still one minor problem that needs to be addressed. Back then, fixed po
 
 It assigns a unique embedding to each position (e.g., position 1, position 2, etc.). This breaks when we introduce recurrence.
 
-* Segment 1 has tokens at positions `1, 2, 3, 4`
-* Segment 2 also has tokens at positions `1, 2, 3, 4`
+- Segment 1 has tokens at positions `1, 2, 3, 4`
+- Segment 2 also has tokens at positions `1, 2, 3, 4`
 
 When we process Segment 2, the model sees the token at absolute position 5 (the first token of Segment 2) and the token at absolute position 1 (the first token of Segment 1). But both are labeled with the same positional encoding for "position 1". The model has no way to tell them apart, leading to what the paper calls temporal confusion.
 
-And the authors solve it using Relative Positional Encoding. Ok, this part get's kind of tough, so bear with me as I walk you through step by step 
+And the authors solve it using Relative Positional Encoding. Ok, this part get's kind of tough, so bear with me as I walk you through step by step
 
 Step 1: The Math of a Standard Transformer
 
@@ -3978,13 +3978,12 @@ Let's break down the changes:
 2.  **Splitting the Key Matrix**: The key weight matrix $W_k$ is split into $W_{k,E}$ for producing content-based keys and $W_{k,R}$ for producing location-based keys.
 
 3.  **Removing the Query's Position**: The query's absolute position term ($U_i^\top W_q^\top$) is entirely replaced by two trainable parameter vectors, $\mathbf{u}$ and $\mathbf{v}$. These act as global biases.
-    * Term (c) now represents a global bias for the *content* of the key word.
-    * Term (d) now represents a global bias for the *relative distance* to the key word.
+    - Term (c) now represents a global bias for the _content_ of the key word.
+    - Term (d) now represents a global bias for the _relative distance_ to the key word.
 
 With these changes, the attention score no longer depends on where a token is, but only on what it is and how far away it is from other tokens. This elegant solution makes the attention mechanism compatible with the segment-level recurrence that allows Transformer-XL to see beyond a fixed context.
 
-The above is definitely as straight forward as some of the other concepts we have talked about so far, so take your time trying to understand it. 
-
+The above is definitely as straight forward as some of the other concepts we have talked about so far, so take your time trying to understand it.
 
 ### XLNet
 
@@ -4023,59 +4022,39 @@ First we need to understand the pros and cons of AR & AE models as identified by
 **AE Pros & Cons**
 
 Pros:
-* It is bidirectional by nature, so it can understnad information from both direction 
+
+- It is bidirectional by nature, so it can understnad information from both direction
 
 Cons:
-* **Independence Assumption**, during training 15% of the tokens are masked and training is done. But this assumes that the target token is independent of other tokens. For example assume a sentence "New York is a city" if we mask out "New", BERT does not capture the joint dependency of "New York", as that is most likely to occur together.
 
-* **Pretrain-Finetune Discrepancy**, Pre-training is done by masking out tokens. But during fine-tuning no such masked data is encountered. This leads to a mismatch which hampers generalization.
+- **Independence Assumption**, during training 15% of the tokens are masked and training is done. But this assumes that the target token is independent of other tokens. For example assume a sentence "New York is a city" if we mask out "New", BERT does not capture the joint dependency of "New York", as that is most likely to occur together.
+
+- **Pretrain-Finetune Discrepancy**, Pre-training is done by masking out tokens. But during fine-tuning no such masked data is encountered. This leads to a mismatch which hampers generalization.
 
 **AR Pros & Cons**
 
 Pros:
-* Captures the sequential nature of natural language, i.e one word comes after the other. 
+
+- Captures the sequential nature of natural language, i.e one word comes after the other.
 
 Cons:
-* 
 
-"""
-With the capability of modeling bidirectional contexts, denoising autoencoding
-based pretraining like BERT achieves better performance than pretraining approaches based on autoregressive Language Modeling. However, relying on corrupting the input with masks, BERT neglects dependency between the masked positions
-and suffers from a pretrain-finetune discrepancy. In light of these pros and cons, we
-propose XLNet, a generalized autoregressive pretraining method that (1) enables
-learning bidirectional contexts by maximizing the expected likelihood over all
-permutations of the factorization order and (2) overcomes the limitations of BERT
-thanks to its autoregressive formulation. Furthermore, XLNet integrates ideas
-from Transformer-XL, the state-of-the-art autoregressive model, into pretraining.
-Empirically, under comparable experiment settings, XLNet outperforms BERT on
-20 tasks, often by a large margin, including question answering, natural language
-inference, sentiment analysis, and document ranking.1
-.
-"""
+- Can capture information in one direction only
 
 
-"""
-- **For the independence issue:** XLNet uses autoregressive factorization, which naturally models the joint probability using the product rule without independence assumptions.
+To address the cons of BERT it uses an AR model, and to make it bidirectional. The authors introduce a new idea called Permutation Language Modeling objective.
 
-- **For the pretrain-finetune discrepancy:** XLNet doesn't rely on masking or corrupting the input at all. It trains on the original data directly but with different permutations of the factorization order.
+In this instead of training our models in sequential form `1,2,3,4` and so on. It is instead trained on all possible permutations of the sequence. For example `4,2,1,3`/`2,4,3,1`/`1,4,2,3` and many more. Now it is a common source of confusion that the data it self is scrambled. But there is no augmentation done in the data or position encoding side. The embeddings themselves and their positions remain the same.
 
-In their example with "New York is a city" using a permutation order [is, a, city, New, York], XLNet would predict:
-
-1. p(is) → unconditional
-2. p(a | is) → given "is"
-3. p(city | is, a) → given "is" and "a"
-4. p(New | is, a, city) → given "is", "a", and "city"
-5. p(York | New, is, a, city) → given "New", "is", "a", and "city"
-
-This captures the dependency between "New" and "York" while training on uncorrupted sequences.
-"""
+Instead the attention values are masked. Let us understand how.
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/73.webp)
-*[Source](https://arxiv.org/pdf/1906.08237)*
+_[Source](https://arxiv.org/pdf/1906.08237)_
+
+P.S mem here is the cached hidden layer from the previous segment, This is inspired from Transformer XL!
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/74.webp)
-*[Source](https://arxiv.org/pdf/1906.08237)*
-
+_[Source](https://arxiv.org/pdf/1906.08237)_
 
 ### Megatron
 
