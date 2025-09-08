@@ -3898,9 +3898,9 @@ The paper represents a significant step forward in extending the effective conte
 <br/>
 
 **Problem**
-The big problem with transformers were that they could not attend to tokens longer than a fixed window (context length) both during training and inferencing. This paper was an exploration to fix this limted context length problem.
+The big problem with vanilla transformers was their fixed context length. During training and inference, they could only pay attention to a limited chunk of text at a time, like reading a book through a keyhole. Any information outside that small window was completely invisible.
 
-This segmentation also causes fragmantetion in the dataflow, Where previous segment data is not flowed during training. (dw if this sounds complex, the problem statement is meant to be information dense. I will simplify it as we move forward)
+This method of splitting text into rigid segments also caused context fragmentation. Imagine a sentence being cut in half between two segments. The model would struggle to understand the beginning of the second segment because it couldn't see the end of the first one, leading to poor performance and inefficient training.
 
 **Solution**
 
@@ -3910,33 +3910,80 @@ This segmentation also causes fragmantetion in the dataflow, Where previous segm
 ![Image of Fixed context window](/assets/blog_assets/evolution_of_llms/71.webp)
 *[Source](https://arxiv.org/pdf/1901.02860)*
 
-"""
-Transformer-XL (meaning extra long).
-We introduce the notion of recurrence into our
-arXiv:1901.02860v3 [cs.LG] 2 Jun 2019
-deep self-attention network. In particular, instead
-of computing the hidden states from scratch for
-each new segment, we reuse the hidden states obtained in previous segments. The reused hidden
-states serve as memory for the current segment,
-which builds up a recurrent connection between
-the segments. As a result, modeling very longterm dependency becomes possible because information can be propagated through the recurrent connections. Meanwhile, passing information from the previous segment can also resolve
-the problem of context fragmentation. More importantly, we show the necessity of using relative
-positional encodings rather than absolute ones, in
-order to enable state reuse without causing temporal confusion. Hence, as an additional technical contribution, we introduce a simple but more
-effective relative positional encoding formulation
-that generalizes to attention lengths longer than the
-one observed during training.
-Transformer-XL obtained strong resul
-"""
+The above image is of a traditional model during it's train and evaluation phase. Notice the segments, you will see that Segment 2 [$X_5$ to $X_8$] have no information passed from Segment 1 [$X_1$ to $X_4$]. This leads to two problems, first being we can only use our model withing a limited context window, Outside which we won't be able to run it. The other being of data fragmentation, I.E text data is highly connected and breaking it into segments can break the flow of information (Something present in the first segment which is relevant to the third segment won't be present in it!)
 
+To solve this problem, the authors introduced two ideas
 
 **Segment-level Recurrence**
-![Image of Fixed context window](/assets/blog_assets/evolution_of_llms/71.webp)
+
+![Image of Fixed context window](/assets/blog_assets/evolution_of_llms/72.webp)
 *[Source](https://arxiv.org/pdf/1901.02860)*
 
+In this during the train phase, after a segment is processed, its calculated hidden states are cached and reused as an extended context for the next segment. When the model processes the new segment, it can attend to both its own tokens and the tokens from the previous segment's cache.
 
+Crucially, the gradients only flow through the current segment. The cached states are "frozen," acting as a read-only memory. This allows the model to learn from past information without the massive computational cost of backpropagating through the entire sequence, similar in spirit to truncated backpropagation in RNNs.
 
 **Relative Positional Encodings**
+
+There is still one minor problem that needs to be addressed. Back then, fixed positional encoding used to be used in models ([Read this](https://goyalpramod.github.io/blogs/Transformers_laid_out/#sinusoidal-encoding) if you are new to this idea).
+
+It assigns a unique embedding to each position (e.g., position 1, position 2, etc.). This breaks when we introduce recurrence.
+
+* Segment 1 has tokens at positions `1, 2, 3, 4`
+* Segment 2 also has tokens at positions `1, 2, 3, 4`
+
+When we process Segment 2, the model sees the token at absolute position 5 (the first token of Segment 2) and the token at absolute position 1 (the first token of Segment 1). But both are labeled with the same positional encoding for "position 1". The model has no way to tell them apart, leading to what the paper calls temporal confusion.
+
+And the authors solve it using Relative Positional Encoding. Ok, this part get's kind of tough, so bear with me as I walk you through step by step 
+
+Step 1: The Math of a Standard Transformer
+
+In a standard Transformer, the input for a token at a specific position `i` is the sum of its word embedding and its positional embedding:
+
+$$X_i = E_i + U_i$$
+
+Here, $E_i$ is the word embedding (the token's meaning), and $U_i$ is the **absolute positional embedding** (the token's fixed address in the sequence).
+
+The Query and Key vectors are linear transformations of this input:
+
+$$Q_i = (E_i + U_i)W_q$$
+$$K_j = (E_j + U_j)W_k$$
+
+The attention score is the dot product of a specific Query vector $Q_i$ with a specific Key vector $K_j$. If we expand this dot product, we reveal four distinct components that the model uses to calculate attention:
+
+$$
+A_{i,j}^{\text{abs}} = ( (E_i + U_i)W_q )^\top ( (E_j + U_j)W_k )
+$$
+
+$$
+A_{i,j}^{\text{abs}} = \underbrace{E_i^\top W_q^\top W_k E_j}_{\text{(a) content-content}} + \underbrace{E_i^\top W_q^\top W_k U_j}_{\text{(b) content-position}} + \underbrace{U_i^\top W_q^\top W_k E_j}_{\text{(c) position-content}} + \underbrace{U_i^\top W_q^\top W_k U_j}_{\text{(d) position-position}}
+$$
+
+The problem lies in terms (b), (c), and (d), which all rely on the absolute position vectors $U_i$ and $U_j$. This rigid system breaks when we use recurrence, as the model can't distinguish between position `5` in segment one and position `5` in segment two.
+
+Step 2: Rebuilding the Attention Score for Transformer-XL
+
+To solve this, Transformer-XL re-engineers the attention score to be based only on relative distances, removing all absolute positional information. This is done by carefully modifying each of the four terms.
+
+The new formula is:
+
+$$
+A_{i,j}^{\text{rel}} = \underbrace{E_i^\top W_q^\top W_{k,E} E_j}_{\text{(a) content-based addressing}} + \underbrace{E_i^\top W_q^\top W_{k,R} R_{i-j}}_{\text{(b) content-dependent positional bias}} + \underbrace{\mathbf{u}^\top W_{k,E} E_j}_{\text{(c) global content bias}} + \underbrace{\mathbf{v}^\top W_{k,R} R_{i-j}}_{\text{(d) global positional bias}}
+$$
+
+Let's break down the changes:
+
+1.  **Replacing Absolute Positions**: The key's absolute position vector $U_j$ is replaced with a **relative position vector** $R_{i-j}$. This vector encodes the distance between the query `i` and the key `j` (e.g., "3 steps behind").
+
+2.  **Splitting the Key Matrix**: The key weight matrix $W_k$ is split into $W_{k,E}$ for producing content-based keys and $W_{k,R}$ for producing location-based keys.
+
+3.  **Removing the Query's Position**: The query's absolute position term ($U_i^\top W_q^\top$) is entirely replaced by two trainable parameter vectors, $\mathbf{u}$ and $\mathbf{v}$. These act as global biases.
+    * Term (c) now represents a global bias for the *content* of the key word.
+    * Term (d) now represents a global bias for the *relative distance* to the key word.
+
+With these changes, the attention score no longer depends on where a token is, but only on what it is and how far away it is from other tokens. This elegant solution makes the attention mechanism compatible with the segment-level recurrence that allows Transformer-XL to see beyond a fixed context.
+
+The above is definitely as straight forward as some of the other concepts we have talked about so far, so take your time trying to understand it. 
 
 
 ### XLNet
