@@ -4460,6 +4460,7 @@ The objective of this blog (or any other blog I have written for that matter), i
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/53.webp)
 _image taken from the [paper](https://arxiv.org/pdf/1904.10509)_
 
+
 a) Image `a` shows the blocks that the early layers use to generate images. If you look very closely you will see a bunch of white blocks. These are local attention blocks that are used for generation
 
 b) For image `b` you will see that further layers use entire rows and columns to get information
@@ -4469,6 +4470,14 @@ c) As we go deeper we can see that general global information is used to generat
 d) What the authors discovered was that surprisingly as we moved to the very deep layers, The model exhibited high sparsity and positions rarely activated.
 
 So from the above images we are already getting a general sense of the kind of attention mask that is helpful, Obviously we need something local, Something that contains information globally, and something that contains stride of information.
+
+
+![Attention mask img](/assets/blog_assets/evolution_of_llms/82.webp)
+_image taken from the [paper](https://arxiv.org/pdf/1904.10509)_
+
+
+![Attention mask img](/assets/blog_assets/evolution_of_llms/81.webp)
+*Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)*
 
 ##### Factorized self-attention
 
