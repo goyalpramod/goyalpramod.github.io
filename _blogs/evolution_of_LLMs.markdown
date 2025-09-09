@@ -4184,57 +4184,39 @@ The following blogs and articles were insanely helpful, While writing the below 
 
 ##### Naive Parallalism
 
-"""
-Naive Model Parallelism (MP) is where one spreads groups of model layers across multiple GPUs. The mechanism is relatively simple - switch the desired layers .to() the desired devices and now whenever the data goes in and out those layers switch the data to the same device as the layer and leave the rest unmodified.
-
-We refer to it as Vertical MP, because if you remember how most models are drawn, we slice the layers vertically. For example, if the following diagram shows an 8-layer model:
-"""
+Naive Model Prallelism, is well... naive and straightforward. Here you just cut the layers of a large model. And put it in different GPUs sequentially.
 
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/79.webp)
 *Inspired from [here](https://huggingface.co/docs/transformers/v4.15.0/parallelism)*
-"""
-``` 
-===================  ===================
-|  0 | 1 | 2 | 3  |  |  4 | 5 | 6 | 7  |
-===================  ===================
-        gpu0                 gpu1
+
+The implementation is simple as well, you just keep changing the device using `.to()`, But there are a few problems. The first one being, when the data travels from layer 0 upto layer 3. It is pretty fast as they are in the same device, but when it needs to go to layer 4, this introduced a computational overhead. If both the GPUs are not in the same machine, this will make it very slow.
+
+Another problem is, even though we have 2 devices, while the data is being transfered from layer1 to layer3. The other GPUs remain idle. To fix these problems, the idea of pipeline parallelism was introduced.
+
+
+```python
+# Define model portions
+model_part1 = nn.Sequential(layer1, layer2).to('cuda:0')
+model_part2 = nn.Sequential(layer3, layer4).to('cuda:1')
+
+# Forward pass
+def forward(x):
+    x = model_part1(x)
+    x = x.to('cuda:1')
+    return model_part2(x)
 ```
-"""
+*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
 
-"""
-Now while data travels from layer 0 to 1, 1 to 2 and 2 to 3 this is just the normal model. But when data needs to pass from layer 3 to layer 4 it needs to travel from GPU0 to GPU1 which introduces a communication overhead. If the participating GPUs are on the same compute node (e.g. same physical machine) this copying is pretty fast, but if the GPUs are located on different compute nodes (e.g. multiple machines) the communication overhead could be significantly larger.
-
-Then layers 4 to 5 to 6 to 7 are as a normal model would have and when the 7th layer completes we often need to send the data back to layer 0 where the labels are (or alternatively send the labels to the last layer). Now the loss can be computed and the optimizer can do its work.
-
-Problems:
-
-the main deficiency and why this one is called “naive” MP, is that all but one GPU is idle at any given moment. So if 4 GPUs are used, it’s almost identical to quadrupling the amount of memory of a single GPU, and ignoring the rest of the hardware. Plus there is the overhead of copying the data between devices. So 4x 6GB cards will be able to accommodate the same size as 1x 24GB card using naive MP, except the latter will complete the training faster, since it doesn’t have the data copying overhead. But, say, if you have 40GB cards and need to fit a 45GB model you can with 4x 40GB cards (but barely because of the gradient and optimizer states)
-shared embeddings may need to get copied back and forth between GPUs.
-"""
 
 ##### Pipeline Parallelism
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/76.webp)
 *[Source](https://research.google/blog/introducing-gpipe-an-open-source-library-for-efficiently-training-large-scale-neural-network-models/)*
 
-"""
+Piepline Parallelism is very similar to Naive MP, We the models split in this too. But to solve the idling problem. The data is sent in mini batches. So each GPU has access to some part of the data and they work somewhat concurrently. 
 
-Pipeline Parallelism (PP) is almost identical to a naive MP, but it solves the GPU idling problem, by chunking the incoming batch into micro-batches and artificially creating a pipeline, which allows different GPUs to concurrently participate in the computation process.
-"""
-
-"""
-It’s easy to see from the bottom diagram how PP has less dead zones, where GPUs are idle. The idle parts are referred to as the “bubble”.
-
-Both parts of the diagram show a parallelism that is of degree 4. That is 4 GPUs are participating in the pipeline. So there is the forward path of 4 pipe stages F0, F1, F2 and F3 and then the return reverse order backward path of B3, B2, B1 and B0.
-
-PP introduces a new hyper-parameter to tune and it’s chunks which defines how many chunks of data are sent in a sequence through the same pipe stage. For example, in the bottomw diagram you can see that chunks=4. GPU0 performs the same forward path on chunk 0, 1, 2 and 3 (F0,0, F0,1, F0,2, F0,3) and then it waits for other GPUs to do their work and only when their work is starting to be complete, GPU0 starts to work again doing the backward path for chunks 3, 2, 1 and 0 (B0,3, B0,2, B0,1, B0,0).
-"""
-
-"""
-Split your model into stages on different devices. Data flows through the pipeline, with multiple batches processed simultaneously.
-
-This is the solution to the imbalancing problem for plain model parallel. A nice explanation of model parallel + pipeline parallel can be found here. Pipeline parallel balances computation and communication and makes model parallelism more efficient. As a drawback, it requires a potentially complex scheduling: you have to deal with splitting the input across GPUs and schedule the pipeline. If you do this the wrong way, you might cause “bubble” periods of idle time.
+There is an obvious bubble present though, that happens when one GPU is waiting for the gradients to do backprop. In practice, an ideal size of batch along with numbers of GPU is calculated so when one forward pass is completed, mini batch of calculated results keep coming back.
 
 ```python
 # Define stages
@@ -4251,18 +4233,14 @@ def pipeline_forward(batches):
         prev_x = x
     yield stage2(prev_x)
 ```
-
-"""
+*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
 
 ##### Data Parallelism
 
-"""
-Split your dataset across multiple GPUs, each with a full model copy. Synchronize gradients after each pass.
-"""
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/80.webp)
+*[Source](https://distributedlexicon.com/)*
 
-"""
-Data parallelism is simple to implement, and scales well with number of devices for smaller model. It is especially effective for large datasets. On the other hand, it introduces a lot of communication overhead for gradient synchronization. Additionally, because a full copy of the model is stored on each device, it also causes memory redundancy.
-"""
+This is another simple method of parallelism. Each device has a full copy of the model, and the data is split between them. And at the end the gradients are synchronized together.
 
 ```python
 # On each device
@@ -4276,52 +4254,78 @@ for batch in dataloader:
 
     optimizer.step()
 ```
-
-##### Model Parallelism
-
-"""
-
-Divide your model across devices, each processes the same input at different stages.
-
-Model parallelism is perfect for handling models too large for a single device. In doing so, it also reduces the memory required for a single device. Unfortunately, it might be complex to implement efficiently, because of potential load imbalance: it usually needs pipelining to avoid GPUs from remaining idle.
-
-Pseudocode:
-
-```python
-# Define model portions
-model_part1 = nn.Sequential(layer1, layer2).to('cuda:0')
-model_part2 = nn.Sequential(layer3, layer4).to('cuda:1')
-
-# Forward pass
-def forward(x):
-    x = model_part1(x)
-    x = x.to('cuda:1')
-    return model_part2(x)
-```
-
-"""
-
+*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
 
 ##### Tensor Parallelism
 
-Read page 4 for implementation detail, Then add here
 
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/75.webp)
 [source](https://huggingface.co/docs/transformers/v4.19.4/en/parallelism)
 
 
-![Image of Megatron](/assets/blog_assets/evolution_of_llms/78.webp)
-![Image of Megatron](/assets/blog_assets/evolution_of_llms/77.webp)
-
-
 This is the kind of parallelism first introuduce by tehe eegatron paper 
 
 This is a great read on the topic as well [github comment](https://github.com/huggingface/transformers/issues/10321#issuecomment-783543530)
-"""
-Partition individual tensors (weights, activations) across devices. Each computes a portion of tensor operations.
 
-This is somewhat on another level of abstraction wrt to Data and Model parallel, as tensor can represent anything in a deep learning pipeline. In other words, tensor parallel includes model and data parallel.
+In this you partition the individual tensors (weights, activations) across devices. And each device computes a portion of the tensor.
+
+This was beautifully explained by the paper, Image you have to do an operation (as shown in the above image). We can simply break the matrix and compute it in different devices and put it back together.
+
+"""
+#### Tensor Parallelism
+
+[cite_start]This is the primary innovation detailed in the Megatron-LM paper[cite: 1477]. Instead of splitting entire layers across GPUs (inter-layer), Tensor Parallelism splits the individual, massive matrices (the tensors) *inside* each layer (intra-layer).
+
+[cite_start]Let's look at how this works for a standard Transformer block, which consists of a Multi-Layer Perceptron (MLP) and a self-attention block[cite: 1563].
+
+**Parallelizing the MLP Block**
+
+An MLP block contains two linear layers. [cite_start]The first is a GEMM (GEneral Matrix Multiply) followed by a GeLU nonlinearity [cite: 1564-1565]:
+
+$$
+Y = \text{GeLU}(XA)
+$$
+
+To parallelize this across two GPUs, the authors split the weight matrix $A$ column-wise: $A = [A_1, A_2]$. The input $X$ is fed to both GPUs, and each computes its part of the operation:
+
+$$
+[Y_1, Y_2] = [\text{GeLU}(XA_1), \text{GeLU}(XA_2)]
+$$
+
+[cite_start]This is efficient because the GeLU activation can be applied independently on each GPU without any communication [cite: 1573-1576].
+
+!(https://i.imgur.com/your-image-url.png)
+*[Source: megatron_lm.pdf, Figure 3a]*
+
+The second linear layer in the MLP block involves another GEMM, $Z = YB$. [cite_start]To make this work, the second weight matrix $B$ is split row-wise[cite: 1576]:
+
+$$
+B = \begin{bmatrix} B_1 \\ B_2 \end{bmatrix}
+$$
+
+Each GPU then computes its part, and the results are summed up using an `all-reduce` operation across the GPUs. [cite_start]This `all-reduce` is the only communication needed in the forward pass for the MLP block [cite: 1577-1578].
+
+**Parallelizing the Self-Attention Block**
+
+The same principle is applied to the self-attention mechanism. [cite_start]The large weight matrices for Query, Key, and Value ($W_Q, W_K, W_V$) are split column-wise across the GPUs, partitioned by the number of attention heads[cite: 1607]. [cite_start]Each GPU can compute its share of attention heads independently [cite: 1607-1608].
+
+!(https://i.imgur.com/your-image-url.png)
+*[Source: megatron_lm.pdf, Figure 3b]*
+
+[cite_start]Just like in the MLP block, the output linear layer is split row-wise, and a single `all-reduce` operation synchronizes the results at the end[cite: 1609].
+
+[cite_start]The key takeaway is that this method cleverly arranges the matrix splits so that a full Transformer layer only requires **two `all-reduce` operations** in the forward pass (one for the MLP, one for attention) and two in the backward pass[cite: 1611]. This minimizes communication overhead and leads to excellent scaling efficiency.
+"""
+
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/78.webp)
+
+The above image shows how $GeLU(XA)$ will remain the same even if we break $A$ into $[A_1, A_2]$. And the second image is just the attention mech, but as it is inherently parallel. This does not pose a big problem.
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/77.webp)
+
+The above image shows how all reduce is applied to the tensor parallel GPUs.
 
 ```python
 # Simplified tensor parallel linear layer
@@ -4334,9 +4338,7 @@ class TPLinear(nn.Module):
         local_out = F.linear(x, self.weight)Z
         return all_gather(local_out)
 ```
-
-"""
-
+*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
 
 ##### 2d parallalism & 3d parallalism 
 
