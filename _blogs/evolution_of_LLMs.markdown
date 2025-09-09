@@ -4475,9 +4475,26 @@ So from the above images we are already getting a general sense of the kind of a
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/82.webp)
 _image taken from the [paper](https://arxiv.org/pdf/1904.10509)_
 
+This seems to have become a theme of the blog, Me affirming that the above image does indeed look extremely convoluted and dauting. But if we go through it step by step. It is rather simple. So let us do that.
+
+`a` is our plain old simple masked attention. Now every section (a,b,c) has two images, a top one and a bottom one. It will make our lives simpler if we tell the difference right away now instead of later. The top one represents how any given image will generate a pixel (The dark blue box) using all the previous tokens (The light blue boxes), Whereas the bottom image represents more of a hollistic view where the rows represent the tokens being generated and the columns represent the values we are paying attention to.
+
+If we look at `b` it is quite simple as well, here instead of paying attention to all the blocks that appeared before any given $i_{th}$ token, we create a window of tokens that appear before it. (Remember this is what we learned previously, that the earlier layers focus more on the local tokens), The strided parts are trying to incorporate the global knowledge without explicitly going through all the previous tokens 
+
+[TOKENS DOES NOT FEEL LIKE THE RIGHT WORD, FIX IT LATER]
+
+"""
+OpenAI suggested two different sparse patterns where, in the different heads, the queries attend the keys differently. The first pattern is the strided pattern. One head focuses on a local window of nearby tokens by having the i-th query only attend the keys in [i-w, i], where w is the window size. For example, if w = 64, it means we only select the keys [i - 64, i - 63, …, i - 1, i]. The other heads focus on more global token interactions by having i-th query attending every c key. c is the stride and can be different for each head. For example, if c = 8, then we would only select the keys [0, …, i - 24,i - 16, i - 8, i].
+"""
+
+The above method works pretty well for images (Local + stride), But it fails when it comes to text. The reason being that text is more sequential and [IDK ACTUALLY, READ ABOUT IT].
+To fix that problem, the authors introduced `c`. Well it is not really simple, so we will have to dig deeper.
+
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/81.webp)
 *Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)*
+
+The blocks can be 
 
 ##### Factorized self-attention
 
