@@ -4039,8 +4039,7 @@ Pros:
 
 Cons:
 
--  It is unidirectional, meaning it can only process context from one direction (either left-to-right or right-to-left), which is a disadvantage for many downstream tasks. For example classification
-
+- It is unidirectional, meaning it can only process context from one direction (either left-to-right or right-to-left), which is a disadvantage for many downstream tasks. For example classification
 
 To address the cons of BERT it uses an AR model, and to make it bidirectional. The authors introduce a new idea called **Permutation Language Modeling** objective.
 
@@ -4057,9 +4056,9 @@ To understand how masking achieves this, let's look at the image below, which sh
 
 This looks complex, but the logic is simple: a token can only see other tokens that come earlier in the random permutation order.
 
-* In panel (a), the order is 3 → 2 → 4 → 1. Since x₃ is the first token to be predicted, its context is empty.
+- In panel (a), the order is 3 → 2 → 4 → 1. Since x₃ is the first token to be predicted, its context is empty.
 
-* In panel (b), the order is 2 → 4 → 3 → 1. Here, x₃ is the third token to be predicted, so it can see the context from the first two predicted tokens, x₂ and x₄.
+- In panel (b), the order is 2 → 4 → 3 → 1. Here, x₃ is the third token to be predicted, so it can see the context from the first two predicted tokens, x₂ and x₄.
 
 By doing this over and over with random orders, the model learns that any token can be surrounded by any other token, forcing it to learn a rich, bidirectional understanding of the language.
 
@@ -4074,16 +4073,16 @@ The permutation objective creates a challenge: To predict a token at a target po
 To solve this, XLNet introduces a Two-Stream Self-Attention mechanism.
 
 ontent Stream (h): The Memory
-This is the standard Transformer representation. It encodes both the content and position of a token. Its job is to serve as the rich context, or "memory," that other tokens can attend to. In the image, this is what the nodes labeled 
+This is the standard Transformer representation. It encodes both the content and position of a token. Its job is to serve as the rich context, or "memory," that other tokens can attend to. In the image, this is what the nodes labeled
 
 h represent.
 
 Query Stream (g): The Predictor
-This is a special representation that only has access to the target 
+This is a special representation that only has access to the target
 
-position, not its content. Its entire purpose is to gather information from the 
+position, not its content. Its entire purpose is to gather information from the
 
-Content Stream of its context tokens to make a prediction for the target position. In the image, this is what the nodes labeled 
+Content Stream of its context tokens to make a prediction for the target position. In the image, this is what the nodes labeled
 
 g represent.
 
@@ -4151,49 +4150,46 @@ Let us start with the idea of megatron training and we can build on top of that
 
 Now to be complete, We also need to talk about how we can calculate the amount of VRAM required before we start with distributed training. Lest you get too many or too less GPU (Compute is extremely expensive, so we gotta be mindful of what we have)
 
-These are the rough GPU memory requirements: 
+These are the rough GPU memory requirements:
 
-* FP16 parameter ~ 2 bytes
-* FP16 gradient ~ 2 bytes
-* FP32 optimizer state ~ 8 bytes based on the Adam optimizers
-* FP32 copy of parameter ~ 4 bytes (needed for the optimizer apply (OA) operation)
-* FP32 copy of gradient ~ 4 bytes (needed for the OA operation)
+- FP16 parameter ~ 2 bytes
+- FP16 gradient ~ 2 bytes
+- FP32 optimizer state ~ 8 bytes based on the Adam optimizers
+- FP32 copy of parameter ~ 4 bytes (needed for the optimizer apply (OA) operation)
+- FP32 copy of gradient ~ 4 bytes (needed for the OA operation)
 
 > Even for a relatively small DL model with 10 billion parameters, it can require at least 200GB of memory, which is much larger than the typical GPU memory (for example, NVIDIA A100 with 40GB/80GB memory and V100 with 16/32 GB) available on a single GPU. Note that on top of the memory requirements for model and optimizer states, there are other memory consumers such as activations generated in the forward pass. The memory required can be a lot greater than 200GB.
-(Taken from sagemaker AWS documentation)
+> (Taken from sagemaker AWS documentation)
 
 If you want to understand the memory better I will recommend the following blogs:
 
-* [A Gentle Introduction to 8-bit Matrix Multiplication for transformers](https://huggingface.co/blog/hf-bitsandbytes-integration)
-* [BFloat16: The secret to high performance on Cloud TPUs](https://cloud.google.com/blog/products/ai-machine-learning/bfloat16-the-secret-to-high-performance-on-cloud-tpus)
+- [A Gentle Introduction to 8-bit Matrix Multiplication for transformers](https://huggingface.co/blog/hf-bitsandbytes-integration)
+- [BFloat16: The secret to high performance on Cloud TPUs](https://cloud.google.com/blog/products/ai-machine-learning/bfloat16-the-secret-to-high-performance-on-cloud-tpus)
 
 Some Misc blogs I found while researching the GPU memory problem:
 
-* HF has a [good estimator](https://huggingface.co/docs/accelerate/en/usage_guides/model_size_estimator).
-* [Calculate it yourself](https://swsmith.cc/posts/gpu-memory.html)! 
-* [How to build you own machine](https://huggingface.co/docs/transformers/en/perf_hardware).
-* [What hardware you should be getting for Deep Learning](https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/#RTX_4090s_and_Melting_Power_Connectors_How_to_Prevent_Problems).
-
+- HF has a [good estimator](https://huggingface.co/docs/accelerate/en/usage_guides/model_size_estimator).
+- [Calculate it yourself](https://swsmith.cc/posts/gpu-memory.html)!
+- [How to build you own machine](https://huggingface.co/docs/transformers/en/perf_hardware).
+- [What hardware you should be getting for Deep Learning](https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/#RTX_4090s_and_Melting_Power_Connectors_How_to_Prevent_Problems).
 
 The following blogs and articles were insanely helpful, While writing the below section:
 
-* This [blog](https://alessiodevoto.github.io/parallelism/) gave a great TL;DR with pseudocode (The code in this section has been taken/inspired from here)
-* Great overview [documentation](https://huggingface.co/docs/transformers/v4.15.0/parallelism) by HF.
-* [AWS Documentation](https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html)had some nice animations with practical code that helped me understand stuff.
-* This [blog](https://distributedlexicon.com/) acted as an awesome glossary and gave good summaries of the ideas.
+- This [blog](https://alessiodevoto.github.io/parallelism/) gave a great TL;DR with pseudocode (The code in this section has been taken/inspired from here)
+- Great overview [documentation](https://huggingface.co/docs/transformers/v4.15.0/parallelism) by HF.
+- [AWS Documentation](https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html)had some nice animations with practical code that helped me understand stuff.
+- This [blog](https://distributedlexicon.com/) acted as an awesome glossary and gave good summaries of the ideas.
 
 ##### Naive Parallalism
 
 Naive Model Prallelism, is well... naive and straightforward. Here you just cut the layers of a large model. And put it in different GPUs sequentially.
 
-
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/79.webp)
-*Inspired from [here](https://huggingface.co/docs/transformers/v4.15.0/parallelism)*
+_Inspired from [here](https://huggingface.co/docs/transformers/v4.15.0/parallelism)_
 
 The implementation is simple as well, you just keep changing the device using `.to()`, But there are a few problems. The first one being, when the data travels from layer 0 upto layer 3. It is pretty fast as they are in the same device, but when it needs to go to layer 4, this introduced a computational overhead. If both the GPUs are not in the same machine, this will make it very slow.
 
 Another problem is, even though we have 2 devices, while the data is being transfered from layer1 to layer3. The other GPUs remain idle. To fix these problems, the idea of pipeline parallelism was introduced.
-
 
 ```python
 # Define model portions
@@ -4206,15 +4202,15 @@ def forward(x):
     x = x.to('cuda:1')
     return model_part2(x)
 ```
-*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
 
+_Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 
 ##### Pipeline Parallelism
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/76.webp)
-*[Source](https://research.google/blog/introducing-gpipe-an-open-source-library-for-efficiently-training-large-scale-neural-network-models/)*
+_[Source](https://research.google/blog/introducing-gpipe-an-open-source-library-for-efficiently-training-large-scale-neural-network-models/)_
 
-Piepline Parallelism is very similar to Naive MP, We the models split in this too. But to solve the idling problem. The data is sent in mini batches. So each GPU has access to some part of the data and they work somewhat concurrently. 
+Piepline Parallelism is very similar to Naive MP, We the models split in this too. But to solve the idling problem. The data is sent in mini batches. So each GPU has access to some part of the data and they work somewhat concurrently.
 
 There is an obvious bubble present though, that happens when one GPU is waiting for the gradients to do backprop. In practice, an ideal size of batch along with numbers of GPU is calculated so when one forward pass is completed, mini batch of calculated results keep coming back.
 
@@ -4233,12 +4229,13 @@ def pipeline_forward(batches):
         prev_x = x
     yield stage2(prev_x)
 ```
-*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
+
+_Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 
 ##### Data Parallelism
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/80.webp)
-*[Source](https://distributedlexicon.com/)*
+_[Source](https://distributedlexicon.com/)_
 
 This is another simple method of parallelism. Each device has a full copy of the model, and the data is split between them. And at the end the gradients are synchronized together.
 
@@ -4254,17 +4251,15 @@ for batch in dataloader:
 
     optimizer.step()
 ```
-*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
+
+_Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 
 ##### Tensor Parallelism
-
-
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/75.webp)
 [source](https://huggingface.co/docs/transformers/v4.19.4/en/parallelism)
 
-
-This is the kind of parallelism first introuduce by tehe eegatron paper 
+This is the kind of parallelism first introuduce by tehe eegatron paper
 
 This is a great read on the topic as well [github comment](https://github.com/huggingface/transformers/issues/10321#issuecomment-783543530)
 
@@ -4273,9 +4268,10 @@ In this you partition the individual tensors (weights, activations) across devic
 This was beautifully explained by the paper, Image you have to do an operation (as shown in the above image). We can simply break the matrix and compute it in different devices and put it back together.
 
 """
+
 #### Tensor Parallelism
 
-[cite_start]This is the primary innovation detailed in the Megatron-LM paper[cite: 1477]. Instead of splitting entire layers across GPUs (inter-layer), Tensor Parallelism splits the individual, massive matrices (the tensors) *inside* each layer (intra-layer).
+[cite_start]This is the primary innovation detailed in the Megatron-LM paper[cite: 1477]. Instead of splitting entire layers across GPUs (inter-layer), Tensor Parallelism splits the individual, massive matrices (the tensors) _inside_ each layer (intra-layer).
 
 [cite_start]Let's look at how this works for a standard Transformer block, which consists of a Multi-Layer Perceptron (MLP) and a self-attention block[cite: 1563].
 
@@ -4296,7 +4292,7 @@ $$
 [cite_start]This is efficient because the GeLU activation can be applied independently on each GPU without any communication [cite: 1573-1576].
 
 !(https://i.imgur.com/your-image-url.png)
-*[Source: megatron_lm.pdf, Figure 3a]*
+_[Source: megatron_lm.pdf, Figure 3a]_
 
 The second linear layer in the MLP block involves another GEMM, $Z = YB$. [cite_start]To make this work, the second weight matrix $B$ is split row-wise[cite: 1576]:
 
@@ -4311,13 +4307,12 @@ Each GPU then computes its part, and the results are summed up using an `all-red
 The same principle is applied to the self-attention mechanism. [cite_start]The large weight matrices for Query, Key, and Value ($W_Q, W_K, W_V$) are split column-wise across the GPUs, partitioned by the number of attention heads[cite: 1607]. [cite_start]Each GPU can compute its share of attention heads independently [cite: 1607-1608].
 
 !(https://i.imgur.com/your-image-url.png)
-*[Source: megatron_lm.pdf, Figure 3b]*
+_[Source: megatron_lm.pdf, Figure 3b]_
 
 [cite_start]Just like in the MLP block, the output linear layer is split row-wise, and a single `all-reduce` operation synchronizes the results at the end[cite: 1609].
 
 [cite_start]The key takeaway is that this method cleverly arranges the matrix splits so that a full Transformer layer only requires **two `all-reduce` operations** in the forward pass (one for the MLP, one for attention) and two in the backward pass[cite: 1611]. This minimizes communication overhead and leads to excellent scaling efficiency.
 """
-
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/78.webp)
 
@@ -4338,9 +4333,10 @@ class TPLinear(nn.Module):
         local_out = F.linear(x, self.weight)Z
         return all_gather(local_out)
 ```
-*Code taken from [here](https://alessiodevoto.github.io/parallelism/)*
 
-##### 2d parallalism & 3d parallalism 
+_Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
+
+##### 2d parallalism & 3d parallalism
 
 I mentioned it here to keep you aware of these ideas, we will discuss in depth about them later on. But for now a simple deifition is enough.
 
@@ -4353,8 +4349,8 @@ For a deeper dive into how to implement each and use them in your application, c
 
 Additionally I will recommend checking these two phenomenol blogs by an engineer at Anthropic.
 
-* [Blog 1: Pipeline Parallel Training](https://siboehm.com/articles/22/pipeline-parallel-training)
-* [Blog 2: Data Parallel Training](https://siboehm.com/articles/22/data-parallel-training)
+- [Blog 1: Pipeline Parallel Training](https://siboehm.com/articles/22/pipeline-parallel-training)
+- [Blog 2: Data Parallel Training](https://siboehm.com/articles/22/data-parallel-training)
 
 The code behind [Megatron-LM](https://github.com/NVIDIA/Megatron-LM)
 
@@ -4385,35 +4381,21 @@ The authors demonstrate that Sparse Transformers can effectively model sequences
 </details>
 <br/>
 
-"""
-However, the memory and computational requirements of
-such networks grows quadratically with sequence length,
-which excludes their use on long sequences.
-The main contribution of this work is to introduce several
-sparse factorizations of the attention matrix, which scale
-as O(n
-√p n) with the sequence length without sacrificing
-performance. These work by separating the full attention
-computation into several faster attention operations which,
-when combined, can approximate the dense attention operation. We use this to apply self-attention to sequences of
-unprecedented length.
-Additionally, we introduce several other changes to the
-Transformer, including:
-• A restructured residual block and weight initialization
-to improve training of very deep networks
-• A set of sparse attention kernels which efficiently compute subsets of the attention matrix
-• Recomputation of attention weights during the backwards pass to reduce memory usage
-We empirically validate that models augmented in this manner can achieve state-of-the-art compression and generation
-of natural language, raw audio, and natural images. The
-simplicity of the architecture leads us to believe it may be
-useful for many problems of interest.
+**Problem**
 
-"""
+Transformers are awesome and we all love them (otherwise you wouldn't be reading such a HUGE blog on the topic). But they face one big issue (well there are many, but we will talk about them later), namely that the attention calculation is quadratic, which is impractical for long training
 
-https://llmmodels.org/blog/sparse-attention-in-transformers-step-by-step-implementation/
-https://reinforcedknowledge.com/sparse-transformers/
-https://lilianweng.github.io/posts/2018-06-24-attention/
-https://openai.com/index/sparse-transformer/
+**Solution**
+
+The authors introduce sparse factorization methods to the attention block, to bring it down to $O(N\sqrt{p}N)$. They additionally introduce some fast kernels (CUDA code) and recomputation method to reduce memory use (Gradient checkpointing)
+
+The following blogs helped me immensely while writing this section out:
+
+- [Questioning the authors](https://reinforcedknowledge.com/sparse-transformers/)
+- [Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)
+- Original [blog](https://openai.com/index/sparse-transformer/) by OpenAi
+
+This would haeve been an [amazing resource](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers) but it's blocked by a paywall. But the available free content is still awesome.
 
 If you have read this far, I am going to assume you have a fair bit of knowledge about computer science. And one of the earliest ideas talked about in CS101 classes is the idea of Big O notation. So let us calculate the Big O of Self-Attention.
 
@@ -4421,10 +4403,9 @@ The self-attention mechanism can be expressed as:
 
 $$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-"""
 Let's break down the computational complexity step by step:
 
-## Step 1: Computing $QK^T$
+Computing $QK^T$
 
 - $Q$ has dimensions $[N \times d_k]$ (N sequence positions, $d_k$ key dimension)
 - $K^T$ has dimensions $[d_k \times N]$
@@ -4434,13 +4415,13 @@ Let's break down the computational complexity step by step:
 
 Since $d_k$ is typically treated as a constant (independent of sequence length), this simplifies to **$O(N^2)$**.
 
-## Step 2: Scaling by $\sqrt{d_k}$
+Scaling by $\sqrt{d_k}$
 
 Dividing each element of the $[N \times N]$ matrix by $\sqrt{d_k}$ is an element-wise operation.
 
 **Complexity**: $O(N^2)$
 
-## Step 3: Softmax Operation
+Softmax Operation
 
 The softmax is applied row-wise to the $[N \times N]$ matrix. For each of the $N$ rows, we:
 
@@ -4448,9 +4429,9 @@ The softmax is applied row-wise to the $[N \times N]$ matrix. For each of the $N
 - Sum all exponentials in the row: $O(N)$
 - Normalize each element: $O(N)$
 
-**Complexity**: $O(N \times N) = O(N^2)$
+$O(N \times N) = O(N^2)$
 
-## Step 4: Multiplying with V
+Multiplying with V
 
 - Attention weights: $[N \times N]$
 - $V$ matrix: $[N \times d_v]$
@@ -4460,71 +4441,34 @@ The softmax is applied row-wise to the $[N \times N]$ matrix. For each of the $N
 
 Again, treating $d_v$ as a constant, this is **$O(N^2)$**.
 
-## Overall Complexity
+Overall Complexity
 
 All steps are $O(N^2)$, so the overall complexity of self-attention is:
 
 $$O(N^2)$$
 
-## Why Not $O(N^3)$?
-
-The key insight is that we're not performing $N$ separate $N \times N$ matrix multiplications. Instead:
-
-1. We compute **one** $N \times N$ attention matrix ($QK^T$)
-2. We then multiply this $N \times N$ matrix with the $N \times d_v$ values matrix
-
-The quadratic complexity arises because each token must attend to every other token in the sequence, creating the $N \times N$ attention pattern that scales quadratically with sequence length.
-
-This $O(N^2)$ scaling is precisely why transformers struggle with very long sequences and why much research focuses on developing more efficient attention mechanisms.
-"""
-
 And as we all know $O(N^2)$ is fairly expensive computationally, That is where Sparse Attention comes in. This reduces our attention calculation to $O(N\sqrt{N})$ (With a tradeoff in perfomance of course).
 
-"""
-
-Even computing a single attention matrix, however, can become impractical for very large inputs. We instead use sparse attention patterns, where each output position only computes weightings from a subset of input positions. When the subset is small relative to the full set of inputs (say,
-N
-N
-​
-​ elements instead of
-
-N
-N elements), the resulting attention computation becomes tractable even for very long sequences, with an algorithmic complexity of
-O
-(
-N
-N
-)
-O(N
-N
-​
-) instead of
-O
-(
-N
-2
-)
-O(N
-2
-).
-"""
-
-https://github.com/openai/sparse_attention
-
-There are 3 types of sparse attention:
+There are 3 types of sparse attention introduced by the authors:
 
 - Local
-- Global
-- Random
+- Strided
+- Fixed
 
 The objective of this blog (or any other blog I have written for that matter), is to get you to believe how you could have come up with the idea on your own. So let us first begin by understanding the rationale of the researchers
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/53.webp)
 _image taken from the [paper](https://arxiv.org/pdf/1904.10509)_
 
-a)
+a) Image `a` shows the blocks that the early layers use to generate images. If you look very closely you will see a bunch of white blocks. These are local attention blocks that are used for generation
 
-https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers -> Good images explaining sparse attention well
+b) For image `b` you will see that further layers use entire rows and columns to get information
+
+c) As we go deeper we can see that general global information is used to generate images
+
+d) What the authors discovered was that surprisingly as we moved to the very deep layers, The model exhibited high sparsity and positions rarely activated.
+
+So from the above images we are already getting a general sense of the kind of attention mask that is helpful, Obviously we need something local, Something that contains information globally, and something that contains stride of information.
 
 ##### Factorized self-attention
 
@@ -4543,6 +4487,8 @@ to improve training of very deep networks
 • A set of sparse attention kernels which efficiently compute subsets of the attention matrix
 • Recomputation of attention weights during the backwards pass to reduce memory usage
 """
+
+If you wish to checkout the work done by OpenAI you can do so by going [here](https://github.com/openai/sparse_attention).
 
 ## 2020: The Scale Revolution
 
