@@ -4023,13 +4023,13 @@ First we need to understand the pros and cons of AR & AE models as identified by
 
 Pros:
 
-- It is bidirectional by nature, so it can understnad information from both direction
+- It is bidirectional by nature, so it can understand information from both direction
 
 Cons:
 
-- **Independence Assumption**, during training 15% of the tokens are masked and training is done. But this assumes that the target token is independent of other tokens. For example assume a sentence "New York is a city" if we mask out "New", BERT does not capture the joint dependency of "New York", as that is most likely to occur together.
+- **Independence Assumption**: BERT assumes all masked tokens are predicted independently of each other. For the phrase "New York," if both words are masked, BERT doesn't use its prediction for "New" to help it predict "York".
 
-- **Pretrain-Finetune Discrepancy**, Pre-training is done by masking out tokens. But during fine-tuning no such masked data is encountered. This leads to a mismatch which hampers generalization.
+- **Pretrain-Finetune Discrepancy**: The artificial `[MASK]` symbol used during pre-training is absent during fine-tuning, creating a mismatch that can affect performance.
 
 **AR Pros & Cons**
 
@@ -4039,22 +4039,56 @@ Pros:
 
 Cons:
 
-- Can capture information in one direction only
+-  It is unidirectional, meaning it can only process context from one direction (either left-to-right or right-to-left), which is a disadvantage for many downstream tasks. For example classification
 
 
-To address the cons of BERT it uses an AR model, and to make it bidirectional. The authors introduce a new idea called Permutation Language Modeling objective.
+To address the cons of BERT it uses an AR model, and to make it bidirectional. The authors introduce a new idea called **Permutation Language Modeling** objective.
 
 In this instead of training our models in sequential form `1,2,3,4` and so on. It is instead trained on all possible permutations of the sequence. For example `4,2,1,3`/`2,4,3,1`/`1,4,2,3` and many more. Now it is a common source of confusion that the data it self is scrambled. But there is no augmentation done in the data or position encoding side. The embeddings themselves and their positions remain the same.
 
 Instead the attention values are masked. Let us understand how.
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/73.webp)
-_[Source](https://arxiv.org/pdf/1906.08237)_
+_Modified from [source](https://arxiv.org/pdf/1906.08237)_
 
-P.S mem here is the cached hidden layer from the previous segment, This is inspired from Transformer XL!
+This looks extremely convoluted, I know!! But let's go through it one by one.
+
+To understand how masking achieves this, let's look at the image below, which shows how the model predicts the token at position 3 (x₃) under different factorization (prediction) orders.
+
+This looks complex, but the logic is simple: a token can only see other tokens that come earlier in the random permutation order.
+
+* In panel (a), the order is 3 → 2 → 4 → 1. Since x₃ is the first token to be predicted, its context is empty.
+
+* In panel (b), the order is 2 → 4 → 3 → 1. Here, x₃ is the third token to be predicted, so it can see the context from the first two predicted tokens, x₂ and x₄.
+
+By doing this over and over with random orders, the model learns that any token can be surrounded by any other token, forcing it to learn a rich, bidirectional understanding of the language.
+
+P.S. mem here is the cached hidden state from the previous segment, an idea inspired by Transformer-XL
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/74.webp)
 _[Source](https://arxiv.org/pdf/1906.08237)_
+
+"""
+The permutation objective creates a challenge: To predict a token at a target position, the model needs to know the position, but it cannot know the content of the token at that position (otherwise, it would just copy it). A standard Transformer can't do this, as its hidden state at any position always contains both content and position information.
+
+To solve this, XLNet introduces a Two-Stream Self-Attention mechanism.
+
+ontent Stream (h): The Memory
+This is the standard Transformer representation. It encodes both the content and position of a token. Its job is to serve as the rich context, or "memory," that other tokens can attend to. In the image, this is what the nodes labeled 
+
+h represent.
+
+Query Stream (g): The Predictor
+This is a special representation that only has access to the target 
+
+position, not its content. Its entire purpose is to gather information from the 
+
+Content Stream of its context tokens to make a prediction for the target position. In the image, this is what the nodes labeled 
+
+g represent.
+
+In simple terms, for each token being predicted, the Query Stream (g) asks the question, and the Content Stream (h) of the other tokens provides the answer. At the final layer, the output of the Query Stream is used to predict the word. During fine-tuning, the query stream is discarded, and we use the powerful, bidirectionally-trained Content Stream for downstream tasks.
+"""
 
 ### Megatron
 
@@ -4106,18 +4140,7 @@ The paper demonstrates that with the right implementation approach, training mul
 </details>
 <br/>
 
-- Model parallelism for efficient large model training
-
 This is a great time to talk about data, model and pipeline paralism and how massively large LLMs are trained across GPUs, Because that is what essential the NVIDIA team did with megatron and shared how they did it!
-
-https://huggingface.co/docs/transformers/v4.13.0/en/parallelism
-https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
-https://alessiodevoto.github.io/parallelism/
-(the paper has some nice images)
-
-https://distributedlexicon.com/
-
-https://docs.pytorch.org/tutorials/distributed.html
 
 Obviously Parallel training of huge models on large clusters is a MEGA topic, and we can write books on it. (There are companies and books made on it).
 So my objective here will be to introduce you to the various concepts of model parallalism, going a bit overboard on what was done in megatron too (for brevity's sake)
@@ -4126,105 +4149,110 @@ Let us start with the idea of megatron training and we can build on top of that
 
 > note: the paper talks about two main ideas, training & how they improved performance on BERT. We will only focus on training in this blog. If you are curious about BERT modifications. Check out the paper!
 
-Data and model parallism
-
-"""
-There are two central paradigms for scaling out deep neural network training to numerous hardware accelerators:
-data parallelism (Valiant, 1990) where a training minibatch
-is split across multiple workers, and model parallelism in
-which the memory usage and computation of a model is
-distributed across multiple workers. By increasing the minibatch size proportionally to the number of available workers (i.e. weak scaling), one observes near linear scaling
-in training data throughput. However, large batch training introduces complications into the optimization process
-that can result in reduced accuracy or longer time to convergence, offsetting the benefit of increased training throughput Further research (Goyal et al., 2017;
-You et al., 2017; 2019) has developed techniques to mitigate these effects and drive down the training time of large
-neural networks. To scale out training even further, parallel
-work (Chen et al., 2016) has combined data parallelism with
-activation checkpointing: recomputing activations in the
-backward pass without storing them in the forward pass to
-reduce memory requirements.
-However, these techniques have one fundamental limitation
-in the problem size they can tackle: the model must fit
-entirely on one worker. With language models of increasing
-size and complexity like BERT and GPT-2, neural networks
-have approached the memory capacity of modern hardware
-accelerators. One solution to this problem is to employ
-parameter sharing to reduce the memory footprint of the
-model (Lan et al., 2019), but this limits the overall capacity
-of the model. Our approach is to utilize model parallelism
-to split the model across multiple accelerators. This not
-only alleviates the memory pressure, but also increases the
-amount of parallelism independently of the microbatch size.
-"""
-
-"""
-Within model parallelism, there are two further paradigms:
-layer-wise pipeline parallelism, and more general distributed
-tensor computation. In pipeline model parallelism, groups
-of operations are performed on one device before the outputs
-are passed to the next device in the pipeline where a different group of operations are performed. Some approaches
-(Harlap et al., 2018; Chen et al., 2018) use a parameter
-server (Li et al., 2014) in conjunction with pipeline parallelism. However these suffer from inconsistency issues.
-The GPipe framework for TensorFlow (Huang et al., 2018)
-overcomes this inconsistency issue by using synchronous
-gradient decent. This approach requires additional logic to
-handle the efficient pipelining of these communication and
-computation operations, and suffers from pipeline bubbles
-that reduce efficiency, or changes to the optimizer itself
-which impact accuracy.
-Distributed tensor computation is an orthogonal and more
-general approach that partitions a tensor operation across
-multiple devices to accelerate computation or increase
-model size. FlexFlow (Jia et al., 2018), a deep learning
-framework orchestrating such parallel computation, provides a method to pick the best parallelization strategy. Recently, Mesh-TensorFlow (Shazeer et al., 2018) introduced
-a language for specifying a general class of distributed tensor computations in TensorFlow (Abadi et al., 2015). The
-parallel dimensions are specified in the language by the
-end user and the resulting graph is compiled with proper
-collective primitives. We utilize similar insights to those
-leveraged in Mesh-TensorFlow and exploit parallelism in
-computing the transformer’s attention heads to parallelize
-our transformer model. However, rather than implementing
-a framework and compiler for model parallelism, we make
-only a few targeted modifications to existing PyTorch transformer implementations. Our approach is simple, does notrequire any new compiler or code re-writing, and can be
-fully implemented by inserting a few simple primitives, as
-described in the next section.
-"""
-
-Read page 4 for implementation detail, Then add here
-
 Now to be complete, We also need to talk about how we can calculate the amount of VRAM required before we start with distributed training. Lest you get too many or too less GPU (Compute is extremely expensive, so we gotta be mindful of what we have)
 
-https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
-"""
-Before you use the SageMaker model parallel library, consider the following to get a sense of the memory requirements of training large DL models.
+These are the rough GPU memory requirements: 
 
-For a training job that uses AMP (FP16) and Adam optimizers, the required GPU memory per parameter is about 20 bytes, which we can break down as follows:
+* FP16 parameter ~ 2 bytes
+* FP16 gradient ~ 2 bytes
+* FP32 optimizer state ~ 8 bytes based on the Adam optimizers
+* FP32 copy of parameter ~ 4 bytes (needed for the optimizer apply (OA) operation)
+* FP32 copy of gradient ~ 4 bytes (needed for the OA operation)
 
-An FP16 parameter ~ 2 bytes
+> Even for a relatively small DL model with 10 billion parameters, it can require at least 200GB of memory, which is much larger than the typical GPU memory (for example, NVIDIA A100 with 40GB/80GB memory and V100 with 16/32 GB) available on a single GPU. Note that on top of the memory requirements for model and optimizer states, there are other memory consumers such as activations generated in the forward pass. The memory required can be a lot greater than 200GB.
+(Taken from sagemaker AWS documentation)
 
-An FP16 gradient ~ 2 bytes
+If you want to understand the memory better I will recommend the following blogs:
 
-An FP32 optimizer state ~ 8 bytes based on the Adam optimizers
+* [A Gentle Introduction to 8-bit Matrix Multiplication for transformers](https://huggingface.co/blog/hf-bitsandbytes-integration)
+* [BFloat16: The secret to high performance on Cloud TPUs](https://cloud.google.com/blog/products/ai-machine-learning/bfloat16-the-secret-to-high-performance-on-cloud-tpus)
 
-An FP32 copy of parameter ~ 4 bytes (needed for the optimizer apply (OA) operation)
+Some Misc blogs I found while researching the GPU memory problem:
 
-An FP32 copy of gradient ~ 4 bytes (needed for the OA operation)
+* HF has a [good estimator](https://huggingface.co/docs/accelerate/en/usage_guides/model_size_estimator).
+* [Calculate it yourself](https://swsmith.cc/posts/gpu-memory.html)! 
+* [How to build you own machine](https://huggingface.co/docs/transformers/en/perf_hardware).
+* [What hardware you should be getting for Deep Learning](https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/#RTX_4090s_and_Melting_Power_Connectors_How_to_Prevent_Problems).
 
-Even for a relatively small DL model with 10 billion parameters, it can require at least 200GB of memory, which is much larger than the typical GPU memory (for example, NVIDIA A100 with 40GB/80GB memory and V100 with 16/32 GB) available on a single GPU. Note that on top of the memory requirements for model and optimizer states, there are other memory consumers such as activations generated in the forward pass. The memory required can be a lot greater than 200GB.
-"""
 
-HF has a good estimator, https://huggingface.co/docs/accelerate/en/usage_guides/model_size_estimator
-https://swsmith.cc/posts/gpu-memory.html
-https://huggingface.co/docs/transformers/en/perf_hardware
-https://timdettmers.com/2023/01/30/which-gpu-for-deep-learning/#RTX_4090s_and_Melting_Power_Connectors_How_to_Prevent_Problems
+The following blogs and articles were insanely helpful, While writing the below section:
 
-Good animations and practical -> https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html
-
-This [blog](https://alessiodevoto.github.io/parallelism/) gave a great TL;DR with pseudocode
-
-USE THIS BLOG FOR IMAGES AND SOME CONCEPTS
-https://huggingface.co/docs/transformers/v4.15.0/parallelism
+* This [blog](https://alessiodevoto.github.io/parallelism/) gave a great TL;DR with pseudocode (The code in this section has been taken/inspired from here)
+* Great overview [documentation](https://huggingface.co/docs/transformers/v4.15.0/parallelism) by HF.
+* [AWS Documentation](https://docs.aws.amazon.com/sagemaker/latest/dg/model-parallel-intro.html)had some nice animations with practical code that helped me understand stuff.
+* This [blog](https://distributedlexicon.com/) acted as an awesome glossary and gave good summaries of the ideas.
 
 ##### Naive Parallalism
+
+"""
+Naive Model Parallelism (MP) is where one spreads groups of model layers across multiple GPUs. The mechanism is relatively simple - switch the desired layers .to() the desired devices and now whenever the data goes in and out those layers switch the data to the same device as the layer and leave the rest unmodified.
+
+We refer to it as Vertical MP, because if you remember how most models are drawn, we slice the layers vertically. For example, if the following diagram shows an 8-layer model:
+"""
+
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/79.webp)
+*Inspired from [here](https://huggingface.co/docs/transformers/v4.15.0/parallelism)*
+"""
+``` 
+===================  ===================
+|  0 | 1 | 2 | 3  |  |  4 | 5 | 6 | 7  |
+===================  ===================
+        gpu0                 gpu1
+```
+"""
+
+"""
+Now while data travels from layer 0 to 1, 1 to 2 and 2 to 3 this is just the normal model. But when data needs to pass from layer 3 to layer 4 it needs to travel from GPU0 to GPU1 which introduces a communication overhead. If the participating GPUs are on the same compute node (e.g. same physical machine) this copying is pretty fast, but if the GPUs are located on different compute nodes (e.g. multiple machines) the communication overhead could be significantly larger.
+
+Then layers 4 to 5 to 6 to 7 are as a normal model would have and when the 7th layer completes we often need to send the data back to layer 0 where the labels are (or alternatively send the labels to the last layer). Now the loss can be computed and the optimizer can do its work.
+
+Problems:
+
+the main deficiency and why this one is called “naive” MP, is that all but one GPU is idle at any given moment. So if 4 GPUs are used, it’s almost identical to quadrupling the amount of memory of a single GPU, and ignoring the rest of the hardware. Plus there is the overhead of copying the data between devices. So 4x 6GB cards will be able to accommodate the same size as 1x 24GB card using naive MP, except the latter will complete the training faster, since it doesn’t have the data copying overhead. But, say, if you have 40GB cards and need to fit a 45GB model you can with 4x 40GB cards (but barely because of the gradient and optimizer states)
+shared embeddings may need to get copied back and forth between GPUs.
+"""
+
+##### Pipeline Parallelism
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/76.webp)
+*[Source](https://research.google/blog/introducing-gpipe-an-open-source-library-for-efficiently-training-large-scale-neural-network-models/)*
+
+"""
+
+Pipeline Parallelism (PP) is almost identical to a naive MP, but it solves the GPU idling problem, by chunking the incoming batch into micro-batches and artificially creating a pipeline, which allows different GPUs to concurrently participate in the computation process.
+"""
+
+"""
+It’s easy to see from the bottom diagram how PP has less dead zones, where GPUs are idle. The idle parts are referred to as the “bubble”.
+
+Both parts of the diagram show a parallelism that is of degree 4. That is 4 GPUs are participating in the pipeline. So there is the forward path of 4 pipe stages F0, F1, F2 and F3 and then the return reverse order backward path of B3, B2, B1 and B0.
+
+PP introduces a new hyper-parameter to tune and it’s chunks which defines how many chunks of data are sent in a sequence through the same pipe stage. For example, in the bottomw diagram you can see that chunks=4. GPU0 performs the same forward path on chunk 0, 1, 2 and 3 (F0,0, F0,1, F0,2, F0,3) and then it waits for other GPUs to do their work and only when their work is starting to be complete, GPU0 starts to work again doing the backward path for chunks 3, 2, 1 and 0 (B0,3, B0,2, B0,1, B0,0).
+"""
+
+"""
+Split your model into stages on different devices. Data flows through the pipeline, with multiple batches processed simultaneously.
+
+This is the solution to the imbalancing problem for plain model parallel. A nice explanation of model parallel + pipeline parallel can be found here. Pipeline parallel balances computation and communication and makes model parallelism more efficient. As a drawback, it requires a potentially complex scheduling: you have to deal with splitting the input across GPUs and schedule the pipeline. If you do this the wrong way, you might cause “bubble” periods of idle time.
+
+```python
+# Define stages
+stage1 = nn.Sequential(layer1, layer2).to('cuda:0')
+stage2 = nn.Sequential(layer3, layer4).to('cuda:1')
+
+# Pipeline forward
+def pipeline_forward(batches):
+    for i, batch in enumerate(batches):
+        x = stage1(batch)
+        x = x.to('cuda:1')
+        if i > 0:
+            yield stage2(prev_x)
+        prev_x = x
+    yield stage2(prev_x)
+```
+
+"""
 
 ##### Data Parallelism
 
@@ -4273,33 +4301,23 @@ def forward(x):
 
 """
 
-##### Pipeline Parallelism
-
-"""
-Split your model into stages on different devices. Data flows through the pipeline, with multiple batches processed simultaneously.
-
-This is the solution to the imbalancing problem for plain model parallel. A nice explanation of model parallel + pipeline parallel can be found here. Pipeline parallel balances computation and communication and makes model parallelism more efficient. As a drawback, it requires a potentially complex scheduling: you have to deal with splitting the input across GPUs and schedule the pipeline. If you do this the wrong way, you might cause “bubble” periods of idle time.
-
-```python
-# Define stages
-stage1 = nn.Sequential(layer1, layer2).to('cuda:0')
-stage2 = nn.Sequential(layer3, layer4).to('cuda:1')
-
-# Pipeline forward
-def pipeline_forward(batches):
-    for i, batch in enumerate(batches):
-        x = stage1(batch)
-        x = x.to('cuda:1')
-        if i > 0:
-            yield stage2(prev_x)
-        prev_x = x
-    yield stage2(prev_x)
-```
-
-"""
 
 ##### Tensor Parallelism
 
+Read page 4 for implementation detail, Then add here
+
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/75.webp)
+[source](https://huggingface.co/docs/transformers/v4.19.4/en/parallelism)
+
+
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/78.webp)
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/77.webp)
+
+
+This is the kind of parallelism first introuduce by tehe eegatron paper 
+
+This is a great read on the topic as well [github comment](https://github.com/huggingface/transformers/issues/10321#issuecomment-783543530)
 """
 Partition individual tensors (weights, activations) across devices. Each computes a portion of tensor operations.
 
@@ -4319,13 +4337,22 @@ class TPLinear(nn.Module):
 
 """
 
+
+##### 2d parallalism & 3d parallalism 
+
+I mentioned it here to keep you aware of these ideas, we will discuss in depth about them later on. But for now a simple deifition is enough.
+
+2d parallism -> When you use two of the techniques described above togehter3d
+3d parallism -> following the above definition when you use 3 of the above described techniques together it's called 3d parallism
+
 There is also ZeRO but we will talk about it when we get to that section.
 
-##### 2d parallalism
-
-https://distributedlexicon.com/ -> Use this blog, along with other ideas
-
 For a deeper dive into how to implement each and use them in your application, check out the documentation by the [PyTorch Team](https://docs.pytorch.org/tutorials/distributed.html).
+
+Additionally I will recommend checking these two phenomenol blogs by an engineer at Anthropic.
+
+* [Blog 1: Pipeline Parallel Training](https://siboehm.com/articles/22/pipeline-parallel-training)
+* [Blog 2: Data Parallel Training](https://siboehm.com/articles/22/data-parallel-training)
 
 The code behind [Megatron-LM](https://github.com/NVIDIA/Megatron-LM)
 
