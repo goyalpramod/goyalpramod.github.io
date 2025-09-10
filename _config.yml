@@ -79,7 +79,9 @@ collections:
   thoughts:
     output: true
     permalink: /thoughts/:title/
-
+  projects: 
+    output: true
+    permalink: /projects/:title/
 defaults:
   - scope:
       path: ""
@@ -101,6 +103,12 @@ defaults:
       type: "thoughts"
     values:
       layout: thought
+      math: true
+  - scope:  
+      path: ""
+      type: "projects"
+    values:
+      layout: note
       math: true
 
 # Content Security Policy
