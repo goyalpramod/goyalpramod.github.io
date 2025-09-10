@@ -4304,8 +4304,8 @@ _Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 
 I mentioned it here to keep you aware of these ideas, we will discuss in depth about them later on. But for now a simple deifition is enough.
 
-* 2d parallism -> When you use two of the techniques described above together.
-* 3d parallism -> following the above definition when you use 3 of the above described techniques together it's called 3d parallism.
+- 2d parallism -> When you use two of the techniques described above together.
+- 3d parallism -> following the above definition when you use 3 of the above described techniques together it's called 3d parallism.
 
 There is also ZeRO but we will talk about it when we get to that section.
 
@@ -4444,7 +4444,6 @@ If you wish to check out the work done by OpenAI, you can do so here: [Sparse At
 
 > This blog is now on a short hiatus, I give my reasons [here](https://goyalpramod.github.io/thoughts/build_first_write_later/). I will still continue updating this blog, but not as often. Thank you for reading everything I write.
 > P.S. I am putting out all of the unstructured thoughts and content below for anyone who is curious to check out the resources I had collected for each section
-
 
 ## 2020: The Scale Revolution
 
