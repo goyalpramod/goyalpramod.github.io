@@ -1,7 +1,7 @@
 ---
 layout: default
-title: Contact Me
-permalink: /contact/
+title: Resume
+permalink: /resume/
 ---
 
 <div class="contact-container">

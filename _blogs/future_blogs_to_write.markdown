@@ -56,6 +56,29 @@ Fine-tune LLM
 
 CUDA & optimising GPUs
 
+https://www.modular.com/blog/matrix-multiplication-on-nvidias-blackwell-part-2-using-hardware-features-to-optimize-matmul
+
+https://www.modular.com/blog/matrix-multiplication-on-nvidias-blackwell-part-1-introduction
+
+
+https://huggingface.co/blog/hf-bitsandbytes-integration
+
+https://cloud.google.com/blog/products/ai-machine-learning/bfloat16-the-secret-to-high-performance-on-cloud-tpus
+
+https://www.modular.com/blog/matrix-multiplication-on-nvidias-blackwell-part-2-using-hardware-features-to-optimize-matmul
+
+https://www.modular.com/blog/matrix-multiplication-on-nvidias-blackwell-part-1-introduction
+
+https://siboehm.com/articles/22/CUDA-MMM
+
+https://cudaforfun.substack.com/p/outperforming-cublas-on-h100-a-worklog
+
+https://puzzles.modular.com/introduction.html
+
+https://docs.modular.com/glossary/
+
+https://docs.modular.com/glossary/gpu/memory/
+
 - https://enccs.github.io/gpu-programming/2-gpu-ecosystem/
 
   - [Introduction to Cuda](https://www.pyspur.dev/blog/introduction_cuda_programming?s=08)
@@ -118,7 +141,8 @@ Challenge by unsloth https://colab.research.google.com/drive/1JqKqA1XWeLHvnYAc0w
   - [A guide on good usage of non_blocking and pin_memory() in PyTorch](https://pytorch.org/tutorials/intermediate/pinmem_nonblock.html)
   - [Automatic Mixed Precision examples](https://pytorch.org/docs/stable/notes/amp_examples.html)
   - [HF Book on distributed Training](https://huggingface.co/spaces/nanotron/ultrascale-playbook?section=high_level_overview)
-  -
+  -https://siboehm.com/articles/22/data-parallel-training
+  https://siboehm.com/articles/22/pipeline-parallel-training
 
 A guide to hacking LLMs
 

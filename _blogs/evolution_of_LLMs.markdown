@@ -4440,11 +4440,11 @@ Some other ideas introduced in the paper as stated by the authors include:
 
 If you wish to check out the work done by OpenAI, you can do so here: [Sparse Attention Repo](https://github.com/openai/sparse_attention). They also open-sourced their work on fast kernels: [Blocksparse Repo](https://github.com/openai/blocksparse/).
 
-## WORK IN PROGRESS NOTICE
+## NOTICE: Build first, Write later
 
 > Rest of the sections from 2020-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
 
-<!-- 
+
 ## 2020: The Scale Revolution
 
 ### Reformer
@@ -4477,6 +4477,10 @@ https://www.youtube.com/watch?app=desktop&v=i4H0kjxrias&t=0s&ab_channel=YannicKi
 
 https://www.pinecone.io/learn/series/faiss/locality-sensitive-hashing/
 https://jaketae.github.io/study/lsh/
+
+https://research.google/blog/reformer-the-efficient-transformer/
+
+https://raviteja-ganta.github.io/Reformer-The-efficient-Transformer
 
 ### Longformer
 
@@ -7738,4 +7742,4 @@ Now let's do the same for T5
 
 ### Inference
 
-[Expand SENTENCE PIECE WHEN IT MAKES SENE] -->
+[Expand SENTENCE PIECE WHEN IT MAKES SENE]

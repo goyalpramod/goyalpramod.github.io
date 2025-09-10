@@ -1,8 +1,11 @@
 ---
-layout: default
-title: Reading
-permalink: /reading/
+layout: thought
+title: "Reading that had an impact on me"
+last_modified_at: 2025-09-10 12:00:00 +0530
+categories: [lifestyle, self-help, growth]
+image: assets/cover_images/img7.webp
 ---
+
 
 # Reading Recommendations
 
