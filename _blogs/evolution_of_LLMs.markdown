@@ -4442,7 +4442,8 @@ If you wish to check out the work done by OpenAI, you can do so here: [Sparse At
 
 ## NOTICE: Build first, Write later
 
-> Rest of the sections from 2020-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
+> This blog is now on a short hiatus, I give my reasons [here](https://goyalpramod.github.io/thoughts/build_first_write_later/). I will still continue updating this blog, but not as often. Thank you for reading everything I write.
+> P.S. I am putting out all of the unstructured thoughts and content below for anyone who is curious to check out the resources I had collected for each section
 
 
 ## 2020: The Scale Revolution
