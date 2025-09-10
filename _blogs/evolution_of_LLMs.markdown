@@ -3515,11 +3515,6 @@ The paper is particularly notable for its thorough empirical analysis of trainin
 </details>
 <br/>
 
-- Dynamic masking
-- Removed NSP
-- Larger batch sizes
-- Extended training
-
 **Problem**
 
 The authors found that most of the models released post BERT were challenging to train, hard to compare and they were mostly working as a black box and it was difficult to tell which hyper-parameter were significant. RoBERTa was a replication study on BERT to better understand it. And they unearthed that BERT was significantly under trained.
@@ -3636,6 +3631,8 @@ This work demonstrates that through careful distillation, smaller and more effic
 </div>
 </details>
 <br/>
+
+![Image of BERT](/assets/blog_assets/evolution_of_llms/84.webp)
 
 The following sources helped me immensely while writing this section.
 
@@ -4063,27 +4060,17 @@ P.S. mem here is the cached hidden state from the previous segment, an idea insp
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/74.webp)
 _[Source](https://arxiv.org/pdf/1906.08237)_
 
-"""
 The permutation objective creates a challenge: To predict a token at a target position, the model needs to know the position, but it cannot know the content of the token at that position (otherwise, it would just copy it). A standard Transformer can't do this, as its hidden state at any position always contains both content and position information.
 
 To solve this, XLNet introduces a Two-Stream Self-Attention mechanism.
 
-ontent Stream (h): The Memory
-This is the standard Transformer representation. It encodes both the content and position of a token. Its job is to serve as the rich context, or "memory," that other tokens can attend to. In the image, this is what the nodes labeled
+Content Stream `h` (The Memory)
+This is the standard Transformer representation. It encodes both the content and position of a token. Its job is to serve as the rich context, or "memory," that other tokens can attend to. In the image, this is what the nodes labeled `h` represent.
 
-h represent.
+Query Stream `g` (The Predictor)
+This is a special representation that only has access to the target position, not its content. Its entire purpose is to gather information from the Content Stream of its context tokens to make a prediction for the target position. In the image, this is what the nodes labeled `g` represent.
 
-Query Stream (g): The Predictor
-This is a special representation that only has access to the target
-
-position, not its content. Its entire purpose is to gather information from the
-
-Content Stream of its context tokens to make a prediction for the target position. In the image, this is what the nodes labeled
-
-g represent.
-
-In simple terms, for each token being predicted, the Query Stream (g) asks the question, and the Content Stream (h) of the other tokens provides the answer. At the final layer, the output of the Query Stream is used to predict the word. During fine-tuning, the query stream is discarded, and we use the powerful, bidirectionally-trained Content Stream for downstream tasks.
-"""
+In simple terms, for each token being predicted, the Query Stream `g` asks the question, and the Content Stream `h` of the other tokens provides the answer. At the final layer, the output of the Query Stream is used to predict the word. During fine-tuning, the query stream is discarded, and we use the powerful, bidirectionally-trained Content Stream for downstream tasks.
 
 ### Megatron
 
@@ -4317,8 +4304,8 @@ _Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 
 I mentioned it here to keep you aware of these ideas, we will discuss in depth about them later on. But for now a simple deifition is enough.
 
-2d parallism -> When you use two of the techniques described above togehter3d
-3d parallism -> following the above definition when you use 3 of the above described techniques together it's called 3d parallism
+* 2d parallism -> When you use two of the techniques described above together.
+* 3d parallism -> following the above definition when you use 3 of the above described techniques together it's called 3d parallism.
 
 There is also ZeRO but we will talk about it when we get to that section.
 
