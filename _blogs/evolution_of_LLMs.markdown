@@ -4259,25 +4259,17 @@ _Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/75.webp)
 [source](https://huggingface.co/docs/transformers/v4.19.4/en/parallelism)
 
-This is the kind of parallelism first introuduce by tehe eegatron paper
+This is the kind of parallelism first introuduce by the megatron paper.
 
-This is a great read on the topic as well [github comment](https://github.com/huggingface/transformers/issues/10321#issuecomment-783543530)
+This is a great read on the topic as well [github comment](https://github.com/huggingface/transformers/issues/10321#issuecomment-783543530).
 
 In this you partition the individual tensors (weights, activations) across devices. And each device computes a portion of the tensor.
 
-This was beautifully explained by the paper, Image you have to do an operation (as shown in the above image). We can simply break the matrix and compute it in different devices and put it back together.
-
-"""
-
-#### Tensor Parallelism
-
-[cite_start]This is the primary innovation detailed in the Megatron-LM paper[cite: 1477]. Instead of splitting entire layers across GPUs (inter-layer), Tensor Parallelism splits the individual, massive matrices (the tensors) _inside_ each layer (intra-layer).
-
-[cite_start]Let's look at how this works for a standard Transformer block, which consists of a Multi-Layer Perceptron (MLP) and a self-attention block[cite: 1563].
+This was beautifully explained by the paper, Imagine you have to do an operation (as shown in the above image). We can simply break the matrix and compute it in different devices and put it back together.
 
 **Parallelizing the MLP Block**
 
-An MLP block contains two linear layers. [cite_start]The first is a GEMM (GEneral Matrix Multiply) followed by a GeLU nonlinearity [cite: 1564-1565]:
+An MLP block contains two linear layers. The first is a GEMM (GEneral Matrix Multiply) followed by a GeLU nonlinearity:
 
 $$
 Y = \text{GeLU}(XA)
@@ -4289,38 +4281,27 @@ $$
 [Y_1, Y_2] = [\text{GeLU}(XA_1), \text{GeLU}(XA_2)]
 $$
 
-[cite_start]This is efficient because the GeLU activation can be applied independently on each GPU without any communication [cite: 1573-1576].
+This is efficient because the GeLU activation can be applied independently on each GPU without any communication.
 
-!(https://i.imgur.com/your-image-url.png)
-_[Source: megatron_lm.pdf, Figure 3a]_
+![Image of Megatron](/assets/blog_assets/evolution_of_llms/78.webp)
 
-The second linear layer in the MLP block involves another GEMM, $Z = YB$. [cite_start]To make this work, the second weight matrix $B$ is split row-wise[cite: 1576]:
+The second linear layer in the MLP block involves another GEMM, $Z = YB$. To make this work, the second weight matrix $B$ is split row-wise:
 
 $$
 B = \begin{bmatrix} B_1 \\ B_2 \end{bmatrix}
 $$
 
-Each GPU then computes its part, and the results are summed up using an `all-reduce` operation across the GPUs. [cite_start]This `all-reduce` is the only communication needed in the forward pass for the MLP block [cite: 1577-1578].
+Each GPU then computes its part, and the results are summed up using an `all-reduce` operation across the GPUs. This `all-reduce` is the only communication needed in the forward pass for the MLP block.
 
 **Parallelizing the Self-Attention Block**
 
-The same principle is applied to the self-attention mechanism. [cite_start]The large weight matrices for Query, Key, and Value ($W_Q, W_K, W_V$) are split column-wise across the GPUs, partitioned by the number of attention heads[cite: 1607]. [cite_start]Each GPU can compute its share of attention heads independently [cite: 1607-1608].
-
-!(https://i.imgur.com/your-image-url.png)
-_[Source: megatron_lm.pdf, Figure 3b]_
-
-[cite_start]Just like in the MLP block, the output linear layer is split row-wise, and a single `all-reduce` operation synchronizes the results at the end[cite: 1609].
-
-[cite_start]The key takeaway is that this method cleverly arranges the matrix splits so that a full Transformer layer only requires **two `all-reduce` operations** in the forward pass (one for the MLP, one for attention) and two in the backward pass[cite: 1611]. This minimizes communication overhead and leads to excellent scaling efficiency.
-"""
-
-![Image of Megatron](/assets/blog_assets/evolution_of_llms/78.webp)
-
-The above image shows how $GeLU(XA)$ will remain the same even if we break $A$ into $[A_1, A_2]$. And the second image is just the attention mech, but as it is inherently parallel. This does not pose a big problem.
+The same principle is applied to the self-attention mechanism. The large weight matrices for Query, Key, and Value ($W_Q, W_K, W_V$) are split column-wise across the GPUs, partitioned by the number of attention heads. Each GPU can compute its share of attention heads independently.
 
 ![Image of Megatron](/assets/blog_assets/evolution_of_llms/77.webp)
 
-The above image shows how all reduce is applied to the tensor parallel GPUs.
+Just like in the MLP block, the output linear layer is split row-wise, and a single `all-reduce` operation synchronizes the results at the end.
+
+The key takeaway is that this method cleverly arranges the matrix splits so that a full Transformer layer only requires **two `all-reduce` operations** in the forward pass (one for the MLP, one for attention) and two in the backward pass. This minimizes communication overhead and leads to excellent scaling efficiency.
 
 ```python
 # Simplified tensor parallel linear layer
@@ -4333,7 +4314,6 @@ class TPLinear(nn.Module):
         local_out = F.linear(x, self.weight)Z
         return all_gather(local_out)
 ```
-
 _Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 
 ##### 2d parallalism & 3d parallalism
@@ -4383,138 +4363,97 @@ The authors demonstrate that Sparse Transformers can effectively model sequences
 
 **Problem**
 
-Transformers are awesome and we all love them (otherwise you wouldn't be reading such a HUGE blog on the topic). But they face one big issue (well there are many, but we will talk about them later), namely that the attention calculation is quadratic, which is impractical for long training
+Transformers are awesome, and we all love them (otherwise, you wouldn't be reading such a huge blog on the topic). But they face one big issue: the self-attention calculation has a quadratic time and memory complexity, which becomes impractical for very long sequences.
 
 **Solution**
 
-The authors introduce sparse factorization methods to the attention block, to bring it down to $O(N\sqrt{p}N)$. They additionally introduce some fast kernels (CUDA code) and recomputation method to reduce memory use (Gradient checkpointing)
+The authors introduce sparse factorization methods to the attention mechanism, reducing its complexity to $O(N\sqrt{N})$. They additionally introduce fast custom kernels and a recomputation method (gradient checkpointing) to save memory.
 
-The following blogs helped me immensely while writing this section out:
-
+The following blogs helped me immensely while writing this section:
 - [Questioning the authors](https://reinforcedknowledge.com/sparse-transformers/)
 - [Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)
-- Original [blog](https://openai.com/index/sparse-transformer/) by OpenAi
+- The original [blog post](https://openai.com/index/sparse-transformer/) by OpenAI
 
-This would haeve been an [amazing resource](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers) but it's blocked by a paywall. But the available free content is still awesome.
+##### The Cost of Full Attention
 
-If you have read this far, I am going to assume you have a fair bit of knowledge about computer science. And one of the earliest ideas talked about in CS101 classes is the idea of Big O notation. So let us calculate the Big O of Self-Attention.
+If you've read this far, I am going to assume you have a fair bit of knowledge about computer science. One of the earliest ideas talked about in CS101 is Big O notation. So let's quickly calculate the complexity of self-attention.
 
 The self-attention mechanism can be expressed as:
 
 $$\text{Attention}(Q, K, V) = \text{Softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V$$
 
-Let's break down the computational complexity step by step:
+Let's break down the computational complexity step-by-step for a sequence of length $N$:
 
-Computing $QK^T$
+1.  **Computing $QK^T$**: The multiplication of a $[N \times d_k]$ matrix ($Q$) with a $[d_k \times N]$ matrix ($K^T$) results in an $[N \times N]$ attention matrix. The complexity is $O(N^2 \cdot d_k)$.
+2.  **Scaling and Softmax**: These are element-wise operations on the $[N \times N]$ matrix, so their complexity is $O(N^2)$.
+3.  **Multiplying with V**: Multiplying the $[N \times N]$ attention matrix with the $[N \times d_v]$ value matrix ($V$) has a complexity of $O(N^2 \cdot d_v)$.
 
-- $Q$ has dimensions $[N \times d_k]$ (N sequence positions, $d_k$ key dimension)
-- $K^T$ has dimensions $[d_k \times N]$
-- The matrix multiplication $QK^T$ results in an $[N \times N]$ matrix
-
-**Complexity**: $O(N \times d_k \times N) = O(N^2 \cdot d_k)$
-
-Since $d_k$ is typically treated as a constant (independent of sequence length), this simplifies to **$O(N^2)$**.
-
-Scaling by $\sqrt{d_k}$
-
-Dividing each element of the $[N \times N]$ matrix by $\sqrt{d_k}$ is an element-wise operation.
-
-**Complexity**: $O(N^2)$
-
-Softmax Operation
-
-The softmax is applied row-wise to the $[N \times N]$ matrix. For each of the $N$ rows, we:
-
-- Compute the exponential of each element: $O(N)$
-- Sum all exponentials in the row: $O(N)$
-- Normalize each element: $O(N)$
-
-$O(N \times N) = O(N^2)$
-
-Multiplying with V
-
-- Attention weights: $[N \times N]$
-- $V$ matrix: $[N \times d_v]$
-- Result: $[N \times d_v]$
-
-**Complexity**: $O(N \times N \times d_v) = O(N^2 \cdot d_v)$
-
-Again, treating $d_v$ as a constant, this is **$O(N^2)$**.
-
-Overall Complexity
-
-All steps are $O(N^2)$, so the overall complexity of self-attention is:
+Since the hidden dimensions $d_k$ and $d_v$ are considered constants with respect to the sequence length, the dominant factor is $N^2$. The overall complexity of self-attention is:
 
 $$O(N^2)$$
 
-And as we all know $O(N^2)$ is fairly expensive computationally, That is where Sparse Attention comes in. This reduces our attention calculation to $O(N\sqrt{N})$ (With a tradeoff in perfomance of course).
+This quadratic cost is computationally expensive for large $N$. This is where Sparse Attention comes in, reducing the complexity to a more manageable $O(N\sqrt{N})$.
 
-There are 3 types of sparse attention introduced by the authors:
+##### Building the Sparse Patterns
 
-- Local
-- Strided
-- Fixed
-
-The objective of this blog (or any other blog I have written for that matter), is to get you to believe how you could have come up with the idea on your own. So let us first begin by understanding the rationale of the researchers
+The objective of this blog is to help you believe you could have come up with these ideas on your own. So let's begin by understanding the rationale of the researchers. By visualizing the attention patterns of a deep, fully-trained Transformer, they noticed some recurring themes.
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/53.webp)
-_image taken from the [paper](https://arxiv.org/pdf/1904.10509)_
+*Image taken from the [paper](https://arxiv.org/pdf/1904.10509), Figure 2*
 
+a) Many early layers learned **local patterns**, resembling convolutions.<br/>
+b) Some layers learned to attend to entire **rows and columns**, effectively factorizing the attention.<br/>
+c) Deeper layers showed **global, data-dependent patterns**.<br/>
+d) Surprisingly, the deepest layers exhibited **high sparsity**, with positions activating rarely.<br/>
 
-a) Image `a` shows the blocks that the early layers use to generate images. If you look very closely you will see a bunch of white blocks. These are local attention blocks that are used for generation
-
-b) For image `b` you will see that further layers use entire rows and columns to get information
-
-c) As we go deeper we can see that general global information is used to generate images
-
-d) What the authors discovered was that surprisingly as we moved to the very deep layers, The model exhibited high sparsity and positions rarely activated.
-
-So from the above images we are already getting a general sense of the kind of attention mask that is helpful, Obviously we need something local, Something that contains information globally, and something that contains stride of information.
-
+From these observations, we get a sense of the useful patterns: we need something local, something that can access information globally, and perhaps something in between, like a stride.
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/82.webp)
-_image taken from the [paper](https://arxiv.org/pdf/1904.10509)_
+*Image taken from the [paper](https://arxiv.org/pdf/1904.10509), Figure 3*
 
-This seems to have become a theme of the blog, Me affirming that the above image does indeed look extremely convoluted and dauting. But if we go through it step by step. It is rather simple. So let us do that.
+This image might look daunting, but it's quite simple if we break it down. Let's quickly clarify the two rows of images. The **top row** shows the perspective of a single output element (the dark blue square) and which input elements (the light blue squares) it can attend to. The **bottom row** provides a holistic view of the entire sequence's connectivity matrix.
 
-`a` is our plain old simple masked attention. Now every section (a,b,c) has two images, a top one and a bottom one. It will make our lives simpler if we tell the difference right away now instead of later. The top one represents how any given image will generate a pixel (The dark blue box) using all the previous tokens (The light blue boxes), Whereas the bottom image represents more of a hollistic view where the rows represent the tokens being generated and the columns represent the values we are paying attention to.
+Now, let's look at the patterns:
 
-If we look at `b` it is quite simple as well, here instead of paying attention to all the blocks that appeared before any given $i_{th}$ token, we create a window of tokens that appear before it. (Remember this is what we learned previously, that the earlier layers focus more on the local tokens), The strided parts are trying to incorporate the global knowledge without explicitly going through all the previous tokens 
+**(b) Strided Attention**
+This pattern combines two kinds of attention. One head focuses on a **local window** of nearby positions. For example, the i-th position might only attend to keys from `i-w` to `i`, where `w` is the window size. The other head focuses on more global interactions by having the i-th query attend to every `c`-th key, where `c` is the stride. This captures both local context and a coarser, long-range context.
 
-[TOKENS DOES NOT FEEL LIKE THE RIGHT WORD, FIX IT LATER]
+This method works very well for data with a natural periodic structure, like images (where a pixel is related to its neighbors and also to the pixel directly above it). However, it can fail when it comes to text. The reason is that relationships in text are not based on fixed intervals; a word'srelevance to another isn't determined by a consistent spatial coordinate or stride.
 
-"""
-OpenAI suggested two different sparse patterns where, in the different heads, the queries attend the keys differently. The first pattern is the strided pattern. One head focuses on a local window of nearby tokens by having the i-th query only attend the keys in [i-w, i], where w is the window size. For example, if w = 64, it means we only select the keys [i - 64, i - 63, …, i - 1, i]. The other heads focus on more global token interactions by having i-th query attending every c key. c is the stride and can be different for each head. For example, if c = 8, then we would only select the keys [0, …, i - 24,i - 16, i - 8, i].
-"""
-
-The above method works pretty well for images (Local + stride), But it fails when it comes to text. The reason being that text is more sequential and [IDK ACTUALLY, READ ABOUT IT].
-To fix that problem, the authors introduced `c`. Well it is not really simple, so we will have to dig deeper.
-
+**(c) Fixed Attention**
+To solve the problem with text, the authors introduced "fixed attention." This also uses a local window, but the second head is different. Instead of a stride, it has all future positions attend to a few fixed "summary" locations from previous block.
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/81.webp)
 *Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)*
 
-The blocks can be 
+The local attention creates the block-like structure. This works well but has one big issue: each block only has information from within its own block.
 
-##### Factorized self-attention
+![Attention mask img](/assets/blog_assets/evolution_of_llms/83.webp)
+*Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)*
 
-Some other ideas introduced in the paper
+The fixed summary positions act as "global connectors." Information captured by the end of a block can now flow globally to all subsequent blocks, allowing the model to connect ideas across the entire sequence.
 
-**Recomputation of matrices**
+##### Calculating the Complexity of Sparse Attention
 
-**Fast Attention Kernels**
-https://github.com/openai/blocksparse/
+These sparse patterns significantly reduce the computational cost. Let's see how, using the formulas from the paper.
 
-"""
-Additionally, we introduce several other changes to the
-Transformer, including:
-• A restructured residual block and weight initialization
-to improve training of very deep networks
-• A set of sparse attention kernels which efficiently compute subsets of the attention matrix
-• Recomputation of attention weights during the backwards pass to reduce memory usage
-"""
+In the **strided case**, each query attends to a local window of size $w$ and roughly $N/c$ strided positions, where $c$ is the stride. The total cost for $N$ queries is:
 
-If you wish to checkout the work done by OpenAI you can do so by going [here](https://github.com/openai/sparse_attention).
+$$ N \left( w + \frac{N}{c} \right) \sim O(N\sqrt{N}), \quad \text{if } c = \sqrt{N} $$
+
+In the **fixed case**, the sequence is split into blocks of length $l$. Each query attends to at most $l$ local positions and $c$ summary positions. The total cost for all queries is:
+
+$$ N(l+c) \sim O(N\sqrt{N}), \quad \text{if } l = \sqrt{N} $$
+
+In both cases, by carefully choosing the hyperparameters, we can achieve the desired sub-quadratic complexity of $O(N\sqrt{N})$.
+
+Some other ideas introduced in the paper as stated by the authors include:
+
+> • A restructured residual block and weight initialization to improve training of very deep networks
+> • A set of sparse attention kernels which efficiently compute subsets of the attenion matrix
+> • Recomputation of attention weights during the backwards pass to reduce memory usage
+
+If you wish to check out the work done by OpenAI, you can do so here: [Sparse Attention Repo](https://github.com/openai/sparse_attention). They also open-sourced their work on fast kernels: [Blocksparse Repo](https://github.com/openai/blocksparse/).
 
 ## 2020: The Scale Revolution
 
