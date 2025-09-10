@@ -38,7 +38,7 @@ This is a timeline of the most influential work. To read about more architecture
 
 The blog ["Transformer models: an introduction and catalog — 2023 Edition"](https://amatria.in/blog/transformer-models-an-introduction-and-catalog-2d1e9039f376/) helped me immensely while making the timeline. Additionally this [blog](https://magazine.sebastianraschka.com/p/understanding-large-language-models) was helpful too.
 
-| Links post 2018 are broken as it's still work in progress
+| Links post 2019 are broken as it's still work in progress
 
 <details>
 <summary markdown="span">2017</summary>
@@ -3394,11 +3394,7 @@ Before BERT, each NLP task needed its own specialized architecture. Question ans
 
 And that concludes BERT too, now we have talked about the two big architectures of LLMs, moving forward we will mostly be talking about the innovations done in the architecture and the solutions found to increase the scale at which to train them.
 
-[Add info on Token type embedding https://stackoverflow.com/questions/57960995/how-are-the-tokenembeddings-in-bert-created]
-
-## WORK IN PROGRESS NOTICE
-
-> Rest of the sections from 2019-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
+<!-- [Add info on Token type embedding https://stackoverflow.com/questions/57960995/how-are-the-tokenembeddings-in-bert-created] -->
 
 ## 2019: Scaling and Efficiency
 
@@ -4314,6 +4310,7 @@ class TPLinear(nn.Module):
         local_out = F.linear(x, self.weight)Z
         return all_gather(local_out)
 ```
+
 _Code taken from [here](https://alessiodevoto.github.io/parallelism/)_
 
 ##### 2d parallalism & 3d parallalism
@@ -4370,6 +4367,7 @@ Transformers are awesome, and we all love them (otherwise, you wouldn't be readi
 The authors introduce sparse factorization methods to the attention mechanism, reducing its complexity to $O(N\sqrt{N})$. They additionally introduce fast custom kernels and a recomputation method (gradient checkpointing) to save memory.
 
 The following blogs helped me immensely while writing this section:
+
 - [Questioning the authors](https://reinforcedknowledge.com/sparse-transformers/)
 - [Attention? Attention!](https://lilianweng.github.io/posts/2018-06-24-attention/)
 - The original [blog post](https://openai.com/index/sparse-transformer/) by OpenAI
@@ -4399,7 +4397,7 @@ This quadratic cost is computationally expensive for large $N$. This is where Sp
 The objective of this blog is to help you believe you could have come up with these ideas on your own. So let's begin by understanding the rationale of the researchers. By visualizing the attention patterns of a deep, fully-trained Transformer, they noticed some recurring themes.
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/53.webp)
-*Image taken from the [paper](https://arxiv.org/pdf/1904.10509), Figure 2*
+_Image taken from the [paper](https://arxiv.org/pdf/1904.10509), Figure 2_
 
 a) Many early layers learned **local patterns**, resembling convolutions.<br/>
 b) Some layers learned to attend to entire **rows and columns**, effectively factorizing the attention.<br/>
@@ -4409,7 +4407,7 @@ d) Surprisingly, the deepest layers exhibited **high sparsity**, with positions 
 From these observations, we get a sense of the useful patterns: we need something local, something that can access information globally, and perhaps something in between, like a stride.
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/82.webp)
-*Image taken from the [paper](https://arxiv.org/pdf/1904.10509), Figure 3*
+_Image taken from the [paper](https://arxiv.org/pdf/1904.10509), Figure 3_
 
 This image might look daunting, but it's quite simple if we break it down. Let's quickly clarify the two rows of images. The **top row** shows the perspective of a single output element (the dark blue square) and which input elements (the light blue squares) it can attend to. The **bottom row** provides a holistic view of the entire sequence's connectivity matrix.
 
@@ -4424,12 +4422,12 @@ This method works very well for data with a natural periodic structure, like ima
 To solve the problem with text, the authors introduced "fixed attention." This also uses a local window, but the second head is different. Instead of a stride, it has all future positions attend to a few fixed "summary" locations from previous block.
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/81.webp)
-*Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)*
+_Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)_
 
 The local attention creates the block-like structure. This works well but has one big issue: each block only has information from within its own block.
 
 ![Attention mask img](/assets/blog_assets/evolution_of_llms/83.webp)
-*Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)*
+_Inspired from [here](https://newsletter.theaiedge.io/p/understanding-the-sparse-transformers)_
 
 The fixed summary positions act as "global connectors." Information captured by the end of a block can now flow globally to all subsequent blocks, allowing the model to connect ideas across the entire sequence.
 
@@ -4455,6 +4453,11 @@ Some other ideas introduced in the paper as stated by the authors include:
 
 If you wish to check out the work done by OpenAI, you can do so here: [Sparse Attention Repo](https://github.com/openai/sparse_attention). They also open-sourced their work on fast kernels: [Blocksparse Repo](https://github.com/openai/blocksparse/).
 
+## WORK IN PROGRESS NOTICE
+
+> Rest of the sections from 2020-2025 are still being worked on by me, I have a rough draft prepared for each year. But to do justice to the material as well as create visualizations that clearly and explicitly explain the idea, it takes me considerable time. I am also spending time to reimpliment each paper and publish it on github. Consider following me on my socials to stay upto date with what I am doing. Thank you for all the support and reading what I write!!! You are awesome and your love keeps me motivated :)
+
+<!-- 
 ## 2020: The Scale Revolution
 
 ### Reformer
@@ -7748,4 +7751,4 @@ Now let's do the same for T5
 
 ### Inference
 
-[Expand SENTENCE PIECE WHEN IT MAKES SENE]
+[Expand SENTENCE PIECE WHEN IT MAKES SENE] -->
