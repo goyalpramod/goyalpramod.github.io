@@ -20,7 +20,7 @@ Here are my curated recommendations of things I've read and loved. These have sh
 
 ## My Favourite ML Blogs to Read
 
-- [Distill](https://distill.pub/) - Beautiful visual explanations of machine learning concepts
+- [Distill](https://distill.pub/)
 - [Transformer Circuits](https://transformer-circuits.pub/) 
 - [Christopher Olah's blog](https://colah.github.io/)
 - [Lilian Weng's blog](https://lilianweng.github.io/)
@@ -41,8 +41,8 @@ I am aware of way more blogs, but these are my absolute favourite one's and whos
 
 ## GitHub Repo Recommendations
 
-- [Build your own X](https://github.com/codecrafters-io/build-your-own-x) - Brief description of why this repo is amazing
-- [what-happens-when](https://github.com/alex/what-happens-when) - What makes this special
+- [Build your own X](https://github.com/codecrafters-io/build-your-own-x)
+- [what-happens-when](https://github.com/alex/what-happens-when)
 - [How Web Works](https://github.com/vasanthk/how-web-works)
   
 
