@@ -65,6 +65,31 @@ permalink: /resume/
     color: #000;
   }
 
+  .resume-intro {
+    max-width: 700px;
+    margin: 0 auto 3rem;
+    padding: 2rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+    text-align: center;
+  }
+
+  .resume-intro p {
+    margin: 0 0 0.75rem 0;
+    font-size: 1rem;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .resume-intro p:last-child {
+    margin-bottom: 0;
+  }
+
+  .resume-intro strong {
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+
   .resume-section {
     margin-bottom: 3rem;
   }
@@ -217,6 +242,18 @@ permalink: /resume/
     border-bottom-color: #333;
   }
 
+  [data-theme="dark"] .resume-intro {
+    background: #1a1a1a;
+  }
+
+  [data-theme="dark"] .resume-intro p {
+    color: #b0b0b0;
+  }
+
+  [data-theme="dark"] .resume-intro strong {
+    color: #e0e0e0;
+  }
+
   /* Mobile responsive */
   @media (max-width: 768px) {
     .resume-container {
@@ -264,6 +301,12 @@ permalink: /resume/
       <a href="https://instagram.com/goyal__pramod" target="_blank" rel="noopener noreferrer">Instagram</a>
     </div>
   </header>
+
+  <!-- Personal Introduction -->
+  <section class="resume-intro">
+    <p>I am always happy to talk to dreamers. If you would like to work with me or just have a quick chat, feel free to email me at <strong>goyalpramod1729[at]gmail.com</strong>. Seriously, drop me a text. I am very happy to meet new people.</p>
+    <p>You can check out my other socials if you would like to learn a bit more about me!</p>
+  </section>
 
   <!-- Education -->
   <section class="resume-section">
