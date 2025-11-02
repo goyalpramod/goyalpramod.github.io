@@ -286,9 +286,6 @@ permalink: /resume/
   <!-- Header -->
   <header class="resume-header">
     <h1 class="resume-name">Pramod Goyal</h1>
-    <div class="resume-contact">
-      <span>goyalpramod1729[at]gmail.com</span>
-    </div>
     <div class="resume-social">
       <a href="https://linkedin.com/in/goyalpramod" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       <span style="color: #ddd;">|</span>
