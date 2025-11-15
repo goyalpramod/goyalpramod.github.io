@@ -328,18 +328,76 @@ as the name implies
 get the stats of the system running the service
 
 
+**get_features**
 
-"""
-based on the directory type get the directory
+get features?
 
- - view_image (/view) - Serves generated images with preview/channel options
-  - post_prompt (/prompt POST) - Most critical - Queues workflows for execution
-  - get_queue (/queue) - Returns pending/running workflows
-  - post_interrupt (/interrupt) - Cancels running workflows
-  - system_stats (/system_stats) - Returns VRAM/RAM usage, device info
+**get_prompt**
 
-  The POST /prompt endpoint is where workflows actually get submitted for execution!
-"""
+get prompt from the queue
+
+**node_info**
+
+get node types and version
+
+**get_object_info**
+
+get information about a particular node
+
+**get_object_info_node**
+
+get information about a particular group of nodes
+
+**get_history**
+
+get history? (but of what?)
+
+**get_history_prompt_id**
+
+get history based on prompt id 
+
+**get_queue**
+
+get queue (no clue what is happening inside though)
+get_queue (/queue) - Returns pending/running workflows
+
+#### POST 
+
+**post_prompt**
+
+Queues workflows for execution
+
+**post_queue**
+
+clear or delete runs in the queue
+
+**post_interrupt**
+
+interrupt running process
+
+**post_free**
+
+free memory
+
+**post_history**
+
+clear or delete history
+
+#### Normal methods 
+
+**setup**
+
+Start a client without timeout
+
+**add_routes**
+
+add routes to enable communication 
+
+**get_queue_info**
+
+get the remaining tasks in the queue
+
+
 
 ## ComfyUI_fronteend Overview
 
