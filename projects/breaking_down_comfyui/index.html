@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Breaking down ComfyUI to build Virgil | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Breaking down ComfyUI to build Virgil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I have been building [Virgil] with my brother ([Dhanajaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI." />
+<meta property="og:description" content="I have been building [Virgil] with my brother ([Dhanajaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI." />
+<link rel="canonical" href="https://goyalpramod.github.io/projects/breaking_down_comfyui/" />
+<meta property="og:url" content="https://goyalpramod.github.io/projects/breaking_down_comfyui/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/cover_images/img6.webp" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-11-17T22:59:02+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/cover_images/img6.webp" />
+<meta property="twitter:title" content="Breaking down ComfyUI to build Virgil" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-13T06:30:00+00:00","datePublished":"2025-11-17T22:59:02+00:00","description":"I have been building [Virgil] with my brother ([Dhanajaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI.","headline":"Breaking down ComfyUI to build Virgil","image":"https://goyalpramod.github.io/assets/cover_images/img6.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/projects/breaking_down_comfyui/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/projects/breaking_down_comfyui/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/cover_images/img6.webp" alt="Breaking down ComfyUI to build Virgil" class="featured-image">
+</div>
+
+
+<article class="note">
+  <h1>Breaking down ComfyUI to build Virgil</h1>
+  <p class="meta">Last updated: November 13, 2025</p>
+
+  <p>I have been building [Virgil] with my brother ([Dhanajaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI.</p>
+
+<p>That’s why we set out to build virgil, one platform where you could create with AI without limitations and as simple as possible.</p>
+
+<p>This is me breaking down ComfyUI and how I went about it, hopefully it helps you. Feel free to reach out to me with any questions. I have also created BabyComfy which is a minimal abstraction and simplification of ComfyUI, we are building virgil on top of this.</p>
+
+<p>(Also do check out Virgil and give me your thoughts on it!!!)</p>
+
+<h2 id="how-i-went-about-it">How I went about it</h2>
+
+<p>ComfyUI is a huge and complex code base to say the least. So I did the following first</p>
+
+<ol>
+  <li>I have been using ComfyUI for a while so I know the problems and beauty of it, so if you haven’t used it yet. I will recommend installinng it and trying it yourself.</li>
+  <li>I forked the repo locally, opened claude code and gave the following prompt <code class="language-plaintext highlighter-rouge">I wish to write a blog breaking down this repository completely, I will also create diagrams in exalidraw to explain parts of it. Additionally I would like to make minimal replica while reading it. Create a reading_guide.md that I can follow. </code> (Here is the guide it gave me.)</li>
+  <li>I went through the <a href="https://docs.comfy.org/">docs</a></li>
+  <li>Toughest part, just keep reading the code and writing it out.</li>
+</ol>
+
+<h2 id="comfyui-overview">ComfyUI Overview</h2>
+
+<p>{later add}</p>
+
+<h2 id="lessons-from-docs">Lessons from docs</h2>
+
+<p>| “ComfyUI is an environment for building and running generative content workflows. In this context, a workflow is defined as a collection of program objects called nodes that are connected to each other, forming a network. This network is also known as a graph.”
+from <a href="https://docs.comfy.org/development/core-concepts/workflow">here</a></p>
+
+<h2 id="foundations">Foundations</h2>
+
+<h3 id="mainpy">main.py</h3>
+
+<ol>
+  <li>How can main.py have multiple <code class="language-plaintext highlighter-rouge">if __name__ == "__main__":</code>?</li>
+</ol>
+
+<p>”””
+Looking at main.py:18, main.py:117, and main.py:364, this file actually has three if <strong>name</strong> == “<strong>main</strong>”: blocks, which is valid Python but unconventional.</p>
+
+<p>Here’s what’s happening:</p>
+
+<ol>
+  <li>Line 18 - Sets environment variables for telemetry</li>
+  <li>Line 117 - Configures CUDA/device settings</li>
+  <li>Line 364 - The main execution block</li>
+</ol>
+
+<p>When Python runs a file directly, it evaluates code from top to bottom. Each if <strong>name</strong> == “<strong>main</strong>”: block is checked independently, and since the condition is true (the file is being run<br />
+ directly), all three blocks execute in sequence.</p>
+
+<p>This works, but it’s unusual code organization. Typically, you’d see:</p>
+
+<ul>
+  <li>A single if <strong>name</strong> == “<strong>main</strong>”: block at the end</li>
+  <li>Code organized chronologically within that block</li>
+</ul>
+
+<p>The reason this file is structured this way appears to be:</p>
+
+<ul>
+  <li>Early environment setup needs to happen before imports (lines 18-21 run before the main imports)</li>
+  <li>Device configuration needs to run before torch is imported (line 117)</li>
+  <li>The actual startup logic runs last (line 364)</li>
+</ul>
+
+<p>This is a deliberate design choice to control the order of initialization - setting certain environment variables before specific modules are imported. While it works, consolidating these into a<br />
+ single block with clear comments would be more conventional.
+“””</p>
+
+<ol>
+  <li>What “def prompt_worker” is doing in a few lines</li>
+</ol>
+
+<p>”””
+The prompt_worker function (main.py:170-246) is a background worker that:</p>
+
+<ol>
+  <li>Runs in an infinite loop pulling workflow execution requests from a queue</li>
+  <li>Executes each prompt using the PromptExecutor (line 202), which processes the node graph and generates outputs</li>
+  <li>Reports completion status back to the server with success/error messages (lines 206-211)</li>
+  <li>Manages memory by periodically running garbage collection and unloading models when flagged (lines 228-244)</li>
+</ol>
+
+<p>Essentially, it’s the core execution engine that processes ComfyUI workflows one at a time, running in a separate thread (started at line 339) so the server can remain responsive while
+generating images or running other operations.
+“””</p>
+
+<ol>
+  <li>What does “hijack_progress” do?</li>
+</ol>
+
+<p>”””
+The hijack_progress function (main.py:256-285) intercepts all progress updates during workflow execution and broadcasts them to connected clients. It:</p>
+
+<ol>
+  <li>Creates a hook function that captures progress updates (current value, total steps, preview images)</li>
+  <li>Enriches the data by automatically filling in the prompt_id and node_id from execution context if not provided</li>
+  <li>Sends real-time updates to the client via websocket (line 271) so the UI can show progress bars</li>
+  <li>Streams preview images during generation (lines 272-283) so users can see intermediate results</li>
+  <li>Registers this globally (line 285) so all progress callbacks throughout ComfyUI route through this function
+The term “hijack” means it’s hooking into the global progress reporting system to ensure all progress events get sent to the web interface, enabling real-time feedback during image generation.
+“””</li>
+</ol>
+
+<p>start_comfyui</p>
+
+<ul>
+  <li>Start a new event loop</li>
+  <li>Setup a prompt server with that event loop</li>
+  <li>Setup Hook Breaker (Why? what does this do?)</li>
+  <li>Cuda malloc warning to let the user know that their gpu may not be supported</li>
+  <li>Setup_database (what kind? What is this used for?)</li>
+  <li>Add hijack_progress on the prompt server so that the progress is tracked</li>
+  <li>Setup thread for prompt_worker (what is this thread?) [#! Potential improvement, python 3.14 and so on does not have GIL. Maybe we can make this better or even faster using that]</li>
+  <li>Then start all together</li>
+</ul>
+
+<p>”””
+Your understanding is mostly correct! Here’s the refined version with answers:</p>
+
+<p>start_comfyui</p>
+
+<ul>
+  <li>Start a new event loop (if not provided)</li>
+  <li>Setup a prompt server with that event loop ✓</li>
+  <li>Setup Hook Breaker - <strong>Saves/restores core functions around custom node loading</strong>
+(Protects against custom nodes that monkey-patch core ComfyUI functions - notice it’s called at line 245 in prompt_worker too, restoring after each execution)</li>
+  <li>Cuda malloc warning ✓</li>
+  <li>Setup_database - <strong>Initializes a database for workflow history/metadata</strong>
+(Uses app/database/db.py, appears to be a feature in development - the error message says “in future the database will be required”)</li>
+  <li>Add routes to prompt server (line 336) + hijack_progress for real-time tracking ✓</li>
+  <li>Setup thread for prompt_worker - <strong>The execution engine thread that processes workflows from the queue</strong>
+(daemon=True means it dies when main thread exits)</li>
+  <li>Return the loop, server, and start_all function (doesn’t actually start yet - that happens at line 376)</li>
+</ul>
+
+<p>Re: Python 3.13+ free-threading (not 3.14): The potential improvement exists, but:</p>
+
+<ul>
+  <li>Most compute happens in PyTorch/NumPy which already releases the GIL</li>
+  <li>The threading here is more about concurrent I/O (queue management, websockets) than CPU parallelism</li>
+  <li>Might see marginal gains, but the bottleneck is GPU execution, not Python threading
+“””</li>
+</ul>
+
+<h3 id="serverpy">server.py</h3>
+
+<ol>
+  <li>What does “@web.middleware” do?</li>
+</ol>
+
+<p>”””</p>
+
+<p>● @web.middleware is a decorator from aiohttp that creates middleware functions - interceptors that process every HTTP request before it reaches the route handler (and can also modify responses).</p>
+
+<p>How it works:</p>
+
+<p>@web.middleware
+async def example_middleware(request, handler): # Code here runs BEFORE the route handler
+response = await handler(request) # Call the actual route handler # Code here runs AFTER the route handler
+return response</p>
+
+<p>In server.py, there are several middlewares:</p>
+
+<ol>
+  <li>deprecation_warning (lines 56-72) - Logs warnings when deprecated API paths are accessed</li>
+  <li>compress_body (lines 75-85) - Compresses JSON/text responses with gzip if client supports it</li>
+  <li>create_cors_middleware() (lines 88-103) - Adds CORS headers for cross-origin requests</li>
+  <li>create_origin_only_middleware() (lines 131-165) - Security middleware that prevents CSRF attacks by checking Host and Origin headers match on localhost</li>
+</ol>
+
+<p>The middleware chain (configured at lines 187-194) processes requests in order:
+Request → cache_control → deprecation_warning → compress_body → CORS/Origin check → Route handler → Response</p>
+
+<p>This pattern lets you add cross-cutting concerns (logging, security, compression) without modifying every route handler individually.
+“””</p>
+
+<ol>
+  <li>What does “is_loopback” do?</li>
+</ol>
+
+<p>”””</p>
+
+<p>● The is_loopback function (server.py:105-128) checks if a hostname or IP address refers to localhost (a loopback address like 127.0.0.1 or ::1).</p>
+
+<p>How it works:</p>
+
+<ol>
+  <li>Quick check (lines 108-112): Tries to parse the host as an IP address and check if it’s loopback directly
+    - Returns True for 127.0.0.1, ::1, etc.</li>
+  <li>Hostname resolution (lines 116-127): If the quick check fails (e.g., host is “localhost” string), it:
+    - Resolves the hostname to IP addresses (both IPv4 and IPv6)
+    - Checks if ALL resolved IPs are loopback addresses
+    - Returns False if ANY resolved IP is NOT loopback</li>
+</ol>
+
+<p>Why it’s needed:</p>
+
+<p>This function is used in create_origin_only_middleware() (line 146) to enable CSRF protection only for localhost requests:</p>
+
+<p>loopback = is_loopback(host_domain_parsed.hostname)</p>
+
+<p>if loopback and host_domain != origin_domain:
+      # Block mismatched Host/Origin on localhost
+      return web.Response(status=403)</p>
+
+<p>Security context: When ComfyUI runs on 127.0.0.1, a malicious website could try to send POST requests to http://127.0.0.1:8188 from your browser. The middleware blocks this by ensuring the
+  Origin header matches the Host header for loopback addresses, preventing cross-site attacks against your local server.</p>
+
+<p>”””</p>
+
+<ol>
+  <li>
+    <p>create_origin_only_middleware -&gt; This can be fixed using cookie as mentioned</p>
+  </li>
+  <li>
+    <p>What is a mimetype?</p>
+  </li>
+</ol>
+
+<p>”””</p>
+
+<p>A MIME type (Multipurpose Internet Mail Extensions type) is a standardized label that identifies the format/type of a file or data. It tells browsers and applications how to handle the content.</p>
+
+<p>Format: type/subtype</p>
+
+<p>Common examples:</p>
+<ul>
+  <li>image/png - PNG image</li>
+  <li>image/jpeg - JPEG image</li>
+  <li>text/html - HTML webpage</li>
+  <li>application/json - JSON data</li>
+  <li>video/mp4 - MP4 video</li>
+  <li>application/octet-stream - Generic binary data (forces download)</li>
+</ul>
+
+<p>In server.py, mimetypes are used:</p>
+
+<ol>
+  <li>
+    <p>Setup (lines 171-173):
+  mimetypes.init()
+  mimetypes.add_type(‘application/javascript; charset=utf-8’, ‘.js’)
+  mimetypes.add_type(‘image/webp’, ‘.webp’)
+  Maps file extensions to MIME types.</p>
+  </li>
+  <li>
+    <p>File serving (line 529):
+  content_type = mimetypes.guess_type(filename)[0] or ‘application/octet-stream’
+  Determines the correct MIME type from the file extension.</p>
+  </li>
+  <li>
+    <p>Security (lines 532-533):
+  if content_type in {‘text/html’, ‘text/javascript’, …}:
+ content_type = ‘application/octet-stream’  # Forces download
+  Prevents browser from executing HTML/JS files by forcing them to download instead.</p>
+  </li>
+</ol>
+
+<p>Why it matters: MIME types tell the browser whether to display an image, play a video, download a file, or execute JavaScript. Wrong MIME types can cause security vulnerabilities (XSS attacks)    <br />
+  or broken functionality.</p>
+
+<p>”””</p>
+
+<ol>
+  <li>PromptServer is the main class of this function. The way it works is</li>
+</ol>
+
+<ul>
+  <li>initialize the different components</li>
+  <li>define the middlewares</li>
+  <li><code class="language-plaintext highlighter-rouge">self.app = web.Application(client_max_size=max_upload_size, middlewares=middlewares)</code> This takes care of starting a web server using aiohttp</li>
+  <li>setup web_root to front_end_manager</li>
+  <li>Start routes using aiohttp using ` web.RouteTableDef()` (What do these aiohtpp endpoints do though?)</li>
+</ul>
+
+<p>The different endpoints and understanding what they do</p>
+
+<h4 id="get">GET</h4>
+
+<p><strong>websocket_handler</strong></p>
+
+<p>”””
+● The websocket_handler function (server.py:213-271) manages real-time bidirectional communication between the ComfyUI server and web clients (the browser UI).</p>
+
+<p>What it does:</p>
+
+<ol>
+  <li>Establishes WebSocket connection (lines 215-216):
+  ws = web.WebSocketResponse()
+  await ws.prepare(request)</li>
+  <li>Assigns client ID (lines 217-222):
+    - Reuses existing clientId from query params if reconnecting
+    - Generates new UUID if new connection</li>
+  <li>Stores connection (lines 225-227):
+  self.sockets[sid] = ws  # Store WebSocket
+  self.sockets_metadata[sid] = {“feature_flags”: {}}  # Store metadata</li>
+  <li>Sends initial state (line 231):
+    - Queue status and client ID to newly connected client</li>
+  <li>Handles reconnection (lines 233-234):
+    - If client was executing a workflow, re-send current node</li>
+  <li>Processes incoming messages (lines 239-267):
+    - Listens for messages from the client
+    - Feature flags negotiation (lines 246-260): Client and server exchange capability information on first message
+    - Handles JSON parsing errors gracefully</li>
+  <li>Cleanup on disconnect (lines 269-270):
+    - Removes socket and metadata when connection closes</li>
+</ol>
+
+<p>Why it’s important: This WebSocket connection is how the UI receives real-time updates like:</p>
+<ul>
+  <li>Progress bars (hijack_progress sends updates here)</li>
+  <li>Preview images during generation</li>
+  <li>Queue status changes</li>
+  <li>Execution status</li>
+</ul>
+
+<p>Without this, the UI would be blind to what’s happening on the server!
+“””</p>
+
+<p><strong>get_root</strong></p>
+
+<p>Get the root path of the front end</p>
+
+<p><strong>get_embeddings</strong></p>
+
+<p>get path of embedding models</p>
+
+<p><strong>list_model_types</strong></p>
+
+<p>list available model types</p>
+
+<p><strong>get_models</strong></p>
+
+<p>Get the models which are available</p>
+
+<p><strong>get_extensions</strong></p>
+
+<p>Get the available extensions?</p>
+
+<p><strong>get_dir_by_type</strong> (not an endpoint This is a helper function used internally by other routes like image_upload)</p>
+
+<p>get directory based on directory type</p>
+
+<p><strong>compare_image_hash</strong> (helper function)</p>
+
+<p>compare hash of two images to see if it already exists</p>
+
+<p><strong>image_upload</strong> (helper function)</p>
+
+<p>Upload image to file path</p>
+
+<p><strong>upload_image</strong></p>
+
+<p>calls image_upload to upload an image</p>
+
+<p><strong>upload_mask</strong></p>
+
+<p>Save an image then upload the mask</p>
+
+<p><strong>view_image</strong></p>
+
+<p>view an image (Rather complex code, have a look and try to understand what is going on inside)</p>
+
+<p><strong>view_metadata</strong></p>
+
+<p>as the name implies</p>
+
+<p><strong>system_stats</strong></p>
+
+<p>get the stats of the system running the service</p>
+
+<p><strong>get_features</strong></p>
+
+<p>get features?</p>
+
+<p><strong>get_prompt</strong></p>
+
+<p>get prompt from the queue</p>
+
+<p><strong>node_info</strong></p>
+
+<p>get node types and version</p>
+
+<p><strong>get_object_info</strong></p>
+
+<p>get information about a particular node</p>
+
+<p><strong>get_object_info_node</strong></p>
+
+<p>get information about a particular group of nodes</p>
+
+<p><strong>get_history</strong></p>
+
+<p>get history? (but of what?)</p>
+
+<p><strong>get_history_prompt_id</strong></p>
+
+<p>get history based on prompt id</p>
+
+<p><strong>get_queue</strong></p>
+
+<p>get queue (no clue what is happening inside though)
+get_queue (/queue) - Returns pending/running workflows</p>
+
+<h4 id="post">POST</h4>
+
+<p><strong>post_prompt</strong></p>
+
+<p>Queues workflows for execution</p>
+
+<p><strong>post_queue</strong></p>
+
+<p>clear or delete runs in the queue</p>
+
+<p><strong>post_interrupt</strong></p>
+
+<p>interrupt running process</p>
+
+<p><strong>post_free</strong></p>
+
+<p>free memory</p>
+
+<p><strong>post_history</strong></p>
+
+<p>clear or delete history</p>
+
+<h4 id="normal-methods">Normal methods</h4>
+
+<p><strong>setup</strong></p>
+
+<p>Start a client without timeout</p>
+
+<p><strong>add_routes</strong></p>
+
+<p>add routes to enable communication</p>
+
+<p><strong>get_queue_info</strong></p>
+
+<p>get the remaining tasks in the queue</p>
+
+<p><strong>send</strong></p>
+
+<p>based on if it is an image or json or bytes, send it. (Where?)</p>
+
+<p><strong>encode_bytes</strong></p>
+
+<p>Encode giving message (Why?)</p>
+
+<p><strong>send_image</strong></p>
+
+<p>Decode and save image</p>
+
+<p><strong>send_image_with_metadata</strong></p>
+
+<p>Combine image and metadata and send it</p>
+
+<p><strong>send_bytes</strong></p>
+
+<p>send data over socket using bytes</p>
+
+<p><strong>send_json</strong></p>
+
+<p>send data over socket using json</p>
+
+<p><strong>send_sync</strong></p>
+
+<p>Add message to the queue?</p>
+
+<p><strong>queue_updated</strong></p>
+
+<p>Update the queue</p>
+
+<p><strong>publish_loop</strong></p>
+
+<p>Get the messages in the queue and publish it</p>
+
+<p><strong>start</strong></p>
+
+<p>Starts Multi address</p>
+
+<p><strong>start_multi_address</strong></p>
+
+<p>Start the web server</p>
+
+<p><strong>add_on_prompt_handler</strong></p>
+
+<p>add on prompt handler</p>
+
+<p><strong>trigger_on_prompt</strong></p>
+
+<p>Trigger each handler with the json data</p>
+
+<p><strong>send_progress_text</strong></p>
+
+<p>send the progress so far</p>
+
+<p>”””
+ Corrections needed:</p>
+
+<p>get_embeddings - Returns list of embedding names (not paths), with file extensions removed</p>
+
+<p>get_prompt - Returns queue status info, not a prompt from the queue</p>
+
+<p>node_info - Returns detailed metadata about a node class (inputs, outputs, category, description), not “types and version”</p>
+
+<p>get_object_info - Returns info about ALL nodes, not a particular one</p>
+
+<p>get_object_info_node - Returns info about one specific node class, not a group</p>
+
+<p>get_history - Returns workflow execution history (answered your “but of what?”)</p>
+
+<p>get_queue - Returns pending/running workflows in the queue (answered your confusion)</p>
+
+<p>send_image - Encodes image and sends it to WebSocket clients as preview (doesn’t decode or save)</p>
+
+<p>queue_updated - Notifies clients about queue status changes (doesn’t update the queue itself)</p>
+
+<p>Answering your questions:</p>
+<ul>
+  <li>send - Sends to connected WebSocket clients</li>
+  <li>encode_bytes - For efficient binary WebSocket protocol (event type + data)</li>
+</ul>
+
+<p>Everything else is correct!
+“””</p>
+
+<h2 id="comfyui_fronteend-overview">ComfyUI_fronteend Overview</h2>
+
+<!-- Self note
+
+> https://registry.comfy.org/ -> This is gold for inspiration and putting in virgil (Hiring goldmine as well) -->
+
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F&text=Breaking+down+ComfyUI+to+build+Virgil" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F&title=Breaking+down+ComfyUI+to+build+Virgil" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+</article>
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2025 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>
