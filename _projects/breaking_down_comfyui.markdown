@@ -397,7 +397,89 @@ add routes to enable communication
 
 get the remaining tasks in the queue
 
+**send**
 
+based on if it is an image or json or bytes, send it. (Where?)
+
+**encode_bytes**
+
+Encode giving message (Why?)
+
+**send_image**
+
+Decode and save image 
+
+**send_image_with_metadata**
+
+Combine image and metadata and send it
+
+**send_bytes**
+
+send data over socket using bytes 
+
+**send_json**
+
+send data over socket using json
+
+**send_sync**
+
+Add message to the queue?
+
+**queue_updated**
+
+Update the queue
+
+**publish_loop**
+
+Get the messages in the queue and publish it
+
+**start**
+
+Starts Multi address 
+
+**start_multi_address**
+
+Start the web server
+
+**add_on_prompt_handler**
+
+add on prompt handler 
+
+**trigger_on_prompt**
+
+Trigger each handler with the json data
+
+**send_progress_text**
+
+send the progress so far
+
+"""
+ Corrections needed:
+
+  get_embeddings - Returns list of embedding names (not paths), with file extensions removed
+
+  get_prompt - Returns queue status info, not a prompt from the queue
+
+  node_info - Returns detailed metadata about a node class (inputs, outputs, category, description), not "types and version"
+
+  get_object_info - Returns info about ALL nodes, not a particular one
+
+  get_object_info_node - Returns info about one specific node class, not a group
+
+  get_history - Returns workflow execution history (answered your "but of what?")
+
+  get_queue - Returns pending/running workflows in the queue (answered your confusion)
+
+  send_image - Encodes image and sends it to WebSocket clients as preview (doesn't decode or save)
+
+  queue_updated - Notifies clients about queue status changes (doesn't update the queue itself)
+
+  Answering your questions:
+  - send - Sends to connected WebSocket clients
+  - encode_bytes - For efficient binary WebSocket protocol (event type + data)
+
+  Everything else is correct!
+"""
 
 ## ComfyUI_fronteend Overview
 
