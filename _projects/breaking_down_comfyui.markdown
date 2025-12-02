@@ -698,6 +698,10 @@ Checks if a prompt is valid (How?)
 
 #### PromptQueue
 
+
+https://www.troyfawkes.com/learn-python-multithreading-queues-basics/ -> Really helpful to understand all of this
+https://bbc.github.io/cloudfit-public-docs/ -> This too 
+
 **init**
 What is mutex? What is threading.Rlock? What is going on yoooooo??????
 
@@ -748,3 +752,67 @@ Why put it in a heap queue? What is going on yooooooooooo?
 <!-- Self note
 
 > https://registry.comfy.org/ -> This is gold for inspiration and putting in virgil (Hiring goldmine as well) -->
+
+## Appendix 
+
+### Everything about async & multithreading in python
+
+
+#### Threading
+
+https://realpython.com/intro-to-python-threading/
+
+Till python pie (3.14) we had something called the [GIL] so people created a lot of work arounds to work with multiple threads. (Maybe in a few years this part of the blog will be irrelevant haha).
+
+But what is a thread? Well let's start by first talking about your CPU, if your CPU has 8 cores that means you have 8 threads. These are the brains and most of the operations you run on python are run by CPU (GPU computation is different!). Now due to the dreaded [GIL] ([here](https://www.artima.com/weblogs/viewpost.jsp?thread=214235) Guido van van Rossum (A dope name for a dope creator) talks about GIL)
+we could only use 1 thread (brain) at a time, which for most application just works fine. 
+
+But why not use all of the brains if I have them, that is what multi-threading let's us do.
+
+[ADD MEME I PAID FOR THE WHOLE METER I AM GOING TO USE THE WHOLE METER]
+
+Now this is what threading means in a traditional sense, but python dont work this way boy. 
+
+"""
+A thread is a separate flow of execution. This means that your program will have two things happening at once. But for most Python 3 implementations the different threads do not actually execute at the same time: they merely appear to.
+
+It’s tempting to think of threading as having two (or more) different processors running on your program, each one doing an independent task at the same time. That’s almost right. The threads may be running on different processors, but they will only be running one at a time.
+
+Getting multiple tasks running simultaneously requires a non-standard implementation of Python, writing some of your code in a different language, or using multiprocessing which comes with some extra overhead.
+
+Because of the way CPython implementation of Python works, threading may not speed up all tasks. This is due to interactions with the GIL that essentially limit one Python thread to run at a time.
+
+Tasks that spend much of their time waiting for external events are generally good candidates for threading. Problems that require heavy CPU computation and spend little time waiting for external events might not run faster at all.
+
+This is true for code written in Python and running on the standard CPython implementation. If your threads are written in C they have the ability to release the GIL and run concurrently. If you are running on a different Python implementation, check with the documentation too see how it handles threads.
+
+If you are running a standard Python implementation, writing in only Python, and have a CPU-bound problem, you should check out the multiprocessing module instead.
+
+Architecting your program to use threading can also provide gains in design clarity. Most of the examples you’ll learn about in this tutorial are not necessarily going to run faster because they use threads. Using threading in them helps to make the design cleaner and easier to reason about.
+
+So, let’s stop talking about threading and start using it!
+"""
+
+https://www.troyfawkes.com/learn-python-multithreading-queues-basics/
+
+"""
+Use asyncio for many I/O-bound tasks that wait on sockets or files. Prefer threading when you need blocking libraries but light CPU use. Pick multiprocessing for CPU-bound work to bypass the GIL and run tasks in parallel.
+"""
+
+Concurency vs parallalism 
+
+
+What does 
+.gather 
+.join 
+.put 
+.get 
+
+these do? 
+
+Blog series here was helpful -> https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-2
+
+https://discuss.python.org/t/wrapping-async-functions-for-use-in-sync-code/8606
+https://realpython.com/async-io-python/
+https://realpython.com/python-concurrency/
+https://realpython.com/python-heapq-module/
