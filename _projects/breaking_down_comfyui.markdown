@@ -481,7 +481,269 @@ send the progress so far
   Everything else is correct!
 """
 
-## ComfyUI_fronteend Overview
+### execution.py 
+
+**ExecutionResult**
+* Enum for result of the execution
+
+**DuplicateNodeError**
+
+**IsChangedCache**
+No clue, I assume it checks if the particular node has been cached or not. 
+
+**CacheEntry**
+No clue either
+
+**CacheType**
+The type of cache to use I presume.
+
+**CacheSet**
+Initialize the cache that needs to be set 
+
+What are outputs and objects though? And why do most of them have Hierarchical Cache? 
+Also what is `recursive_debug_dump`
+
+How do you choose which function needs to be async and which needs to be sync
+
+**get_input_data**
+depending on if this is v3 or not 
+get info like prompt, id and other stuff 
+
+The heck? How is this code valid 
+
+```python
+for x in inputs:
+    input_data = inputs[x]
+```
+
+and whichever data is not available mark them as missing 
+
+**resolve_map_node_over_list_results**
+counts down the remaining tasks and continues if not done
+
+**_async_map_node_over_list**
+No Clue 
+
+**merge_result_data**
+merge node execution results
+
+**get_output_data**
+run `_async_map_node_over_list` to get the return values 
+check if any pending tasks are left 
+finally get output from final values using `get_output_from_returns` 
+
+What? Why this flow? Why do we need to get output from return values? 
+
+**get_output_from_returns**
+expand the results to get the final output
+
+**format_value**
+format the value of input
+
+**execute**
+start with getting all the ids 
+if a node is async and pending, remove it because it failed 
+for pending subgraph results, take the cached value and delete the rest 
+if lazy status is pending resolve the node over list (what does this even mean)
+execution block sending msg to server for sync execution 
+
+#### PromptExecutor
+
+How is the execute here different from the above one?
+
+"""
+orrections and Clarifications
+
+  IsChangedCache
+
+  Your understanding: "checks if the particular node has been cached or not"
+  Actually: It caches the results of a node's IS_CHANGED or fingerprint_inputs method. These methods determine if a node's output needs to be recomputed based     
+  on its inputs. It's about change detection, not just cache presence.
+
+  CacheEntry
+
+  It's a simple NamedTuple (lines 92-94) that holds:
+  - ui: UI-related outputs (what gets displayed to the user)
+  - outputs: The actual data outputs passed to downstream nodes
+
+  CacheSet - outputs vs objects
+
+  - outputs: Caches the results of node execution (the data produced)
+  - objects: Caches the node instances themselves (the Python objects)
+
+  HierarchicalCache: It's a caching strategy that can have parent-child relationships (important for subgraph execution where nodes can be nested).
+
+  recursive_debug_dump: Debugging method to inspect cache contents.
+
+  The Python code confusion
+
+  for x in inputs:
+      input_data = inputs[x]
+
+  This is completely valid Python! When you iterate over a dict, you iterate over its keys. So x is each key, and inputs[x] gets the value. This is basic
+  Python dict iteration.
+
+  get_input_data
+
+  Your understanding is too vague. This function:
+  1. Gets the INPUT_TYPES schema for the node
+  2. For each input, checks if it's a link (connection from another node) or a direct value
+  3. If it's a link, retrieves the output from the cached results of the source node
+  4. Handles hidden inputs (PROMPT, UNIQUE_ID, etc.)
+  5. Returns all input data needed to execute the node
+
+  _async_map_node_over_list
+
+  This is crucial - it handles batch processing. When a node receives list inputs, it can either:
+  - Process the entire list at once (INPUT_IS_LIST = True)
+  - Process each element separately and merge results
+
+● It also handles async execution, creating tasks for coroutines.
+
+  get_output_data vs get_output_from_returns
+
+  Why this flow? Because nodes can return outputs in different formats:
+  - V1 nodes: tuples or dicts with {'ui': ..., 'result': ...}
+  - V3 nodes: _NodeOutputInternal objects
+  - Subgraph expansion: dicts with 'expand' key
+
+  get_output_from_returns normalizes these different formats into a consistent structure.
+
+  execute function (standalone)
+
+  This executes a single node. Here's the flow:
+
+  1. Check cache - if node result is cached, return it immediately
+  2. Three execution paths:
+    - Async continuation: Node had pending async tasks, resolve them
+    - Subgraph continuation: Node expanded into subgraph, resolve the results
+    - Normal execution: Execute the node fresh
+  3. Lazy evaluation: If node has check_lazy_status, it can request additional inputs dynamically
+  4. Subgraph expansion: Some nodes can dynamically create new nodes (workflows within workflows)
+  5. Cache results and return
+
+  PromptExecutor.execute vs standalone execute
+
+  Key difference:
+  - PromptExecutor.execute_async: Orchestrates execution of the entire workflow (all nodes)
+  - Standalone execute: Executes a single node
+
+  The PromptExecutor:
+  - Manages the execution queue
+  - Calls the standalone execute for each node
+  - Handles execution order via ExecutionList
+  - Manages global state (caches, progress, etc.)
+  - Sends status updates to the server/UI
+
+  Key Concepts You're Missing
+
+  1. Subgraph expansion: Nodes can dynamically create new sub-workflows
+  2. Lazy evaluation: Nodes can request inputs on-demand during execution
+  3. Batch processing: The "map over list" concept handles processing lists of inputs
+  4. Async execution: Some nodes return coroutines that execute asynchronously
+
+  Async vs Sync Decision
+
+  Functions are async when they:
+  - Need to await other async operations
+  - Call _async_map_node_over_list (which might create async tasks)
+  - Perform I/O or long-running operations that shouldn't block
+"""
+
+**reset**
+
+Get's cache (how does it reset it?)
+
+**add_message**
+
+synchronously adds data and event to server
+
+**handle_execution_error**
+
+Send message to the frontend of the error encountered (node error or any kind of error)
+
+**execute**
+
+Wrapper to run async execute synchronously 
+
+**execute_async**
+
+* Put the interupt as False 
+* Add message of starting the execution 
+* Start torch in inference mode
+* Create Dynamic Prompt 
+* Reset the progress state 
+* Add a progress handler
+* Check if the caches have changed
+* While the execution list is not empty keep executing it (This execute is the one outside of the class)
+* Handle execution error if any
+* poll the ram (What?)
+* add the outputs to ui outputs
+
+DONE WITH THE CLASS 
+
+**validate_inputs**
+
+Validates the given inputs. (How?)
+
+`r = await validate_inputs(prompt_id, prompt, o_id, validated)` -> Why recursion?
+
+**full_type_name**
+
+No clue what is going on
+
+**validate_prompt**
+
+Checks if a prompt is valid (How?)
+
+#### PromptQueue
+
+**init**
+What is mutex? What is threading.Rlock? What is going on yoooooo??????
+
+**put**
+Why put it in a heap queue? What is going on yooooooooooo?
+
+**get**
+
+
+**ExecutionStatus**
+
+
+**task_done**
+
+
+**get_current_queue**
+
+
+**get_current_queue_volatile**
+
+
+**get_tasks_remaining**
+
+
+**wipe_queue**
+
+
+**delete_queue_item**
+
+
+**get_history**
+
+
+**wipe_history**
+
+
+**delete_history_item**
+
+
+**set_flags**
+
+
+**get_flags**
+
+
+## ComfyUI_frontend Overview
 
 <!-- Self note
 
