@@ -4443,6 +4443,8 @@ If you wish to check out the work done by OpenAI, you can do so here: [Sparse At
 ## NOTICE: Build first, Write later
 
 > This blog is now on a short hiatus, I give my reasons [here](https://goyalpramod.github.io/thoughts/build_first_write_later/). I will still continue updating this blog, but not as often. Thank you for reading everything I write.
+
+ 
 <!-- > P.S. I am putting out all of the unstructured thoughts and content below for anyone who is curious to check out the resources I had collected for each section
 
 ## 2020: The Scale Revolution
