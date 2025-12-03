@@ -34,7 +34,19 @@ from [here](https://docs.comfy.org/development/core-concepts/workflow)
 
 ## Foundations
 
-### main.py
+### main.py ⭐⭐⭐ CRITICAL
+
+"""
+  **Purpose:** Application entry point
+
+- Parses command-line arguments
+- Sets up model paths
+- Loads custom nodes
+- Starts the server
+- **Run this to start ComfyUI**
+
+  **Importance:** Critical - the main entry point.
+"""
 
 1. How can main.py have multiple `if __name__ == "__main__":`?
 
@@ -127,7 +139,19 @@ Re: Python 3.13+ free-threading (not 3.14): The potential improvement exists, bu
 - Might see marginal gains, but the bottleneck is GPU execution, not Python threading
   """
 
-### server.py
+### server.py ⭐⭐⭐ CRITICAL
+
+"""
+  **Purpose:** Main web server (aiohttp)
+
+- WebSocket server for real-time communication
+- HTTP endpoints for API
+- Handles prompt submission, queue management
+- Sends execution updates to frontend
+- Image upload/download
+
+  **Importance:** Critical - this is the main server entry point.
+"""
 
 1. What does "@web.middleware" do?
 
@@ -481,7 +505,15 @@ send the progress so far
   Everything else is correct!
 """
 
-### execution.py
+### execution.py ⭐⭐⭐ CRITICAL
+
+"""
+
+- Main execution logic
+- PromptQueue class
+- execute() function
+- PromptExecutor class
+"""
 
 **ExecutionResult**
 
@@ -940,13 +972,6 @@ PromptQueue Methods - Detailed Analysis
   4. Condition variables: not_empty.wait() / not_empty.notify() efficiently wake sleeping threads
 """
 
-Important things left to go through: 
-
-1. nodes.py
-2. comfy_execution/
-3. comfy/
-4. comfy_api/
-
 ### **nodes.py** ⭐⭐⭐ CRITICAL
 
 """
@@ -960,14 +985,75 @@ Important things left to go through:
   **Important:** This is one of the most important files - it's the bridge between the UI and the backend functionality.
 """
 
+This is probably the most straight forward file in this repo. There are different classes which are the different nodes. The input type i.e what all it takes is defined as a [classmethod], the return type, fuction, and category are constants to help know what they return, what they do, and where should be stored respectively.
 
+Of these the most essential and commonly used nodes are
+- cheakpoint loader
+- VAE encode
+- VAE Decode
+- SaveImage
+- LoadImage
+- PreviewImage
+- Clip Text Encode
+- VAELoader
+- Ksampler
 
+It's easier to just look at the mapping defined in `NODE_DISPLAY_NAME_MAPPINGS`
+
+---
+
+That covers all of the most important root files. Now let us go through the directories in alphabetical order
+
+### **alembic_db/**
+
+mostly irrelevant
 
 """
+  **Purpose:** Database migration system (Alembic)
 
-  ---
+- Manages SQL schema changes over time
+- Run `alembic revision --autogenerate -m "message"` to create migrations
+
+  **Importance:** Only matters if modifying the database schema.
+"""
+
+### **api_server/** ⭐⭐ IMPORTANT
+
+"""
+  **Purpose:** FastAPI/aiohttp REST API endpoints
+  **Structure:**
+
+- `routes/` - API route handlers
+  - `routes/internal/` - Internal API endpoints
+- `services/` - Business logic services
+- `utils/` - API utilities
+
+  **Importance:** Critical for understanding the API and backend architecture.
+"""
+This mostly did not make any sense to me
+
+
+### **app/** ⭐⭐ IMPORTANT
+
+"""
+  **Purpose:** Application-level services and management
+  **Key files:**
+
+- `frontend_management.py` - Manages frontend versioning and downloads
+- `user_manager.py` - User authentication and session management
+- `model_manager.py` - Model file tracking and organization
+- `custom_node_manager.py` - Custom node installation and management
+- `subgraph_manager.py` - Workflow subgraph management
+- `logger.py` - Logging configuration
+- `database/` - SQLite database models (Alembic migrations)
+
+  **Importance:** Application infrastructure - manages users, models, and custom nodes.
+"""
+
 
 ### **comfy/** ⭐⭐⭐ CRITICAL
+
+"""
 
   **Purpose:** Core machine learning and model management library
   **Key files:**
@@ -993,22 +1079,18 @@ Important things left to go through:
 
   **Importance:** This is the heart of ComfyUI - all ML/AI functionality lives here.
 
-  ---
+### **comfy_api/** ⭐⭐⭐ CRITICAL
 
-### **app/** ⭐⭐ IMPORTANT
+  **Purpose:** V3 ComfyUI API system (new node API)
+  **Structure:**
 
-  **Purpose:** Application-level services and management
-  **Key files:**
+- `latest/` - Latest API version
+- `v0_0_1/`, `v0_0_2/` - Versioned APIs
+- `internal/` - Internal API utilities
+- `feature_flags.py` - Feature toggles
+- `version_list.py` - API version management
 
-- `frontend_management.py` - Manages frontend versioning and downloads
-- `user_manager.py` - User authentication and session management
-- `model_manager.py` - Model file tracking and organization
-- `custom_node_manager.py` - Custom node installation and management
-- `subgraph_manager.py` - Workflow subgraph management
-- `logger.py` - Logging configuration
-- `database/` - SQLite database models (Alembic migrations)
-
-  **Importance:** Application infrastructure - manages users, models, and custom nodes.
+  **Importance:** Critical for understanding the new V3 node system and API versioning.
 
   ---
 
@@ -1022,7 +1104,27 @@ Important things left to go through:
 
   **When to care:** Only if working with Comfy.org cloud features or API nodes.
 
-  ---
+### **comfy_config/**
+
+  **Purpose:** Configuration parsing and types
+
+- `config_parser.py` - Parse YAML/JSON configs
+- `types.py` - Type definitions for configs
+
+  **Importance:** For advanced configuration management.
+
+### **comfy_execution/** ⭐⭐⭐ CRITICAL
+
+  **Purpose:** Execution engine (you've already studied this!)
+  **Key files:**
+
+- `graph.py` - DynamicPrompt, ExecutionList, dependency graph
+- `caching.py` - Caching strategies (LRU, RAM pressure, etc.)
+- `progress.py` - Progress tracking and reporting
+- `validation.py` - Input validation
+- `utils.py` - Execution utilities
+
+  **Importance:** EXTREMELY CRITICAL - this is the execution engine that runs workflows.
 
 ### **comfy_extras/** ⭐⭐ IMPORTANT
 
@@ -1039,63 +1141,6 @@ Important things left to go through:
 
   **Importance:** Contains most advanced/experimental features. Check here for specialized functionality.
 
-  ---
-
-### **middleware/**
-
-  **Purpose:** HTTP middleware for the web server
-
-- `cache_middleware.py` - HTTP caching headers
-
-  **Importance:** Low - only matters for web server optimization.
-
-  ---
-
-### **script_examples/**
-
-  **Purpose:** Example scripts for using ComfyUI programmatically
-
-- `basic_api_example.py` - Simple API usage
-- `websockets_api_example.py` - WebSocket communication
-- `websockets_api_example_ws_images.py` - Receiving images via WebSocket
-
-  **Importance:** Useful for learning how to use ComfyUI as a library or via API.
-
-  ---
-
-### **tests-unit/**
-
-  **Purpose:** Unit tests using pytest
-
-- Contains test files for various components
-- Run with: `pytest tests-unit/`
-
-  **Importance:** Critical for development, not for usage.
-
-  ---
-
-### **alembic_db/**
-
-  **Purpose:** Database migration system (Alembic)
-
-- Manages SQL schema changes over time
-- Run `alembic revision --autogenerate -m "message"` to create migrations
-
-  **Importance:** Only matters if modifying the database schema.
-
-  ---
-
-### **comfy_config/**
-
-  **Purpose:** Configuration parsing and types
-
-- `config_parser.py` - Parse YAML/JSON configs
-- `types.py` - Type definitions for configs
-
-  **Importance:** For advanced configuration management.
-
-  ---
-
 ### **custom_nodes/** ⭐⭐ IMPORTANT
 
   **Purpose:** User-installed custom node extensions
@@ -1106,7 +1151,23 @@ Important things left to go through:
 
   **Importance:** This is where community extensions live. Essential for understanding the plugin system.
 
-  ---
+### **input/**
+
+  **Purpose:** Input files for workflows
+
+- Default location for input images
+- `3d/` - 3D model inputs
+- `example.png` - Example input image
+
+  **Importance:** Low - just a data directory.
+
+### **middleware/**
+
+  **Purpose:** HTTP middleware for the web server
+
+- `cache_middleware.py` - HTTP caching headers
+
+  **Importance:** Low - only matters for web server optimization.
 
 ### **models/** ⭐⭐⭐ CRITICAL
 
@@ -1127,86 +1188,6 @@ Important things left to go through:
 
   **Importance:** Critical - this is where you put all your models.
 
-  ---
-
-### **temp/**
-
-  **Purpose:** Temporary files during execution
-
-- Preview images, intermediate results
-- Auto-cleaned
-
-  **Importance:** Low - system-managed.
-
-  ---
-
-### **user/**
-
-  **Purpose:** User data and settings
-
-- `comfyui.db` - SQLite database (user settings, workflows)
-- `default/` - Default user's data
-
-  **Importance:** Moderate - contains saved workflows and user preferences.
-
-  ---
-
-### **api_server/** ⭐⭐ IMPORTANT
-
-  **Purpose:** FastAPI/aiohttp REST API endpoints
-  **Structure:**
-
-- `routes/` - API route handlers
-  - `routes/internal/` - Internal API endpoints
-- `services/` - Business logic services
-- `utils/` - API utilities
-
-  **Importance:** Critical for understanding the API and backend architecture.
-
-  ---
-
-### **comfy_api/** ⭐⭐⭐ CRITICAL
-
-  **Purpose:** V3 ComfyUI API system (new node API)
-  **Structure:**
-
-- `latest/` - Latest API version
-- `v0_0_1/`, `v0_0_2/` - Versioned APIs
-- `internal/` - Internal API utilities
-- `feature_flags.py` - Feature toggles
-- `version_list.py` - API version management
-
-  **Importance:** Critical for understanding the new V3 node system and API versioning.
-
-  ---
-
-### **comfy_execution/** ⭐⭐⭐ CRITICAL
-
-  **Purpose:** Execution engine (you've already studied this!)
-  **Key files:**
-
-- `graph.py` - DynamicPrompt, ExecutionList, dependency graph
-- `caching.py` - Caching strategies (LRU, RAM pressure, etc.)
-- `progress.py` - Progress tracking and reporting
-- `validation.py` - Input validation
-- `utils.py` - Execution utilities
-
-  **Importance:** EXTREMELY CRITICAL - this is the execution engine that runs workflows.
-
-  ---
-
-### **input/**
-
-  **Purpose:** Input files for workflows
-
-- Default location for input images
-- `3d/` - 3D model inputs
-- `example.png` - Example input image
-
-  **Importance:** Low - just a data directory.
-
-  ---
-
 ### **output/**
 
   **Purpose:** Generated output files
@@ -1216,7 +1197,15 @@ Important things left to go through:
 
   **Importance:** Low - just a data directory.
 
-  ---
+### **script_examples/**
+
+  **Purpose:** Example scripts for using ComfyUI programmatically
+
+- `basic_api_example.py` - Simple API usage
+- `websockets_api_example.py` - WebSocket communication
+- `websockets_api_example_ws_images.py` - Receiving images via WebSocket
+
+  **Importance:** Useful for learning how to use ComfyUI as a library or via API.
 
 ### **tests/**
 
@@ -1226,7 +1215,14 @@ Important things left to go through:
 
   **Importance:** For development.
 
-  ---
+### **tests-unit/**
+
+  **Purpose:** Unit tests using pytest
+
+- Contains test files for various components
+- Run with: `pytest tests-unit/`
+
+  **Importance:** Critical for development, not for usage.
 
 ### **utils/**
 
@@ -1237,49 +1233,6 @@ Important things left to go through:
 - `json_util.py` - JSON helpers
 
   **Importance:** Low - helper utilities.
-
-  ---
-
-## 📄 Important Root Files
-
-### **execution.py** ⭐⭐⭐ CRITICAL
-
-  **You've already studied this!**
-
-- Main execution logic
-- PromptQueue class
-- execute() function
-- PromptExecutor class
-
-  ---
-
-### **server.py** ⭐⭐⭐ CRITICAL
-
-  **Purpose:** Main web server (aiohttp)
-
-- WebSocket server for real-time communication
-- HTTP endpoints for API
-- Handles prompt submission, queue management
-- Sends execution updates to frontend
-- Image upload/download
-
-  **Importance:** Critical - this is the main server entry point.
-
-  ---
-
-### **main.py** ⭐⭐⭐ CRITICAL
-
-  **Purpose:** Application entry point
-
-- Parses command-line arguments
-- Sets up model paths
-- Loads custom nodes
-- Starts the server
-- **Run this to start ComfyUI**
-
-  **Importance:** Critical - the main entry point.
-
-  ---
 
 ### **folder_paths.py** ⭐⭐⭐ CRITICAL
 
@@ -1294,8 +1247,6 @@ Important things left to go through:
 
   **Importance:** Critical - central path management for all models.
 
-  ---
-
 ### **cuda_malloc.py** ⭐
 
   **Purpose:** CUDA memory allocator configuration
@@ -1306,8 +1257,6 @@ Important things left to go through:
 - Must run BEFORE importing PyTorch
 
   **Importance:** Important for GPU memory management, especially on problematic GPUs.
-
-  ---
 
 ### **hook_breaker_ac10a0.py** ⭐
 
@@ -1320,8 +1269,6 @@ Important things left to go through:
 
   **Importance:** Security feature to protect core functionality.
 
-  ---
-
 ### **latent_preview.py** ⭐⭐
 
   **Purpose:** Generate preview images during sampling
@@ -1333,8 +1280,6 @@ Important things left to go through:
 
   **Importance:** Important for user experience - shows sampling progress.
 
-  ---
-
 ### **new_updater.py**
 
   **Purpose:** Updates the Windows standalone package updater scripts
@@ -1342,8 +1287,6 @@ Important things left to go through:
 - Only relevant for Windows standalone builds
 
   **Importance:** Low - only for Windows packaged version.
-
-  ---
 
 ### **node_helpers.py** ⭐⭐
 
@@ -1357,8 +1300,6 @@ Important things left to go through:
 
   **Importance:** Useful utilities used throughout nodes.
 
-  ---
-
 ### **protocol.py**
 
   **Purpose:** Binary protocol constants for WebSocket
@@ -1371,8 +1312,6 @@ Important things left to go through:
 
   **Importance:** Low - just constants for the WebSocket protocol.
 
-  ---
-
 ### **comfyui_version.py**
 
   **Purpose:** Version string
@@ -1381,25 +1320,6 @@ Important things left to go through:
 - Current version: "0.3.73"
 
   **Importance:** Low - just version metadata.
-
-  ---
-
-## 🎯 Most Important for Deep Understanding
-
-  If you want to deeply understand ComfyUI, focus on these in order:
-
-  1. **execution.py** ⭐⭐⭐ (You've done this!)
-  2. **comfy_execution/** ⭐⭐⭐ (Execution engine)
-  3. **nodes.py** ⭐⭐⭐ (Core nodes)
-  4. **comfy/model_management.py** ⭐⭐⭐ (Memory management)
-  5. **comfy/samplers.py** ⭐⭐⭐ (Sampling algorithms)
-  6. **server.py** ⭐⭐⭐ (Web server)
-  7. **main.py** ⭐⭐⭐ (Entry point)
-  8. **folder_paths.py** ⭐⭐⭐ (Path management)
-  9. **comfy_api/** ⭐⭐⭐ (New API system)
-  10. **comfy/model_patcher.py** ⭐⭐ (Model patching)
-
-  The rest are either specialized features, utilities, or infrastructure that you can explore as needed.
 """
 
 ## ComfyUI_frontend Overview
