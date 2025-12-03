@@ -19,7 +19,7 @@ This is me breaking down ComfyUI and how I went about it, hopefully it helps you
 ComfyUI is a huge and complex code base to say the least. So I did the following first
 
 1. I have been using ComfyUI for a while so I know the problems and beauty of it, so if you haven't used it yet. I will recommend installinng it and trying it yourself.
-2. I forked the repo locally, opened claude code and gave the following prompt `I wish to write a blog breaking down this repository completely, I will also create diagrams in exalidraw to explain parts of it. Additionally I would like to make minimal replica while reading it. Create a reading_guide.md that I can follow. ` (Here is the guide it gave me.)
+2. I forked the repo locally, opened claude code and gave the following prompt `I wish to write a blog breaking down this repository completely, I will also create diagrams in exalidraw to explain parts of it. Additionally I would like to make minimal replica while reading it. Create a reading_guide.md that I can follow.` (Here is the guide it gave me.)
 3. I went through the [docs](https://docs.comfy.org/)
 4. Toughest part, just keep reading the code and writing it out.
 
@@ -155,7 +155,7 @@ Request → cache_control → deprecation_warning → compress_body → CORS/Ori
 This pattern lets you add cross-cutting concerns (logging, security, compression) without modifying every route handler individually.
 """
 
-2. What does "is_loopback" do? 
+2. What does "is_loopback" do?
 
 """
 
@@ -180,29 +180,29 @@ This pattern lets you add cross-cutting concerns (logging, security, compression
       # Block mismatched Host/Origin on localhost
       return web.Response(status=403)
 
-  Security context: When ComfyUI runs on 127.0.0.1, a malicious website could try to send POST requests to http://127.0.0.1:8188 from your browser. The middleware blocks this by ensuring the
+  Security context: When ComfyUI runs on 127.0.0.1, a malicious website could try to send POST requests to <http://127.0.0.1:8188> from your browser. The middleware blocks this by ensuring the
   Origin header matches the Host header for loopback addresses, preventing cross-site attacks against your local server.
-
 
 """
 
 3. create_origin_only_middleware -> This can be fixed using cookie as mentioned
 
-4. What is a mimetype? 
+4. What is a mimetype?
 
 """
 
-A MIME type (Multipurpose Internet Mail Extensions type) is a standardized label that identifies the format/type of a file or data. It tells browsers and applications how to handle the content.     
+A MIME type (Multipurpose Internet Mail Extensions type) is a standardized label that identifies the format/type of a file or data. It tells browsers and applications how to handle the content.
 
   Format: type/subtype
 
   Common examples:
-  - image/png - PNG image
-  - image/jpeg - JPEG image
-  - text/html - HTML webpage
-  - application/json - JSON data
-  - video/mp4 - MP4 video
-  - application/octet-stream - Generic binary data (forces download)
+
+- image/png - PNG image
+- image/jpeg - JPEG image
+- text/html - HTML webpage
+- application/json - JSON data
+- video/mp4 - MP4 video
+- application/octet-stream - Generic binary data (forces download)
 
   In server.py, mimetypes are used:
 
@@ -213,7 +213,7 @@ A MIME type (Multipurpose Internet Mail Extensions type) is a standardized label
   Maps file extensions to MIME types.
 
   2. File serving (line 529):
-  content_type = mimetypes.guess_type(filename)[0] or 'application/octet-stream'
+  content_type = mimetypes.guess_type[filename](0) or 'application/octet-stream'
   Determines the correct MIME type from the file extension.
 
   3. Security (lines 532-533):
@@ -221,20 +221,20 @@ A MIME type (Multipurpose Internet Mail Extensions type) is a standardized label
       content_type = 'application/octet-stream'  # Forces download
   Prevents browser from executing HTML/JS files by forcing them to download instead.
 
-  Why it matters: MIME types tell the browser whether to display an image, play a video, download a file, or execute JavaScript. Wrong MIME types can cause security vulnerabilities (XSS attacks)      
+  Why it matters: MIME types tell the browser whether to display an image, play a video, download a file, or execute JavaScript. Wrong MIME types can cause security vulnerabilities (XSS attacks)
   or broken functionality.
 
 """
 
-5. PromptServer is the main class of this function. The way it works is 
+5. PromptServer is the main class of this function. The way it works is
 
-* initialize the different components 
-* define the middlewares
-* `self.app = web.Application(client_max_size=max_upload_size, middlewares=middlewares)` This takes care of starting a web server using aiohttp
-* setup web_root to front_end_manager 
-* Start routes using aiohttp using ` web.RouteTableDef()` (What do these aiohtpp endpoints do though?)
+- initialize the different components
+- define the middlewares
+- `self.app = web.Application(client_max_size=max_upload_size, middlewares=middlewares)` This takes care of starting a web server using aiohttp
+- setup web_root to front_end_manager
+- Start routes using aiohttp using `web.RouteTableDef()` (What do these aiohtpp endpoints do though?)
 
-The different endpoints and understanding what they do 
+The different endpoints and understanding what they do
 
 #### GET
 
@@ -266,14 +266,14 @@ The different endpoints and understanding what they do
     - Removes socket and metadata when connection closes
 
   Why it's important: This WebSocket connection is how the UI receives real-time updates like:
-  - Progress bars (hijack_progress sends updates here)
-  - Preview images during generation
-  - Queue status changes
-  - Execution status
+
+- Progress bars (hijack_progress sends updates here)
+- Preview images during generation
+- Queue status changes
+- Execution status
 
   Without this, the UI would be blind to what's happening on the server!
 """
-
 
 **get_root**
 
@@ -281,11 +281,11 @@ Get the root path of the front end
 
 **get_embeddings**
 
-get path of embedding models 
+get path of embedding models
 
 **list_model_types**
 
-list available model types 
+list available model types
 
 **get_models**
 
@@ -293,7 +293,7 @@ Get the models which are available
 
 **get_extensions**
 
-Get the available extensions? 
+Get the available extensions?
 
 **get_dir_by_type** (not an endpoint This is a helper function used internally by other routes like image_upload)
 
@@ -309,11 +309,11 @@ Upload image to file path
 
 **upload_image**
 
-calls image_upload to upload an image 
+calls image_upload to upload an image
 
 **upload_mask**
 
-Save an image then upload the mask 
+Save an image then upload the mask
 
 **view_image**
 
@@ -326,7 +326,6 @@ as the name implies
 **system_stats**
 
 get the stats of the system running the service
-
 
 **get_features**
 
@@ -354,14 +353,14 @@ get history? (but of what?)
 
 **get_history_prompt_id**
 
-get history based on prompt id 
+get history based on prompt id
 
 **get_queue**
 
 get queue (no clue what is happening inside though)
 get_queue (/queue) - Returns pending/running workflows
 
-#### POST 
+#### POST
 
 **post_prompt**
 
@@ -383,7 +382,7 @@ free memory
 
 clear or delete history
 
-#### Normal methods 
+#### Normal methods
 
 **setup**
 
@@ -391,7 +390,7 @@ Start a client without timeout
 
 **add_routes**
 
-add routes to enable communication 
+add routes to enable communication
 
 **get_queue_info**
 
@@ -407,7 +406,7 @@ Encode giving message (Why?)
 
 **send_image**
 
-Decode and save image 
+Decode and save image
 
 **send_image_with_metadata**
 
@@ -415,7 +414,7 @@ Combine image and metadata and send it
 
 **send_bytes**
 
-send data over socket using bytes 
+send data over socket using bytes
 
 **send_json**
 
@@ -435,7 +434,7 @@ Get the messages in the queue and publish it
 
 **start**
 
-Starts Multi address 
+Starts Multi address
 
 **start_multi_address**
 
@@ -443,7 +442,7 @@ Start the web server
 
 **add_on_prompt_handler**
 
-add on prompt handler 
+add on prompt handler
 
 **trigger_on_prompt**
 
@@ -475,21 +474,22 @@ send the progress so far
   queue_updated - Notifies clients about queue status changes (doesn't update the queue itself)
 
   Answering your questions:
-  - send - Sends to connected WebSocket clients
-  - encode_bytes - For efficient binary WebSocket protocol (event type + data)
+
+- send - Sends to connected WebSocket clients
+- encode_bytes - For efficient binary WebSocket protocol (event type + data)
 
   Everything else is correct!
 """
 
-### execution.py 
+### execution.py
 
 **ExecutionResult**
-* Enum for result of the execution
+- Enum for result of the execution
 
 **DuplicateNodeError**
 
 **IsChangedCache**
-No clue, I assume it checks if the particular node has been cached or not. 
+No clue, I assume it checks if the particular node has been cached or not.
 
 **CacheEntry**
 No clue either
@@ -498,41 +498,41 @@ No clue either
 The type of cache to use I presume.
 
 **CacheSet**
-Initialize the cache that needs to be set 
+Initialize the cache that needs to be set
 
-What are outputs and objects though? And why do most of them have Hierarchical Cache? 
+What are outputs and objects though? And why do most of them have Hierarchical Cache?
 Also what is `recursive_debug_dump`
 
 How do you choose which function needs to be async and which needs to be sync
 
 **get_input_data**
-depending on if this is v3 or not 
-get info like prompt, id and other stuff 
+depending on if this is v3 or not
+get info like prompt, id and other stuff
 
-The heck? How is this code valid 
+The heck? How is this code valid
 
 ```python
 for x in inputs:
     input_data = inputs[x]
 ```
 
-and whichever data is not available mark them as missing 
+and whichever data is not available mark them as missing
 
 **resolve_map_node_over_list_results**
 counts down the remaining tasks and continues if not done
 
 **_async_map_node_over_list**
-No Clue 
+No Clue
 
 **merge_result_data**
 merge node execution results
 
 **get_output_data**
-run `_async_map_node_over_list` to get the return values 
-check if any pending tasks are left 
-finally get output from final values using `get_output_from_returns` 
+run `_async_map_node_over_list` to get the return values
+check if any pending tasks are left
+finally get output from final values using `get_output_from_returns`
 
-What? Why this flow? Why do we need to get output from return values? 
+What? Why this flow? Why do we need to get output from return values?
 
 **get_output_from_returns**
 expand the results to get the final output
@@ -541,11 +541,11 @@ expand the results to get the final output
 format the value of input
 
 **execute**
-start with getting all the ids 
-if a node is async and pending, remove it because it failed 
-for pending subgraph results, take the cached value and delete the rest 
+start with getting all the ids
+if a node is async and pending, remove it because it failed
+for pending subgraph results, take the cached value and delete the rest
 if lazy status is pending resolve the node over list (what does this even mean)
-execution block sending msg to server for sync execution 
+execution block sending msg to server for sync execution
 
 #### PromptExecutor
 
@@ -557,19 +557,20 @@ orrections and Clarifications
   IsChangedCache
 
   Your understanding: "checks if the particular node has been cached or not"
-  Actually: It caches the results of a node's IS_CHANGED or fingerprint_inputs method. These methods determine if a node's output needs to be recomputed based     
+  Actually: It caches the results of a node's IS_CHANGED or fingerprint_inputs method. These methods determine if a node's output needs to be recomputed based
   on its inputs. It's about change detection, not just cache presence.
 
   CacheEntry
 
   It's a simple NamedTuple (lines 92-94) that holds:
-  - ui: UI-related outputs (what gets displayed to the user)
-  - outputs: The actual data outputs passed to downstream nodes
+
+- ui: UI-related outputs (what gets displayed to the user)
+- outputs: The actual data outputs passed to downstream nodes
 
   CacheSet - outputs vs objects
 
-  - outputs: Caches the results of node execution (the data produced)
-  - objects: Caches the node instances themselves (the Python objects)
+- outputs: Caches the results of node execution (the data produced)
+- objects: Caches the node instances themselves (the Python objects)
 
   HierarchicalCache: It's a caching strategy that can have parent-child relationships (important for subgraph execution where nodes can be nested).
 
@@ -586,6 +587,7 @@ orrections and Clarifications
   get_input_data
 
   Your understanding is too vague. This function:
+
   1. Gets the INPUT_TYPES schema for the node
   2. For each input, checks if it's a link (connection from another node) or a direct value
   3. If it's a link, retrieves the output from the cached results of the source node
@@ -595,17 +597,19 @@ orrections and Clarifications
   _async_map_node_over_list
 
   This is crucial - it handles batch processing. When a node receives list inputs, it can either:
-  - Process the entire list at once (INPUT_IS_LIST = True)
-  - Process each element separately and merge results
+
+- Process the entire list at once (INPUT_IS_LIST = True)
+- Process each element separately and merge results
 
 ● It also handles async execution, creating tasks for coroutines.
 
   get_output_data vs get_output_from_returns
 
   Why this flow? Because nodes can return outputs in different formats:
-  - V1 nodes: tuples or dicts with {'ui': ..., 'result': ...}
-  - V3 nodes: _NodeOutputInternal objects
-  - Subgraph expansion: dicts with 'expand' key
+
+- V1 nodes: tuples or dicts with {'ui': ..., 'result': ...}
+- V3 nodes: _NodeOutputInternal objects
+- Subgraph expansion: dicts with 'expand' key
 
   get_output_from_returns normalizes these different formats into a consistent structure.
 
@@ -625,15 +629,17 @@ orrections and Clarifications
   PromptExecutor.execute vs standalone execute
 
   Key difference:
-  - PromptExecutor.execute_async: Orchestrates execution of the entire workflow (all nodes)
-  - Standalone execute: Executes a single node
+
+- PromptExecutor.execute_async: Orchestrates execution of the entire workflow (all nodes)
+- Standalone execute: Executes a single node
 
   The PromptExecutor:
-  - Manages the execution queue
-  - Calls the standalone execute for each node
-  - Handles execution order via ExecutionList
-  - Manages global state (caches, progress, etc.)
-  - Sends status updates to the server/UI
+
+- Manages the execution queue
+- Calls the standalone execute for each node
+- Handles execution order via ExecutionList
+- Manages global state (caches, progress, etc.)
+- Sends status updates to the server/UI
 
   Key Concepts You're Missing
 
@@ -645,9 +651,10 @@ orrections and Clarifications
   Async vs Sync Decision
 
   Functions are async when they:
-  - Need to await other async operations
-  - Call _async_map_node_over_list (which might create async tasks)
-  - Perform I/O or long-running operations that shouldn't block
+
+- Need to await other async operations
+- Call _async_map_node_over_list (which might create async tasks)
+- Perform I/O or long-running operations that shouldn't block
 """
 
 **reset**
@@ -664,23 +671,23 @@ Send message to the frontend of the error encountered (node error or any kind of
 
 **execute**
 
-Wrapper to run async execute synchronously 
+Wrapper to run async execute synchronously
 
 **execute_async**
 
-* Put the interupt as False 
-* Add message of starting the execution 
-* Start torch in inference mode
-* Create Dynamic Prompt 
-* Reset the progress state 
-* Add a progress handler
-* Check if the caches have changed
-* While the execution list is not empty keep executing it (This execute is the one outside of the class)
-* Handle execution error if any
-* poll the ram (What?)
-* add the outputs to ui outputs
+- Put the interupt as False
+- Add message of starting the execution
+- Start torch in inference mode
+- Create Dynamic Prompt
+- Reset the progress state
+- Add a progress handler
+- Check if the caches have changed
+- While the execution list is not empty keep executing it (This execute is the one outside of the class)
+- Handle execution error if any
+- poll the ram (What?)
+- add the outputs to ui outputs
 
-DONE WITH THE CLASS 
+DONE WITH THE CLASS
 
 **validate_inputs**
 
@@ -698,54 +705,299 @@ Checks if a prompt is valid (How?)
 
 #### PromptQueue
 
-
-https://www.troyfawkes.com/learn-python-multithreading-queues-basics/ -> Really helpful to understand all of this
-https://bbc.github.io/cloudfit-public-docs/ -> This too 
+<https://www.troyfawkes.com/learn-python-multithreading-queues-basics/> -> Really helpful to understand all of this
+<https://bbc.github.io/cloudfit-public-docs/> -> This too
 
 **init**
 What is mutex? What is threading.Rlock? What is going on yoooooo??????
+Okay mutex locks the thread so noone does anything else to it
 
 **put**
 Why put it in a heap queue? What is going on yooooooooooo?
+adds item to the queue
+
+(Should we use PriorityQueue instead of heapq?)
 
 **get**
 
+get item and count of that item as well as update the task counter
 
 **ExecutionStatus**
 
+What is the status of the execution
 
 **task_done**
 
+Start locked thread
+
+Whats going on inside though?
 
 **get_current_queue**
 
+With mutex get the current queue
+Why is this slow?
 
 **get_current_queue_volatile**
 
+How is this different from get_current_queue?
 
 **get_tasks_remaining**
 
+Get size of the remaining tasks
 
 **wipe_queue**
 
+Clean the queue
 
 **delete_queue_item**
 
+Remove 1 item from the queue
 
 **get_history**
 
+get history of everything that was ran?
 
 **wipe_history**
 
+delete history
 
 **delete_history_item**
 
+delete history of a specific item (history is a dict)
 
 **set_flags**
 
+set the flag (What flag, where?)
 
 **get_flags**
 
+What?
+
+"""
+PromptQueue Methods - Detailed Analysis
+
+  init (lines 1092-1100)
+
+  Your understanding: "mutex locks the thread"
+
+  More precise:
+
+- threading.RLock() is a reentrant lock (can be acquired multiple times by the same thread)
+- threading.Condition(self.mutex) is a condition variable - allows threads to wait for
+  notifications
+- Together they enable thread-safe queue operations where multiple threads can safely add/remove
+  items
+
+  Why threading? ComfyUI can have multiple workers/threads executing prompts simultaneously.
+
+  put (lines 1102-1106)
+
+  Your question: "Why put it in a heap queue?"
+
+  Answer: heapq implements a priority queue. Queue items are tuples like (priority, number,
+  prompt_id, prompt, extra_data). The heap automatically keeps the highest priority items at the
+  front. This means:
+
+- Lower priority numbers = higher priority execution
+- Items execute in priority order, not just FIFO
+
+  Should we use PriorityQueue? No, heapq is fine and more lightweight. queue.PriorityQueue is
+  thread-safe but adds overhead.
+
+  get (lines 1108-1119)
+
+  Your understanding: "get item and count of that item as well as update the task counter"
+
+  Correction: It doesn't count "that item" - it:
+
+  1. Waits until queue is not empty (blocks with self.not_empty.wait())
+  2. Pops the highest priority item from the heap
+  3. Assigns it a unique task ID (self.task_counter)
+  4. Moves it to currently_running dict
+  5. Returns (item, task_id)
+
+  The task_counter is a global incrementing ID, not item-specific.
+
+  ExecutionStatus (lines 1121-1124)
+
+  ✅ Correct - it's a NamedTuple holding execution status info (success/error, whether completed,
+  messages).
+
+  task_done (lines 1126-1146)
+
+  Your confusion: "What's going on inside?"
+
+  Here's the flow:
+
+  1. Lock the thread with mutex
+  2. Remove the item from currently_running using item_id
+  3. Limit history size - if history > 10,000 items, remove the oldest entry
+  4. Convert status to dict (if provided)
+  5. Optional processing - call process_item to transform the prompt before storing
+  6. Store in history dict with:
+    - The prompt info
+    - Empty outputs dict (filled later)
+    - Status dict
+    - History result (UI outputs, metadata)
+  7. Notify server that queue updated
+
+  get_current_queue (lines 1148-1154)
+
+  Your question: "Why is this slow?"
+
+  Answer: Line 1154 - copy.deepcopy(self.queue) creates a full recursive copy of all queue items.
+  Each item contains the entire prompt dict (all nodes, inputs, etc.). This is expensive for large
+  queues.
+
+  Why deep copy? To return a safe snapshot that won't change if the queue is modified by another
+  thread.
+
+  get_current_queue_volatile (lines 1156-1161)
+
+  Your question: "How is this different?"
+
+  Key difference:
+
+- get_current_queue: Uses copy.deepcopy() - safe but slow
+- get_current_queue_volatile: Uses copy.copy() (shallow copy) - fast but potentially unsafe
+
+  "Volatile" means: The returned data might reference objects that other threads are modifying. Safe
+  for read-only viewing, not for modification.
+
+  get_tasks_remaining (lines 1163-1165)
+
+  ✅ Correct - Returns len(queue) + len(currently_running).
+
+  wipe_queue (lines 1167-1170)
+
+  ✅ Correct - Clears all pending items from the queue.
+
+  delete_queue_item (lines 1172-1183)
+
+  Your understanding is basically correct, but here's the detail:
+
+- Takes a function parameter (a predicate/filter)
+- Iterates through queue looking for an item where function(item) returns True
+- When found, removes it and re-heapifies to maintain heap property
+- Returns True if deleted, False if not found
+
+  Example usage:
+  queue.delete_queue_item(lambda x: x[2] == "prompt_123")  # Delete by prompt_id
+
+  get_history (lines 1185-1210)
+
+  Your understanding: "get history of everything that was ran"
+
+  More precise: Returns execution history with flexible querying:
+
+- prompt_id=None: Get all history (with optional pagination via offset/max_items)
+- prompt_id="xyz": Get specific prompt's history
+- map_function: Optional transformer to process each history entry before returning
+
+  Not just "everything" - you can filter and paginate.
+
+  wipe_history (lines 1212-1214)
+
+  ✅ Correct - Clears all execution history.
+
+  delete_history_item (lines 1216-1218)
+
+  ✅ Correct - Deletes a specific history entry by ID. Uses pop(id, None) so it doesn't error if ID
+  doesn't exist.
+
+  set_flag (lines 1220-1223)
+
+  Your confusion: "What flag, where?"
+
+  Answer: This is a generic signaling mechanism. Flags are stored in self.flags dict as {name: data}.
+   Used for:
+
+- Interrupting execution
+- Sending control signals between threads
+- Example: queue.set_flag("interrupt", True) to stop execution
+
+  After setting, it calls self.not_empty.notify() to wake up any waiting threads.
+
+  get_flags (lines 1225-1232)
+
+  Answer:
+
+- Retrieves all flags from self.flags dict
+- reset=True (default): Returns flags and clears them (consume-once pattern)
+- reset=False: Returns a copy without clearing (peek pattern)
+
+  Use case: Worker threads periodically call get_flags() to check for interrupt signals or other
+  commands.
+
+  ---
+  Key Concepts You're Missing
+
+  1. Thread synchronization: This entire class is about coordinating multiple threads safely
+  accessing shared data
+  2. Priority queue: Items execute by priority, not FIFO
+  3. Producer-consumer pattern: Web API puts items, worker threads get them
+  4. Condition variables: not_empty.wait() / not_empty.notify() efficiently wake sleeping threads
+"""
+
+### nodes.py
+
+### comfy
+
+### app
+
+### comfy_api_nodes
+
+### comfy_extras 
+
+### middleware  
+
+### script_examples  
+
+### tests-unit
+
+### alembic_db
+
+### comfy_config
+
+### custom_nodes  
+
+### models
+
+### temp
+
+### user
+
+### api_server
+
+### comfy_api  
+
+### comfy_execution
+
+### input
+
+### output
+
+### tests
+
+### utils
+
+### misc
+
+#### folder_paths.py
+
+#### cuda_malloc.py
+
+#### hook_breaker_ac10a0.py
+
+#### latent_preview.py
+
+#### new_updater.py
+
+#### node_helper.py
+
+#### protocol.py
+
+#### comfyui_version.py
 
 ## ComfyUI_frontend Overview
 
@@ -753,25 +1005,24 @@ Why put it in a heap queue? What is going on yooooooooooo?
 
 > https://registry.comfy.org/ -> This is gold for inspiration and putting in virgil (Hiring goldmine as well) -->
 
-## Appendix 
+## Appendix
 
 ### Everything about async & multithreading in python
 
-
 #### Threading
 
-https://realpython.com/intro-to-python-threading/
+<https://realpython.com/intro-to-python-threading/>
 
 Till python pie (3.14) we had something called the [GIL] so people created a lot of work arounds to work with multiple threads. (Maybe in a few years this part of the blog will be irrelevant haha).
 
 But what is a thread? Well let's start by first talking about your CPU, if your CPU has 8 cores that means you have 8 threads. These are the brains and most of the operations you run on python are run by CPU (GPU computation is different!). Now due to the dreaded [GIL] ([here](https://www.artima.com/weblogs/viewpost.jsp?thread=214235) Guido van van Rossum (A dope name for a dope creator) talks about GIL)
-we could only use 1 thread (brain) at a time, which for most application just works fine. 
+we could only use 1 thread (brain) at a time, which for most application just works fine.
 
 But why not use all of the brains if I have them, that is what multi-threading let's us do.
 
 [ADD MEME I PAID FOR THE WHOLE METER I AM GOING TO USE THE WHOLE METER]
 
-Now this is what threading means in a traditional sense, but python dont work this way boy. 
+Now this is what threading means in a traditional sense, but python dont work this way boy.
 
 """
 A thread is a separate flow of execution. This means that your program will have two things happening at once. But for most Python 3 implementations the different threads do not actually execute at the same time: they merely appear to.
@@ -793,26 +1044,25 @@ Architecting your program to use threading can also provide gains in design clar
 So, let’s stop talking about threading and start using it!
 """
 
-https://www.troyfawkes.com/learn-python-multithreading-queues-basics/
+<https://www.troyfawkes.com/learn-python-multithreading-queues-basics/>
 
 """
 Use asyncio for many I/O-bound tasks that wait on sockets or files. Prefer threading when you need blocking libraries but light CPU use. Pick multiprocessing for CPU-bound work to bypass the GIL and run tasks in parallel.
 """
 
-Concurency vs parallalism 
+Concurency vs parallalism
 
+What does
+.gather
+.join
+.put
+.get
 
-What does 
-.gather 
-.join 
-.put 
-.get 
+these do?
 
-these do? 
+Blog series here was helpful -> <https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-2>
 
-Blog series here was helpful -> https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-2
-
-https://discuss.python.org/t/wrapping-async-functions-for-use-in-sync-code/8606
-https://realpython.com/async-io-python/
-https://realpython.com/python-concurrency/
-https://realpython.com/python-heapq-module/
+<https://discuss.python.org/t/wrapping-async-functions-for-use-in-sync-code/8606>
+<https://realpython.com/async-io-python/>
+<https://realpython.com/python-concurrency/>
+<https://realpython.com/python-heapq-module/>
