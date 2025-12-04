@@ -1050,6 +1050,19 @@ This mostly did not make any sense to me
   **Importance:** Application infrastructure - manages users, models, and custom nodes.
 """
 
+Quick definitions of some directories/files 
+
+* database -> I more or less have no clue what this is or why or where it is even used. 
+* app_settings.py -> used for getting and saving user settings
+* logger.py -> used to setup logging
+* custom_node_manager.py -> get the custom nodes from the .json and load them 
+* frontend_management.py -> Used to check if the correct front-end package is installed.
+* model_manager.py -> get's the model from the given filepath?
+* subgraph_manager.py -> used to load subgraphs
+* user_manager.py -> 
+
+
+
 
 ### **comfy/** ⭐⭐⭐ CRITICAL
 
@@ -1078,9 +1091,16 @@ This mostly did not make any sense to me
 - `extra_samplers/` - Additional sampling methods
 
   **Importance:** This is the heart of ComfyUI - all ML/AI functionality lives here.
+"""
+It is quite troublesome to go through this entire directory and try to understand all parts of it. I will recommend pick this flow. 
+Choose one model (let's say flux) go to where that is defined ([add path here]) and read how that is ran.
+
+I did the same for Flux as I wanted to have that as the first model in virgil. And it worked out quite well. You can see my implementation details here.
+
 
 ### **comfy_api/** ⭐⭐⭐ CRITICAL
 
+"""
   **Purpose:** V3 ComfyUI API system (new node API)
   **Structure:**
 
@@ -1091,11 +1111,13 @@ This mostly did not make any sense to me
 - `version_list.py` - API version management
 
   **Importance:** Critical for understanding the new V3 node system and API versioning.
+"""
 
-  ---
+Everything beside internal is just talking about types. I do not understand what is going inside of internal though. [FIND_OUT]
 
 ### **comfy_api_nodes/** ⭐
 
+"""
   **Purpose:** Nodes that call external Comfy.org APIs
 
 - API nodes for cloud services (model sharing, workflow sharing, etc.)
@@ -1103,19 +1125,29 @@ This mostly did not make any sense to me
 - Contains both staging and production API integration
 
   **When to care:** Only if working with Comfy.org cloud features or API nodes.
+"""
+
+These contain the nodes that call external services. 
+
+Let's understand how we can build a node by picking one model, in this case I chose Gemini.
+
+<!-- Note to self: Learn from these and make one for gemini -->
 
 ### **comfy_config/**
 
+"""
   **Purpose:** Configuration parsing and types
 
 - `config_parser.py` - Parse YAML/JSON configs
 - `types.py` - Type definitions for configs
 
   **Importance:** For advanced configuration management.
+"""
 
 ### **comfy_execution/** ⭐⭐⭐ CRITICAL
 
-  **Purpose:** Execution engine (you've already studied this!)
+"""
+  **Purpose:** Execution engine
   **Key files:**
 
 - `graph.py` - DynamicPrompt, ExecutionList, dependency graph
@@ -1125,9 +1157,13 @@ This mostly did not make any sense to me
 - `utils.py` - Execution utilities
 
   **Importance:** EXTREMELY CRITICAL - this is the execution engine that runs workflows.
+"""
+
+
 
 ### **comfy_extras/** ⭐⭐ IMPORTANT
 
+"""
   **Purpose:** Extra/experimental nodes and features
   **Contains 80+ specialized node files:**
 
@@ -1140,9 +1176,11 @@ This mostly did not make any sense to me
 - And many more specialized nodes...
 
   **Importance:** Contains most advanced/experimental features. Check here for specialized functionality.
+"""
+
 
 ### **custom_nodes/** ⭐⭐ IMPORTANT
-
+"""
   **Purpose:** User-installed custom node extensions
 
 - `example_node.py.example` - Template for creating custom nodes
@@ -1150,9 +1188,12 @@ This mostly did not make any sense to me
 - **Third-party nodes install here**
 
   **Importance:** This is where community extensions live. Essential for understanding the plugin system.
+"""
+
 
 ### **input/**
 
+"""
   **Purpose:** Input files for workflows
 
 - Default location for input images
@@ -1160,17 +1201,21 @@ This mostly did not make any sense to me
 - `example.png` - Example input image
 
   **Importance:** Low - just a data directory.
+"""
+
 
 ### **middleware/**
-
+"""
   **Purpose:** HTTP middleware for the web server
 
 - `cache_middleware.py` - HTTP caching headers
 
   **Importance:** Low - only matters for web server optimization.
+"""
+
 
 ### **models/** ⭐⭐⭐ CRITICAL
-
+"""
   **Purpose:** All AI model files (checkpoints, LoRAs, etc.)
   **Subdirectories:**
 
@@ -1187,18 +1232,22 @@ This mostly did not make any sense to me
 - `gligen/`, `photomaker/`, etc. - Specialized models
 
   **Importance:** Critical - this is where you put all your models.
+"""
+
 
 ### **output/**
-
+"""
   **Purpose:** Generated output files
 
 - Images, videos, and other outputs go here
 - Can be configured with `--output-directory`
 
   **Importance:** Low - just a data directory.
+"""
+
 
 ### **script_examples/**
-
+"""
   **Purpose:** Example scripts for using ComfyUI programmatically
 
 - `basic_api_example.py` - Simple API usage
@@ -1206,26 +1255,32 @@ This mostly did not make any sense to me
 - `websockets_api_example_ws_images.py` - Receiving images via WebSocket
 
   **Importance:** Useful for learning how to use ComfyUI as a library or via API.
+"""
+
 
 ### **tests/**
-
+"""
   **Purpose:** Integration/functional tests
 
 - More comprehensive than unit tests
 
   **Importance:** For development.
+"""
+
 
 ### **tests-unit/**
-
+"""
   **Purpose:** Unit tests using pytest
 
 - Contains test files for various components
 - Run with: `pytest tests-unit/`
 
   **Importance:** Critical for development, not for usage.
+"""
+
 
 ### **utils/**
-
+"""
   **Purpose:** General utility functions
 
 - `extra_config.py` - Extra configuration loading
@@ -1233,9 +1288,11 @@ This mostly did not make any sense to me
 - `json_util.py` - JSON helpers
 
   **Importance:** Low - helper utilities.
+"""
+
 
 ### **folder_paths.py** ⭐⭐⭐ CRITICAL
-
+"""
   **Purpose:** Path management system
 
 - Manages all model folder paths
@@ -1246,9 +1303,11 @@ This mostly did not make any sense to me
 - Configurable via command-line args
 
   **Importance:** Critical - central path management for all models.
+"""
+
 
 ### **cuda_malloc.py** ⭐
-
+"""
   **Purpose:** CUDA memory allocator configuration
 
 - Detects GPU models
@@ -1257,9 +1316,11 @@ This mostly did not make any sense to me
 - Must run BEFORE importing PyTorch
 
   **Importance:** Important for GPU memory management, especially on problematic GPUs.
+"""
+
 
 ### **hook_breaker_ac10a0.py** ⭐
-
+"""
   **Purpose:** Security - prevents custom nodes from hooking core functions
 
 - Saves original function pointers
@@ -1268,9 +1329,11 @@ This mostly did not make any sense to me
 - Currently protects: `comfy.model_management.cast_to`
 
   **Importance:** Security feature to protect core functionality.
+"""
+
 
 ### **latent_preview.py** ⭐⭐
-
+"""
   **Purpose:** Generate preview images during sampling
 
 - TAESD-based previews (fast)
@@ -1279,17 +1342,21 @@ This mostly did not make any sense to me
 - Used for real-time progress visualization
 
   **Importance:** Important for user experience - shows sampling progress.
+"""
+
 
 ### **new_updater.py**
-
+"""
   **Purpose:** Updates the Windows standalone package updater scripts
 
 - Only relevant for Windows standalone builds
 
   **Importance:** Low - only for Windows packaged version.
+"""
+
 
 ### **node_helpers.py** ⭐⭐
-
+"""
   **Purpose:** Helper utilities for nodes
 
 - `conditioning_set_values()` - Modify conditioning data
@@ -1299,9 +1366,11 @@ This mostly did not make any sense to me
 - `image_alpha_fix()` - Fix alpha channels
 
   **Importance:** Useful utilities used throughout nodes.
+"""
+
 
 ### **protocol.py**
-
+"""
   **Purpose:** Binary protocol constants for WebSocket
 
 - `BinaryEventTypes` - Enum for binary message types
@@ -1311,9 +1380,11 @@ This mostly did not make any sense to me
   - PREVIEW_IMAGE_WITH_METADATA = 4
 
   **Importance:** Low - just constants for the WebSocket protocol.
+"""
+
 
 ### **comfyui_version.py**
-
+"""
   **Purpose:** Version string
 
 - Auto-generated from `pyproject.toml`
