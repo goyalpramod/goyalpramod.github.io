@@ -6,7 +6,7 @@ categories: [Tech, Stable Diffusion, Tutorial]
 image: assets/cover_images/img6.webp
 ---
 
-I have been building [Virgil] with my brother ([Dhanajaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI.
+I have been building [Virgil] with my brother ([Dhananjaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI.
 
 That's why we set out to build virgil, one platform where you could create with AI without limitations and as simple as possible.
 
@@ -1144,6 +1144,8 @@ Let's understand how we can build a node by picking one model, in this case I ch
   **Importance:** For advanced configuration management.
 """
 
+
+
 ### **comfy_execution/** ⭐⭐⭐ CRITICAL
 
 """
@@ -1459,4 +1461,9 @@ Blog series here was helpful -> <https://bbc.github.io/cloudfit-public-docs/asyn
 <https://discuss.python.org/t/wrapping-async-functions-for-use-in-sync-code/8606>
 <https://realpython.com/async-io-python/>
 <https://realpython.com/python-concurrency/>
+https://book.pythontips.com/en/latest/index.html
 <https://realpython.com/python-heapq-module/>
+https://arjancodes.com/blog/understanding-python-metaclasses-for-advanced-class-customization/
+https://realpython.com/python-interface/ -> To learn importance of abc and shit 
+https://jellis18.github.io/post/2022-01-11-abc-vs-protocol/
+https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#you-know-what-youre-looking-for
