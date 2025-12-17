@@ -1143,7 +1143,7 @@ Let's understand how we can build a node by picking one model, in this case I ch
 
   **Importance:** For advanced configuration management.
 """
-
+Responsible for extracting the configuration of any given node
 
 
 ### **comfy_execution/** ⭐⭐⭐ CRITICAL
@@ -1160,7 +1160,7 @@ Let's understand how we can build a node by picking one model, in this case I ch
 
   **Importance:** EXTREMELY CRITICAL - this is the execution engine that runs workflows.
 """
-
+The above definitions are succint
 
 
 ### **comfy_extras/** ⭐⭐ IMPORTANT
