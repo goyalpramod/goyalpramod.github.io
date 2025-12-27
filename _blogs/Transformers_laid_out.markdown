@@ -688,7 +688,7 @@ class FeedForwardNetwork(nn.Module):
         #YOUR CODE HERE
 ```
 
-- [Dropout](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
+- [Dropout](https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout.html)
 - [Where to put Dropout](https://stackoverflow.com/questions/46841362/where-dropout-should-be-inserted-fully-connected-layer-convolutional-layer)
 - [ReLU](https://pytorch.org/docs/stable/generated/torch.nn.ReLU.html)
 
