@@ -1,0 +1,2001 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Breaking down ComfyUI to build Virgil | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Breaking down ComfyUI to build Virgil" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I have been building [Virgil] with my brother ([Dhananjaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI." />
+<meta property="og:description" content="I have been building [Virgil] with my brother ([Dhananjaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI." />
+<link rel="canonical" href="https://goyalpramod.github.io/projects/breaking_down_comfyui/" />
+<meta property="og:url" content="https://goyalpramod.github.io/projects/breaking_down_comfyui/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/cover_images/img6.webp" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-01-14T07:31:52+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/cover_images/img6.webp" />
+<meta property="twitter:title" content="Breaking down ComfyUI to build Virgil" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-11-13T06:30:00+00:00","datePublished":"2026-01-14T07:31:52+00:00","description":"I have been building [Virgil] with my brother ([Dhananjaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI.","headline":"Breaking down ComfyUI to build Virgil","image":"https://goyalpramod.github.io/assets/cover_images/img6.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/projects/breaking_down_comfyui/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/projects/breaking_down_comfyui/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/cover_images/img6.webp" alt="Breaking down ComfyUI to build Virgil" class="featured-image">
+</div>
+
+
+<article class="note">
+  <h1>Breaking down ComfyUI to build Virgil</h1>
+  <p class="meta">Last updated: November 13, 2025</p>
+
+  <p>I have been building [Virgil] with my brother ([Dhananjaya]), We love tech, ai and art. and we have always been dishearted by how complex most ai generation platforms are either too complex (comfyUI) or ask for a subscription for their simpler UI.</p>
+
+<p>That’s why we set out to build virgil, one platform where you could create with AI without limitations and as simple as possible.</p>
+
+<p>This is me breaking down ComfyUI and how I went about it, hopefully it helps you. Feel free to reach out to me with any questions. I have also created BabyComfy which is a minimal abstraction and simplification of ComfyUI, we are building virgil on top of this.</p>
+
+<p>(Also do check out Virgil and give me your thoughts on it!!!)</p>
+
+<h2 id="how-i-went-about-it">How I went about it</h2>
+
+<p>ComfyUI is a huge and complex code base to say the least. So I did the following first</p>
+
+<ol>
+  <li>I have been using ComfyUI for a while so I know the problems and beauty of it, so if you haven’t used it yet. I will recommend installinng it and trying it yourself.</li>
+  <li>I forked the repo locally, opened claude code and gave the following prompt <code class="language-plaintext highlighter-rouge">I wish to write a blog breaking down this repository completely, I will also create diagrams in exalidraw to explain parts of it. Additionally I would like to make minimal replica while reading it. Create a reading_guide.md that I can follow.</code> (Here is the guide it gave me.)</li>
+  <li>I went through the <a href="https://docs.comfy.org/">docs</a></li>
+  <li>Toughest part, just keep reading the code and writing it out.</li>
+</ol>
+
+<h2 id="comfyui-overview">ComfyUI Overview</h2>
+
+<p>{later add}</p>
+
+<h2 id="lessons-from-docs">Lessons from docs</h2>
+
+<p>| “ComfyUI is an environment for building and running generative content workflows. In this context, a workflow is defined as a collection of program objects called nodes that are connected to each other, forming a network. This network is also known as a graph.”
+from <a href="https://docs.comfy.org/development/core-concepts/workflow">here</a></p>
+
+<h2 id="foundations">Foundations</h2>
+
+<h3 id="mainpy--critical">main.py ⭐⭐⭐ CRITICAL</h3>
+
+<p>”””
+  <strong>Purpose:</strong> Application entry point</p>
+
+<ul>
+  <li>Parses command-line arguments</li>
+  <li>Sets up model paths</li>
+  <li>Loads custom nodes</li>
+  <li>Starts the server</li>
+  <li>
+    <p><strong>Run this to start ComfyUI</strong></p>
+
+    <p><strong>Importance:</strong> Critical - the main entry point.
+“””</p>
+  </li>
+</ul>
+
+<ol>
+  <li>How can main.py have multiple <code class="language-plaintext highlighter-rouge">if __name__ == "__main__":</code>?</li>
+</ol>
+
+<p>”””
+Looking at main.py:18, main.py:117, and main.py:364, this file actually has three if <strong>name</strong> == “<strong>main</strong>”: blocks, which is valid Python but unconventional.</p>
+
+<p>Here’s what’s happening:</p>
+
+<ol>
+  <li>Line 18 - Sets environment variables for telemetry</li>
+  <li>Line 117 - Configures CUDA/device settings</li>
+  <li>Line 364 - The main execution block</li>
+</ol>
+
+<p>When Python runs a file directly, it evaluates code from top to bottom. Each if <strong>name</strong> == “<strong>main</strong>”: block is checked independently, and since the condition is true (the file is being run<br />
+ directly), all three blocks execute in sequence.</p>
+
+<p>This works, but it’s unusual code organization. Typically, you’d see:</p>
+
+<ul>
+  <li>A single if <strong>name</strong> == “<strong>main</strong>”: block at the end</li>
+  <li>Code organized chronologically within that block</li>
+</ul>
+
+<p>The reason this file is structured this way appears to be:</p>
+
+<ul>
+  <li>Early environment setup needs to happen before imports (lines 18-21 run before the main imports)</li>
+  <li>Device configuration needs to run before torch is imported (line 117)</li>
+  <li>The actual startup logic runs last (line 364)</li>
+</ul>
+
+<p>This is a deliberate design choice to control the order of initialization - setting certain environment variables before specific modules are imported. While it works, consolidating these into a<br />
+ single block with clear comments would be more conventional.
+“””</p>
+
+<ol>
+  <li>What “def prompt_worker” is doing in a few lines</li>
+</ol>
+
+<p>”””
+The prompt_worker function (main.py:170-246) is a background worker that:</p>
+
+<ol>
+  <li>Runs in an infinite loop pulling workflow execution requests from a queue</li>
+  <li>Executes each prompt using the PromptExecutor (line 202), which processes the node graph and generates outputs</li>
+  <li>Reports completion status back to the server with success/error messages (lines 206-211)</li>
+  <li>Manages memory by periodically running garbage collection and unloading models when flagged (lines 228-244)</li>
+</ol>
+
+<p>Essentially, it’s the core execution engine that processes ComfyUI workflows one at a time, running in a separate thread (started at line 339) so the server can remain responsive while
+generating images or running other operations.
+“””</p>
+
+<ol>
+  <li>What does “hijack_progress” do?</li>
+</ol>
+
+<p>”””
+The hijack_progress function (main.py:256-285) intercepts all progress updates during workflow execution and broadcasts them to connected clients. It:</p>
+
+<ol>
+  <li>Creates a hook function that captures progress updates (current value, total steps, preview images)</li>
+  <li>Enriches the data by automatically filling in the prompt_id and node_id from execution context if not provided</li>
+  <li>Sends real-time updates to the client via websocket (line 271) so the UI can show progress bars</li>
+  <li>Streams preview images during generation (lines 272-283) so users can see intermediate results</li>
+  <li>Registers this globally (line 285) so all progress callbacks throughout ComfyUI route through this function
+The term “hijack” means it’s hooking into the global progress reporting system to ensure all progress events get sent to the web interface, enabling real-time feedback during image generation.
+“””</li>
+</ol>
+
+<p>start_comfyui</p>
+
+<ul>
+  <li>Start a new event loop</li>
+  <li>Setup a prompt server with that event loop</li>
+  <li>Setup Hook Breaker (Why? what does this do?)</li>
+  <li>Cuda malloc warning to let the user know that their gpu may not be supported</li>
+  <li>Setup_database (what kind? What is this used for?)</li>
+  <li>Add hijack_progress on the prompt server so that the progress is tracked</li>
+  <li>Setup thread for prompt_worker (what is this thread?) [#! Potential improvement, python 3.14 and so on does not have GIL. Maybe we can make this better or even faster using that]</li>
+  <li>Then start all together</li>
+</ul>
+
+<p>”””
+Your understanding is mostly correct! Here’s the refined version with answers:</p>
+
+<p>start_comfyui</p>
+
+<ul>
+  <li>Start a new event loop (if not provided)</li>
+  <li>Setup a prompt server with that event loop ✓</li>
+  <li>Setup Hook Breaker - <strong>Saves/restores core functions around custom node loading</strong>
+(Protects against custom nodes that monkey-patch core ComfyUI functions - notice it’s called at line 245 in prompt_worker too, restoring after each execution)</li>
+  <li>Cuda malloc warning ✓</li>
+  <li>Setup_database - <strong>Initializes a database for workflow history/metadata</strong>
+(Uses app/database/db.py, appears to be a feature in development - the error message says “in future the database will be required”)</li>
+  <li>Add routes to prompt server (line 336) + hijack_progress for real-time tracking ✓</li>
+  <li>Setup thread for prompt_worker - <strong>The execution engine thread that processes workflows from the queue</strong>
+(daemon=True means it dies when main thread exits)</li>
+  <li>Return the loop, server, and start_all function (doesn’t actually start yet - that happens at line 376)</li>
+</ul>
+
+<p>Re: Python 3.13+ free-threading (not 3.14): The potential improvement exists, but:</p>
+
+<ul>
+  <li>Most compute happens in PyTorch/NumPy which already releases the GIL</li>
+  <li>The threading here is more about concurrent I/O (queue management, websockets) than CPU parallelism</li>
+  <li>Might see marginal gains, but the bottleneck is GPU execution, not Python threading
+“””</li>
+</ul>
+
+<h3 id="serverpy--critical">server.py ⭐⭐⭐ CRITICAL</h3>
+
+<p>”””
+  <strong>Purpose:</strong> Main web server (aiohttp)</p>
+
+<ul>
+  <li>WebSocket server for real-time communication</li>
+  <li>HTTP endpoints for API</li>
+  <li>Handles prompt submission, queue management</li>
+  <li>Sends execution updates to frontend</li>
+  <li>
+    <p>Image upload/download</p>
+
+    <p><strong>Importance:</strong> Critical - this is the main server entry point.
+“””</p>
+  </li>
+</ul>
+
+<ol>
+  <li>What does “@web.middleware” do?</li>
+</ol>
+
+<p>”””</p>
+
+<p>● @web.middleware is a decorator from aiohttp that creates middleware functions - interceptors that process every HTTP request before it reaches the route handler (and can also modify responses).</p>
+
+<p>How it works:</p>
+
+<p>@web.middleware
+async def example_middleware(request, handler): # Code here runs BEFORE the route handler
+response = await handler(request) # Call the actual route handler # Code here runs AFTER the route handler
+return response</p>
+
+<p>In server.py, there are several middlewares:</p>
+
+<ol>
+  <li>deprecation_warning (lines 56-72) - Logs warnings when deprecated API paths are accessed</li>
+  <li>compress_body (lines 75-85) - Compresses JSON/text responses with gzip if client supports it</li>
+  <li>create_cors_middleware() (lines 88-103) - Adds CORS headers for cross-origin requests</li>
+  <li>create_origin_only_middleware() (lines 131-165) - Security middleware that prevents CSRF attacks by checking Host and Origin headers match on localhost</li>
+</ol>
+
+<p>The middleware chain (configured at lines 187-194) processes requests in order:
+Request → cache_control → deprecation_warning → compress_body → CORS/Origin check → Route handler → Response</p>
+
+<p>This pattern lets you add cross-cutting concerns (logging, security, compression) without modifying every route handler individually.
+“””</p>
+
+<ol>
+  <li>What does “is_loopback” do?</li>
+</ol>
+
+<p>”””</p>
+
+<p>● The is_loopback function (server.py:105-128) checks if a hostname or IP address refers to localhost (a loopback address like 127.0.0.1 or ::1).</p>
+
+<p>How it works:</p>
+
+<ol>
+  <li>Quick check (lines 108-112): Tries to parse the host as an IP address and check if it’s loopback directly
+    - Returns True for 127.0.0.1, ::1, etc.</li>
+  <li>Hostname resolution (lines 116-127): If the quick check fails (e.g., host is “localhost” string), it:
+    - Resolves the hostname to IP addresses (both IPv4 and IPv6)
+    - Checks if ALL resolved IPs are loopback addresses
+    - Returns False if ANY resolved IP is NOT loopback</li>
+</ol>
+
+<p>Why it’s needed:</p>
+
+<p>This function is used in create_origin_only_middleware() (line 146) to enable CSRF protection only for localhost requests:</p>
+
+<p>loopback = is_loopback(host_domain_parsed.hostname)</p>
+
+<p>if loopback and host_domain != origin_domain:
+      # Block mismatched Host/Origin on localhost
+      return web.Response(status=403)</p>
+
+<p>Security context: When ComfyUI runs on 127.0.0.1, a malicious website could try to send POST requests to <a href="http://127.0.0.1:8188">http://127.0.0.1:8188</a> from your browser. The middleware blocks this by ensuring the
+  Origin header matches the Host header for loopback addresses, preventing cross-site attacks against your local server.</p>
+
+<p>”””</p>
+
+<ol>
+  <li>
+    <p>create_origin_only_middleware -&gt; This can be fixed using cookie as mentioned</p>
+  </li>
+  <li>
+    <p>What is a mimetype?</p>
+  </li>
+</ol>
+
+<p>”””</p>
+
+<p>A MIME type (Multipurpose Internet Mail Extensions type) is a standardized label that identifies the format/type of a file or data. It tells browsers and applications how to handle the content.</p>
+
+<p>Format: type/subtype</p>
+
+<p>Common examples:</p>
+
+<ul>
+  <li>image/png - PNG image</li>
+  <li>image/jpeg - JPEG image</li>
+  <li>text/html - HTML webpage</li>
+  <li>application/json - JSON data</li>
+  <li>video/mp4 - MP4 video</li>
+  <li>
+    <p>application/octet-stream - Generic binary data (forces download)</p>
+
+    <p>In server.py, mimetypes are used:</p>
+
+    <ol>
+      <li>
+        <p>Setup (lines 171-173):
+mimetypes.init()
+mimetypes.add_type(‘application/javascript; charset=utf-8’, ‘.js’)
+mimetypes.add_type(‘image/webp’, ‘.webp’)
+Maps file extensions to MIME types.</p>
+      </li>
+      <li>
+        <p>File serving (line 529):
+content_type = mimetypes.guess_type<a href="0">filename</a> or ‘application/octet-stream’
+Determines the correct MIME type from the file extension.</p>
+      </li>
+      <li>
+        <p>Security (lines 532-533):
+if content_type in {‘text/html’, ‘text/javascript’, …}:
+ content_type = ‘application/octet-stream’  # Forces download
+Prevents browser from executing HTML/JS files by forcing them to download instead.</p>
+      </li>
+    </ol>
+
+    <p>Why it matters: MIME types tell the browser whether to display an image, play a video, download a file, or execute JavaScript. Wrong MIME types can cause security vulnerabilities (XSS attacks)
+or broken functionality.</p>
+  </li>
+</ul>
+
+<p>”””</p>
+
+<ol>
+  <li>PromptServer is the main class of this function. The way it works is</li>
+</ol>
+
+<ul>
+  <li>initialize the different components</li>
+  <li>define the middlewares</li>
+  <li><code class="language-plaintext highlighter-rouge">self.app = web.Application(client_max_size=max_upload_size, middlewares=middlewares)</code> This takes care of starting a web server using aiohttp</li>
+  <li>setup web_root to front_end_manager</li>
+  <li>Start routes using aiohttp using <code class="language-plaintext highlighter-rouge">web.RouteTableDef()</code> (What do these aiohtpp endpoints do though?)</li>
+</ul>
+
+<p>The different endpoints and understanding what they do</p>
+
+<h4 id="get">GET</h4>
+
+<p><strong>websocket_handler</strong></p>
+
+<p>”””
+● The websocket_handler function (server.py:213-271) manages real-time bidirectional communication between the ComfyUI server and web clients (the browser UI).</p>
+
+<p>What it does:</p>
+
+<ol>
+  <li>Establishes WebSocket connection (lines 215-216):
+  ws = web.WebSocketResponse()
+  await ws.prepare(request)</li>
+  <li>Assigns client ID (lines 217-222):
+    - Reuses existing clientId from query params if reconnecting
+    - Generates new UUID if new connection</li>
+  <li>Stores connection (lines 225-227):
+  self.sockets[sid] = ws  # Store WebSocket
+  self.sockets_metadata[sid] = {“feature_flags”: {}}  # Store metadata</li>
+  <li>Sends initial state (line 231):
+    - Queue status and client ID to newly connected client</li>
+  <li>Handles reconnection (lines 233-234):
+    - If client was executing a workflow, re-send current node</li>
+  <li>Processes incoming messages (lines 239-267):
+    - Listens for messages from the client
+    - Feature flags negotiation (lines 246-260): Client and server exchange capability information on first message
+    - Handles JSON parsing errors gracefully</li>
+  <li>Cleanup on disconnect (lines 269-270):
+    - Removes socket and metadata when connection closes</li>
+</ol>
+
+<p>Why it’s important: This WebSocket connection is how the UI receives real-time updates like:</p>
+
+<ul>
+  <li>Progress bars (hijack_progress sends updates here)</li>
+  <li>Preview images during generation</li>
+  <li>Queue status changes</li>
+  <li>
+    <p>Execution status</p>
+
+    <p>Without this, the UI would be blind to what’s happening on the server!
+“””</p>
+  </li>
+</ul>
+
+<p><strong>get_root</strong></p>
+
+<p>Get the root path of the front end</p>
+
+<p><strong>get_embeddings</strong></p>
+
+<p>get path of embedding models</p>
+
+<p><strong>list_model_types</strong></p>
+
+<p>list available model types</p>
+
+<p><strong>get_models</strong></p>
+
+<p>Get the models which are available</p>
+
+<p><strong>get_extensions</strong></p>
+
+<p>Get the available extensions?</p>
+
+<p><strong>get_dir_by_type</strong> (not an endpoint This is a helper function used internally by other routes like image_upload)</p>
+
+<p>get directory based on directory type</p>
+
+<p><strong>compare_image_hash</strong> (helper function)</p>
+
+<p>compare hash of two images to see if it already exists</p>
+
+<p><strong>image_upload</strong> (helper function)</p>
+
+<p>Upload image to file path</p>
+
+<p><strong>upload_image</strong></p>
+
+<p>calls image_upload to upload an image</p>
+
+<p><strong>upload_mask</strong></p>
+
+<p>Save an image then upload the mask</p>
+
+<p><strong>view_image</strong></p>
+
+<p>view an image (Rather complex code, have a look and try to understand what is going on inside)</p>
+
+<p><strong>view_metadata</strong></p>
+
+<p>as the name implies</p>
+
+<p><strong>system_stats</strong></p>
+
+<p>get the stats of the system running the service</p>
+
+<p><strong>get_features</strong></p>
+
+<p>get features?</p>
+
+<p><strong>get_prompt</strong></p>
+
+<p>get prompt from the queue</p>
+
+<p><strong>node_info</strong></p>
+
+<p>get node types and version</p>
+
+<p><strong>get_object_info</strong></p>
+
+<p>get information about a particular node</p>
+
+<p><strong>get_object_info_node</strong></p>
+
+<p>get information about a particular group of nodes</p>
+
+<p><strong>get_history</strong></p>
+
+<p>get history? (but of what?)</p>
+
+<p><strong>get_history_prompt_id</strong></p>
+
+<p>get history based on prompt id</p>
+
+<p><strong>get_queue</strong></p>
+
+<p>get queue (no clue what is happening inside though)
+get_queue (/queue) - Returns pending/running workflows</p>
+
+<h4 id="post">POST</h4>
+
+<p><strong>post_prompt</strong></p>
+
+<p>Queues workflows for execution</p>
+
+<p><strong>post_queue</strong></p>
+
+<p>clear or delete runs in the queue</p>
+
+<p><strong>post_interrupt</strong></p>
+
+<p>interrupt running process</p>
+
+<p><strong>post_free</strong></p>
+
+<p>free memory</p>
+
+<p><strong>post_history</strong></p>
+
+<p>clear or delete history</p>
+
+<h4 id="normal-methods">Normal methods</h4>
+
+<p><strong>setup</strong></p>
+
+<p>Start a client without timeout</p>
+
+<p><strong>add_routes</strong></p>
+
+<p>add routes to enable communication</p>
+
+<p><strong>get_queue_info</strong></p>
+
+<p>get the remaining tasks in the queue</p>
+
+<p><strong>send</strong></p>
+
+<p>based on if it is an image or json or bytes, send it. (Where?)</p>
+
+<p><strong>encode_bytes</strong></p>
+
+<p>Encode giving message (Why?)</p>
+
+<p><strong>send_image</strong></p>
+
+<p>Decode and save image</p>
+
+<p><strong>send_image_with_metadata</strong></p>
+
+<p>Combine image and metadata and send it</p>
+
+<p><strong>send_bytes</strong></p>
+
+<p>send data over socket using bytes</p>
+
+<p><strong>send_json</strong></p>
+
+<p>send data over socket using json</p>
+
+<p><strong>send_sync</strong></p>
+
+<p>Add message to the queue?</p>
+
+<p><strong>queue_updated</strong></p>
+
+<p>Update the queue</p>
+
+<p><strong>publish_loop</strong></p>
+
+<p>Get the messages in the queue and publish it</p>
+
+<p><strong>start</strong></p>
+
+<p>Starts Multi address</p>
+
+<p><strong>start_multi_address</strong></p>
+
+<p>Start the web server</p>
+
+<p><strong>add_on_prompt_handler</strong></p>
+
+<p>add on prompt handler</p>
+
+<p><strong>trigger_on_prompt</strong></p>
+
+<p>Trigger each handler with the json data</p>
+
+<p><strong>send_progress_text</strong></p>
+
+<p>send the progress so far</p>
+
+<p>”””
+ Corrections needed:</p>
+
+<p>get_embeddings - Returns list of embedding names (not paths), with file extensions removed</p>
+
+<p>get_prompt - Returns queue status info, not a prompt from the queue</p>
+
+<p>node_info - Returns detailed metadata about a node class (inputs, outputs, category, description), not “types and version”</p>
+
+<p>get_object_info - Returns info about ALL nodes, not a particular one</p>
+
+<p>get_object_info_node - Returns info about one specific node class, not a group</p>
+
+<p>get_history - Returns workflow execution history (answered your “but of what?”)</p>
+
+<p>get_queue - Returns pending/running workflows in the queue (answered your confusion)</p>
+
+<p>send_image - Encodes image and sends it to WebSocket clients as preview (doesn’t decode or save)</p>
+
+<p>queue_updated - Notifies clients about queue status changes (doesn’t update the queue itself)</p>
+
+<p>Answering your questions:</p>
+
+<ul>
+  <li>send - Sends to connected WebSocket clients</li>
+  <li>
+    <p>encode_bytes - For efficient binary WebSocket protocol (event type + data)</p>
+
+    <p>Everything else is correct!
+“””</p>
+  </li>
+</ul>
+
+<h3 id="executionpy--critical">execution.py ⭐⭐⭐ CRITICAL</h3>
+
+<p>”””</p>
+
+<ul>
+  <li>Main execution logic</li>
+  <li>PromptQueue class</li>
+  <li>execute() function</li>
+  <li>PromptExecutor class
+“””</li>
+</ul>
+
+<p><strong>ExecutionResult</strong></p>
+
+<ul>
+  <li>Enum for result of the execution</li>
+</ul>
+
+<p><strong>DuplicateNodeError</strong></p>
+
+<p><strong>IsChangedCache</strong>
+No clue, I assume it checks if the particular node has been cached or not.</p>
+
+<p><strong>CacheEntry</strong>
+No clue either</p>
+
+<p><strong>CacheType</strong>
+The type of cache to use I presume.</p>
+
+<p><strong>CacheSet</strong>
+Initialize the cache that needs to be set</p>
+
+<p>What are outputs and objects though? And why do most of them have Hierarchical Cache?
+Also what is <code class="language-plaintext highlighter-rouge">recursive_debug_dump</code></p>
+
+<p>How do you choose which function needs to be async and which needs to be sync</p>
+
+<p><strong>get_input_data</strong>
+depending on if this is v3 or not
+get info like prompt, id and other stuff</p>
+
+<p>The heck? How is this code valid</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">inputs</span><span class="p">:</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">inputs</span><span class="p">[</span><span class="n">x</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p>and whichever data is not available mark them as missing</p>
+
+<p><strong>resolve_map_node_over_list_results</strong>
+counts down the remaining tasks and continues if not done</p>
+
+<p><strong>_async_map_node_over_list</strong>
+No Clue</p>
+
+<p><strong>merge_result_data</strong>
+merge node execution results</p>
+
+<p><strong>get_output_data</strong>
+run <code class="language-plaintext highlighter-rouge">_async_map_node_over_list</code> to get the return values
+check if any pending tasks are left
+finally get output from final values using <code class="language-plaintext highlighter-rouge">get_output_from_returns</code></p>
+
+<p>What? Why this flow? Why do we need to get output from return values?</p>
+
+<p><strong>get_output_from_returns</strong>
+expand the results to get the final output</p>
+
+<p><strong>format_value</strong>
+format the value of input</p>
+
+<p><strong>execute</strong>
+start with getting all the ids
+if a node is async and pending, remove it because it failed
+for pending subgraph results, take the cached value and delete the rest
+if lazy status is pending resolve the node over list (what does this even mean)
+execution block sending msg to server for sync execution</p>
+
+<h4 id="promptexecutor">PromptExecutor</h4>
+
+<p>How is the execute here different from the above one?</p>
+
+<p>”””
+orrections and Clarifications</p>
+
+<p>IsChangedCache</p>
+
+<p>Your understanding: “checks if the particular node has been cached or not”
+  Actually: It caches the results of a node’s IS_CHANGED or fingerprint_inputs method. These methods determine if a node’s output needs to be recomputed based
+  on its inputs. It’s about change detection, not just cache presence.</p>
+
+<p>CacheEntry</p>
+
+<p>It’s a simple NamedTuple (lines 92-94) that holds:</p>
+
+<ul>
+  <li>ui: UI-related outputs (what gets displayed to the user)</li>
+  <li>
+    <p>outputs: The actual data outputs passed to downstream nodes</p>
+
+    <p>CacheSet - outputs vs objects</p>
+  </li>
+  <li>outputs: Caches the results of node execution (the data produced)</li>
+  <li>
+    <p>objects: Caches the node instances themselves (the Python objects)</p>
+
+    <p>HierarchicalCache: It’s a caching strategy that can have parent-child relationships (important for subgraph execution where nodes can be nested).</p>
+
+    <p>recursive_debug_dump: Debugging method to inspect cache contents.</p>
+
+    <p>The Python code confusion</p>
+
+    <p>for x in inputs:
+    input_data = inputs[x]</p>
+
+    <p>This is completely valid Python! When you iterate over a dict, you iterate over its keys. So x is each key, and inputs[x] gets the value. This is basic
+Python dict iteration.</p>
+
+    <p>get_input_data</p>
+
+    <p>Your understanding is too vague. This function:</p>
+
+    <ol>
+      <li>Gets the INPUT_TYPES schema for the node</li>
+      <li>For each input, checks if it’s a link (connection from another node) or a direct value</li>
+      <li>If it’s a link, retrieves the output from the cached results of the source node</li>
+      <li>Handles hidden inputs (PROMPT, UNIQUE_ID, etc.)</li>
+      <li>Returns all input data needed to execute the node</li>
+    </ol>
+
+    <p>_async_map_node_over_list</p>
+
+    <p>This is crucial - it handles batch processing. When a node receives list inputs, it can either:</p>
+  </li>
+  <li>Process the entire list at once (INPUT_IS_LIST = True)</li>
+  <li>Process each element separately and merge results</li>
+</ul>
+
+<p>● It also handles async execution, creating tasks for coroutines.</p>
+
+<p>get_output_data vs get_output_from_returns</p>
+
+<p>Why this flow? Because nodes can return outputs in different formats:</p>
+
+<ul>
+  <li>V1 nodes: tuples or dicts with {‘ui’: …, ‘result’: …}</li>
+  <li>V3 nodes: _NodeOutputInternal objects</li>
+  <li>
+    <p>Subgraph expansion: dicts with ‘expand’ key</p>
+
+    <p>get_output_from_returns normalizes these different formats into a consistent structure.</p>
+
+    <p>execute function (standalone)</p>
+
+    <p>This executes a single node. Here’s the flow:</p>
+
+    <ol>
+      <li>Check cache - if node result is cached, return it immediately</li>
+      <li>Three execution paths:
+        <ul>
+          <li>Async continuation: Node had pending async tasks, resolve them</li>
+          <li>Subgraph continuation: Node expanded into subgraph, resolve the results</li>
+          <li>Normal execution: Execute the node fresh</li>
+        </ul>
+      </li>
+      <li>Lazy evaluation: If node has check_lazy_status, it can request additional inputs dynamically</li>
+      <li>Subgraph expansion: Some nodes can dynamically create new nodes (workflows within workflows)</li>
+      <li>Cache results and return</li>
+    </ol>
+
+    <p>PromptExecutor.execute vs standalone execute</p>
+
+    <p>Key difference:</p>
+  </li>
+  <li>PromptExecutor.execute_async: Orchestrates execution of the entire workflow (all nodes)</li>
+  <li>
+    <p>Standalone execute: Executes a single node</p>
+
+    <p>The PromptExecutor:</p>
+  </li>
+  <li>Manages the execution queue</li>
+  <li>Calls the standalone execute for each node</li>
+  <li>Handles execution order via ExecutionList</li>
+  <li>Manages global state (caches, progress, etc.)</li>
+  <li>
+    <p>Sends status updates to the server/UI</p>
+
+    <p>Key Concepts You’re Missing</p>
+
+    <ol>
+      <li>Subgraph expansion: Nodes can dynamically create new sub-workflows</li>
+      <li>Lazy evaluation: Nodes can request inputs on-demand during execution</li>
+      <li>Batch processing: The “map over list” concept handles processing lists of inputs</li>
+      <li>Async execution: Some nodes return coroutines that execute asynchronously</li>
+    </ol>
+
+    <p>Async vs Sync Decision</p>
+
+    <p>Functions are async when they:</p>
+  </li>
+  <li>Need to await other async operations</li>
+  <li>Call _async_map_node_over_list (which might create async tasks)</li>
+  <li>Perform I/O or long-running operations that shouldn’t block
+“””</li>
+</ul>
+
+<p><strong>reset</strong></p>
+
+<p>Get’s cache (how does it reset it?)</p>
+
+<p><strong>add_message</strong></p>
+
+<p>synchronously adds data and event to server</p>
+
+<p><strong>handle_execution_error</strong></p>
+
+<p>Send message to the frontend of the error encountered (node error or any kind of error)</p>
+
+<p><strong>execute</strong></p>
+
+<p>Wrapper to run async execute synchronously</p>
+
+<p><strong>execute_async</strong></p>
+
+<ul>
+  <li>Put the interupt as False</li>
+  <li>Add message of starting the execution</li>
+  <li>Start torch in inference mode</li>
+  <li>Create Dynamic Prompt</li>
+  <li>Reset the progress state</li>
+  <li>Add a progress handler</li>
+  <li>Check if the caches have changed</li>
+  <li>While the execution list is not empty keep executing it (This execute is the one outside of the class)</li>
+  <li>Handle execution error if any</li>
+  <li>poll the ram (What?)</li>
+  <li>add the outputs to ui outputs</li>
+</ul>
+
+<p>DONE WITH THE CLASS</p>
+
+<p><strong>validate_inputs</strong></p>
+
+<p>Validates the given inputs. (How?)</p>
+
+<p><code class="language-plaintext highlighter-rouge">r = await validate_inputs(prompt_id, prompt, o_id, validated)</code> -&gt; Why recursion?</p>
+
+<p><strong>full_type_name</strong></p>
+
+<p>No clue what is going on</p>
+
+<p><strong>validate_prompt</strong></p>
+
+<p>Checks if a prompt is valid (How?)</p>
+
+<h4 id="promptqueue">PromptQueue</h4>
+
+<p><a href="https://www.troyfawkes.com/learn-python-multithreading-queues-basics/">https://www.troyfawkes.com/learn-python-multithreading-queues-basics/</a> -&gt; Really helpful to understand all of this
+<a href="https://bbc.github.io/cloudfit-public-docs/">https://bbc.github.io/cloudfit-public-docs/</a> -&gt; This too</p>
+
+<p><strong>init</strong>
+What is mutex? What is threading.Rlock? What is going on yoooooo??????
+Okay mutex locks the thread so noone does anything else to it</p>
+
+<p><strong>put</strong>
+Why put it in a heap queue? What is going on yooooooooooo?
+adds item to the queue</p>
+
+<p>(Should we use PriorityQueue instead of heapq?)</p>
+
+<p><strong>get</strong></p>
+
+<p>get item and count of that item as well as update the task counter</p>
+
+<p><strong>ExecutionStatus</strong></p>
+
+<p>What is the status of the execution</p>
+
+<p><strong>task_done</strong></p>
+
+<p>Start locked thread</p>
+
+<p>Whats going on inside though?</p>
+
+<p><strong>get_current_queue</strong></p>
+
+<p>With mutex get the current queue
+Why is this slow?</p>
+
+<p><strong>get_current_queue_volatile</strong></p>
+
+<p>How is this different from get_current_queue?</p>
+
+<p><strong>get_tasks_remaining</strong></p>
+
+<p>Get size of the remaining tasks</p>
+
+<p><strong>wipe_queue</strong></p>
+
+<p>Clean the queue</p>
+
+<p><strong>delete_queue_item</strong></p>
+
+<p>Remove 1 item from the queue</p>
+
+<p><strong>get_history</strong></p>
+
+<p>get history of everything that was ran?</p>
+
+<p><strong>wipe_history</strong></p>
+
+<p>delete history</p>
+
+<p><strong>delete_history_item</strong></p>
+
+<p>delete history of a specific item (history is a dict)</p>
+
+<p><strong>set_flags</strong></p>
+
+<p>set the flag (What flag, where?)</p>
+
+<p><strong>get_flags</strong></p>
+
+<p>What?</p>
+
+<p>”””
+PromptQueue Methods - Detailed Analysis</p>
+
+<p>init (lines 1092-1100)</p>
+
+<p>Your understanding: “mutex locks the thread”</p>
+
+<p>More precise:</p>
+
+<ul>
+  <li>threading.RLock() is a reentrant lock (can be acquired multiple times by the same thread)</li>
+  <li>threading.Condition(self.mutex) is a condition variable - allows threads to wait for
+notifications</li>
+  <li>
+    <p>Together they enable thread-safe queue operations where multiple threads can safely add/remove
+items</p>
+
+    <p>Why threading? ComfyUI can have multiple workers/threads executing prompts simultaneously.</p>
+
+    <p>put (lines 1102-1106)</p>
+
+    <p>Your question: “Why put it in a heap queue?”</p>
+
+    <p>Answer: heapq implements a priority queue. Queue items are tuples like (priority, number,
+prompt_id, prompt, extra_data). The heap automatically keeps the highest priority items at the
+front. This means:</p>
+  </li>
+  <li>Lower priority numbers = higher priority execution</li>
+  <li>
+    <p>Items execute in priority order, not just FIFO</p>
+
+    <p>Should we use PriorityQueue? No, heapq is fine and more lightweight. queue.PriorityQueue is
+thread-safe but adds overhead.</p>
+
+    <p>get (lines 1108-1119)</p>
+
+    <p>Your understanding: “get item and count of that item as well as update the task counter”</p>
+
+    <p>Correction: It doesn’t count “that item” - it:</p>
+
+    <ol>
+      <li>Waits until queue is not empty (blocks with self.not_empty.wait())</li>
+      <li>Pops the highest priority item from the heap</li>
+      <li>Assigns it a unique task ID (self.task_counter)</li>
+      <li>Moves it to currently_running dict</li>
+      <li>Returns (item, task_id)</li>
+    </ol>
+
+    <p>The task_counter is a global incrementing ID, not item-specific.</p>
+
+    <p>ExecutionStatus (lines 1121-1124)</p>
+
+    <p>✅ Correct - it’s a NamedTuple holding execution status info (success/error, whether completed,
+messages).</p>
+
+    <p>task_done (lines 1126-1146)</p>
+
+    <p>Your confusion: “What’s going on inside?”</p>
+
+    <p>Here’s the flow:</p>
+
+    <ol>
+      <li>Lock the thread with mutex</li>
+      <li>Remove the item from currently_running using item_id</li>
+      <li>Limit history size - if history &gt; 10,000 items, remove the oldest entry</li>
+      <li>Convert status to dict (if provided)</li>
+      <li>Optional processing - call process_item to transform the prompt before storing</li>
+      <li>Store in history dict with:
+        <ul>
+          <li>The prompt info</li>
+          <li>Empty outputs dict (filled later)</li>
+          <li>Status dict</li>
+          <li>History result (UI outputs, metadata)</li>
+        </ul>
+      </li>
+      <li>Notify server that queue updated</li>
+    </ol>
+
+    <p>get_current_queue (lines 1148-1154)</p>
+
+    <p>Your question: “Why is this slow?”</p>
+
+    <p>Answer: Line 1154 - copy.deepcopy(self.queue) creates a full recursive copy of all queue items.
+Each item contains the entire prompt dict (all nodes, inputs, etc.). This is expensive for large
+queues.</p>
+
+    <p>Why deep copy? To return a safe snapshot that won’t change if the queue is modified by another
+thread.</p>
+
+    <p>get_current_queue_volatile (lines 1156-1161)</p>
+
+    <p>Your question: “How is this different?”</p>
+
+    <p>Key difference:</p>
+  </li>
+  <li>get_current_queue: Uses copy.deepcopy() - safe but slow</li>
+  <li>
+    <p>get_current_queue_volatile: Uses copy.copy() (shallow copy) - fast but potentially unsafe</p>
+
+    <p>“Volatile” means: The returned data might reference objects that other threads are modifying. Safe
+for read-only viewing, not for modification.</p>
+
+    <p>get_tasks_remaining (lines 1163-1165)</p>
+
+    <p>✅ Correct - Returns len(queue) + len(currently_running).</p>
+
+    <p>wipe_queue (lines 1167-1170)</p>
+
+    <p>✅ Correct - Clears all pending items from the queue.</p>
+
+    <p>delete_queue_item (lines 1172-1183)</p>
+
+    <p>Your understanding is basically correct, but here’s the detail:</p>
+  </li>
+  <li>Takes a function parameter (a predicate/filter)</li>
+  <li>Iterates through queue looking for an item where function(item) returns True</li>
+  <li>When found, removes it and re-heapifies to maintain heap property</li>
+  <li>
+    <p>Returns True if deleted, False if not found</p>
+
+    <p>Example usage:
+queue.delete_queue_item(lambda x: x[2] == “prompt_123”)  # Delete by prompt_id</p>
+
+    <p>get_history (lines 1185-1210)</p>
+
+    <p>Your understanding: “get history of everything that was ran”</p>
+
+    <p>More precise: Returns execution history with flexible querying:</p>
+  </li>
+  <li>prompt_id=None: Get all history (with optional pagination via offset/max_items)</li>
+  <li>prompt_id=”xyz”: Get specific prompt’s history</li>
+  <li>
+    <p>map_function: Optional transformer to process each history entry before returning</p>
+
+    <p>Not just “everything” - you can filter and paginate.</p>
+
+    <p>wipe_history (lines 1212-1214)</p>
+
+    <p>✅ Correct - Clears all execution history.</p>
+
+    <p>delete_history_item (lines 1216-1218)</p>
+
+    <p>✅ Correct - Deletes a specific history entry by ID. Uses pop(id, None) so it doesn’t error if ID
+doesn’t exist.</p>
+
+    <p>set_flag (lines 1220-1223)</p>
+
+    <p>Your confusion: “What flag, where?”</p>
+
+    <p>Answer: This is a generic signaling mechanism. Flags are stored in self.flags dict as {name: data}.
+ Used for:</p>
+  </li>
+  <li>Interrupting execution</li>
+  <li>Sending control signals between threads</li>
+  <li>
+    <p>Example: queue.set_flag(“interrupt”, True) to stop execution</p>
+
+    <p>After setting, it calls self.not_empty.notify() to wake up any waiting threads.</p>
+
+    <p>get_flags (lines 1225-1232)</p>
+
+    <p>Answer:</p>
+  </li>
+  <li>Retrieves all flags from self.flags dict</li>
+  <li>reset=True (default): Returns flags and clears them (consume-once pattern)</li>
+  <li>
+    <p>reset=False: Returns a copy without clearing (peek pattern)</p>
+
+    <p>Use case: Worker threads periodically call get_flags() to check for interrupt signals or other
+commands.</p>
+  </li>
+</ul>
+
+<hr />
+<p>Key Concepts You’re Missing</p>
+
+<ol>
+  <li>Thread synchronization: This entire class is about coordinating multiple threads safely
+  accessing shared data</li>
+  <li>Priority queue: Items execute by priority, not FIFO</li>
+  <li>Producer-consumer pattern: Web API puts items, worker threads get them</li>
+  <li>Condition variables: not_empty.wait() / not_empty.notify() efficiently wake sleeping threads
+“””</li>
+</ol>
+
+<h3 id="nodespy--critical"><strong>nodes.py</strong> ⭐⭐⭐ CRITICAL</h3>
+
+<p>”””
+  <strong>Purpose:</strong> Main node definitions for the core ComfyUI workflow system</p>
+
+<ul>
+  <li>Defines all built-in node classes (LoadImage, SaveImage, KSampler, etc.)</li>
+  <li>Contains NODE_CLASS_MAPPINGS and NODE_DISPLAY_NAME_MAPPINGS</li>
+  <li>Imports all core functionality from comfy/ modules</li>
+  <li>
+    <p><strong>This is where ALL nodes are registered and made available to the UI</strong></p>
+
+    <p><strong>Important:</strong> This is one of the most important files - it’s the bridge between the UI and the backend functionality.
+“””</p>
+  </li>
+</ul>
+
+<p>This is probably the most straight forward file in this repo. There are different classes which are the different nodes. The input type i.e what all it takes is defined as a [classmethod], the return type, fuction, and category are constants to help know what they return, what they do, and where should be stored respectively.</p>
+
+<p>Of these the most essential and commonly used nodes are</p>
+<ul>
+  <li>cheakpoint loader</li>
+  <li>VAE encode</li>
+  <li>VAE Decode</li>
+  <li>SaveImage</li>
+  <li>LoadImage</li>
+  <li>PreviewImage</li>
+  <li>Clip Text Encode</li>
+  <li>VAELoader</li>
+  <li>Ksampler</li>
+</ul>
+
+<p>It’s easier to just look at the mapping defined in <code class="language-plaintext highlighter-rouge">NODE_DISPLAY_NAME_MAPPINGS</code></p>
+
+<hr />
+
+<p>That covers all of the most important root files. Now let us go through the directories in alphabetical order</p>
+
+<h3 id="alembic_db"><strong>alembic_db/</strong></h3>
+
+<p>mostly irrelevant</p>
+
+<p>”””
+  <strong>Purpose:</strong> Database migration system (Alembic)</p>
+
+<ul>
+  <li>Manages SQL schema changes over time</li>
+  <li>
+    <p>Run <code class="language-plaintext highlighter-rouge">alembic revision --autogenerate -m "message"</code> to create migrations</p>
+
+    <p><strong>Importance:</strong> Only matters if modifying the database schema.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="api_server--important"><strong>api_server/</strong> ⭐⭐ IMPORTANT</h3>
+
+<p>”””
+  <strong>Purpose:</strong> FastAPI/aiohttp REST API endpoints
+  <strong>Structure:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">routes/</code> - API route handlers
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">routes/internal/</code> - Internal API endpoints</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">services/</code> - Business logic services</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">utils/</code> - API utilities</p>
+
+    <p><strong>Importance:</strong> Critical for understanding the API and backend architecture.
+“””
+This mostly did not make any sense to me</p>
+  </li>
+</ul>
+
+<h3 id="app--important"><strong>app/</strong> ⭐⭐ IMPORTANT</h3>
+
+<p>”””
+  <strong>Purpose:</strong> Application-level services and management
+  <strong>Key files:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">frontend_management.py</code> - Manages frontend versioning and downloads</li>
+  <li><code class="language-plaintext highlighter-rouge">user_manager.py</code> - User authentication and session management</li>
+  <li><code class="language-plaintext highlighter-rouge">model_manager.py</code> - Model file tracking and organization</li>
+  <li><code class="language-plaintext highlighter-rouge">custom_node_manager.py</code> - Custom node installation and management</li>
+  <li><code class="language-plaintext highlighter-rouge">subgraph_manager.py</code> - Workflow subgraph management</li>
+  <li><code class="language-plaintext highlighter-rouge">logger.py</code> - Logging configuration</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">database/</code> - SQLite database models (Alembic migrations)</p>
+
+    <p><strong>Importance:</strong> Application infrastructure - manages users, models, and custom nodes.
+“””</p>
+  </li>
+</ul>
+
+<p>Quick definitions of some directories/files</p>
+
+<ul>
+  <li>database -&gt; I more or less have no clue what this is or why or where it is even used.</li>
+  <li>app_settings.py -&gt; used for getting and saving user settings</li>
+  <li>logger.py -&gt; used to setup logging</li>
+  <li>custom_node_manager.py -&gt; get the custom nodes from the .json and load them</li>
+  <li>frontend_management.py -&gt; Used to check if the correct front-end package is installed.</li>
+  <li>model_manager.py -&gt; get’s the model from the given filepath?</li>
+  <li>subgraph_manager.py -&gt; used to load subgraphs</li>
+  <li>user_manager.py -&gt;</li>
+</ul>
+
+<h3 id="comfy--critical"><strong>comfy/</strong> ⭐⭐⭐ CRITICAL</h3>
+
+<p>”””</p>
+
+<p><strong>Purpose:</strong> Core machine learning and model management library
+  <strong>Key files:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">model_management.py</code> - GPU/CPU memory management, model loading/unloading</li>
+  <li><code class="language-plaintext highlighter-rouge">model_patcher.py</code> - Dynamic model patching for LoRAs, control nets</li>
+  <li><code class="language-plaintext highlighter-rouge">sd.py</code> - Stable Diffusion model implementation</li>
+  <li><code class="language-plaintext highlighter-rouge">samplers.py</code> - All sampling algorithms (Euler, DPM, etc.)</li>
+  <li><code class="language-plaintext highlighter-rouge">model_base.py</code> - Base model architectures</li>
+  <li><code class="language-plaintext highlighter-rouge">model_detection.py</code> - Auto-detect model types from files</li>
+  <li><code class="language-plaintext highlighter-rouge">supported_models.py</code> - Configuration for all supported model architectures</li>
+  <li><code class="language-plaintext highlighter-rouge">controlnet.py</code> - ControlNet implementation</li>
+  <li><code class="language-plaintext highlighter-rouge">lora.py</code> - LoRA loading and application</li>
+  <li><code class="language-plaintext highlighter-rouge">clip_model.py</code> - CLIP text encoder</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">utils.py</code> - Utility functions for tensor operations</p>
+
+    <p><strong>Subdirectories:</strong></p>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">ldm/</code> - Latent Diffusion Model modules</li>
+  <li><code class="language-plaintext highlighter-rouge">text_encoders/</code> - Various text encoder implementations (T5, CLIP, etc.)</li>
+  <li><code class="language-plaintext highlighter-rouge">k_diffusion/</code> - Katherine Crowson’s k-diffusion sampling</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">extra_samplers/</code> - Additional sampling methods</p>
+
+    <p><strong>Importance:</strong> This is the heart of ComfyUI - all ML/AI functionality lives here.
+“””
+It is quite troublesome to go through this entire directory and try to understand all parts of it. I will recommend pick this flow. 
+Choose one model (let’s say flux) go to where that is defined ([add path here]) and read how that is ran.</p>
+  </li>
+</ul>
+
+<p>I did the same for Flux as I wanted to have that as the first model in virgil. And it worked out quite well. You can see my implementation details here.</p>
+
+<h3 id="comfy_api--critical"><strong>comfy_api/</strong> ⭐⭐⭐ CRITICAL</h3>
+
+<p>”””
+  <strong>Purpose:</strong> V3 ComfyUI API system (new node API)
+  <strong>Structure:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">latest/</code> - Latest API version</li>
+  <li><code class="language-plaintext highlighter-rouge">v0_0_1/</code>, <code class="language-plaintext highlighter-rouge">v0_0_2/</code> - Versioned APIs</li>
+  <li><code class="language-plaintext highlighter-rouge">internal/</code> - Internal API utilities</li>
+  <li><code class="language-plaintext highlighter-rouge">feature_flags.py</code> - Feature toggles</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">version_list.py</code> - API version management</p>
+
+    <p><strong>Importance:</strong> Critical for understanding the new V3 node system and API versioning.
+“””</p>
+  </li>
+</ul>
+
+<p>Everything beside internal is just talking about types. I do not understand what is going inside of internal though. [FIND_OUT]</p>
+
+<h3 id="comfy_api_nodes-"><strong>comfy_api_nodes/</strong> ⭐</h3>
+
+<p>”””
+  <strong>Purpose:</strong> Nodes that call external Comfy.org APIs</p>
+
+<ul>
+  <li>API nodes for cloud services (model sharing, workflow sharing, etc.)</li>
+  <li>Auto-generated from OpenAPI specs</li>
+  <li>
+    <p>Contains both staging and production API integration</p>
+
+    <p><strong>When to care:</strong> Only if working with Comfy.org cloud features or API nodes.
+“””</p>
+  </li>
+</ul>
+
+<p>These contain the nodes that call external services.</p>
+
+<p>Let’s understand how we can build a node by picking one model, in this case I chose Gemini.</p>
+
+<!-- Note to self: Learn from these and make one for gemini -->
+
+<h3 id="comfy_config"><strong>comfy_config/</strong></h3>
+
+<p>”””
+  <strong>Purpose:</strong> Configuration parsing and types</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">config_parser.py</code> - Parse YAML/JSON configs</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">types.py</code> - Type definitions for configs</p>
+
+    <p><strong>Importance:</strong> For advanced configuration management.
+“””
+Responsible for extracting the configuration of any given node</p>
+  </li>
+</ul>
+
+<h3 id="comfy_execution--critical"><strong>comfy_execution/</strong> ⭐⭐⭐ CRITICAL</h3>
+
+<p>”””
+  <strong>Purpose:</strong> Execution engine
+  <strong>Key files:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">graph.py</code> - DynamicPrompt, ExecutionList, dependency graph</li>
+  <li><code class="language-plaintext highlighter-rouge">caching.py</code> - Caching strategies (LRU, RAM pressure, etc.)</li>
+  <li><code class="language-plaintext highlighter-rouge">progress.py</code> - Progress tracking and reporting</li>
+  <li><code class="language-plaintext highlighter-rouge">validation.py</code> - Input validation</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">utils.py</code> - Execution utilities</p>
+
+    <p><strong>Importance:</strong> EXTREMELY CRITICAL - this is the execution engine that runs workflows.
+“””
+The above definitions are succint</p>
+  </li>
+</ul>
+
+<h3 id="comfy_extras--important"><strong>comfy_extras/</strong> ⭐⭐ IMPORTANT</h3>
+
+<p>”””
+  <strong>Purpose:</strong> Extra/experimental nodes and features
+  <strong>Contains 80+ specialized node files:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">nodes_custom_sampler.py</code> - Advanced sampling nodes</li>
+  <li><code class="language-plaintext highlighter-rouge">nodes_model_merging.py</code> - Model merging functionality</li>
+  <li><code class="language-plaintext highlighter-rouge">nodes_latent.py</code> - Latent space manipulation</li>
+  <li><code class="language-plaintext highlighter-rouge">nodes_mask.py</code> - Mask operations</li>
+  <li><code class="language-plaintext highlighter-rouge">nodes_flux.py</code>, <code class="language-plaintext highlighter-rouge">nodes_sd3.py</code> - Model-specific nodes</li>
+  <li><code class="language-plaintext highlighter-rouge">nodes_hooks.py</code> - Sampling hooks</li>
+  <li>
+    <p>And many more specialized nodes…</p>
+
+    <p><strong>Importance:</strong> Contains most advanced/experimental features. Check here for specialized functionality.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="custom_nodes--important"><strong>custom_nodes/</strong> ⭐⭐ IMPORTANT</h3>
+<p>”””
+  <strong>Purpose:</strong> User-installed custom node extensions</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">example_node.py.example</code> - Template for creating custom nodes</li>
+  <li><code class="language-plaintext highlighter-rouge">websocket_image_save.py</code> - Example WebSocket node</li>
+  <li>
+    <p><strong>Third-party nodes install here</strong></p>
+
+    <p><strong>Importance:</strong> This is where community extensions live. Essential for understanding the plugin system.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="input"><strong>input/</strong></h3>
+
+<p>”””
+  <strong>Purpose:</strong> Input files for workflows</p>
+
+<ul>
+  <li>Default location for input images</li>
+  <li><code class="language-plaintext highlighter-rouge">3d/</code> - 3D model inputs</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">example.png</code> - Example input image</p>
+
+    <p><strong>Importance:</strong> Low - just a data directory.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="middleware"><strong>middleware/</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> HTTP middleware for the web server</p>
+
+<ul>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">cache_middleware.py</code> - HTTP caching headers</p>
+
+    <p><strong>Importance:</strong> Low - only matters for web server optimization.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="models--critical"><strong>models/</strong> ⭐⭐⭐ CRITICAL</h3>
+<p>”””
+  <strong>Purpose:</strong> All AI model files (checkpoints, LoRAs, etc.)
+  <strong>Subdirectories:</strong></p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">checkpoints/</code> - Main SD models (.safetensors, .ckpt)</li>
+  <li><code class="language-plaintext highlighter-rouge">loras/</code> - LoRA files</li>
+  <li><code class="language-plaintext highlighter-rouge">vae/</code> - VAE models</li>
+  <li><code class="language-plaintext highlighter-rouge">controlnet/</code> - ControlNet models</li>
+  <li><code class="language-plaintext highlighter-rouge">clip/</code>, <code class="language-plaintext highlighter-rouge">text_encoders/</code> - Text encoder models</li>
+  <li><code class="language-plaintext highlighter-rouge">unet/</code>, <code class="language-plaintext highlighter-rouge">diffusion_models/</code> - Diffusion models</li>
+  <li><code class="language-plaintext highlighter-rouge">upscale_models/</code> - Upscaling models</li>
+  <li><code class="language-plaintext highlighter-rouge">embeddings/</code> - Textual inversion embeddings</li>
+  <li><code class="language-plaintext highlighter-rouge">hypernetworks/</code> - Hypernetwork files</li>
+  <li><code class="language-plaintext highlighter-rouge">clip_vision/</code> - CLIP vision models</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">gligen/</code>, <code class="language-plaintext highlighter-rouge">photomaker/</code>, etc. - Specialized models</p>
+
+    <p><strong>Importance:</strong> Critical - this is where you put all your models.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="output"><strong>output/</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> Generated output files</p>
+
+<ul>
+  <li>Images, videos, and other outputs go here</li>
+  <li>
+    <p>Can be configured with <code class="language-plaintext highlighter-rouge">--output-directory</code></p>
+
+    <p><strong>Importance:</strong> Low - just a data directory.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="script_examples"><strong>script_examples/</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> Example scripts for using ComfyUI programmatically</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">basic_api_example.py</code> - Simple API usage</li>
+  <li><code class="language-plaintext highlighter-rouge">websockets_api_example.py</code> - WebSocket communication</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">websockets_api_example_ws_images.py</code> - Receiving images via WebSocket</p>
+
+    <p><strong>Importance:</strong> Useful for learning how to use ComfyUI as a library or via API.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="tests"><strong>tests/</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> Integration/functional tests</p>
+
+<ul>
+  <li>
+    <p>More comprehensive than unit tests</p>
+
+    <p><strong>Importance:</strong> For development.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="tests-unit"><strong>tests-unit/</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> Unit tests using pytest</p>
+
+<ul>
+  <li>Contains test files for various components</li>
+  <li>
+    <p>Run with: <code class="language-plaintext highlighter-rouge">pytest tests-unit/</code></p>
+
+    <p><strong>Importance:</strong> Critical for development, not for usage.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="utils"><strong>utils/</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> General utility functions</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">extra_config.py</code> - Extra configuration loading</li>
+  <li><code class="language-plaintext highlighter-rouge">install_util.py</code> - Installation utilities</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">json_util.py</code> - JSON helpers</p>
+
+    <p><strong>Importance:</strong> Low - helper utilities.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="folder_pathspy--critical"><strong>folder_paths.py</strong> ⭐⭐⭐ CRITICAL</h3>
+<p>”””
+  <strong>Purpose:</strong> Path management system</p>
+
+<ul>
+  <li>Manages all model folder paths</li>
+  <li><code class="language-plaintext highlighter-rouge">folder_names_and_paths</code> - Maps model types to directories</li>
+  <li><code class="language-plaintext highlighter-rouge">get_filename_list()</code> - Lists files in model folders</li>
+  <li><code class="language-plaintext highlighter-rouge">get_full_path()</code> - Resolves model file paths</li>
+  <li>File caching for performance</li>
+  <li>
+    <p>Configurable via command-line args</p>
+
+    <p><strong>Importance:</strong> Critical - central path management for all models.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="cuda_mallocpy-"><strong>cuda_malloc.py</strong> ⭐</h3>
+<p>”””
+  <strong>Purpose:</strong> CUDA memory allocator configuration</p>
+
+<ul>
+  <li>Detects GPU models</li>
+  <li>Sets PyTorch CUDA malloc backend</li>
+  <li>Blacklists GPUs with issues</li>
+  <li>
+    <p>Must run BEFORE importing PyTorch</p>
+
+    <p><strong>Importance:</strong> Important for GPU memory management, especially on problematic GPUs.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="hook_breaker_ac10a0py-"><strong>hook_breaker_ac10a0.py</strong> ⭐</h3>
+<p>”””
+  <strong>Purpose:</strong> Security - prevents custom nodes from hooking core functions</p>
+
+<ul>
+  <li>Saves original function pointers</li>
+  <li>Restores them after custom nodes load</li>
+  <li>Prevents malicious monkey-patching</li>
+  <li>
+    <p>Currently protects: <code class="language-plaintext highlighter-rouge">comfy.model_management.cast_to</code></p>
+
+    <p><strong>Importance:</strong> Security feature to protect core functionality.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="latent_previewpy-"><strong>latent_preview.py</strong> ⭐⭐</h3>
+<p>”””
+  <strong>Purpose:</strong> Generate preview images during sampling</p>
+
+<ul>
+  <li>TAESD-based previews (fast)</li>
+  <li>Latent2RGB previews (faster but lower quality)</li>
+  <li>Converts latents to displayable images</li>
+  <li>
+    <p>Used for real-time progress visualization</p>
+
+    <p><strong>Importance:</strong> Important for user experience - shows sampling progress.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="new_updaterpy"><strong>new_updater.py</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> Updates the Windows standalone package updater scripts</p>
+
+<ul>
+  <li>
+    <p>Only relevant for Windows standalone builds</p>
+
+    <p><strong>Importance:</strong> Low - only for Windows packaged version.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="node_helperspy-"><strong>node_helpers.py</strong> ⭐⭐</h3>
+<p>”””
+  <strong>Purpose:</strong> Helper utilities for nodes</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">conditioning_set_values()</code> - Modify conditioning data</li>
+  <li><code class="language-plaintext highlighter-rouge">pillow()</code> - Robust PIL image loading</li>
+  <li><code class="language-plaintext highlighter-rouge">hasher()</code> - Get hashing function</li>
+  <li><code class="language-plaintext highlighter-rouge">string_to_torch_dtype()</code> - Convert dtype strings</li>
+  <li>
+    <p><code class="language-plaintext highlighter-rouge">image_alpha_fix()</code> - Fix alpha channels</p>
+
+    <p><strong>Importance:</strong> Useful utilities used throughout nodes.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="protocolpy"><strong>protocol.py</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> Binary protocol constants for WebSocket</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">BinaryEventTypes</code> - Enum for binary message types
+    <ul>
+      <li>PREVIEW_IMAGE = 1</li>
+      <li>UNENCODED_PREVIEW_IMAGE = 2</li>
+      <li>TEXT = 3</li>
+      <li>PREVIEW_IMAGE_WITH_METADATA = 4</li>
+    </ul>
+
+    <p><strong>Importance:</strong> Low - just constants for the WebSocket protocol.
+“””</p>
+  </li>
+</ul>
+
+<h3 id="comfyui_versionpy"><strong>comfyui_version.py</strong></h3>
+<p>”””
+  <strong>Purpose:</strong> Version string</p>
+
+<ul>
+  <li>Auto-generated from <code class="language-plaintext highlighter-rouge">pyproject.toml</code></li>
+  <li>
+    <p>Current version: “0.3.73”</p>
+
+    <p><strong>Importance:</strong> Low - just version metadata.
+“””</p>
+  </li>
+</ul>
+
+<h2 id="comfyui_frontend-overview">ComfyUI_frontend Overview</h2>
+
+<!-- Self note
+
+> https://registry.comfy.org/ -> This is gold for inspiration and putting in virgil (Hiring goldmine as well) -->
+
+<h2 id="appendix">Appendix</h2>
+
+<h3 id="everything-about-async--multithreading-in-python">Everything about async &amp; multithreading in python</h3>
+
+<h4 id="threading">Threading</h4>
+
+<p><a href="https://realpython.com/intro-to-python-threading/">https://realpython.com/intro-to-python-threading/</a></p>
+
+<p>Till python pie (3.14) we had something called the [GIL] so people created a lot of work arounds to work with multiple threads. (Maybe in a few years this part of the blog will be irrelevant haha).</p>
+
+<p>But what is a thread? Well let’s start by first talking about your CPU, if your CPU has 8 cores that means you have 8 threads. These are the brains and most of the operations you run on python are run by CPU (GPU computation is different!). Now due to the dreaded [GIL] (<a href="https://www.artima.com/weblogs/viewpost.jsp?thread=214235">here</a> Guido van van Rossum (A dope name for a dope creator) talks about GIL)
+we could only use 1 thread (brain) at a time, which for most application just works fine.</p>
+
+<p>But why not use all of the brains if I have them, that is what multi-threading let’s us do.</p>
+
+<p>[ADD MEME I PAID FOR THE WHOLE METER I AM GOING TO USE THE WHOLE METER]</p>
+
+<p>Now this is what threading means in a traditional sense, but python dont work this way boy.</p>
+
+<p>”””
+A thread is a separate flow of execution. This means that your program will have two things happening at once. But for most Python 3 implementations the different threads do not actually execute at the same time: they merely appear to.</p>
+
+<p>It’s tempting to think of threading as having two (or more) different processors running on your program, each one doing an independent task at the same time. That’s almost right. The threads may be running on different processors, but they will only be running one at a time.</p>
+
+<p>Getting multiple tasks running simultaneously requires a non-standard implementation of Python, writing some of your code in a different language, or using multiprocessing which comes with some extra overhead.</p>
+
+<p>Because of the way CPython implementation of Python works, threading may not speed up all tasks. This is due to interactions with the GIL that essentially limit one Python thread to run at a time.</p>
+
+<p>Tasks that spend much of their time waiting for external events are generally good candidates for threading. Problems that require heavy CPU computation and spend little time waiting for external events might not run faster at all.</p>
+
+<p>This is true for code written in Python and running on the standard CPython implementation. If your threads are written in C they have the ability to release the GIL and run concurrently. If you are running on a different Python implementation, check with the documentation too see how it handles threads.</p>
+
+<p>If you are running a standard Python implementation, writing in only Python, and have a CPU-bound problem, you should check out the multiprocessing module instead.</p>
+
+<p>Architecting your program to use threading can also provide gains in design clarity. Most of the examples you’ll learn about in this tutorial are not necessarily going to run faster because they use threads. Using threading in them helps to make the design cleaner and easier to reason about.</p>
+
+<p>So, let’s stop talking about threading and start using it!
+“””</p>
+
+<p><a href="https://www.troyfawkes.com/learn-python-multithreading-queues-basics/">https://www.troyfawkes.com/learn-python-multithreading-queues-basics/</a></p>
+
+<p>”””
+Use asyncio for many I/O-bound tasks that wait on sockets or files. Prefer threading when you need blocking libraries but light CPU use. Pick multiprocessing for CPU-bound work to bypass the GIL and run tasks in parallel.
+“””</p>
+
+<p>Concurency vs parallalism</p>
+
+<p>What does
+.gather
+.join
+.put
+.get</p>
+
+<p>these do?</p>
+
+<p>Blog series here was helpful -&gt; <a href="https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-2">https://bbc.github.io/cloudfit-public-docs/asyncio/asyncio-part-2</a></p>
+
+<p><a href="https://discuss.python.org/t/wrapping-async-functions-for-use-in-sync-code/8606">https://discuss.python.org/t/wrapping-async-functions-for-use-in-sync-code/8606</a>
+<a href="https://realpython.com/async-io-python/">https://realpython.com/async-io-python/</a>
+<a href="https://realpython.com/python-concurrency/">https://realpython.com/python-concurrency/</a>
+https://book.pythontips.com/en/latest/index.html
+<a href="https://realpython.com/python-heapq-module/">https://realpython.com/python-heapq-module/</a>
+https://arjancodes.com/blog/understanding-python-metaclasses-for-advanced-class-customization/
+https://realpython.com/python-interface/ -&gt; To learn importance of abc and shit 
+https://jellis18.github.io/post/2022-01-11-abc-vs-protocol/
+https://blog.ionelmc.ro/2015/02/09/understanding-python-metaclasses/#you-know-what-youre-looking-for</p>
+
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F&text=Breaking+down+ComfyUI+to+build+Virgil" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F&title=Breaking+down+ComfyUI+to+build+Virgil" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fprojects%2Fbreaking_down_comfyui%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+</article>
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2026 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>

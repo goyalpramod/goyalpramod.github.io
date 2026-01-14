@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Weekly Lessons #2 (6.1.25 - 12.1.25) | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Weekly Lessons #2 (6.1.25 - 12.1.25)" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Notes on first youtube video, work on second blog on SD, weekly small things learned here and there. Also some thoughts on podcasts, books and quotes that have stuck with me." />
+<meta property="og:description" content="Notes on first youtube video, work on second blog on SD, weekly small things learned here and there. Also some thoughts on podcasts, books and quotes that have stuck with me." />
+<link rel="canonical" href="https://goyalpramod.github.io/notes/wl_2/" />
+<meta property="og:url" content="https://goyalpramod.github.io/notes/wl_2/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/cover_images/img4.webp" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-01-14T07:31:52+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/cover_images/img4.webp" />
+<meta property="twitter:title" content="Weekly Lessons #2 (6.1.25 - 12.1.25)" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-01-12T06:30:00+00:00","datePublished":"2026-01-14T07:31:52+00:00","description":"Notes on first youtube video, work on second blog on SD, weekly small things learned here and there. Also some thoughts on podcasts, books and quotes that have stuck with me.","headline":"Weekly Lessons #2 (6.1.25 - 12.1.25)","image":"https://goyalpramod.github.io/assets/cover_images/img4.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/notes/wl_2/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/notes/wl_2/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/cover_images/img4.webp" alt="Weekly Lessons #2 (6.1.25 - 12.1.25)" class="featured-image">
+</div>
+
+
+<article class="note">
+  <h1>Weekly Lessons #2 (6.1.25 - 12.1.25)</h1>
+  <p class="meta">Last updated: January 12, 2025</p>
+
+  <p>Notes on first youtube video, work on second blog on SD, weekly small things learned here and there. Also some thoughts on podcasts, books and quotes that have stuck with me.</p>
+
+<p>Day 1 -&gt;</p>
+<ul>
+  <li>Most of the day was spent working for the company, I had a look at onyx. It is an interesting project and highly relevant to what I am working on</li>
+  <li>For the time I had left I worked on manim and the youtube video. A lot of time was spent getting it just perfect</li>
+  <li>In any free time I got, I continued reading the e myth revisited, it is a rather nice book. It brought to light an issue I had been facing with my own company that I started with my friends.</li>
+</ul>
+
+<p>Day 2 -&gt;</p>
+<ul>
+  <li>I worked on manim, I made 4 minutes of my transformers video. But I want it to be just perfect</li>
+  <li>I read the boo</li>
+  <li>I started working on the SD blog, damn is it challenging. But completely worth it IMO.</li>
+</ul>
+
+<p>day 3 -&gt;</p>
+<ul>
+  <li>Something that has stuck with me for a long time are the two things I read on “The millionaire fastlane”
+    <ul>
+      <li>First being “impact millions’ That is the autour saying. “If I had to sum the entire book in 2 words”</li>
+      <li>Second, The CENTS formula. It goes lik
+        <ul>
+          <li>C -&gt; Control, You should have entire control of your business, you cannot delegate this.</li>
+          <li>E -&gt; Entry, THe entry barrier should be relatively high. Otherwise everyone will be doing it.</li>
+          <li>N -&gt; Need, Their should be a cutomer base who you can provide value to, if your business does not solve a need. It wont succeed.</li>
+          <li>T -&gt; Time, You are not your business, you should be able to detach your time from the business. Otherwise you will have a job not a business. The end goal should be you spending as less time as possible in your own business</li>
+          <li>S -&gt; Scale, Your business should be scalable. You can be the best nurse in the world. But you can only cater to a handful of people in your entire life</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Also, let us speak a bit about the other books and podcasts that have stuck with me.
+    <ul>
+      <li>The almanack of naval ravikant, “You need 7 years of dedication that’s all” Pick something. DO it to the entireity for 7 years. THat is all you need.</li>
+      <li>Perplexity is not the competitor of google, their motto is “knowledge” It’s an entirely different business model</li>
+      <li>To overtake an existing product. Your product needs to be either 10x UI better, UX better or anything that is 10X (from hooked book)</li>
+      <li>Most of the times, doing things which are 10x just need 2x of the energy.</li>
+      <li>Also I was reading on Charlie Munger’s speach and ideas.
+        <ul>
+          <li>INVERT INVERT INVERT, if you have a problem you cant figure out. Try thinking of it in other ways.</li>
+          <li>Just sit down and do not get up till its done.</li>
+        </ul>
+      </li>
+      <li>Some thoughts from paul’s blogs have also stuck with me. THe most profound one being. Inconvience, founders just have a keen eye for the most weirdly inconvinient things that people have just accepted to live with. They are so used to it being the way it is, noone ever thinks of chaning or improving it.</li>
+    </ul>
+  </li>
+  <li>Some more sayings that I like
+    <ul>
+      <li>The way one does one thing, he does everything.</li>
+      <li>If you do it once, you will do it again.</li>
+    </ul>
+  </li>
+  <li>I also learned that these three line are live savers
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git checkout main
+git fetch origin
+git reset --hard origin/main
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+<p>day 4:</p>
+<ul>
+  <li>I was mostly busy with work today</li>
+  <li>The time I did get I spent learning about GANs, from the following <a href="https://arxiv.org/pdf/1406.2661">paper</a> and <a href="https://lilianweng.github.io/posts/2017-08-20-gan/">blog</a>
+I also found an interesting youtube channel, that had a great video on markov chains. It was called normalized nerds hahaha.</li>
+  <li>I read some interesting things from e-myth revisited which I would like to write about in one go.</li>
+  <li>It’s late…. I really want to sleep. But I must learn.. I want to know more. I am reading these <a href="https://www.countbayesie.com/blog/2015/3/19/expectation-and-variance-from-high-school-to-grad-school">blogs</a> atm, really got inspired by Taehoon Kim’s <a href="https://carpedm30.notion.site/me">story</a></li>
+</ul>
+
+<p>day 5:</p>
+<ul>
+  <li>One of these days I updated my github and medium profile and forgot to write down about it. I believe it is very important to follow a style
+in your writing and the work you present. That becomes your brand image, I like simplicity, minimalism, A bit of naivety or childishness too, To add a bit of fun in your writing,
+in your diagrams, in one’s way of life. Because when people go through my work, ACTUAL work that I have put hours behind. 
+I want them to realize, that most things in life really are simple, that most things can be fun if you have fun while doing them.</li>
+  <li>There is one thing in my belief system that I am way too fond of, “Exponential growth”, it is very tough to grow exponentially, but 
+if you can do this. You will achieve in 1 year what most take 10 years. 
+The idea is simple, instead of trying to improve 1% a day, try to improve by 10%. It is very tough, but it is worth it. 
+To do this, on a single day I try to write, code, practice a real life skill (cooking, driving, explosive training etc), reading (fast, and comprehending it)
+When you do multiple things (not all at once, but designating specific time for each) You get better at each, but it has some profound effect on you. 
+And you actually start to get better at other things. Like the idea of asynchronous programming improved my cooking.</li>
+  <li>I have been mostly reading count bayesian blogs on random variables, expectation, variance, covvariance etc. I will make some content on these later on. 
+Either short form or include all of it in a single blog.</li>
+</ul>
+
+<p>day 6:</p>
+<ul>
+  <li>I spent much of the morning working on the youtube video, even after everything is done. I change quite a lot of stuff because I want it to be absolutely perfect, or atleast get it to a stage I can happy with it, like I want it to be something that I would honestly revisit in the future, Like the blogs I write, content I put out in twitter, linkedin etc. Are stuff that I actually like to go through again, because I see them as really helpful and essential knowledge</li>
+  <li>Afternoon was spent taking care of chores</li>
+  <li>In the evening I tried to learn more on GANs, I left it for training (I still need to completely grok it, most of the stuff I left to AI to code, or teach me. I still feel like there is a lot that I need to understand), After which I proceeded to learn about VAEs</li>
+  <li>I was listening to the DOAC podcast and a story by alex hormonzi stuck with me. “A dad gifts his son an old car for his birthday, 
+Then asks him would you rather have the money? The son says yes, then his father advices him to go to the local delership and see what they offer him, He comes back and says “The dealership said that the car looks old, and it will be a lot of money trying to fix it up, best they can offer is a grand.” Then his father adviced him to go to the scrapyard and see what they offer him. He does that, comes back and tells his father “They said that they will have to spend a lot of time scraping the good and bad metal. Best they can do is 500 Dollars”. His father then says, “Why dont you go to the local antique store and see what they have to say”. He does that, after a while he comes back running, with a huge smile on his face. All excitedly he tells his father “DAD DAD DAD, the antique store said that the car is an antique. One of only 100 made in the world. It will easily sell for more than 100k”. The lesson in this story is that you aren’t valued the same in all places.</li>
+  <li>The greatest price you pay in life, is the price of ignorance.</li>
+</ul>
+
+<p>day 7 :</p>
+<ul>
+  <li>I spent most of yesterday creating the youtube video in the morning (which I released yehhhhhh, It didnt explode unfortunately tho. But its ok, these are mostly wealth assets which build on time)</li>
+  <li>After that I spent the afternoon resting and watching anime</li>
+  <li>At night I was reading about VAEs</li>
+</ul>
+
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Fwl_2%2F&text=Weekly+Lessons+%232+%286.1.25+-+12.1.25%29" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Fwl_2%2F&title=Weekly+Lessons+%232+%286.1.25+-+12.1.25%29" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Fwl_2%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Fwl_2%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+</article>
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2026 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>

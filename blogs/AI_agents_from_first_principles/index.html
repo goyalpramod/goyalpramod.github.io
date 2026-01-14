@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>AI Agents from First Principles | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="AI Agents from First Principles" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="If you exist between the time period of late 2024 to 2027 (my prediction of when this tech will become saturated and stable), And do not live under a rock. You have heard of AI agents." />
+<meta property="og:description" content="If you exist between the time period of late 2024 to 2027 (my prediction of when this tech will become saturated and stable), And do not live under a rock. You have heard of AI agents." />
+<link rel="canonical" href="https://goyalpramod.github.io/blogs/AI_agents_from_first_principles/" />
+<meta property="og:url" content="https://goyalpramod.github.io/blogs/AI_agents_from_first_principles/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/blog_assets/ai_agents/meme.webp" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2025-02-15T06:30:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/blog_assets/ai_agents/meme.webp" />
+<meta property="twitter:title" content="AI Agents from First Principles" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2025-02-15T06:30:00+00:00","datePublished":"2025-02-15T06:30:00+00:00","description":"If you exist between the time period of late 2024 to 2027 (my prediction of when this tech will become saturated and stable), And do not live under a rock. You have heard of AI agents.","headline":"AI Agents from First Principles","image":"https://goyalpramod.github.io/assets/blog_assets/ai_agents/meme.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/blogs/AI_agents_from_first_principles/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/blogs/AI_agents_from_first_principles/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/blog_assets/ai_agents/meme.webp" alt="AI Agents from First Principles" class="featured-image">
+</div>
+
+
+<article class="blog-post">
+  <h1>AI Agents from First Principles</h1>
+  <p class="meta">February 15, 2025</p><button id="toc-toggle" class="toc-toggle" aria-label="Toggle Table of Contents">
+    <i class="fas fa-list-ul"></i>
+  </button>
+  
+  <div class="toc-wrapper">
+    <div class="toc">
+      <div class="toc-header">
+        Table of Contents
+        <button class="toc-close" aria-label="Close Table of Contents">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="toc-nav" id="toc">
+        <!-- ToC content will be dynamically inserted here by JavaScript -->
+      </nav>
+    </div>
+  </div>
+  <p>If you exist  between the time period of late 2024 to 2027 (my prediction of when this tech will become saturated and stable), And do not live under a rock. You have heard of AI agents.</p>
+
+<p>For the general layman an AI agent is basically a magic genie whom you tell a task and it just gets it done.</p>
+
+<blockquote>
+  <p>“Hey AI Agent (let’s call her Aya) Book my tickets from Dubai to London”<br />
+“Hey Aya, give me a summary of all the points discussed in the meeting and then implement everything suggested by Steve”<br />
+“Hey Aya, fix my workout routine”</p>
+</blockquote>
+
+<p>You get the gist of it, as amazing as it sounds. In practicality (as of early 2025) Aya is not stable, she makes frequent mistakes, hallucinates a lot, and is annoying to build.</p>
+
+<p>To make it easier, multiple frameworks have been developed. The most popular one’s being</p>
+
+<ul>
+  <li><a href="https://www.langchain.com/">Langchain</a></li>
+  <li><a href="https://www.llamaindex.ai/">LLamaIndex</a></li>
+  <li><a href="https://www.langflow.org/">Langflow</a></li>
+</ul>
+
+<p>But if you are anything like me, you hate abstraction layers which add needless complexity during debugging. So in this blog I would like to breakdown how to build AI agents from first principles purely using Python and the core libraries.</p>
+
+<p>First we would build the building blocks, Using which. We will build different AI agents for particular use cases (Nothing like one shoe fits all)</p>
+
+<p>If you would like an introduction to LLMs themselves, I will recommend the below two sources.</p>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=jkrNMKz9pWU">A hackers guide to language models by Jeremy Howard</a></li>
+  <li><a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Intro to LLMs by Andrej Karpathy</a></li>
+</ul>
+
+<h2 id="prompts">Prompts</h2>
+
+<p>Prompts are the instructions given to an LLM, they describe the task, what the LLM is supposed to do, the output etc. It’s like code for a program, but clear instructions in english.</p>
+
+<p>One thing to keep in mind is LLMs are word predictors, the best thing to do is think of the sample space while prompting.</p>
+
+<p>There are multiple tips and tricks when it comes to writing prompts, here is a <a href="https://docs.anthropic.com/en/docs/build-with-claude/prompt-engineering/overview">guide</a> by Anthropic which talks about the most popular ones.</p>
+
+<p>In a cruz the few rules you need to be aware of are.</p>
+
+<ul>
+  <li>Be clear and descriptive</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bad_prompt</span> <span class="o">=</span> <span class="s">"return numbers"</span>
+
+<span class="n">good_prompt</span> <span class="o">=</span> <span class="s">"Given a list of numbers and words, only return the numbers as a list"</span>
+
+</code></pre></div></div>
+
+<ul>
+  <li>Use examples</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bad_prompt</span> <span class="o">=</span> <span class="s">"return numbers"</span>
+
+<span class="n">good_prompt</span> <span class="o">=</span> <span class="s">"""Given a list of numbers and words, only return the numbers as a list.</span><span class="se">\
+</span><span class="s">
+Input:  ["hello", 42, "pizza", 2, 5]
+Output: [42,2,5]
+
+"""</span>
+</code></pre></div></div>
+
+<ul>
+  <li>Use XML tags</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bad_prompt</span> <span class="o">=</span> <span class="s">"return numbers"</span>
+
+<span class="n">good_prompt</span> <span class="o">=</span> <span class="s">"""Given a list of numbers and words, only return the numbers as a list.</span><span class="se">\
+</span><span class="s">You will be given the inputs inside &lt;input&gt; tags.</span><span class="se">\
+</span><span class="s">
+Input:  &lt;input&gt;["hello", 42, "pizza", 2, 5]&lt;/input&gt;
+Output: [42,2,5]
+</span></code></pre></div></div>
+
+<ul>
+  <li>Give it a role</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">bad_prompt</span> <span class="o">=</span> <span class="s">"return numbers"</span>
+
+<span class="n">good_prompt</span> <span class="o">=</span> <span class="s">"""You are an expert classifier, which classifies strings and integers.</span><span class="se">\
+</span><span class="s">Given a list of numbers and words, only return the numbers as a list.</span><span class="se">\
+</span><span class="s">You will be given the inputs inside &lt;input&gt; tags.</span><span class="se">\
+</span><span class="s">
+Input:  &lt;input&gt;["hello", 42, "pizza", 2, 5]&lt;/input&gt;
+Output: [42,2,5]
+</span></code></pre></div></div>
+
+<p>If these are too hard to remember, just replace yourself with the agent and think, “are the given instructions, simple and complete enough to help you complete the task?”, if not. Reiterate.</p>
+
+<h2 id="models">Models</h2>
+
+<p><img src="/assets/blog_assets/ai_agents/5.webp" alt="Image of super special artist" /></p>
+
+<blockquote>
+  <p>Image taken from Anthropic’s <a href="https://www.anthropic.com/research/building-effective-agents">blog</a> on Agents</p>
+</blockquote>
+
+<p>Large Language Models are our thinking machines, which take our prompts/instructions/guidance/tools and perform the action we want it to.</p>
+
+<p>You can think of the LLM as the CPU, doing all the thinking and performing all the actions based on tools available to it.</p>
+
+<p><img src="/assets/blog_assets/ai_agents/1.webp" alt="Image of super special artist" /></p>
+
+<blockquote>
+  <p>Image taken from <a href="https://www.youtube.com/watch?v=zjkBMFhNj_g">Andrej’s Intro to LLMs</a> video</p>
+</blockquote>
+
+<p>For inference, your choice boils down to API providers or self-hosted models. This decision impacts your development speed, costs, and control over the model’s behavior.</p>
+
+<p><strong>API providers</strong> (<a href="https://openai.com/">OpenAI</a>, <a href="https://www.anthropic.com/">Anthropic</a>, <a href="https://gemini.google.com/?hl=en-IN">Google</a>) handle the infrastructure and updates, giving you immediate access to state-of-the-art models. While this means <em>higher per-token costs</em> and less control, it lets you focus on building your application rather than managing infrastructure. Use these when rapid development and minimal maintenance overhead are priorities.</p>
+
+<p><strong>Self-hosting</strong> open-source models (<a href="https://huggingface.co/meta-llama">Llama</a>, <a href="https://huggingface.co/Qwen">Qwen</a>, <a href="https://huggingface.co/deepseek-ai">Deepseek</a>) gives you complete control over inference and costs. The trade-off is managing infrastructure and optimization yourself. Your primary constraint here is model size - it directly determines your hardware requirements and inference speed. A 7B parameter model might run on a consumer GPU, but a 70B model needs serious hardware or optimization techniques like quantization and sharding.</p>
+
+<p>For specific tasks, you might not need large general-purpose models. Specialized models from HuggingFace (for <a href="https://huggingface.co/defog/llama-3-sqlcoder-8b">SQL</a>, <a href="https://huggingface.co/codellama/CodeLlama-34b-hf">code generation</a>, or <a href="https://huggingface.co/CohereForAI/aya-101">multilingual</a> tasks) often perform better while requiring fewer resources. Check benchmark platforms like <a href="https://livebench.ai/#/">Livebench</a> and <a href="https://artificialanalysis.ai/leaderboards/models">LLMAnalysis</a> for real-world performance metrics before deciding.</p>
+
+<p>Self-hosting requires thinking about inference optimization and deployment. This includes quantization, continuous batching, and GPU memory management. Your deployment strategy needs to consider throughput requirements, scaling needs, and system reliability. Tools like <a href="https://github.com/vllm-project/vllm">vLLM</a> can help manage these complexities, but you’ll need to handle integration and maintenance.</p>
+
+<h2 id="tools">Tools</h2>
+
+<p>This has a needlessly complex name - tools are just functions.</p>
+
+<p>Yes, that’s it - they are functions with defined inputs and outputs. These functions are provided to an LLM as a schema, and the model extracts input values from user queries to call these functions.</p>
+
+<p>Think of it as someone reading a user’s request, identifying available functions, extracting the right values, and passing them to compute. The model then takes the computed output and formulates a response.</p>
+
+<p>Creating functions for LLMs should follow software development best practices like <a href="https://en.wikipedia.org/wiki/Separation_of_concerns">Separation of Concerns</a>, <a href="https://en.wikipedia.org/wiki/Principle_of_least_astonishment#:~:text=In%20user%20interface%20design%20and,not%20astonish%20or%20surprise%20users.">Principle of least astonishment</a>, and <a href="https://en.wikipedia.org/wiki/SOLID">SOLID principles</a>.</p>
+
+<p>Here’s a sample tool:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_weather</span><span class="p">(</span><span class="n">city</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">date</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="s">"""
+    Gets weather information for a specific city and date.
+    
+    Args:
+        city: Name of the city
+        date: Date in YYYY-MM-DD format, defaults to today
+    
+    Returns:
+        dict: Weather information including temperature and conditions
+    """</span>
+    <span class="c1"># Implementation here
+</span>    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">"temperature"</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+        <span class="s">"conditions"</span><span class="p">:</span> <span class="s">"sunny"</span><span class="p">,</span>
+        <span class="s">"humidity"</span><span class="p">:</span> <span class="mi">60</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>In many libraries you will find them using <code class="language-plaintext highlighter-rouge">@tool</code> on top of functions. This is just a Python <a href="https://realpython.com/primer-on-python-decorators/">decorator</a> that adds metadata. Let’s create a simple one:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+
+<span class="k">def</span> <span class="nf">tool</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="s">"""
+    Decorator that converts a function into an LLM tool by adding metadata.
+    
+    Args:
+        func: Function to convert into a tool
+        
+    Returns:
+        Callable: Decorated function with metadata
+    """</span>
+    <span class="o">@</span><span class="n">wraps</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+    <span class="c1"># Add function metadata
+</span>    <span class="n">wrapper</span><span class="p">.</span><span class="n">is_tool</span> <span class="o">=</span> <span class="bp">True</span>
+    <span class="n">wrapper</span><span class="p">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">func</span><span class="p">.</span><span class="n">__doc__</span>
+    <span class="n">wrapper</span><span class="p">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">).</span><span class="n">parameters</span>
+    
+    <span class="k">return</span> <span class="n">wrapper</span>
+
+<span class="c1"># Usage example
+</span><span class="o">@</span><span class="n">tool</span>
+<span class="k">def</span> <span class="nf">calculate_area</span><span class="p">(</span><span class="n">length</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""Calculate area of a rectangle."""</span>
+    <span class="k">return</span> <span class="n">length</span> <span class="o">*</span> <span class="n">width</span>
+
+<span class="c1"># Let's see what the decorator added
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Is tool:"</span><span class="p">,</span> <span class="n">calculate_area</span><span class="p">.</span><span class="n">is_tool</span><span class="p">)</span> <span class="c1"># Is tool: True
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Description:"</span><span class="p">,</span> <span class="n">calculate_area</span><span class="p">.</span><span class="n">description</span><span class="p">)</span> <span class="c1"># Description: Calculate area of a rectangle.
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Parameters:"</span><span class="p">,</span> <span class="n">calculate_area</span><span class="p">.</span><span class="n">parameters</span><span class="p">)</span> <span class="c1"># Parameters: &lt;Signature (length: float, width: float) -&gt; float&gt;
+</span><span class="k">print</span><span class="p">(</span><span class="s">"Result:"</span><span class="p">,</span> <span class="n">calculate_area</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span> <span class="c1"># result: 15
+</span></code></pre></div></div>
+
+<p>The decorator doesn’t modify how the function works - it simply passes through all calls to the original function while adding extra attributes. These attributes (is_tool, description, parameters) help the LLM understand:</p>
+
+<ul>
+  <li>That this function is available as a tool</li>
+  <li>What the function does (from the docstring)</li>
+  <li>What parameters it expects (from the signature)</li>
+</ul>
+
+<p>This metadata is then used to create the function schema that we send to the LLM.</p>
+
+<h2 id="memory">Memory</h2>
+
+<p>Memory in LLM agents can be handled in two ways - through context window or external databases.</p>
+
+<p>The context window is the model’s working memory - it’s what the model can “see” during a conversation. Each model has a fixed context window (Claude has 200k tokens, GPT-4 has 128k tokens). This limits how much information the model can process in one go. Think of this as the model’s short-term memory.</p>
+
+<p>For long-term memory, we use databases. This could be as simple as storing conversation history in a SQL database or as complex as storing embeddings in a vector database. The key is to retrieve only relevant information when needed, rather than trying to stuff everything into the context window.</p>
+
+<p>Here’s a basic example of implementing memory:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AgentMemory</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">"""Initialize memory storage"""</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">conversations</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Short-term memory
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">Database</span><span class="p">()</span>    <span class="c1"># Long-term memory
+</span>    
+    <span class="k">def</span> <span class="nf">add_to_memory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">role</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="s">"""Add a new message to memory"""</span>
+        <span class="c1"># Keep last N messages in context
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">conversations</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s">"role"</span><span class="p">:</span> <span class="n">role</span><span class="p">,</span>
+            <span class="s">"content"</span><span class="p">:</span> <span class="n">message</span><span class="p">,</span>
+            <span class="s">"timestamp"</span><span class="p">:</span> <span class="n">datetime</span><span class="p">.</span><span class="n">now</span><span class="p">()</span>
+        <span class="p">})</span>
+        
+        <span class="c1"># Store in long-term memory
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">db</span><span class="p">.</span><span class="n">store</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">role</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">get_relevant_context</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="s">"""Retrieve relevant information from long-term memory"""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">db</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">get_context_window</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">dict</span><span class="p">]:</span>
+        <span class="s">"""Get recent conversations for context window"""</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="p">.</span><span class="n">conversations</span><span class="p">[</span><span class="o">-</span><span class="mi">10</span><span class="p">:]</span>  <span class="c1"># Last 10 messages
+</span></code></pre></div></div>
+
+<p>Memory becomes crucial when your agent needs to:</p>
+
+<ul>
+  <li>Remember past conversations</li>
+  <li>Learn from previous interactions</li>
+  <li>Maintain consistent context over long sessions</li>
+  <li>Access knowledge that won’t fit in the context window</li>
+</ul>
+
+<p>The effectiveness of memory often depends on your retrieval strategy. Simple memory might just load the last few messages, while advanced implementations might use embedding-based similarity search to find relevant past interactions. Which is popularly known as RAG, lets talk about that next.</p>
+
+<h2 id="retrieval-augmented-generation-rag">Retrieval Augmented Generation (RAG)</h2>
+
+<p>RAG improves LLM responses by providing relevant context from your data. Unlike fine-tuning, RAG lets you update your knowledge base without retraining the model. Let’s break down the key components.</p>
+
+<h3 id="embedding-models">Embedding Models</h3>
+
+<p>Embedding models are neural networks that convert text into numerical vectors - imagine converting a sentence into a list of numbers while preserving its meaning. These vectors allow us to measure semantic similarity between texts using mathematical operations like cosine similarity.</p>
+
+<p>Some examples are:</p>
+<ul>
+  <li><a href="https://huggingface.co/BAAI/bge-large-en-v1.5">BGE</a></li>
+  <li><a href="https://platform.openai.com/docs/guides/embeddings">OpenAI Embeddings</a></li>
+  <li><a href="https://huggingface.co/jinaai/jina-embeddings-v2-base-en">Jina embeddings</a></li>
+</ul>
+
+<p>You can compare the latest best embedding model by going to the <a href="https://huggingface.co/spaces/mteb/leaderboard">mteb leaderboard</a>.</p>
+
+<h3 id="vector-databases">Vector Databases</h3>
+
+<p>Vector databases are specialized databases that efficiently store and search through embeddings using algorithms like Approximate Nearest Neighbors (ANN). They solve the problem of finding similar vectors in high-dimensional spaces quickly.</p>
+
+<p>Popular options with their strengths:</p>
+<ul>
+  <li><a href="https://qdrant.tech/">Qdrant</a>: Rust-based, excellent for production deployments</li>
+  <li><a href="https://weaviate.io/">Weaviate</a>: GraphQL-native, good for multi-modal data</li>
+  <li><a href="https://www.pinecone.io/">Pinecone</a>: Fully managed, automatic scaling</li>
+  <li><a href="https://www.trychroma.com/">Chroma</a>: Python-native, perfect for development</li>
+  <li><a href="https://milvus.io/">Milvus</a>: Cloud-native, handles billions of vectors</li>
+</ul>
+
+<p>Here’s a basic RAG implementation:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<span class="kn">from</span> <span class="nn">qdrant_client</span> <span class="kn">import</span> <span class="n">QdrantClient</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+
+<span class="k">class</span> <span class="nc">RAGSystem</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># Initialize embedding model
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">embedder</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="s">'BAAI/bge-large-en-v1.5'</span><span class="p">)</span>
+        
+        <span class="c1"># Initialize vector store
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">qdrant</span> <span class="o">=</span> <span class="n">QdrantClient</span><span class="p">(</span><span class="s">"localhost"</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">6333</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">add_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">documents</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]):</span>
+        <span class="c1"># Create embeddings
+</span>        <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">embedder</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">documents</span><span class="p">)</span>
+        
+        <span class="c1"># Store in vector DB
+</span>        <span class="bp">self</span><span class="p">.</span><span class="n">qdrant</span><span class="p">.</span><span class="n">upload_collection</span><span class="p">(</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="s">"knowledge_base"</span><span class="p">,</span>
+            <span class="n">vectors</span><span class="o">=</span><span class="n">embeddings</span><span class="p">,</span>
+            <span class="n">payload</span><span class="o">=</span><span class="n">documents</span>
+        <span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">retrieve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="c1"># Get query embedding
+</span>        <span class="n">query_embedding</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">embedder</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        
+        <span class="c1"># Search similar documents
+</span>        <span class="n">results</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">qdrant</span><span class="p">.</span><span class="n">search</span><span class="p">(</span>
+            <span class="n">collection_name</span><span class="o">=</span><span class="s">"knowledge_base"</span><span class="p">,</span>
+            <span class="n">query_vector</span><span class="o">=</span><span class="n">query_embedding</span><span class="p">,</span>
+            <span class="n">limit</span><span class="o">=</span><span class="n">k</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">hit</span><span class="p">.</span><span class="n">payload</span> <span class="k">for</span> <span class="n">hit</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h3 id="document-processing">Document Processing</h3>
+
+<p>Before embedding, documents need processing. Here are the key steps with implementations:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">chunk_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">chunk_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">):</span>
+    <span class="s">"""
+    Split text into smaller chunks while preserving sentence boundaries
+    """</span>
+    <span class="n">sentences</span> <span class="o">=</span> <span class="n">text</span><span class="p">.</span><span class="n">split</span><span class="p">(</span><span class="s">'. '</span><span class="p">)</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current_chunk</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current_length</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">current_length</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">chunk_size</span><span class="p">:</span>
+            <span class="n">chunks</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="s">' '</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_chunk</span><span class="p">))</span>
+            <span class="n">current_chunk</span> <span class="o">=</span> <span class="p">[</span><span class="n">sentence</span><span class="p">]</span>
+            <span class="n">current_length</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">current_chunk</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+            <span class="n">current_length</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+            
+    <span class="k">return</span> <span class="n">chunks</span>
+
+<span class="k">def</span> <span class="nf">clean_text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    Standardize text format and remove noise
+    """</span>
+    <span class="c1"># Remove extra whitespace
+</span>    <span class="n">text</span> <span class="o">=</span> <span class="s">' '</span><span class="p">.</span><span class="n">join</span><span class="p">(</span><span class="n">text</span><span class="p">.</span><span class="n">split</span><span class="p">())</span>
+    <span class="c1"># Remove special characters
+</span>    <span class="n">text</span> <span class="o">=</span> <span class="n">re</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s">'[^\w\s.,!?]'</span><span class="p">,</span> <span class="s">''</span><span class="p">,</span> <span class="n">text</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">text</span>
+</code></pre></div></div>
+
+<h3 id="rag-strategiesoptimizationevaluation">RAG Strategies/Optimization/Evaluation</h3>
+
+<p>Different RAG approaches for different needs:</p>
+
+<p><strong>Basic RAG</strong>: Single retrieval-injection cycle</p>
+
+<ul>
+  <li>Best for: Simple queries, quick implementation</li>
+  <li>Limitation: Context window size</li>
+</ul>
+
+<p><strong>Iterative RAG</strong>: Multiple retrieval rounds</p>
+
+<ul>
+  <li>Best for: Complex queries, follow-up questions</li>
+  <li>Limitation: Higher latency, more expensive</li>
+</ul>
+
+<p><strong>Hybrid RAG</strong>: Combined search methods</p>
+
+<ul>
+  <li>Best for: Large diverse datasets</li>
+  <li>Limitation: Complex implementation</li>
+</ul>
+
+<p><strong>Re-ranker RAG</strong>: Two-stage retrieval</p>
+
+<ul>
+  <li>Best for: High accuracy requirements</li>
+  <li>Limitation: Higher compute costs</li>
+</ul>
+
+<p><strong>Performance Optimization</strong>
+Critical optimizations for production:</p>
+
+<ul>
+  <li>Caching: Store frequent query results</li>
+  <li>Batching: Process embeddings in groups</li>
+  <li>Filtering: Use metadata before semantic search</li>
+  <li>Index Optimization: Implement HNSW algorithms</li>
+  <li>Query Preprocessing: Rewrite queries for better retrieval</li>
+</ul>
+
+<p><strong>Evaluation Metrics</strong>
+Monitor these metrics for RAG performance:</p>
+
+<ul>
+  <li>Retrieval Precision: Relevance of retrieved contexts</li>
+  <li>Answer Correctness: Accuracy of generated responses</li>
+  <li>Latency: Response time per query</li>
+  <li>Cost: Tokens used per response</li>
+</ul>
+
+<p>Consider checking out <a href="https://www.trulens.org/">trulens</a> and <a href="https://github.com/confident-ai/deepeval">DeepEval</a>.</p>
+
+<p><strong>Common failure patterns:</strong></p>
+
+<ul>
+  <li>Hallucination from irrelevant context</li>
+  <li>Missing key information due to poor chunking</li>
+  <li>High latency from inefficient retrieval</li>
+</ul>
+
+<p>We can dive deeper into each of these topics, I will recommend the following two blogs <a href="https://www.pinecone.io/blog/">Pinecone engineering blogs</a> &amp; <a href="https://qdrant.tech/blog/">Qdrant engineering blogs</a></p>
+
+<h2 id="best-practices-for-ai-agents">Best Practices for AI Agents</h2>
+
+<p>Building AI agents follows the same engineering principles as any ML system, but with some unique considerations. Let’s break down the key practices.</p>
+
+<h3 id="core-guidelines">Core Guidelines</h3>
+
+<p>Your agent’s complexity should match your needs, not the other way around. Start with a simple system that barely works, then iterate based on actual bottlenecks. The most common mistake is over-engineering before understanding the real requirements.</p>
+
+<p>The most critical metric is LLM calls - they impact both latency and costs. As pointed out in the <a href="https://huggingface.co/docs/smolagents/tutorials/building_good_agents">smolagents guide</a>, minimize LLM calls by:</p>
+
+<ul>
+  <li>Combining related tools into single functions</li>
+  <li>Using deterministic logic over LLM-based decisions</li>
+  <li>Caching responses for similar queries</li>
+</ul>
+
+<p>Here’s how this looks in practice:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Bad: Multiple LLM calls
+</span><span class="k">def</span> <span class="nf">process_order</span><span class="p">(</span><span class="n">order_details</span><span class="p">):</span>
+    <span class="c1"># First LLM call to validate
+</span>    <span class="n">validated</span> <span class="o">=</span> <span class="n">llm</span><span class="p">.</span><span class="n">validate</span><span class="p">(</span><span class="n">order_details</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">validated</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">"Invalid order"</span>
+        
+    <span class="c1"># Second LLM call to format
+</span>    <span class="n">formatted</span> <span class="o">=</span> <span class="n">llm</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="n">order_details</span><span class="p">)</span>
+    
+    <span class="c1"># Third LLM call to process
+</span>    <span class="k">return</span> <span class="n">llm</span><span class="p">.</span><span class="n">process</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
+
+<span class="c1"># Good: Single LLM call
+</span><span class="k">def</span> <span class="nf">process_order</span><span class="p">(</span><span class="n">order_details</span><span class="p">):</span>
+    <span class="c1"># Validate with regular code
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_valid_order</span><span class="p">(</span><span class="n">order_details</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">"Invalid order"</span>
+        
+    <span class="c1"># Format with template
+</span>    <span class="n">formatted</span> <span class="o">=</span> <span class="n">ORDER_TEMPLATE</span><span class="p">.</span><span class="nb">format</span><span class="p">(</span><span class="o">**</span><span class="n">order_details</span><span class="p">)</span>
+    
+    <span class="c1"># Single LLM call
+</span>    <span class="k">return</span> <span class="n">llm</span><span class="p">.</span><span class="n">process</span><span class="p">(</span><span class="n">formatted</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="evaluation-framework">Evaluation Framework</h3>
+
+<p>Set up clear metrics before building:</p>
+
+<ol>
+  <li>Task Success Rate: Can your agent complete the assigned tasks?</li>
+  <li>Response Quality: Are the responses accurate and relevant?</li>
+  <li>Operational Metrics: Latency, cost per request, error rates</li>
+  <li>Safety Metrics: Rate of harmful or inappropriate responses</li>
+</ol>
+
+<h3 id="development-workflow">Development Workflow</h3>
+
+<p><strong>Start Simple</strong></p>
+
+<ul>
+  <li>Build a basic agent that handles the core task</li>
+  <li>Use minimal tools and straightforward prompts</li>
+  <li>Test with real scenarios, not just ideal cases</li>
+</ul>
+
+<p><strong>Measure Everything</strong></p>
+
+<ul>
+  <li>Log all interactions and their outcomes</li>
+  <li>Track token usage and response times</li>
+  <li>Monitor error patterns and edge cases</li>
+</ul>
+
+<p>HuggingFace has a nice <a href="https://huggingface.co/docs/smolagents/en/tutorials/inspect_runs">blog</a> on using OpenTelemetry for inspecting runs.</p>
+
+<p><strong>Iterate Intelligently</strong></p>
+
+<ul>
+  <li>Add complexity only when metrics show need</li>
+  <li>A/B test prompt changes and tool additions</li>
+  <li>Document why each feature was added</li>
+</ul>
+
+<p><strong>Optimize Systematically</strong></p>
+
+<ul>
+  <li>Cache frequent queries and their results</li>
+  <li>Batch similar operations when possible</li>
+  <li>Use cheaper models for simpler tasks</li>
+</ul>
+
+<h3 id="common-pitfalls">Common Pitfalls</h3>
+
+<p><strong>Over-relying on LLMs</strong></p>
+
+<p>Instead of:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">validate_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="p">.</span><span class="n">call</span><span class="p">(</span><span class="s">"Is this a valid email: "</span> <span class="o">+</span> <span class="n">email</span><span class="p">)</span>
+    <span class="k">return</span> <span class="s">"valid"</span> <span class="ow">in</span> <span class="n">response</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p>Do this:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">re</span>
+
+<span class="k">def</span> <span class="nf">validate_email</span><span class="p">(</span><span class="n">email</span><span class="p">):</span>
+    <span class="n">pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s">'^[\w\.-]+@[\w\.-]+\.\w+$'</span>
+    <span class="k">return</span> <span class="nb">bool</span><span class="p">(</span><span class="n">re</span><span class="p">.</span><span class="n">match</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">email</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p><strong>Prompt Bloat</strong></p>
+
+<p>Bad:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">system_message</span> <span class="o">=</span> <span class="s">"""You are an AI assistant that helps with tasks.
+You should be helpful, concise, and clear.
+Always format responses properly.
+Remember to be polite.
+Double check your answers.
+Consider edge cases.
+...50 more lines of instructions..."""</span>
+</code></pre></div></div>
+
+<p>Good:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">system_message</span> <span class="o">=</span> <span class="s">"""You are a task-focused AI assistant.
+Format: Generate concise, actionable responses.
+Priority: Accuracy and clarity."""</span>
+</code></pre></div></div>
+
+<p><strong>Tool Proliferation</strong></p>
+
+<p>Instead of:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">fetch_weather</span><span class="p">,</span>
+    <span class="n">fetch_temperature</span><span class="p">,</span>
+    <span class="n">fetch_humidity</span><span class="p">,</span>
+    <span class="n">fetch_wind_speed</span><span class="p">,</span>
+    <span class="n">fetch_precipitation</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p>Do this:</p>
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tools</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">fetch_weather_data</span>  <span class="c1"># Returns complete weather info in one call
+</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p><strong>Testing Framework</strong></p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">AgentTester</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">agent</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">agent</span> <span class="o">=</span> <span class="n">agent</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">metrics</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s">'success_rate'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s">'response_time'</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s">'token_usage'</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s">'error_rate'</span><span class="p">:</span> <span class="mi">0</span>
+        <span class="p">}</span>
+    
+    <span class="k">def</span> <span class="nf">test_case</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_query</span><span class="p">,</span> <span class="n">expected_output</span><span class="p">):</span>
+        <span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">agent</span><span class="p">.</span><span class="n">run</span><span class="p">(</span><span class="n">input_query</span><span class="p">)</span>
+            <span class="n">success</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">validate_response</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">expected_output</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">metrics</span><span class="p">[</span><span class="s">'success_rate'</span><span class="p">]</span> <span class="o">+=</span> <span class="n">success</span>
+            
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">metrics</span><span class="p">[</span><span class="s">'error_rate'</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+        <span class="bp">self</span><span class="p">.</span><span class="n">metrics</span><span class="p">[</span><span class="s">'response_time'</span><span class="p">].</span><span class="n">append</span><span class="p">(</span><span class="n">time</span><span class="p">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">start_time</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">validate_response</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">,</span> <span class="n">expected</span><span class="p">):</span>
+        <span class="c1"># Implement validation logic
+</span>        <span class="k">pass</span>
+        
+    <span class="k">def</span> <span class="nf">get_metrics_report</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">'avg_response_time'</span><span class="p">:</span> <span class="n">np</span><span class="p">.</span><span class="n">mean</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">metrics</span><span class="p">[</span><span class="s">'response_time'</span><span class="p">]),</span>
+            <span class="s">'success_rate'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">metrics</span><span class="p">[</span><span class="s">'success_rate'</span><span class="p">],</span>
+            <span class="s">'error_rate'</span><span class="p">:</span> <span class="bp">self</span><span class="p">.</span><span class="n">metrics</span><span class="p">[</span><span class="s">'error_rate'</span><span class="p">]</span>
+        <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Anthropic has a nice <a href="https://github.com/anthropics/anthropic-cookbook/blob/main/patterns/agents/evaluator_optimizer.ipynb">cookbook</a> on creating a testing framework.</p>
+
+<h3 id="key-takeaways">Key Takeaways</h3>
+
+<ul>
+  <li><strong>Minimize LLM Usage</strong>: Each call costs time and money</li>
+  <li><strong>Start Simple</strong>: Add complexity only when needed</li>
+  <li><strong>Measure Everything</strong>: You can’t improve what you don’t measure</li>
+  <li><strong>Test Thoroughly</strong>: Include edge cases and error scenarios</li>
+  <li><strong>Document Decisions</strong>: Keep track of why each feature exists</li>
+</ul>
+
+<h2 id="building-an-agent">Building an Agent</h2>
+
+<p><img src="/assets/blog_assets/ai_agents/6.webp" alt="Image of super special artist" /></p>
+
+<p>We will start simple from setting up a simple LLM call that obeys a system prompt to a full blown multi-agent setup.</p>
+
+<p>The code here will be for educational purpose only, to see the whole code, visit this <a href="https://github.com/goyalpramod/paper_implementations/blob/main/AI_agents_from_first_principles.ipynb">repo</a>.</p>
+
+<p>The code in this section of the blog was heavily inspired from <a href="https://cookbook.openai.com/examples/orchestrating_agents">OpenAI Cookbook</a></p>
+
+<h3 id="llm-call">LLM call</h3>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_llm</span><span class="p">(</span><span class="n">content</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="bp">None</span><span class="p">,</span> <span class="n">messages</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">tool_schemas</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">system_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">"You are a helpful assistant."</span><span class="p">):</span>
+    <span class="c1"># Build base request parameters
+</span>    <span class="n">request_params</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s">"model"</span><span class="p">:</span> <span class="s">"gpt-4o-mini"</span><span class="p">,</span>
+        <span class="s">"messages"</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"system"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">system_message</span><span class="p">},</span>
+            <span class="p">{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">content</span><span class="p">}</span>
+        <span class="p">]</span> <span class="o">+</span> <span class="n">messages</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Only add tools parameter if tool_schemas is provided and non-empty
+</span>    <span class="k">if</span> <span class="n">tool_schemas</span><span class="p">:</span>
+        <span class="n">request_params</span><span class="p">[</span><span class="s">"tools"</span><span class="p">]</span> <span class="o">=</span> <span class="n">tool_schemas</span>
+
+    <span class="c1"># Make the API call with conditional parameters
+</span>    <span class="n">completion</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">chat</span><span class="p">.</span><span class="n">completions</span><span class="p">.</span><span class="n">create</span><span class="p">(</span><span class="o">**</span><span class="n">request_params</span><span class="p">)</span>
+
+    <span class="n">response</span> <span class="o">=</span> <span class="n">completion</span><span class="p">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">message</span>
+    <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">messages</span>
+</code></pre></div></div>
+
+<p>I chose OpenAI as I had some credits lying around, you can do similar thing with any other api provider.</p>
+
+<p>Here there are 4 arguments</p>
+
+<blockquote>
+  <p>content -&gt; The user query/input.<br />
+system_message -&gt; What do you want the LLM to do.<br />
+messages -&gt; Past messages/conversation.<br />
+tool_schemas -&gt; The structure of the tools</p>
+</blockquote>
+
+<p>Let’s give it the same prompt that we made earlier and see how it works.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">run_llm</span><span class="p">(</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="s">"""["apple", "pie", 42, 2, 13]"""</span><span class="p">,</span>
+    <span class="n">system_message</span> <span class="o">=</span> <span class="s">"""
+    You are an expert classifier, which classifies strings and integers.</span><span class="se">\
+</span><span class="s">    Given a list of numbers and words, only return the numbers as a list.</span><span class="se">\
+</span><span class="s">    You will be given the inputs inside &lt;input&gt; tags.</span><span class="se">\
+</span><span class="s">
+    Input:  &lt;input&gt;["hello", 42, "pizza", 2, 5]&lt;/input&gt;
+    Output: [42,2,5]
+    """</span>
+<span class="p">)</span>
+
+<span class="c1"># [ChatCompletionMessage(content='[42, 2, 13]', refusal=None, role='assistant', audio=None, function_call=None, tool_calls=None)]
+</span></code></pre></div></div>
+
+<p>This works as expected, Let’s build on top of this by giving our LLM the ability to calculate sums of numbers. (You can define the function anyhow you would like)</p>
+
+<h3 id="llm-call--tools">LLM call + Tools</h3>
+
+<p>I mentioned earlier that Tools are nothing but functions, and these functions are sent as schema to a model. And then these models extract out the inputs to these functions from the user input and provide the required output.</p>
+
+<p>Let’s create a utility function that takes another function and creates it’s schema</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">function_to_schema</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+    <span class="n">type_map</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="nb">str</span><span class="p">:</span> <span class="s">"string"</span><span class="p">,</span>
+        <span class="nb">int</span><span class="p">:</span> <span class="s">"integer"</span><span class="p">,</span>
+        <span class="nb">float</span><span class="p">:</span> <span class="s">"number"</span><span class="p">,</span>
+        <span class="nb">bool</span><span class="p">:</span> <span class="s">"boolean"</span><span class="p">,</span>
+        <span class="nb">list</span><span class="p">:</span> <span class="s">"array"</span><span class="p">,</span>
+        <span class="nb">dict</span><span class="p">:</span> <span class="s">"object"</span><span class="p">,</span>
+        <span class="nb">type</span><span class="p">(</span><span class="bp">None</span><span class="p">):</span> <span class="s">"null"</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">except</span> <span class="nb">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s">"Failed to get signature for function </span><span class="si">{</span><span class="n">func</span><span class="p">.</span><span class="n">__name__</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s">"</span>
+        <span class="p">)</span>
+
+    <span class="n">parameters</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">.</span><span class="n">parameters</span><span class="p">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">param_type</span> <span class="o">=</span> <span class="n">type_map</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">param</span><span class="p">.</span><span class="n">annotation</span><span class="p">,</span> <span class="s">"string"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="nb">KeyError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">KeyError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s">"Unknown type annotation </span><span class="si">{</span><span class="n">param</span><span class="p">.</span><span class="n">annotation</span><span class="si">}</span><span class="s"> for parameter </span><span class="si">{</span><span class="n">param</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s">"</span>
+            <span class="p">)</span>
+        <span class="n">parameters</span><span class="p">[</span><span class="n">param</span><span class="p">.</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s">"type"</span><span class="p">:</span> <span class="n">param_type</span><span class="p">}</span>
+
+    <span class="n">required</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">param</span><span class="p">.</span><span class="n">name</span>
+        <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">signature</span><span class="p">.</span><span class="n">parameters</span><span class="p">.</span><span class="n">values</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">param</span><span class="p">.</span><span class="n">default</span> <span class="o">==</span> <span class="n">inspect</span><span class="p">.</span><span class="n">_empty</span>
+    <span class="p">]</span>
+
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s">"type"</span><span class="p">:</span> <span class="s">"function"</span><span class="p">,</span>
+        <span class="s">"function"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s">"name"</span><span class="p">:</span> <span class="n">func</span><span class="p">.</span><span class="n">__name__</span><span class="p">,</span>
+            <span class="s">"description"</span><span class="p">:</span> <span class="p">(</span><span class="n">func</span><span class="p">.</span><span class="n">__doc__</span> <span class="ow">or</span> <span class="s">""</span><span class="p">).</span><span class="n">strip</span><span class="p">(),</span>
+            <span class="s">"parameters"</span><span class="p">:</span> <span class="p">{</span>
+                <span class="s">"type"</span><span class="p">:</span> <span class="s">"object"</span><span class="p">,</span>
+                <span class="s">"properties"</span><span class="p">:</span> <span class="n">parameters</span><span class="p">,</span>
+                <span class="s">"required"</span><span class="p">:</span> <span class="n">required</span><span class="p">,</span>
+            <span class="p">},</span>
+        <span class="p">},</span>
+    <span class="p">}</span>
+</code></pre></div></div>
+
+<p>__name__ is a dunder/magic function, if you have never heard of them, read more about them <a href="https://realpython.com/python-magic-methods/">here</a>.</p>
+
+<p>A function that takes another function can be simplified using a decorator. That is what one usually sees in most libraries/framework “@tool”. Which is what we talked about in the beginning.</p>
+
+<p>Now let’s create a sum tool.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add_numbers</span><span class="p">(</span><span class="n">num_list</span><span class="p">:</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">]):</span>
+  <span class="s">"""
+  This function takes a List of numbers as Input and returns the sum
+
+  Args:
+      input: List[int]
+      output: int
+  """</span>
+  <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
+
+<span class="n">schema</span> <span class="o">=</span> <span class="n">function_to_schema</span><span class="p">(</span><span class="n">add_numbers</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">json</span><span class="p">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">schema</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+
+<span class="c1"># {
+#   "type": "function",
+#   "function": {
+#     "name": "add_numbers",
+#     "description": "This function takes a List of numbers as Input and returns the sum \n  \n  Args:\n      input: List[int]\n      output: int",
+#     "parameters": {
+#       "type": "object",
+#       "properties": {
+#         "num_list": {
+#           "type": "string"
+#         }
+#       },
+#       "required": [
+#         "num_list"
+#       ]
+#     }
+#   }
+# }
+</span>
+</code></pre></div></div>
+
+<p>We can make the above function a bit more dummy proof for dumber models by modifying it as such:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+
+<span class="k">def</span> <span class="nf">add_numbers</span><span class="p">(</span><span class="n">num_list</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""
+    This function takes either a List of integers or a string representation of a list
+    and returns the sum of the numbers.
+
+    Args:
+        num_list: List[int] or str - Either a list of integers or a string representing a list
+            e.g. "[1, 2, 3]" or [1, 2, 3]
+
+    Returns:
+        int: The sum of all numbers in the list
+
+    Raises:
+        ValueError: If the string cannot be converted to a list of integers
+        SyntaxError: If the string is not properly formatted
+    """</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">num_list</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"String must represent a list"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="nb">ValueError</span><span class="p">,</span> <span class="nb">SyntaxError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s">"Invalid input string format: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+    <span class="c1"># Verify all elements are integers
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"All elements must be integers"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>While we are at it, let’s create an additional multiply_numbers tool too.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">ast</span>
+
+<span class="k">def</span> <span class="nf">multiply_numbers</span><span class="p">(</span><span class="n">num_list</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="s">"""
+    This function takes either a List of integers or a string representation of a list
+    and returns the product of all numbers.
+
+    Args:
+        num_list: List[int] or str - Either a list of integers or a string representing a list
+            e.g. "[1, 2, 3]" or [1, 2, 3]
+
+    Returns:
+        int: The product of all numbers in the list
+
+    Raises:
+        ValueError: If the string cannot be converted to a list of integers,
+                   if the list is empty, or if any element is not an integer
+        SyntaxError: If the string is not properly formatted
+    """</span>
+    <span class="c1"># Handle string input
+</span>    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_list</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">num_list</span> <span class="o">=</span> <span class="n">ast</span><span class="p">.</span><span class="n">literal_eval</span><span class="p">(</span><span class="n">num_list</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">num_list</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"String must represent a list"</span><span class="p">)</span>
+        <span class="k">except</span> <span class="p">(</span><span class="nb">ValueError</span><span class="p">,</span> <span class="nb">SyntaxError</span><span class="p">)</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s">"Invalid input string format: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+
+    <span class="c1"># Check if list is empty
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="n">num_list</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"List cannot be empty"</span><span class="p">)</span>
+
+    <span class="c1"># Verify all elements are integers
+</span>    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">num_list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"All elements must be integers"</span><span class="p">)</span>
+
+    <span class="c1"># Calculate product using reduce and multiplication operator
+</span>    <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="nb">reduce</span>
+    <span class="kn">from</span> <span class="nn">operator</span> <span class="kn">import</span> <span class="n">mul</span>
+    <span class="k">return</span> <span class="nb">reduce</span><span class="p">(</span><span class="n">mul</span><span class="p">,</span> <span class="n">num_list</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Time to use this tool with our LLM to see how well it works.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">add_numbers</span><span class="p">,</span> <span class="n">multiply_numbers</span><span class="p">]</span>
+<span class="n">tool_schemas</span> <span class="o">=</span> <span class="p">[</span><span class="n">function_to_schema</span><span class="p">(</span><span class="n">tool</span><span class="p">)</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">]</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">run_llm</span><span class="p">(</span>
+    <span class="n">content</span> <span class="o">=</span> <span class="s">"""
+    [23,51,321]
+    """</span><span class="p">,</span>
+    <span class="n">system_message</span> <span class="o">=</span> <span class="s">"""
+    Use the appropriate tool to calculate the sum of numbers, and only the tool and nothing else.
+    """</span><span class="p">,</span>
+    <span class="n">tool_schemas</span> <span class="o">=</span> <span class="n">tool_schemas</span>
+<span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="c1"># [ChatCompletionMessage(content=None, refusal=None, role='assistant', audio=None, function_call=None, tool_calls=[ChatCompletionMessageToolCall(id='call_enJSWBrayTgSlFCKgrgw6BGz', function=Function(arguments='{"num_list":"[23,51,321]"}', name='add_numbers'), type='function')])]
+</span></code></pre></div></div>
+
+<p>Now we have a single function that can take in instructions as well as the tools that we want, we can increase the complexity of the tools and prompts without worrying about creating an increasingly complex pipeline.</p>
+
+<p>Now that we can get the tool names and arguments, its time to create another utility function that can take these info and actually execute them.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tools_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">tool</span><span class="p">.</span><span class="n">__name__</span><span class="p">:</span> <span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="k">def</span> <span class="nf">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools_map</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">name</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">arguments</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Assistant: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+
+    <span class="c1"># call corresponding function with provided arguments
+</span>    <span class="k">return</span> <span class="n">tools_map</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">**</span><span class="n">args</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">tool_call</span> <span class="ow">in</span> <span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools_map</span><span class="p">)</span>
+
+            <span class="c1"># add result back to conversation
+</span>            <span class="n">result_message</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">"role"</span><span class="p">:</span> <span class="s">"tool"</span><span class="p">,</span>
+                <span class="s">"tool_call_id"</span><span class="p">:</span> <span class="n">tool_call</span><span class="p">.</span><span class="nb">id</span><span class="p">,</span>
+                <span class="s">"content"</span><span class="p">:</span> <span class="n">result</span><span class="p">,</span>
+            <span class="p">}</span>
+            <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_message</span><span class="p">)</span>
+
+<span class="c1"># Assistant: add_numbers({'num_list': '[23,51,321]'})
+</span></code></pre></div></div>
+
+<p>Now we would like our llms to take this response and send an output to the user. Let’s do that.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_agent</span><span class="p">(</span><span class="n">system_message</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+
+    <span class="n">num_init_messages</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+
+        <span class="c1"># turn python functions into tools and save a reverse map
+</span>        <span class="n">tool_schemas</span> <span class="o">=</span> <span class="p">[</span><span class="n">function_to_schema</span><span class="p">(</span><span class="n">tool</span><span class="p">)</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">]</span>
+        <span class="n">tools_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">tool</span><span class="p">.</span><span class="n">__name__</span><span class="p">:</span> <span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">tools</span><span class="p">}</span>
+
+        <span class="c1"># === 1. get openai completion ===
+</span>        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">chat</span><span class="p">.</span><span class="n">completions</span><span class="p">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="s">"gpt-4o-mini"</span><span class="p">,</span>
+            <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"system"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">system_message</span><span class="p">}]</span> <span class="o">+</span> <span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tool_schemas</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">message</span>
+        <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">:</span>  <span class="c1"># print assistant response
+</span>            <span class="k">print</span><span class="p">(</span><span class="s">"Assistant:"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>  <span class="c1"># if finished handling tool calls, break
+</span>            <span class="k">break</span>
+
+        <span class="c1"># === 2. handle tool calls ===
+</span>
+        <span class="k">for</span> <span class="n">tool_call</span> <span class="ow">in</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools_map</span><span class="p">)</span>
+
+            <span class="n">result_message</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">"role"</span><span class="p">:</span> <span class="s">"tool"</span><span class="p">,</span>
+                <span class="s">"tool_call_id"</span><span class="p">:</span> <span class="n">tool_call</span><span class="p">.</span><span class="nb">id</span><span class="p">,</span>
+                <span class="s">"content"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">),</span>
+            <span class="p">}</span>
+            <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_message</span><span class="p">)</span>
+
+    <span class="c1"># ==== 3. return new messages =====
+</span>    <span class="k">return</span> <span class="n">messages</span><span class="p">[</span><span class="n">num_init_messages</span><span class="p">:]</span>
+
+
+<span class="k">def</span> <span class="nf">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools_map</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">name</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">arguments</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Assistant: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+
+    <span class="c1"># call corresponding function with provided arguments
+</span>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">tools_map</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">**</span><span class="n">args</span><span class="p">))</span>
+
+
+<span class="n">tools</span> <span class="o">=</span> <span class="p">[</span><span class="n">add_numbers</span><span class="p">]</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">system_message</span> <span class="o">=</span> <span class="s">"""
+    You are an expert number processor and classifier. Your task is to extract and sum only the numbers from any input, ignoring all non-numeric values.
+
+    Rules:
+    1. Only process numeric values (integers)
+    2. Ignore all non-numeric values (strings, letters, special characters)
+    3. Use the add_numbers function to calculate the sum
+    4. Format the input properly before passing to add_numbers
+
+    Examples:
+    Input: &lt;input&gt;["hello", 42, "pizza", 2, 5]&lt;/input&gt;
+    Process: Extract numbers [42, 2, 5]
+    Output: 49
+
+    Input: &lt;input&gt;[asj,cg,111,42,2]&lt;/input&gt;
+    Process: Extract numbers [111, 42, 2]
+    Output: 155
+
+    Input: &lt;input&gt;[text, more, 100, words, 50]&lt;/input&gt;
+    Process: Extract numbers [100, 50]
+    Output: 150
+
+    For any input, first extract the numbers, then use add_numbers function to calculate their sum.
+    Make sure to format the input as a proper list string with square brackets before passing to add_numbers.
+    """</span>
+
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="n">user</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">"User: "</span><span class="p">)</span>
+    <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">user</span><span class="p">})</span>
+
+    <span class="n">new_messages</span> <span class="o">=</span> <span class="n">run_agent</span><span class="p">(</span><span class="n">system_message</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+    <span class="n">messages</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">new_messages</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="agentllm-call--tools--pydantic-model">Agent(LLM call + Tools + Pydantic Model)</h3>
+
+<p>Let’s first build a model (This is the pydantic model, I will be referring to these as models. And Large Language Models as LLMs)</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Agent</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">"Agent"</span>
+    <span class="n">llm</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">"gpt-4o-mini"</span>
+    <span class="n">system_message</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s">"You are a helpful Agent"</span>
+    <span class="n">tools</span><span class="p">:</span> <span class="nb">list</span> <span class="o">=</span> <span class="p">[]</span>
+</code></pre></div></div>
+
+<p>Now we can modify the code we wrote earlier to use this model</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+
+    <span class="n">num_init_messages</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+
+        <span class="c1"># turn python functions into tools and save a reverse map
+</span>        <span class="n">tool_schemas</span> <span class="o">=</span> <span class="p">[</span><span class="n">function_to_schema</span><span class="p">(</span><span class="n">tool</span><span class="p">)</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">.</span><span class="n">tools</span><span class="p">]</span>
+        <span class="n">tools_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">tool</span><span class="p">.</span><span class="n">__name__</span><span class="p">:</span> <span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">.</span><span class="n">tools</span><span class="p">}</span>
+
+        <span class="c1"># === 1. get openai completion ===
+</span>        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">chat</span><span class="p">.</span><span class="n">completions</span><span class="p">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">agent</span><span class="p">.</span><span class="n">llm</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"system"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">agent</span><span class="p">.</span><span class="n">system_message</span><span class="p">}]</span> <span class="o">+</span> <span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tool_schemas</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">message</span>
+        <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">:</span>  <span class="c1"># print assistant response
+</span>            <span class="k">print</span><span class="p">(</span><span class="s">"Assistant:"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>  <span class="c1"># if finished handling tool calls, break
+</span>            <span class="k">break</span>
+
+        <span class="c1"># === 2. handle tool calls ===
+</span>
+        <span class="k">for</span> <span class="n">tool_call</span> <span class="ow">in</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools_map</span><span class="p">)</span>
+
+            <span class="n">result_message</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">"role"</span><span class="p">:</span> <span class="s">"tool"</span><span class="p">,</span>
+                <span class="s">"tool_call_id"</span><span class="p">:</span> <span class="n">tool_call</span><span class="p">.</span><span class="nb">id</span><span class="p">,</span>
+                <span class="s">"content"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">),</span>
+            <span class="p">}</span>
+            <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_message</span><span class="p">)</span>
+
+    <span class="c1"># ==== 3. return new messages =====
+</span>    <span class="k">return</span> <span class="n">messages</span><span class="p">[</span><span class="n">num_init_messages</span><span class="p">:]</span>
+
+
+<span class="k">def</span> <span class="nf">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools_map</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">name</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">arguments</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Assistant: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+
+    <span class="c1"># call corresponding function with provided arguments
+</span>    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">tools_map</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">**</span><span class="n">args</span><span class="p">))</span>
+</code></pre></div></div>
+
+<p>And just as easily we can run multiple agents</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">calculator_add</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"Addition Calculator"</span><span class="p">,</span>
+    <span class="n">system_message</span><span class="o">=</span><span class="s">"""You are an expert number processor. Extract and sum only the numbers from any input, ignoring non-numeric values.
+    Example:
+    Input: [text, 100, words, 50]
+    Process: Extract numbers [100, 50]
+    Output: 150"""</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">add_numbers</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">calculator_multiply</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"Multiplication Calculator"</span><span class="p">,</span>
+    <span class="n">system_message</span><span class="o">=</span><span class="s">"""You are an expert number processor. Extract and multiply only the numbers from any input, ignoring non-numeric values.
+    Example:
+    Input: [text, 4, words, 5]
+    Process: Extract numbers [4, 5]
+    Output: 20"""</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">multiply_numbers</span><span class="p">],</span>
+<span class="p">)</span>
+
+<span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="n">user_query</span> <span class="o">=</span> <span class="s">"[hello, 10, world, 5, test, 2]"</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"User:"</span><span class="p">,</span> <span class="n">user_query</span><span class="p">)</span>
+<span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">user_query</span><span class="p">})</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">run_agent</span><span class="p">(</span><span class="n">calculator_add</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>  <span class="c1"># Addition calculator
+</span><span class="n">messages</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+<span class="n">user_query</span> <span class="o">=</span> <span class="s">"Now multiply these numbers"</span>  <span class="c1"># implicitly refers to the numbers from previous input
+</span><span class="k">print</span><span class="p">(</span><span class="s">"User:"</span><span class="p">,</span> <span class="n">user_query</span><span class="p">)</span>
+<span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">user_query</span><span class="p">})</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">run_agent</span><span class="p">(</span><span class="n">calculator_multiply</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>  <span class="c1"># Multiplication calculator
+</span>
+<span class="c1"># User: [hello, 10, world, 5, test, 2]
+# Assistant: add_numbers({'num_list': '[10, 5, 2]'})
+# Assistant: The sum of the numbers extracted from the input is 17.
+# User: Now multiply these numbers
+# Assistant: multiply_numbers({'num_list': '[10, 5, 2]'})
+# Assistant: The product of the numbers extracted from the input is 100.
+</span></code></pre></div></div>
+
+<p>When building multi-agent systems, we want seamless transitions between agents based on the task requirements. The naive approach would be manual handoffs, but we can make this smarter.</p>
+
+<p>Instead of manually switching agents, we can create a handoff mechanism where agents decide themselves when to transfer control. Let’s build this:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Response</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">agent</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Agent</span><span class="p">]</span>
+    <span class="n">messages</span><span class="p">:</span> <span class="nb">list</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">run_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+
+    <span class="n">current_agent</span> <span class="o">=</span> <span class="n">agent</span>
+    <span class="n">num_init_messages</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+
+        <span class="c1"># turn python functions into tools and save a reverse map
+</span>        <span class="n">tool_schemas</span> <span class="o">=</span> <span class="p">[</span><span class="n">function_to_schema</span><span class="p">(</span><span class="n">tool</span><span class="p">)</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">current_agent</span><span class="p">.</span><span class="n">tools</span><span class="p">]</span>
+        <span class="n">tools</span> <span class="o">=</span> <span class="p">{</span><span class="n">tool</span><span class="p">.</span><span class="n">__name__</span><span class="p">:</span> <span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">current_agent</span><span class="p">.</span><span class="n">tools</span><span class="p">}</span>
+
+        <span class="c1"># === 1. get openai completion ===
+</span>        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">chat</span><span class="p">.</span><span class="n">completions</span><span class="p">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">agent</span><span class="p">.</span><span class="n">llm</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"system"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">current_agent</span><span class="p">.</span><span class="n">system_message</span><span class="p">}]</span>
+            <span class="o">+</span> <span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tool_schemas</span> <span class="ow">or</span> <span class="bp">None</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">message</span>
+        <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">:</span>  <span class="c1"># print agent response
+</span>            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">current_agent</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">:"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>  <span class="c1"># if finished handling tool calls, break
+</span>            <span class="k">break</span>
+
+        <span class="c1"># === 2. handle tool calls ===
+</span>
+        <span class="k">for</span> <span class="n">tool_call</span> <span class="ow">in</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">current_agent</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="ow">is</span> <span class="n">Agent</span><span class="p">:</span>  <span class="c1"># if agent transfer, update current agent
+</span>                <span class="n">current_agent</span> <span class="o">=</span> <span class="n">result</span>
+                <span class="n">result</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="sa">f</span><span class="s">"Transfered to </span><span class="si">{</span><span class="n">current_agent</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">. Adopt persona immediately."</span>
+                <span class="p">)</span>
+
+            <span class="n">result_message</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s">"role"</span><span class="p">:</span> <span class="s">"tool"</span><span class="p">,</span>
+                <span class="s">"tool_call_id"</span><span class="p">:</span> <span class="n">tool_call</span><span class="p">.</span><span class="nb">id</span><span class="p">,</span>
+                <span class="s">"content"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">),</span>
+            <span class="p">}</span>
+            <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">result_message</span><span class="p">)</span>
+
+    <span class="c1"># ==== 3. return last agent used and new messages =====
+</span>    <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">agent</span><span class="o">=</span><span class="n">current_agent</span><span class="p">,</span> <span class="n">messages</span><span class="o">=</span><span class="n">messages</span><span class="p">[</span><span class="n">num_init_messages</span><span class="p">:])</span>
+
+
+<span class="k">def</span> <span class="nf">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">name</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">json</span><span class="p">.</span><span class="n">loads</span><span class="p">(</span><span class="n">tool_call</span><span class="p">.</span><span class="n">function</span><span class="p">.</span><span class="n">arguments</span><span class="p">)</span>
+
+    <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">agent_name</span><span class="si">}</span><span class="s">:"</span><span class="p">,</span> <span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s">(</span><span class="si">{</span><span class="n">args</span><span class="si">}</span><span class="s">)"</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">tools</span><span class="p">[</span><span class="n">name</span><span class="p">](</span><span class="o">**</span><span class="n">args</span><span class="p">))</span>  <span class="c1"># call corresponding function with provided arguments
+</span></code></pre></div></div>
+
+<h2 id="popular-agentic-systems">Popular Agentic systems</h2>
+
+<p>The above is all the knowledge you require to build more complex agentic systems, let’s explore a few of them. Solely using what we have learned so far.</p>
+
+<p>Langgraph has a nice list of agentic systems in my opinion, you can check them out <a href="https://langchain-ai.github.io/langgraph/tutorials/#multi-agent-systems">here</a>.</p>
+
+<h3 id="react">ReAct</h3>
+
+<p><img src="/assets/blog_assets/ai_agents/4.webp" alt="Image of super special artist" /></p>
+
+<blockquote>
+  <p>Image taken from the <a href="https://arxiv.org/abs/2210.03629">ReAct paper</a></p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">def</span> <span class="nf">add_numbers</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""
+    Add two numbers together.
+
+    Args:
+        a: First number
+        b: Second number
+
+    Returns:
+        The sum of a and b
+    """</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>
+
+<span class="k">def</span> <span class="nf">subtract_numbers</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""
+    Subtract b from a.
+
+    Args:
+        a: First number
+        b: Second number
+
+    Returns:
+        The result of a - b
+    """</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">-</span> <span class="n">b</span>
+
+<span class="k">def</span> <span class="nf">multiply_numbers</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""
+    Multiply two numbers together.
+
+    Args:
+        a: First number
+        b: Second number
+
+    Returns:
+        The product of a and b
+    """</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="k">def</span> <span class="nf">divide_numbers</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="s">"""
+    Divide a by b.
+
+    Args:
+        a: First number (dividend)
+        b: Second number (divisor)
+
+    Returns:
+        The result of a / b
+
+    Raises:
+        ValueError: If b is zero
+    """</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="nb">ValueError</span><span class="p">(</span><span class="s">"Cannot divide by zero"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">react_system_message</span> <span class="o">=</span> <span class="s">"""You are a mathematical reasoning agent that follows the ReAct pattern: Thought, Action, Observation.
+
+For each step of your reasoning:
+1. Thought: First explain your thinking
+2. Action: Then choose and use a tool
+3. Observation: Observe the result
+
+Format your responses as:
+Thought: &lt;your reasoning&gt;
+Action: &lt;tool_name&gt;(&lt;parameters&gt;)
+Observation: &lt;result&gt;
+Thought: &lt;your next step&gt;
+...
+
+Available tools:
+- add_numbers(a, b): Add two numbers
+- subtract_numbers(a, b): Subtract b from a
+- multiply_numbers(a, b): Multiply two numbers
+- divide_numbers(a, b): Divide a by b
+
+Always break down complex calculations into steps using this format."""</span>
+
+<span class="n">react_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"ReActMath"</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="s">"gpt-4o-mini"</span><span class="p">,</span>
+    <span class="n">system_message</span><span class="o">=</span><span class="n">react_system_message</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">add_numbers</span><span class="p">,</span> <span class="n">subtract_numbers</span><span class="p">,</span> <span class="n">multiply_numbers</span><span class="p">,</span> <span class="n">divide_numbers</span><span class="p">]</span>
+<span class="p">)</span>
+</code></pre></div></div>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Example usage
+</span><span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span>
+    <span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span>
+    <span class="s">"content"</span><span class="p">:</span> <span class="s">"Calculate (23 + 7) * 3 - 15"</span>
+<span class="p">}]</span>
+
+<span class="n">response</span> <span class="o">=</span> <span class="n">run_agent</span><span class="p">(</span><span class="n">react_agent</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+
+<span class="c1"># ReActMath: Thought: First, I need to calculate the sum of 23 and 7. Then I will multiply the result by 3, and finally, I will subtract 15 from that product. I'll break this down into steps for clarity.
+</span>
+<span class="c1"># Action: I will first add 23 and 7.
+# functions.add_numbers({ a: 23, b: 7 })
+</span>
+<span class="c1"># Observation: Let's perform the addition.
+# ReActMath: add_numbers({'a': 23, 'b': 7})
+# ReActMath: Thought: The sum of 23 and 7 is 30. Now, I will multiply this result by 3.
+</span>
+<span class="c1"># Action: I will multiply 30 by 3.
+# functions.multiply_numbers({ a: 30, b: 3 })
+</span>
+<span class="c1"># Observation: Let's perform the multiplication.
+# ReActMath: multiply_numbers({'a': 30, 'b': 3})
+# ReActMath: Thought: The product of 30 and 3 is 90. Now, I need to subtract 15 from this result.
+</span>
+<span class="c1"># Action: I will subtract 15 from 90.
+# functions.subtract_numbers({ a: 90, b: 15 })
+</span>
+<span class="c1"># Observation: Let's perform the subtraction.
+# ReActMath: subtract_numbers({'a': 90, 'b': 15})
+# ReActMath: Thought: The result of subtracting 15 from 90 is 75. Therefore, the final result of the calculation (23 + 7) * 3 - 15 is 75.
+</span>
+<span class="c1"># Final Result: 75
+</span></code></pre></div></div>
+
+<h3 id="agentic-rag">Agentic RAG</h3>
+
+<p><img src="/assets/blog_assets/ai_agents/3.webp" alt="Image of super special artist" /></p>
+
+<blockquote>
+  <p>Image taken from langgraph <a href="https://langchain-ai.github.io/langgraph/tutorials/rag/langgraph_agentic_rag/">docs</a></p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">faiss</span>
+<span class="kn">from</span> <span class="nn">sentence_transformers</span> <span class="kn">import</span> <span class="n">SentenceTransformer</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="k">class</span> <span class="nc">DocumentStore</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">model_name</span><span class="o">=</span><span class="s">"all-MiniLM-L6-v2"</span><span class="p">):</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">embedder</span> <span class="o">=</span> <span class="n">SentenceTransformer</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">documents</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="bp">None</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">dimension</span> <span class="o">=</span> <span class="mi">384</span>
+
+    <span class="k">def</span> <span class="nf">add_documents</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="p">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+        <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">text</span><span class="p">,</span> <span class="s">'html.parser'</span><span class="p">)</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">soup</span><span class="p">.</span><span class="n">find</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s">"mw-content-text"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">content</span><span class="p">:</span>
+            <span class="n">paragraphs</span> <span class="o">=</span> <span class="n">content</span><span class="p">.</span><span class="n">find_all</span><span class="p">(</span><span class="s">'p'</span><span class="p">)</span>
+            <span class="bp">self</span><span class="p">.</span><span class="n">documents</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">paragraphs</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">.</span><span class="n">text</span><span class="p">.</span><span class="n">split</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">20</span><span class="p">]</span>
+
+        <span class="n">embeddings</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">embedder</span><span class="p">.</span><span class="n">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">documents</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">faiss</span><span class="p">.</span><span class="n">IndexFlatL2</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">dimension</span><span class="p">)</span>
+        <span class="bp">self</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">add</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">embeddings</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">))</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s">"Processed </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">.</span><span class="n">documents</span><span class="p">)</span><span class="si">}</span><span class="s"> documents"</span>
+
+    <span class="k">def</span> <span class="nf">search</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">query_vector</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">embedder</span><span class="p">.</span><span class="n">encode</span><span class="p">([</span><span class="n">query</span><span class="p">])</span>
+        <span class="n">D</span><span class="p">,</span> <span class="n">I</span> <span class="o">=</span> <span class="bp">self</span><span class="p">.</span><span class="n">index</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">np</span><span class="p">.</span><span class="n">array</span><span class="p">(</span><span class="n">query_vector</span><span class="p">).</span><span class="n">astype</span><span class="p">(</span><span class="s">'float32'</span><span class="p">),</span> <span class="n">k</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="p">.</span><span class="n">documents</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">I</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span>
+
+<span class="c1"># Initialize document store
+</span><span class="n">doc_store</span> <span class="o">=</span> <span class="n">DocumentStore</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">retrieve_documents</span><span class="p">(</span><span class="n">url</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="s">"""Tool function for document retrieval"""</span>
+    <span class="k">return</span> <span class="n">doc_store</span><span class="p">.</span><span class="n">add_documents</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">search_context</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="s">"""Tool function for searching documents"""</span>
+    <span class="k">return</span> <span class="n">doc_store</span><span class="p">.</span><span class="n">search</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">check_relevance</span><span class="p">(</span><span class="n">context</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="s">"""
+    Tool function to check if retrieved context is relevant using an LLM.
+
+    Args:
+        context: List of context strings to evaluate
+
+    Returns:
+        bool: True if context is relevant, False otherwise
+    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">context</span><span class="p">:</span>
+        <span class="k">return</span> <span class="bp">False</span>
+
+    <span class="n">system_message</span> <span class="o">=</span> <span class="s">"""You are a relevance checking assistant.
+    Evaluate if the given context is relevant and substantial enough to answer questions.
+    Return only 'true' or 'false'."""</span>
+
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"""Evaluate if this context is relevant and substantial (contains meaningful information):
+
+    Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s">
+
+    Return only 'true' or 'false'."""</span>
+
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">run_llm</span><span class="p">(</span>
+        <span class="n">content</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+        <span class="n">system_message</span><span class="o">=</span><span class="n">system_message</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Get the last message which contains the LLM's response
+</span>    <span class="n">result</span> <span class="o">=</span> <span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">content</span><span class="p">.</span><span class="n">lower</span><span class="p">().</span><span class="n">strip</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">result</span> <span class="o">==</span> <span class="s">'true'</span>
+
+<span class="k">def</span> <span class="nf">rewrite_query</span><span class="p">(</span><span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    Tool function to rewrite a query based on context using an LLM.
+
+    Args:
+        query: Original query to rewrite
+        context: List of context strings to use for rewriting
+
+    Returns:
+        str: Rewritten query incorporating context
+    """</span>
+    <span class="n">system_message</span> <span class="o">=</span> <span class="s">"""You are a query rewriting assistant.
+    Your task is to rewrite the original query to incorporate relevant context.
+    Maintain the original intent while making it more specific based on the context."""</span>
+
+    <span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s">"""Original Query: </span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s">
+
+Available Context: </span><span class="si">{</span><span class="n">context</span><span class="si">}</span><span class="s">
+
+Rewrite the query to be more specific using the context.
+Maintain the original intent but make it more precise."""</span>
+
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">run_llm</span><span class="p">(</span>
+        <span class="n">content</span><span class="o">=</span><span class="n">prompt</span><span class="p">,</span>
+        <span class="n">system_message</span><span class="o">=</span><span class="n">system_message</span>
+    <span class="p">)</span>
+
+    <span class="c1"># Get the last message which contains the rewritten query
+</span>    <span class="k">return</span> <span class="n">messages</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">].</span><span class="n">content</span><span class="p">.</span><span class="n">strip</span><span class="p">()</span>
+
+<span class="n">rag_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"RAG Agent"</span><span class="p">,</span>
+    <span class="n">system_message</span><span class="o">=</span><span class="s">"""You are an intelligent RAG agent that follows a specific workflow:
+    1. First, determine if you need to retrieve documents
+    2. If yes, use the retrieval tool
+    3. Check the relevance of retrieved documents
+    4. Either rewrite the query or generate an answer
+    5. Always cite your sources from the context
+
+    Be explicit about each step you're taking."""</span><span class="p">,</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">retrieve_documents</span><span class="p">,</span> <span class="n">search_context</span><span class="p">,</span> <span class="n">check_relevance</span><span class="p">,</span> <span class="n">rewrite_query</span><span class="p">],</span>
+    <span class="n">llm</span><span class="o">=</span><span class="s">"gpt-4o-mini"</span>
+<span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">run_rag_agent</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
+    <span class="n">num_init_messages</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="n">messages</span><span class="p">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="c1"># Get tool schemas and tool map
+</span>        <span class="n">tool_schemas</span> <span class="o">=</span> <span class="p">[</span><span class="n">function_to_schema</span><span class="p">(</span><span class="n">tool</span><span class="p">)</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">.</span><span class="n">tools</span><span class="p">]</span>
+        <span class="n">tools</span> <span class="o">=</span> <span class="p">{</span><span class="n">tool</span><span class="p">.</span><span class="n">__name__</span><span class="p">:</span> <span class="n">tool</span> <span class="k">for</span> <span class="n">tool</span> <span class="ow">in</span> <span class="n">agent</span><span class="p">.</span><span class="n">tools</span><span class="p">}</span>
+
+        <span class="c1"># Make API call with system message and history
+</span>        <span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="p">.</span><span class="n">chat</span><span class="p">.</span><span class="n">completions</span><span class="p">.</span><span class="n">create</span><span class="p">(</span>
+            <span class="n">model</span><span class="o">=</span><span class="n">agent</span><span class="p">.</span><span class="n">llm</span><span class="p">,</span>
+            <span class="n">messages</span><span class="o">=</span><span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"system"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">agent</span><span class="p">.</span><span class="n">system_message</span><span class="p">}]</span> <span class="o">+</span> <span class="n">messages</span><span class="p">,</span>
+            <span class="n">tools</span><span class="o">=</span><span class="n">tool_schemas</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Get and append the assistant's message
+</span>        <span class="n">message</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">choices</span><span class="p">[</span><span class="mi">0</span><span class="p">].</span><span class="n">message</span>
+        <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s">"role"</span><span class="p">:</span> <span class="s">"assistant"</span><span class="p">,</span>
+            <span class="s">"content"</span><span class="p">:</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">,</span>
+            <span class="s">"tool_calls"</span><span class="p">:</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s">"tool_calls"</span><span class="p">)</span> <span class="k">else</span> <span class="bp">None</span>
+        <span class="p">})</span>
+
+        <span class="k">if</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"</span><span class="si">{</span><span class="n">agent</span><span class="p">.</span><span class="n">name</span><span class="si">}</span><span class="s">:"</span><span class="p">,</span> <span class="n">message</span><span class="p">.</span><span class="n">content</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="s">"tool_calls"</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="c1"># Handle tool calls
+</span>        <span class="k">for</span> <span class="n">tool_call</span> <span class="ow">in</span> <span class="n">message</span><span class="p">.</span><span class="n">tool_calls</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">execute_tool_call</span><span class="p">(</span><span class="n">tool_call</span><span class="p">,</span> <span class="n">tools</span><span class="p">,</span> <span class="n">agent</span><span class="p">.</span><span class="n">name</span><span class="p">)</span>
+
+            <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s">"role"</span><span class="p">:</span> <span class="s">"tool"</span><span class="p">,</span>
+                <span class="s">"tool_call_id"</span><span class="p">:</span> <span class="n">tool_call</span><span class="p">.</span><span class="nb">id</span><span class="p">,</span>
+                <span class="s">"content"</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">result</span><span class="p">),</span>
+            <span class="p">})</span>
+
+    <span class="k">return</span> <span class="n">messages</span><span class="p">[</span><span class="n">num_init_messages</span><span class="p">:]</span>
+
+<span class="c1"># Main execution
+</span><span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+<span class="c1"># First, index a document
+</span><span class="n">url</span> <span class="o">=</span> <span class="s">"https://en.wikipedia.org/wiki/Alan_Turing"</span>
+<span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span>
+    <span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span>
+    <span class="s">"content"</span><span class="p">:</span> <span class="sa">f</span><span class="s">"Please retrieve and index this document: </span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s">"</span>
+<span class="p">})</span>
+
+<span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">run_rag_agent</span><span class="p">(</span><span class="n">rag_agent</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+        <span class="n">messages</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+        <span class="n">user_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">"</span><span class="se">\n</span><span class="s">User (type 'quit' to exit): "</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">user_input</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">'quit'</span><span class="p">:</span>
+            <span class="k">break</span>
+
+        <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">user_input</span><span class="p">})</span>
+
+    <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error occurred: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+        <span class="k">break</span>
+</code></pre></div></div>
+
+<h3 id="supervisor--workers">Supervisor + Workers</h3>
+
+<p><img src="/assets/blog_assets/ai_agents/2.webp" alt="Image of super special artist" /></p>
+
+<blockquote>
+  <p>Image taken from langgraph <a href="https://langchain-ai.github.io/langgraph/tutorials/multi_agent/agent_supervisor/">docs</a></p>
+</blockquote>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Math Genius Tools
+</span><span class="k">def</span> <span class="nf">solve_equation</span><span class="p">(</span><span class="n">equation</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    Solves mathematical equations.
+    Args:
+        equation: str - A mathematical equation to solve
+            e.g. "2x + 5 = 13" or "integrate(x^2)"
+    Returns:
+        str: The solution to the equation
+    """</span>
+    <span class="c1"># In a real implementation, this would use a math solving library
+</span>    <span class="k">return</span> <span class="sa">f</span><span class="s">"Solution for equation: </span><span class="si">{</span><span class="n">equation</span><span class="si">}</span><span class="s">"</span>
+
+<span class="k">def</span> <span class="nf">perform_statistics</span><span class="p">(</span><span class="n">data</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    Performs statistical analysis on given data.
+    Args:
+        data: str - Data in format "[1,2,3,4]" or "1,2,3,4"
+    Returns:
+        str: Statistical analysis including mean, median, mode, std dev
+    """</span>
+    <span class="c1"># In a real implementation, this would use numpy/pandas
+</span>    <span class="k">return</span> <span class="sa">f</span><span class="s">"Statistical analysis of: </span><span class="si">{</span><span class="n">data</span><span class="si">}</span><span class="s">"</span>
+
+<span class="c1"># Code Writer Tools
+</span><span class="k">def</span> <span class="nf">generate_code</span><span class="p">(</span><span class="n">specification</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    Generates code based on specifications.
+    Args:
+        specification: str - Description of what the code should do
+        language: str - Programming language to use
+    Returns:
+        str: Generated code
+    """</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s">"Generated </span><span class="si">{</span><span class="n">language</span><span class="si">}</span><span class="s"> code for: </span><span class="si">{</span><span class="n">specification</span><span class="si">}</span><span class="s">"</span>
+
+<span class="k">def</span> <span class="nf">review_code</span><span class="p">(</span><span class="n">code</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="s">"""
+    Reviews code for best practices and potential issues.
+    Args:
+        code: str - Code to review
+    Returns:
+        str: Code review comments
+    """</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s">"Code review for: </span><span class="si">{</span><span class="n">code</span><span class="si">}</span><span class="s">"</span>
+
+<span class="k">def</span> <span class="nf">transfer_to_math_genius</span><span class="p">():</span>
+    <span class="s">"""Transfer to math genius agent for complex calculations."""</span>
+    <span class="k">return</span> <span class="n">math_genius_agent</span>
+
+<span class="k">def</span> <span class="nf">transfer_to_code_writer</span><span class="p">():</span>
+    <span class="s">"""Transfer to code writer agent for programming tasks."""</span>
+    <span class="k">return</span> <span class="n">code_writer_agent</span>
+
+<span class="k">def</span> <span class="nf">transfer_to_supervisor</span><span class="p">():</span>
+    <span class="s">"""Transfer back to supervisor agent."""</span>
+    <span class="k">return</span> <span class="n">supervisor_agent</span>
+
+<span class="c1"># Agent Definitions
+</span><span class="n">math_genius_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"Math Genius"</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="s">"gpt-4o"</span><span class="p">,</span>
+    <span class="n">system_message</span><span class="o">=</span><span class="p">(</span>
+        <span class="s">"You are a mathematical genius capable of solving complex equations "</span>
+        <span class="s">"and performing advanced statistical analysis. Always show your work "</span>
+        <span class="s">"step by step. If a task is outside your mathematical expertise, "</span>
+        <span class="s">"transfer back to the supervisor."</span>
+    <span class="p">),</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">solve_equation</span><span class="p">,</span> <span class="n">perform_statistics</span><span class="p">,</span> <span class="n">transfer_to_supervisor</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">code_writer_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"Code Writer"</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="s">"gpt-4o"</span><span class="p">,</span>
+    <span class="n">system_message</span><span class="o">=</span><span class="p">(</span>
+        <span class="s">"You are an expert programmer capable of writing efficient, clean code "</span>
+        <span class="s">"and providing detailed code reviews. Always explain your code and "</span>
+        <span class="s">"include comments. If a task is outside your programming expertise, "</span>
+        <span class="s">"transfer back to the supervisor."</span>
+    <span class="p">),</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">generate_code</span><span class="p">,</span> <span class="n">review_code</span><span class="p">,</span> <span class="n">transfer_to_supervisor</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="n">supervisor_agent</span> <span class="o">=</span> <span class="n">Agent</span><span class="p">(</span>
+    <span class="n">name</span><span class="o">=</span><span class="s">"Supervisor"</span><span class="p">,</span>
+    <span class="n">llm</span><span class="o">=</span><span class="s">"gpt-4o"</span><span class="p">,</span>
+    <span class="n">system_message</span><span class="o">=</span><span class="p">(</span>
+        <span class="s">"You are a supervisor agent responsible for delegating tasks to specialized agents. "</span>
+        <span class="s">"For mathematical problems, delegate to the Math Genius. "</span>
+        <span class="s">"For programming tasks, delegate to the Code Writer. "</span>
+        <span class="s">"Ensure all responses are complete and coordinate between agents when needed."</span>
+    <span class="p">),</span>
+    <span class="n">tools</span><span class="o">=</span><span class="p">[</span><span class="n">transfer_to_math_genius</span><span class="p">,</span> <span class="n">transfer_to_code_writer</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># Example usage
+</span><span class="k">def</span> <span class="nf">process_request</span><span class="p">(</span><span class="n">user_input</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="s">"""
+    Process user request through the multi-agent system.
+    Args:
+        user_input: str - User's question or request
+    Returns:
+        List of messages containing the conversation
+    """</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[{</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">user_input</span><span class="p">}]</span>
+    <span class="n">response</span> <span class="o">=</span> <span class="n">run_full_turn</span><span class="p">(</span><span class="n">supervisor_agent</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">response</span><span class="p">.</span><span class="n">messages</span>
+
+<span class="c1"># Interactive testing loop
+</span><span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">"__main__"</span><span class="p">:</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Welcome to the Multi-Agent System!"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"You can interact with a supervisor who will delegate to either:"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"1. Math Genius - for mathematical problems"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"2. Code Writer - for programming tasks"</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"Type 'exit', 'quit', or 'bye' to end the conversation</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+
+    <span class="n">agent</span> <span class="o">=</span> <span class="n">supervisor_agent</span>
+    <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">user_input</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s">"User: "</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">user_input</span><span class="p">.</span><span class="n">lower</span><span class="p">()</span> <span class="ow">in</span> <span class="p">[</span><span class="s">'quit'</span><span class="p">,</span> <span class="s">'exit'</span><span class="p">,</span> <span class="s">'bye'</span><span class="p">]:</span>
+                <span class="k">print</span><span class="p">(</span><span class="s">"Goodbye!"</span><span class="p">)</span>
+                <span class="k">break</span>
+
+            <span class="n">messages</span><span class="p">.</span><span class="n">append</span><span class="p">({</span><span class="s">"role"</span><span class="p">:</span> <span class="s">"user"</span><span class="p">,</span> <span class="s">"content"</span><span class="p">:</span> <span class="n">user_input</span><span class="p">})</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">run_full_turn</span><span class="p">(</span><span class="n">agent</span><span class="p">,</span> <span class="n">messages</span><span class="p">)</span>
+            <span class="n">agent</span> <span class="o">=</span> <span class="n">response</span><span class="p">.</span><span class="n">agent</span>
+            <span class="n">messages</span><span class="p">.</span><span class="n">extend</span><span class="p">(</span><span class="n">response</span><span class="p">.</span><span class="n">messages</span><span class="p">)</span>
+
+        <span class="k">except</span> <span class="nb">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="k">print</span><span class="p">(</span><span class="sa">f</span><span class="s">"Error: </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="si">}</span><span class="s">"</span><span class="p">)</span>
+            <span class="k">print</span><span class="p">(</span><span class="s">"Resetting conversation..."</span><span class="p">)</span>
+            <span class="n">messages</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">agent</span> <span class="o">=</span> <span class="n">supervisor_agent</span>
+</code></pre></div></div>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>Now you have all the knowledge required to build complex agentic workflows using pure python.</p>
+
+<p>Mind you, frameworks like langchain are still extremely useful (I use them in my day job daily) but you still need to understand the underlying idea and technology behind what you are doing.</p>
+
+<p>There are many things that we have not discussed like token usage optimization, error recovery strategies, Security best practices etc. I hope the reader can explore about them using the links provided in references.</p>
+
+<p>Hope you had fun reading this. Thank you!!</p>
+
+<p>Cheers :)</p>
+
+<h2 id="ways-to-help-out">Ways to help out</h2>
+
+<ul>
+  <li><strong>Share</strong>: Consider clicking on any of the links below to share this blog, It reaches more people and they get to learn something new. Which make’s me happy :), also. Consider tagging me from my socials.</li>
+  <li><strong>Translate</strong>: This blog is written in english, but there are a lot of people who do not speak english. I will be really glad if you are willing to translate this work in the language you prefer. (Consider raising a PR and I will attach your translation at the top)</li>
+  <li><strong>Corrections &amp; Feedback</strong>: I am human, and I too can err. If you find I have made any mistakes, again feel free to raise a PR. Or contact me through my socials.</li>
+</ul>
+
+<h2 id="references">References</h2>
+
+<ul>
+  <li><a href="https://cookbook.openai.com/examples/orchestrating_agents">OpenAI blog</a></li>
+  <li><a href="https://lilianweng.github.io/posts/2023-03-15-prompt-engineering/">Lil’log’s blog on prompt engineering</a></li>
+  <li><a href="https://www.anthropic.com/research/building-effective-agents">Anthropic’s blog on building effective agents</a></li>
+  <li><a href="https://huyenchip.com/2025/01/07/agents.html">Chip’s Blog on Agents</a></li>
+  <li><a href="https://github.com/openai/swarm/blob/main/swarm/core.py">Core code for Swarm</a></li>
+  <li><a href="https://huggingface.co/docs/smolagents/tutorials/building_good_agents">HF docs on building agents</a></li>
+  <li><a href="https://huggingface.co/blog/smolagents">HF blog on smolagents</a></li>
+  <li>Meme at top taken from <a href="https://www.reddit.com/r/ProgrammerHumor/comments/1dckq74/soundsfamiliar/">dilbert</a></li>
+</ul>
+
+  <div class="voting-buttons" data-post-id="blogs-ai-agents-from-first-principles">
+    <button class="vote-btn upvote" aria-label="Upvote">
+      <i class="vote-icon fas fa-arrow-up"></i>
+      <span class="vote-count upvote-count">0</span>
+    </button>
+    <button class="vote-btn downvote" aria-label="Downvote">
+      <i class="vote-icon fas fa-arrow-down"></i>
+      <span class="vote-count downvote-count">0</span>
+    </button>
+  </div>
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2FAI_agents_from_first_principles%2F&text=AI+Agents+from+First+Principles" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2FAI_agents_from_first_principles%2F&title=AI+Agents+from+First+Principles" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2FAI_agents_from_first_principles%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2FAI_agents_from_first_principles%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+</article>
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2026 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>

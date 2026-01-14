@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>How to change the world | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="How to change the world" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Before we talk about how to change the world, a question arises. Why do YOU want to change the world?" />
+<meta property="og:description" content="Before we talk about how to change the world, a question arises. Why do YOU want to change the world?" />
+<link rel="canonical" href="https://goyalpramod.github.io/thoughts/how_to_change_the_world/" />
+<meta property="og:url" content="https://goyalpramod.github.io/thoughts/how_to_change_the_world/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/cover_images/cover_image.webp" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-01-14T07:31:52+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/cover_images/cover_image.webp" />
+<meta property="twitter:title" content="How to change the world" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-12-19T06:30:00+00:00","datePublished":"2026-01-14T07:31:52+00:00","description":"Before we talk about how to change the world, a question arises. Why do YOU want to change the world?","headline":"How to change the world","image":"https://goyalpramod.github.io/assets/cover_images/cover_image.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/thoughts/how_to_change_the_world/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/thoughts/how_to_change_the_world/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/cover_images/cover_image.webp" alt="How to change the world" class="featured-image">
+</div>
+
+
+<article class="thought">
+  <h1>How to change the world</h1>
+  <p class="meta">Last updated: December 19, 2024</p>
+
+  <!-- Add this right after the <article> opening tag --><button id="toc-toggle" class="toc-toggle" aria-label="Toggle Table of Contents">
+    <i class="fas fa-list-ul"></i>
+  </button>
+  
+  <div class="toc-wrapper">
+    <div class="toc">
+      <div class="toc-header">
+        Table of Contents
+        <button class="toc-close" aria-label="Close Table of Contents">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="toc-nav" id="toc">
+        <!-- ToC content will be dynamically inserted here by JavaScript -->
+      </nav>
+    </div>
+  </div>
+  <p>Before we talk about how to change the world, a question arises. Why do YOU want to change the world?</p>
+
+<p>“The world has been the way it is way before you were born, and will stay the same way if you do or do not do anything about it.
+How dare you even have the audacity to think that you deserve to change the world, The world is absolutely perfect. And if it is not perfect, Let some other messiah.. GOD take care of it”</p>
+
+<p>I do not hope to solve poverty, I do not hope to solve global warming, I do not hope to solve loneliness (But hopefully inspire you to).
+That is not “The world” for me.”The world” to me is a place of wishful thinkers and lost souls.
+People who can achieve so much more than what they think, but do not know what to do.
+That is “The world” that I hope to change.</p>
+
+<p>Why change the world? So the world can have more dreamers, who have faith and direction in their dreams.</p>
+
+<h2 id="write-you-are-not-as-smart-as-you-think">Write; you are not as smart as you think</h2>
+
+<p>“Those who tell stories rule the world” - Plato. Everything you ever want to do in the world, comes down to how well you can articulate your thoughts.</p>
+
+<p>If you can pen them down logically and simply enough that the people you are trying to get it across understand it and reciprocate your feelings.</p>
+
+<p>We all believe we are smart, have sharp mind, with knowledge of the whole world. (at least of the things we believe we know). But this belief system comes crashing down when we try to explain something that we have worked on for years to someone for the first time, even simple questions perplex us. Take for example when a 5 year old is in their cycle of constantly asking why? after a while one realizes one does not truly understand things that they thought were obvious.</p>
+
+<p>Writing is not only about gaining clear thinking in different aspects of life, it is also a mindset shift. From being a consumer to being a producer.</p>
+
+<p>Want to make a video? you better write a good script. Want an investment? you better know how to make a presentation that investors will love? Want more customers? you better know how to write a good copy.</p>
+
+<p>Practice makes perfect. Keep writing, and iteratively you will get better. Not just as a thinker but as a creator too.</p>
+
+<h2 id="read-you-do-not-have-all-the-answers">Read; you do not have all the answers</h2>
+
+<p>A good producer, is first a good consumer.</p>
+
+<p>One trait common amongst most successful people (Bill gates, Elon Musk, Naval Ravikant, or non businessmen depending on which wake of life you come from) have been avid readers from a young age.</p>
+
+<p>A primary reason I believe being, that one does not have all the answers. It is only when we are exposed to the ideas of others that we realize the faults in our own thinking and are exposed to new possibilities of how things can be.</p>
+
+<p>Another way I see books is as, a man’s years of life condensed in short 200-300 pages. That is huge, A good book contains knowledge that you would otherwise have had to spend a lifetime to learn and know about.</p>
+
+<h2 id="move-all-study-and-no-play-makes-jack-a-dull-boy">Move; all study and no play makes jack a dull boy</h2>
+
+<p>One amongst the many reasons homo sapiens were able to survive whilst other homo species perished was because of our strong herd mentality, and our ability to gossip.
+Wisdom was passed down as tales and folklore. So even if the saying is old, there is much to be learnt from it.</p>
+
+<p>There is an immediate and profound effect that happens on your body when you move around. If you sit on your ass daily for long periods of time, consider
+going for a run, exercising, anything that moves your body for a while.</p>
+
+<p>You need a healthy body to have a sound mind and be able to do anything. Hence the saying “All study and no play makes jack a dull boy”.</p>
+
+<h2 id="dream-you-are-limited-by-your-imagination">Dream; you are limited by your imagination</h2>
+
+<p>“Dare to Dream”. Even today when someone asks me what do you want to do? my answer remains what it was 10 years ago. “I want to change the world”. You will be whatever you want to be and exactly that.</p>
+
+<p>If you wish to end up working for Google, and REALLY REALLY want to do that. You will eventually end up at Google. But let me ask you this, If you are dedicated enough to spend days, even years of your life to end up at google… why not build something bigger than google.</p>
+
+<p>You become what you envision yourself to be, why set it so small then?</p>
+
+<h2 id="build-great-ideas-make-others-go-i-could-have-thought-of-that">Build; great ideas make others go “I could have thought of that”</h2>
+
+<p>Let me ask you another question (we do that often here), What is the point of education? Why do we learn?</p>
+
+<p>Primarily I believe there are two reason. One is to share the knowledge with our fellow human beings, that is how most of the known civilization has progressed over the years.</p>
+
+<p>Second of an equal importance, is to apply. You can know all about art in the world, but if you never paint. It is to nought. (The argument of “is art for art’s sake” is for another day)</p>
+
+<p>The thing I want you to take away is, build something with your knowledge.</p>
+
+<h2 id="question-everything">Question… everything</h2>
+
+<p>My favorite word in the english language is “Why?” Why? good question, because it helps my understanding of things. It can help in multitude of places. Let me illustrate some common times:</p>
+
+<p>Why am I unhappy? Because I am alone. (or other variations of it no girlfriend/no friends/away from family which all boils down to loneliness) Why am I alone? Because I have no friends. Why do I have no friends? Because I am too busy working all day. Why am I busy working all day? Because I want to create something that can help the world out. Why do you want to do that? Because I envision a world where no one is unhappy. And does that future not make you happy? yes it does.</p>
+
+<p>I call it the exercise of “reaching the logical end” I try to do it often with many things, but limited by experience most of the times my logical ending is inconsistent with reality. But I am fine with it, Because I DREAM.</p>
+
+<p>Question because if you do not, why will you search and read about it, why will you dream of finding an answer, why will you build a solution, why will you write about what you learned.</p>
+
+<p>Everything begins with a question (Ironically that is where we end)</p>
+
+<p>Cheers,
+Pramod</p>
+
+<h1 id="update-241224">Update (24.12.24)</h1>
+
+<p>Here are some links so you are not left wandering</p>
+
+<h2 id="write">Write</h2>
+
+<ul>
+  <li>If you are a non tech person, the best place you can start is with <a href="https://medium.com/">Medium</a></li>
+  <li>For more technical people there are multiple options. For quick and simple personal blog, you can use <a href="https://jekyllrb.com/">Jekyll</a> (That is what I do!!) or you can create your own website.</li>
+  <li>Writing also goes in short form content, you can start simple writing in <a href="https://x.com/home">X</a>, <a href="https://www.reddit.com/">Reddit</a>, <a href="https://www.linkedin.com/feed/">LinkedIn</a> etc.</li>
+  <li>If you are not comfortable sharing everything to the world, you can start with journaling. A Physical notebook is great, Otherwise if you are a digital person consider <a href="https://www.notion.com/">Notion</a> or <a href="https://obsidian.md/">Obsidian</a> for the hard core people.</li>
+</ul>
+
+<h2 id="read">Read</h2>
+
+<ul>
+  <li>If you are not much of a reader. Start with <a href="https://www.navalmanack.com/">The Almanack of Naval Ravikant</a></li>
+  <li>If you already like reading here are a few lists whose books I recommend <a href="https://www.bookmarked.club/people">bookmarked</a>, <a href="https://www.navalmanack.com/navals-recommended-reading">Naval’s reading list</a> ,and <a href="https://www.escapingordinary.net/top-50-books">Escaping Ordinary top 50</a></li>
+  <li>My personal favorites overlap with the books recommended above, But I will recommend picking up some fiction as well. Few of my favourites are <a href="https://www.goodreads.com/book/show/61439040-1984">1984</a>, <a href="https://www.goodreads.com/book/show/170448.Animal_Farm">Animal Farm</a> ,and <a href="https://www.goodreads.com/book/show/157993.The_Little_Prince">The Little Prince</a>.</li>
+  <li>I will recommend reading a bit of philosophy too, in your reading journey. My personal favorites are <a href="https://en.wikipedia.org/wiki/Friedrich_Nietzsche">Nietzsche</a> and <a href="https://en.wikipedia.org/wiki/Albert_Camus">Camus</a>. If you are new to this, consider visiting <a href="https://www.youtube.com/@theschooloflifetv">The School of Life</a></li>
+  <li>Some poetry can be a nice pace of change. <a href="https://en.wikipedia.org/wiki/Shel_Silverstein">Shel silverstein</a>, <a href="https://en.wikipedia.org/wiki/Sylvia_Plath">Silvia plath</a> ,and <a href="https://en.wikipedia.org/wiki/Pablo_Neruda">Pablo neruda</a> are few I enjoy reading on a weary night.</li>
+</ul>
+
+<h2 id="move">Move</h2>
+
+<ul>
+  <li><a href="https://en.wikipedia.org/wiki/Calisthenics">Calisthenics</a> is a great form of workout for beginners if you do not wish to go to a gym at the moment. I will recommend visiting the YouTube Channel <a href="https://www.youtube.com/@calimove">Calisthenicmovement</a></li>
+  <li>Resistance training is vital though in my opinion and you will have to eventually do it. Start by listening to <a href="https://www.youtube.com/@athleanx">Athlean X</a> if you have never worked out before. (ONLY FOR WORKOUTS, Do not buy the endorsed products)</li>
+  <li>If you have finally decided to improve your life with this, Having a healthier diet goes a long way. Start by cutting down on sugar and highly processed food.</li>
+</ul>
+
+<h2 id="dream">Dream</h2>
+
+<ul>
+  <li>The story of <a href="https://en.wikipedia.org/wiki/Muhammad_Ali">Muhammad Ali</a> has always inspired me. Also meeting new people and listening to their journey inspires me to learn from a wake of life I never knew about.</li>
+  <li><a href="https://www.imdb.com/title/tt0454921/">The Pursuit of Happyness</a> &amp; <a href="https://en.wikipedia.org/wiki/The_Shawshank_Redemption">The Shawshank Redemption</a> are two movies that have had a huge impact on me. A man’s obsession to escape his current circumstances. And to be able to dream of a better life.</li>
+  <li><a href="https://www.goodreads.com/book/show/18050143-zero-to-one">Zero to One</a> This is not a motivational book by any means, but reading this fills me with so much hope and dreams that I cannot help but put it here.</li>
+</ul>
+
+<h2 id="build">Build</h2>
+
+<ul>
+  <li>If you wish to move into software, learn, build, share. <a href="https://roadmap.sh/">roadmap.sh</a> is a nice site to know about the specifics for the things you are interested in. But I will still recommend to learn each specific topic from different places. For my roadmap to Software Development <a href="">read this</a>.</li>
+  <li>Content Creation is building as well, Learn some Adobe tools like Premiere, Photoshop, lightroom etc. And start creating on platforms like <a href="https://www.youtube.com/">YouTube</a>, <a href="https://www.instagram.com/">Instagram</a>, <a href="https://en.wikipedia.org/wiki/TikTok">TikTok</a> etc</li>
+  <li>Do not limit yourself to the digital media, Creating Art, Music, Sculptures all come under “Building” in my opinion. There are specific places for specific things, To read what I have learnt over the years and from where <a href="">read this</a></li>
+</ul>
+
+<h2 id="question">Question</h2>
+
+<ul>
+  <li>I have created a personal group in WhatsApp for myself where I write down my quick thoughts and question. Which I refer back to ponder later. I will recommend you find something suitable to you and stick to that.</li>
+</ul>
+
+  <div class="voting-buttons" data-post-id="thoughts-how-to-change-the-world">
+    <button class="vote-btn upvote">
+      <span class="vote-icon">↑</span>
+      <span class="vote-count upvote-count">0</span>
+    </button>
+    <button class="vote-btn downvote">
+      <span class="vote-icon">↓</span>
+      <span class="vote-count downvote-count">0</span>
+    </button>
+  </div>
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fhow_to_change_the_world%2F&text=How+to+change+the+world" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fhow_to_change_the_world%2F&title=How+to+change+the+world" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fhow_to_change_the_world%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fhow_to_change_the_world%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+</article>
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2026 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>
