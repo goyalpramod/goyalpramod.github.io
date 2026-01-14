@@ -504,5 +504,34 @@ https://nextjs.org/learn/react-foundations/rendering-ui
 
 https://www.react-graph-gallery.com/
 
+Eloquent JS
+
+https://flexboxfroggy.com/ 
+These are for flex box (display: flex)
+* Justify content moves stuff around horizontally 
+* allign-items moves stuff around vertically
+* flex direction is to choose direction for flex box to appear in 
+* order to change the order or a box in a container 
+* allign-self to move around one object 
+* flex-wrap unquishes stuff
+* flex-flow is a short hand to use direction and wrap togehter
+* align-content: align multiple lines of boxes in a container
+
+https://cssgridgarden.com/
+These are for grid column (display-grid)
+* You can create the template (layout) using grid template row/column
+* grid-column/row-start let's you select
+* short hand is just grid column 
+* span decides the span of these 
+* grid area combines everything in one place 
+* This got order for boxes too
+
+https://flukeout.github.io/
+Get descendents using 
+A B C 
+use . for classes 
+use # for id 
+use * to access everything (we can combine this with descendent to pick everything of one parent thingy)
+
 
  -->
