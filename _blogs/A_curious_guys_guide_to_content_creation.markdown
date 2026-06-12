@@ -53,31 +53,119 @@ The whole of this entire blog and in fact for all of content creation can be sum
 
 #### Audience 
 
+X in my opinion is one of the easiest to start with and still one of the hardest to penetrate. The simple reason being that people who spend time here are usually tech people and people in a hurry. They want information as soon as possible. So you have a very short window to provide value to them. Density and Complexity is rewarded here. 
+
+#### Value 
+
+From my observation, long threads, long articles, quick witty tweets and links to unknown sources work well. As they provide a lot of information very quickly. 
+People here from my observation are tech focused (AI).
+
+#### Monetization
+
+* From the platform (Certain criterias, not tough after 6 months of consistency)
+* From affiliates & promotions
+
+### LinkedIn 
+
+#### Audience 
+
+This is one of those platform which has a chunk of two kinds of people, business people looking to learn/hire/connect and upskillers. 
+
+#### Value 
+
+Talking about business, talking about courses, sharing multiple links in a single post works great. Because people come here with the expectaction to learn in entirety about current trends, additionally sharing novel ideas and knowledge works wonder too. (But that generally works well everywhere)
+
+#### Monetization
+
+* From affiliates & promotions 
+* I will say it is much better and easier to get a good job through LinkedIn if you have a good profile.
+
+### YouTube 
+
+#### Audience
+
+Talking about Audience in YouTube is not exactly straightforward, because their are all kinds of things people use youtube for. Entertainment, Education, Background noise, COOKING. But in all in all it boils down to, people come here for LONG FORM of entertainment.
+
+#### Value 
+
+Value in YouTube really depends on your audience, but the structure of most videos in my opinion is the same. At the end of the video the audience feels like either they had fun or they learnt something. And as long as you can do that, it will work out well! 
+
+#### Monetization
+
+* From the platform (Probably the best)
+* From affiliates & promotions
+
+### Instagram
+
+#### Audience 
+
 #### Value 
 
 #### Monetization
 
-### LinkedIn 
-
-### YouTube 
-
-### Instagram
-
 ### YouTube Shorts
+
+#### Audience 
+
+#### Value 
+
+#### Monetization
 
 ### TikTok 
 
+#### Audience 
+
+#### Value 
+
+#### Monetization
+
 ### Medium
+
+#### Audience 
+
+#### Value 
+
+#### Monetization
 
 ### Substack 
 
+#### Audience 
+
+#### Value 
+
+#### Monetization
+
 ### Blogsite
+
+#### Audience 
+
+#### Value 
+
+#### Monetization
 
 ### Reddit 
 
+#### Audience 
+
+#### Value 
+
+#### Monetization
+
 ### Podcasts (Spotify, Apple Music)
 
+#### Audience 
+
+#### Value 
+
+#### Monetization
+
 ### Books
+
+#### Audience 
+
+#### Value 
+
+#### Monetization
 
 ### Misc
 Fiverr, upwork, woop store
@@ -118,11 +206,34 @@ I will mainly be diving deep into Davinci Resolve in this one (I know adobe rece
 
 ## On Fonts 
 
+Font in use {link}
+The other indian font site I love! 
+
 ## On Music
+
+Music sets the mood, no music in my opinion is still much better than wrong music
 
 ## On SFX
 
+I believe their are only 4 funamental sound effects in content creation
+
+* Score 
+* Whoosh 
+* 
+
 ## On VFX
+
+This is something I am still actively working on but I believe there are a few popular ones that I love 
+
+* Background 
+* Texture 
+* Text Animations 
+* 3d camera
+
+The fundamental knowledge is 
+
+* keyframes 
+* curves
 
 ## On Storytelling 
 
@@ -167,4 +278,7 @@ We can rave about these for days, but there are so many ways to mess one's story
 * HIRE AN EDITOR
 * Use shortcuts
 * Have structure
-* LUTs  -->
+* LUTs 
+
+## Conclusion
+ -->
