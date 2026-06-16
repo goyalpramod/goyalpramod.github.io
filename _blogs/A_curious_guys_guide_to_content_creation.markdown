@@ -99,13 +99,28 @@ Value in YouTube really depends on your audience, but the structure of most vide
 
 #### Audience 
 
+The funny thing about Instagram is, everyone is equal to the platform. (which is kind of the case for most platforms now) anyone can get viral. It really does not matter if you have a million followers or not. 
+
+So it is important to understand the secret to "virality", which is essentially high quality cinematic content. Unless you are genius with a very unique taste and content. The cheatcode is to make beautiful content. In youtube mediocre quality with great content works, not with instagram. 
+
 #### Value 
 
+Value in instagram is a dopamine rush, make them laugh, make them cry, make them happy, make them feel smart. Understand what insecurity you are targetting and fulfil that. 
+
 #### Monetization
+
+* I do not think the platform pays (will need to check)
+* From affiliates & promotions (Probably the best)
+
+
+### Facebook 
+
+Bro I am not that old....
 
 ### YouTube Shorts
 
 #### Audience 
+
 
 #### Value 
 
@@ -121,7 +136,7 @@ Value in YouTube really depends on your audience, but the structure of most vide
 
 ### Medium
 
-#### Audience 
+#### Audience
 
 #### Value 
 
@@ -190,11 +205,23 @@ Ok I lied, this exactly isn't a part on video but more on lighting. Blame bad li
 
 Now to understand different kinds of frames, we first need to understand how cameras work
 
+### ISO 
+
+### FPS 
+
+### Apperture 
+
 ## On framming 
 
 Framing might be just one of those things that silengthly elevates and sets the mood of the sotry, the way I like to imagine it is. If someone can see your frames, you did bad framming. Good framming is invisible and blends into the story. 
 
+{add link to the frames video by that pay kay guy}
 
+## On Editing 
+
+### Types of cuts
+
+### Useful shortcuts
 
 ## On Color Grading 
 
@@ -245,29 +272,73 @@ Let me provide you the different steps to tell a good story
 
 ### Types of story 
 
-#### A hero's journey
+#### Three Act Structure
 
-#### The justin roiland method
+#### Freytag's Pyramid
+
+#### The Hero's Journey
 
 ### Structures of a story
 
+Now the above methods work great for a long form of video, they specifically go into the content section of this part. But we can still divide it essentially into 3 parts.
+
 #### hook 
+
+This is one of the most important part of the video. It comprises about 5% but makes up for 50%. So pay attention. 
+
+The hook as the name says hooks the user to the content, their are multiple differnt 
 
 ##### Video Hook 
 
+This is the most common kind of hook, here are some examples of it... 
+
+{}
+
 ##### Audio Hook 
+
+Rare, but still amazing. Done best with music, some examples 
+
+{}
 
 ##### Thumbnail
 
+YouTube will benefit the most from this knowledge, I can do a big deep dive on how to make the best thumbnail out there which may perform well. (it is always a probablitsitc model)
+
+But I will not, instead feel free to watch this video which does a much better job...
+
+
+
 #### Content 
 
+Now finding content, this is one of THE QUESTION of social media. I'll say it is mostly irrelevant for a beginner. Because initially noone cares about what you put out because you are essentially a nobody. 
+
+So here is some advice to find your content 
+
+* Make or post what you wish existed in the world. For instance,I love to read articles and blogs. And I really wished someone would post interesting things they were reading, so that is what I started doing on X. surprise surprise, a lot of people wished for that too!
+
+* Do what you would have done anyhoo, it's much easier to do something you like than to do something you think others will like. 
+
+* Be you, that is your biggest moat. There is no competing with the real you, because you are like noone, and noone is like you! 
+
 #### CTA
+
+CTA stands for the call to action. They can be multiple things 
+
+* Links to your courses/products/affiliates 
+* Engagement
+* Other social media
+
+I used to think having a CTA was like selling snake oil, but a fabulous friend of mine changed my opinion on it. The example was something along the lines "If steve jobs started a design academy and charged 100 dollars for it, will you not pay for it" (Obviously steve jobs wouldnt need movie and he most likely will not do it for that much too, the idea was that if person X who is the one of the best in Y, it is completely reasonable for him to charge for the years of work he has put in his field. You pay for the years of time & experience, not the course itself.)
+
+Also another thought that I liked was that in courses, it's rarely the material that you are charged for. But the structure, because we live in a day and age where you have access to all kinds of information. The hard thing is to know the right kind of information for you!
+
+The reasoning can be extended to everything, but what I am trying to say is... be a good person, use this knowledge to make the world a better place. 
 
 ### Tips 
 
 We can rave about these for days, but there are so many ways to mess one's story and so few ways to get it correct 
 
-* Filter (Human personality)
+* Filter (Human personality) (Speak through a mental filter)
 * Voice (personal touch)
 * But, therefore not and, then (South park creators)
 
@@ -279,6 +350,8 @@ We can rave about these for days, but there are so many ways to mess one's story
 * Use shortcuts
 * Have structure
 * LUTs 
+* Cut on the beat 
+* Understand curves, like seriously. 
 
 ## Conclusion
  -->
