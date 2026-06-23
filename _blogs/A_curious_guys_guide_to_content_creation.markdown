@@ -235,17 +235,17 @@ I will mainly be diving deep into Davinci Resolve in this one (I know adobe rece
 
 * https://www.youtube.com/watch?v=gPZ4-CF_osk&t=3s 
 * https://www.youtube.com/watch?v=45z60vnPOBw&t=827s
+* https://www.youtube.com/watch?v=7imay44H3_Q
+
 
 
 option + s (or alt + s) to add a serial node
 
 Separation of concers is good in most things in life, each part does exactly one thing and it does it well. For the following nodes, you are free to change them as you see fit, mix and merge as well. I am just going with what seems most pragmatic and simple to me. 
 
-### EXP (exposure node)
 
-### SAT (Saturation Node)
 
-### CON (Contrast Node)
+Contrast using curves 
 
 ### WB (White Balance)
 
@@ -280,9 +280,15 @@ Keying is your friend, listen to it.
 
 ### VIN (Vinette Node)
 
+### GLOW ()
 
+I am skipping it here because it starts feeling a bit much rather quickly
 
+### Tips
 
+* Group similar clips in color page, and switch between them in the top
+* Use adjustment layer for color grading 
+* Name your nodes
 
 ## On Fonts 
 
