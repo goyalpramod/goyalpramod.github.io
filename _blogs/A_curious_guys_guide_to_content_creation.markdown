@@ -219,15 +219,68 @@ Framing might be just one of those things that silengthly elevates and sets the 
 
 ## On Editing 
 
+### Import settings
+
 ### Types of cuts
 
 ### Useful shortcuts
+
+### Export settings
 
 ## On Color Grading 
 
 I believe this might be one of my favourite things to talk about, this journey started for me with photography in college and I was awed after I watched a few videos by gawxart. Surprisingly for the longest time all I did was BnW photography, colors really bought... colors to my art.
 
 I will mainly be diving deep into Davinci Resolve in this one (I know adobe recently introduced there own color grading tool in lumiere, but I have not used it much so I cannot do it justice.), if you wish other tools, that is fine too as most of this knowledge is transferable and will be helpful everywhere. 
+
+* https://www.youtube.com/watch?v=gPZ4-CF_osk&t=3s 
+* https://www.youtube.com/watch?v=45z60vnPOBw&t=827s
+
+
+option + s (or alt + s) to add a serial node
+
+Separation of concers is good in most things in life, each part does exactly one thing and it does it well. For the following nodes, you are free to change them as you see fit, mix and merge as well. I am just going with what seems most pragmatic and simple to me. 
+
+### EXP (exposure node)
+
+### SAT (Saturation Node)
+
+### CON (Contrast Node)
+
+### WB (White Balance)
+
+### SKIN 
+
+Create a layer, whatever is at bottom, takes precedence
+
+Press Shift+h to only see the selection 
+
+### LOOK 
+
+
+### SOFT (Softness)
+
+### GRAIN 
+
+I love grain so much, the davinci one is paid so feel free to use an overlay 
+
+Here is the one I use 
+
+### CST (Color Space Transform Node)
+
+As a rule of thumb, you want to apply your creative nodes (glow, halation, dust, grain etc) after CST and color grading nodes (WB, EXP, Look) before it. 
+
+> This is just a good rule of thumb and people break it all the time, including me in this blog!
+
+Sometimes you might see some light moving/twisting weird after CST, this is called artifacts, you can usually fix it by changing the gamut mapping to saturation compression. (It is in the CST settings)
+
+### LUT (Look Up Table Node)
+
+Keying is your friend, listen to it. 
+
+### VIN (Vinette Node)
+
+
 
 
 
@@ -352,6 +405,8 @@ We can rave about these for days, but there are so many ways to mess one's story
 * LUTs 
 * Cut on the beat 
 * Understand curves, like seriously. 
+
+### Plugins
 
 ## Conclusion
  -->
