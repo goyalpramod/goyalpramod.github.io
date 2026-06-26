@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Recipes | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Recipes" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment." />
+<meta property="og:description" content="A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment." />
+<link rel="canonical" href="https://goyalpramod.github.io/notes/recipes/" />
+<meta property="og:url" content="https://goyalpramod.github.io/notes/recipes/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/cover_images/img3.webp" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-06-26T13:49:20+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/cover_images/img3.webp" />
+<meta property="twitter:title" content="Recipes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-06-24T06:30:00+00:00","datePublished":"2026-06-26T13:49:20+00:00","description":"A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.","headline":"Recipes","image":"https://goyalpramod.github.io/assets/cover_images/img3.webp","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/notes/recipes/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/notes/recipes/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/cover_images/img3.webp" alt="Recipes" class="featured-image">
+</div>
+
+
+<article class="note">
+  <h1>Recipes</h1>
+  <p class="meta">Last updated: June 24, 2026</p>
+
+  <p><img src="image.png" alt="alt text" /></p>
+
+<p>Baked Mac &amp; Cheese with Sourdough Crust
+Creamy ricotta-gruyere base with Calabrian heat, parmesan rind depth, and a buttery sourdough crust.</p>
+
+<p>INGREDIENTS
+• 400 grams maccheroni
+• 2 parmesan rind pieces
+• 1.5 cups ricotta
+• 1.5 cups gruyere, grated
+• 1 cups mozzarella, torn
+• 1.5 cups pasta water (reserved)
+• 1.5 tablespoons cornflour
+• 3 tablespoons cold water (for slurry)
+• 3 tablespoons olive oil
+• 4 garlic cloves, minced
+• 3 Calabrian chilli (whole), roughly chopped
+• 0.5 teaspoons chilli flakes
+• 2 cups sourdough bread, torn into chunks
+• 3 tablespoons butter (for breadcrumbs)
+• 1 tablespoons butter (for greasing pan)
+• 0.8 teaspoons garlic powder
+• 0.5 teaspoons onion powder
+• 0.3 teaspoons ginger powder
+• 0.5 teaspoons black pepper
+• 1 teaspoons salt
+• 0.3 teaspoons nutmeg, freshly grated
+• 0.3 cups parmesan, grated (for breadcrumbs)</p>
+
+<p>STEPS</p>
+<ol>
+  <li>Make sourdough breadcrumbs: Pulse 2 cups sourdough bread, torn into chunks in a food processor into rough crumbs — uneven is good, you want texture. Melt 3 tablespoons butter (for breadcrumbs) in a pan over medium heat, add the crumbs and toast, stirring often, until deep golden. In the last minute add 0.3 cups parmesan, grated (for breadcrumbs), a pinch of 0.8 teaspoons garlic powder, and the chopped Calabrian chilli oil from your jar if any. Set aside uncovered so they stay crispy.</li>
+  <li>Cook pasta with parmesan rind: Bring a large pot of well-salted water to boil. Add 2 parmesan rind pieces and let it simmer for 5 min before adding pasta. Cook 400 grams maccheroni 2 minutes less than package time — it will finish in the oven. Reserve 1.5 cups pasta water (reserved) before draining. Remove and keep the rinds.</li>
+  <li>Make cornflour slurry: Whisk 1.5 tablespoons cornflour into 3 tablespoons cold water (for slurry) until completely smooth with no lumps. Set aside.</li>
+  <li>Build the garlic-chilli base: Heat 3 tablespoons olive oil in a wide, heavy pan over medium-low. Add 4 garlic cloves, minced and 3 Calabrian chilli (whole), roughly chopped and cook gently for 3-4 minutes until fragrant and garlic is just turning golden. Don’t rush this — low and slow. Add 0.5 teaspoons chilli flakes and stir for 30 seconds.</li>
+  <li>Build the ricotta sauce: Add 1.5 cups ricotta directly into the garlic oil. Stir it into the fat and let it warm through for 2 minutes — this blooms the flavor. Gradually add 1.5 cups pasta water (reserved), stirring constantly. Pour in the cornflour slurry and stir well. Add 0.5 teaspoons onion powder, 0.3 teaspoons ginger powder, 0.8 teaspoons garlic powder, 0.3 teaspoons nutmeg, freshly grated, 0.5 teaspoons black pepper, and 1 teaspoons salt. Simmer on low for 2-3 min until slightly thickened.</li>
+  <li>Fold in cheese and pasta: Remove from heat. Stir in most of 1.5 cups gruyere, grated and half of 1 cups mozzarella, torn, reserving some of each for the top. Add the drained pasta and fold everything together. Taste and adjust salt and heat. If the mix feels tight, add a splash more pasta water — it should be saucy, not dry, as it’ll tighten in the oven.</li>
+  <li>Assemble: Preheat oven to 400°F. Grease your baking dish thoroughly with 1 tablespoons butter (for greasing pan). Transfer the pasta mix in. Scatter remaining 1.5 cups gruyere, grated and 1 cups mozzarella, torn evenly on top. Then pile the sourdough breadcrumbs over everything in an even layer.</li>
+  <li>Bake: Bake uncovered at 400°F for 20-22 minutes until the edges are bubbling and the top is deep golden. Then switch to broil for 2-3 minutes watching closely — you want the crumbs to blister and the cheese underneath to bubble up through the cracks.</li>
+  <li>Rest and serve: Let it rest for 5-8 minutes before serving. This is important — it lets the sauce set so you get clean scoops instead of a soup. Finish with a drizzle of olive oil and extra chilli flakes if you want.</li>
+</ol>
+
+<p>NOTES
+<strong>Parmesan rinds:</strong> If they softened nicely while boiling, chop them into small cubes and mix them into the pasta at step 6. They go gooey and melty in the oven — little umami pockets throughout.</p>
+
+<p><strong>Breadcrumbs:</strong> Keep them uncovered after toasting. Covering them steams and softens them.</p>
+
+<p><strong>Make ahead:</strong> You can assemble everything up to step 7 and refrigerate. Add breadcrumbs just before baking, and add 5 extra minutes to bake time.</p>
+
+<p><img src="image-1.png" alt="alt text" /></p>
+
+<p>Tamil Nadu Dosa Batter
+Authentic fermented batter for crispy golden dosas. Scaled for 2 people. Start soaking tonight — batter needs overnight fermentation.</p>
+
+<p>INGREDIENTS
+• 2 cups idli rice
+• 1 cups whole white urad dal (urad gota)
+• 0.5 teaspoons fenugreek seeds (methi)
+• 2 tablespoons thin poha (flattened rice)
+• 1 teaspoons rock salt (non-iodized)
+• 1.5 cups ice cold water</p>
+
+<p>STEPS</p>
+<ol>
+  <li>Soak the rice: Wash 2 cups idli rice 4–5 times until the water runs completely clear. Soak in fresh cold water in a large bowl for 6 hours minimum. Keep separately from the dal.</li>
+  <li>Soak the dal: Wash 1 cups whole white urad dal (urad gota) and 0.5 teaspoons fenugreek seeds (methi) together 3 times. Soak in fresh cold water for 6 hours. In the last 30 minutes of soaking, add 2 tablespoons thin poha (flattened rice) directly to the dal bowl — no need to soak it separately.</li>
+  <li>Grind the urad dal (do this first): Drain the urad dal, poha, and methi — reserve the soaking water. Add to mixie in batches. Grind with small splashes of 1.5 cups ice cold water, never dumping all water at once. Grind 15–20 minutes total, scraping down sides. The result should be snow-white, very smooth, and airy — almost mousse-like. This step is the most important. If the batter feels warm, stop and refrigerate for 10 minutes before continuing.</li>
+  <li>Grind the rice: Drain the 2 cups idli rice and grind with small splashes of ice cold water until smooth but very slightly gritty — not as fine as the dal. About 10 minutes in the mixie. Transfer to the same large vessel as the urad batter.</li>
+  <li>Mix and salt the batter: Combine both batters thoroughly using your clean hands — the warmth helps activate fermentation. Add 1 teaspoons rock salt (non-iodized) and mix again. The vessel should be no more than half full; the batter will nearly double. Cover loosely with a lid (not airtight).</li>
+  <li>Ferment overnight: Leave in a warm spot for 8–12 hours. If you’re in a cold climate, place in an oven with just the light on (no heat). Do not disturb it during fermentation.</li>
+  <li>Check fermentation: After 8–12 hours, the batter should have doubled in volume, have a slightly sour aroma, and a bubbly surface. Stir gently from the bottom. If it hasn’t risen, give it another 2 hours. Well-fermented batter feels light and airy when you stir it.</li>
+  <li>Heat the tawa: Heat a cast iron or thick non-stick tawa on high flame. Flick a few drops of water onto the surface — if they sizzle and evaporate immediately, it’s ready. Reduce to medium-high. Rub a cut onion or an oil-soaked paper towel across the surface to season it.</li>
+  <li>Make the dosa: Pour one ladle of batter in the center of the tawa. Immediately spread in quick concentric circles outward using the back of the ladle — do it in one confident motion, don’t go back and forth. Drizzle ½ tsp oil along the edges and a little on top. Cook until the bottom is deep golden and the edges start to lift and crisp. Fold in half or roll and serve immediately.</li>
+</ol>
+
+<p>NOTES
+<strong>Mixie tip:</strong> Ice cold water is non-negotiable. Heat from the blade kills fermentation cultures and makes the batter dense. Grind in short bursts if needed.</p>
+
+<p><strong>Salt timing:</strong> Adding salt before fermentation is the Tamil Nadu way — it actually helps in warm climates by controlling over-fermentation.</p>
+
+<p><strong>Day 2 dosas are better:</strong> Slightly fermented batter makes crispier dosas than fresh. Keep leftover batter refrigerated for up to 3 days.</p>
+
+<p><img src="image-2.png" alt="alt text" /></p>
+
+<p>Red Coconut Chutney (Tamil Nadu Style)
+The spicier, deeper Tamil Nadu red chutney — bolder than the white version, with roasted chillies, garlic, and coconut. The one you get with masala dosa in most Tamil restaurants.</p>
+
+<p>INGREDIENTS
+• 1 cups fresh grated coconut
+• 2 tbsp roasted chana dal (pottukadalai)
+• 4 dried Kashmiri red chillies (adjust for heat)
+• 0.5 inch fresh ginger
+• 2 garlic cloves
+• 1 small piece tamarind (or ½ tsp pulp)
+• 1 teaspoons salt
+• 0.3 cups water
+• 1 teaspoons oil
+• 0.5 teaspoons mustard seeds
+• 0.5 teaspoons urad dal
+• 1 dried red chilli
+• 6 fresh curry leaves
+• 1 pinch asafoetida (hing)</p>
+
+<p>STEPS</p>
+<ol>
+  <li>Dry roast the chillies: Optional but worth it: heat a dry pan and roast 4 dried Kashmiri red chillies (adjust for heat) for 30–40 seconds, tossing, until you smell a nutty aroma. Let cool for 1 minute before blending.</li>
+  <li>Blend everything: Add 1 cups fresh grated coconut, 2 tbsp roasted chana dal (pottukadalai), roasted 4 dried Kashmiri red chillies (adjust for heat), 0.5 inch fresh ginger, 2 garlic cloves, 1 small piece tamarind (or ½ tsp pulp), and 1 teaspoons salt to the mixie. Add 0.3 cups water and blend to a smooth, deep red paste. It should be thicker than the white chutney. Taste — adjust salt and tamarind. Transfer to a bowl.</li>
+  <li>Make the tadka: Heat 1 teaspoons oil in a small pan on medium. Add 0.5 teaspoons mustard seeds and let them splutter fully. Add 0.5 teaspoons urad dal, fry until golden. Add 1 dried red chilli, 6 fresh curry leaves, and 1 pinch asafoetida (hing). Crackle for 5 seconds and turn off heat.</li>
+  <li>Finish and serve: Pour tadka over chutney, stir through, and serve alongside the white chutney. Having both on the table is the full Tamil Nadu breakfast experience.</li>
+</ol>
+
+<p>NOTES
+<strong>Kashmiri vs regular chillies:</strong> Kashmiri chillies give a deep red color with moderate heat. Regular dried red chillies will be spicier and darker. Mix both for a balance of color and fire.</p>
+
+<p><strong>Dry roast the chillies first:</strong> Optional but recommended — dry roast the dried red chillies in the pan for 30 seconds before grinding. It deepens the flavor significantly.</p>
+
+<p><strong>Garlic:</strong> Some Tamil Nadu home cooks skip garlic in white chutney but almost always include it in the red. Don’t skip it here.</p>
+
+<p><img src="image-3.png" alt="alt text" /></p>
+
+<p>Batata Poha (Kanda Batata Poha)
+Maharashtrian-style spiced flattened rice with potato, onion &amp; capsicum. Ready in 20 minutes.</p>
+
+<p>INGREDIENTS
+• 2 cups thick poha (flattened rice)
+• 1 medium potato, peeled &amp; cut into small cubes (~1cm)
+• 1 medium onion, finely chopped
+• 0.5 capsicum, small dice
+• 1 teaspoons ginger, grated or minced
+• 2 green chilli, slit lengthwise
+• 12 curry leaves
+• 3 tablespoons coriander leaves, roughly chopped
+• 2 tablespoons oil (neutral)
+• 1 teaspoons mustard seeds
+• 0.5 teaspoons cumin seeds
+• 0.5 teaspoons turmeric powder
+• 1 pinch hing (asafoetida)
+• 0.5 teaspoons sugar
+• 1 teaspoons salt
+• 0.5 lime, juiced</p>
+
+<p>STEPS</p>
+<ol>
+  <li>Rinse &amp; season poha: Place 2 cups thick poha (flattened rice) in a strainer and rinse under running water for 10–15 seconds — just enough to moisten, not soak. Drain immediately. Sprinkle 0.5 teaspoons turmeric powder and 1 teaspoons salt over it, toss gently, and set aside. The turmeric coats every flake evenly this way.</li>
+  <li>Pre-cook the potato: Microwave 1 medium potato, peeled &amp; cut into small cubes (~1cm) in a covered bowl with a tiny splash of water for 3–4 minutes on high until just tender (not mushy). Alternatively, par-boil. This keeps your main cook fast and ensures the potato is fully done.</li>
+  <li>Temper the spices: Heat 2 tablespoons oil (neutral) in a wide pan on medium-high. Add 1 teaspoons mustard seeds and wait for them to crackle — about 30 seconds. Then add 0.5 teaspoons cumin seeds, 1 pinch hing (asafoetida), and 12 curry leaves. Let them sizzle for 15–20 seconds. The curry leaves will pop, so keep a lid handy.</li>
+  <li>Sauté aromatics: Add 2 green chilli, slit lengthwise and 1 teaspoons ginger, grated or minced. Sauté for 30 seconds. Add 1 medium onion, finely chopped and cook until just translucent, about 3–4 minutes. Don’t brown them — you want sweetness, not caramelisation.</li>
+  <li>Add capsicum &amp; potato: Add 0.5 capsicum, small dice and sauté for 2 minutes until slightly softened but still with bite. Add the pre-cooked 1 medium potato, peeled &amp; cut into small cubes (~1cm) and 0.5 teaspoons sugar. Mix well and cook for 1 minute.</li>
+  <li>Add poha &amp; steam: Lower the flame. Add the seasoned poha and fold gently — don’t stir aggressively or it’ll break. Cover and cook on low for 2–3 minutes. The steam finishes it off and makes everything fluffy.</li>
+  <li>Finish &amp; serve: Turn off heat. Squeeze 0.5 lime, juiced over the top, add 3 tablespoons coriander leaves, roughly chopped, and fold once more. Taste for salt. Serve immediately — poha is best hot and fresh.</li>
+</ol>
+
+<p>NOTES
+<strong>Key tips:</strong></p>
+<ul>
+  <li><strong>Don’t over-rinse</strong> — 10–15 seconds is enough for thick poha. Over-rinsing = mush.</li>
+  <li><strong>Turmeric on poha immediately after rinsing</strong> — this is the trick for that even golden colour.</li>
+  <li><strong>Low flame for the final steam</strong> — high heat will dry it out or burn the bottom.</li>
+  <li><strong>Capsicum added late</strong> — keeps it slightly crunchy, which gives texture contrast since there are no peanuts.</li>
+  <li><strong>No peanuts?</strong> You can add roasted chana dal (daria) as a substitute for crunch if you have it.</li>
+</ul>
+
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Frecipes%2F&text=Recipes" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Frecipes%2F&title=Recipes" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Frecipes%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fnotes%2Frecipes%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+</article>
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2026 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>
