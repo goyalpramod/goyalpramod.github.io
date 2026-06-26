@@ -4,7 +4,7 @@ title: Notes
 permalink: /notes/
 ---
 
-This is where I write down my weekly learnings, goals, plans etc.
+I have mostly made this for myself, you are free to explore. 
 
 <ul class="list-unstyled">
   {% for note in site.notes %}
