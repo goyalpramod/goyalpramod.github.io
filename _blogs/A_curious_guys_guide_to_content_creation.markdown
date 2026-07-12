@@ -236,6 +236,7 @@ I will mainly be diving deep into Davinci Resolve in this one (I know adobe rece
 * https://www.youtube.com/watch?v=gPZ4-CF_osk&t=3s 
 * https://www.youtube.com/watch?v=45z60vnPOBw&t=827s
 * https://www.youtube.com/watch?v=7imay44H3_Q
+* https://www.youtube.com/watch?v=53gcbJPP5eA (A ludicrous advance tutorial)
 
 
 
@@ -247,24 +248,194 @@ Separation of concers is good in most things in life, each part does exactly one
 
 Contrast using curves 
 
-### WB (White Balance)
+### Quick overview
 
-### SKIN 
+![overview of the color page of davinci](/assets/blog_assets/content_creation/img.webp)
 
-Create a layer, whatever is at bottom, takes precedence
+Starting with color grading can be over-whelming at first. But there are a few things we can do to make our lives easier. 
 
-Press Shift+h to only see the selection 
+Making ourselves familiar with the different tools, along with the methodolody helps. Study the image above to understand what the different parts do, as we move forward I will explain more things. 
 
-### LOOK 
+Color grading is a two step process, first is color correction; where you fix the exposure and contrast of the video. Once you have a good correction which looks like it has depth, we start adding the grade to that. 
+
+There are multiple ways of doing this and everyone has their own methodology, I will break down the above videos I have mentioned and essentially write it in three parts 
+
+1. Beginner 
+2. Intermediate 
+3. Advanced 
+4. Professional
+
+I am still stuck at Intermediate myself and I try to take some inspirations from the more advanced ideas.(I am still not great at it though.)
+
+### Beginner
+
+![Inspiration image](/assets/blog_assets/content_creation/img2.webp)
+
+No matter at what stage of a creative process you are at, it is always great to have some inspirations. 
+
+Another point to mention is, always pick a hero frame of the video, this is a clean frame that lets you easily apply your grade. (essentially do not pick something with movements, or if it is out of focus and so on)
+
+![Setting up basic nodes](/assets/blog_assets/content_creation/img3.webp)
+
+Over here I have added 4 serial nodes (shortcut is alt/option + s), I have adjusted the exposure using the primary wheels. Lift correlates to shadows, Gamma to midtones, Gain to highlights (These are photography terms and not same as blacks and whites, to learn more about them go here [ADD_LINK]). 
+
+Offset is used to change everything at once, play around with these wheels to get the hang of it. 
+
+One of the most important thing to remember is, we want to do incremenatal changes, never make large changes, .05 can be a lot too at times, We gradually add or subtract the image as we want it. 
+
+for **exposure** I just adjusted the wheels, and as a begineer you can change the saturation and contrast using the primary too (see above the wheel you will see the option). 
+
+> It is helpful to always label your nodes, you can right click on a node and label it as you see fit. 
+
+> Most tutorials will tell you against changing contrast and saturation from primaries, but it is a good beginning tool imo. 
+
+Before adding a look (or grade) to our image, we have to make sure we protect the skin. 
+
+> A good rule of thumb is, as long as Black looks black, white looks white and skin looks like skin. You can sell any grade as real. 
+
+![Setting up basic nodes](/assets/blog_assets/content_creation/img4.webp)
+
+We add a layer node to our 4th node 
+
+| Important caveat, whatever is at the bottom, is actually at the top layer.
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/img5.webp)
+
+Now selecting the node at top. And chossing the qualifier, by hovering over your skin (I used my face) and clicking on it, you can select the color range you want to protect (Press Shift + H to see the mask that has been selected). This is a delecate fight and it is tough to get exactly what you want at times.
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/img6.webp)
+
+Now we can go to the node on top of our skin and apply grading to that, one of the easiest ways (and the safest) is to go to curves, and change them as you like it! 
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/img7.webp)
+
+Another cheat code to protecting your skins is just masking them and motion tracking them using the powerful davnici motion tracker. This will make your grade look much cleaner. (Otherwise you start getting weird grainy artifacts). And thats it! 
+
+As this was the beginner way we skipped an imense amount of things, including CST!!! your next task, if you choose to accept it. Is to dive deeper into each of these nodes and customize each part. 
 
 
-### SOFT (Softness)
+### Intermediate
 
-### GRAIN 
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img1.webp)
 
-I love grain so much, the davinci one is paid so feel free to use an overlay 
+Now it is going to get a bit tougher but it is completely worth it. If you shot your video in log profile as we discussed in the [video] section. You know it completely flattens it. 
 
-Here is the one I use 
+Now that is because the video is in a different color space from what we are used to in media (which is usually rec709, if you wish to understand about the different types of color profile, [check this out]). So we have to convert it from our log profile to a film profile!
+
+> Log profile depends on your camera, as I was using a canon. I applied my settings accordingly.
+
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img2.webp)
+
+A LUT (Lookup table) is like a pre-set. It let's you change the colors, the simplest way to imagine it is. It is a mapping from one color to another, so red in rec709 will be turned into scarlet in another LUT. 
+
+Pick the LUT you like, I like Kodak so I chose that the difference between D55, D60, D65 is ....{fill this}
+
+Now the problem with LUTs is, they can be too powerful at times. That is why we use something called keying. You can select keying (3rd one from the right. The one that looks like a rectangle with a hole) and decrease the intensity of the LUT. I am leaving it as it is for now because I like the way it looks.
+
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img3.webp)
+
+If you notice out video (or image in this case) is already looking so beautiful. Now to push the look we will add a bit of warmth using the temperature, and make the highlights slightly warmer by changing the gain (You can go the direction you like for the look. Changing temp, tint and primary wheels is a common way of achieving the look you want!)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img4.webp)
+
+Now we add balance to our image by fixing the exposure, as this is the shot with a window in it, it is way too bright which needs to be fixed. So I have crancked the gain way down, you have to adjust according to your video. 
+
+> In retrospect, we could have added a separate contrast and saturation node, and used what we learnt in the beginner course. I personally use what we will learn in advanced!
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img5.webp)
+
+Now to add some film looks/elements, it is a bit of a controversial topic of where to add these nodes. The best practice would be to add them after your LUT node as for these you do not need a high dynamic range unlike for exposure/saturation/contrast. But I am used to this and this is how I learned so I just follow this. (In my head, I believe it should not make much difference. Please comment if you believe I am wrong.)
+
+Over at the first node we add a bit of softness using gaussian blur. 
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img6(halation).webp)
+
+Now to add my absolutely favourite node, HALATION. Davinci does have one, but it is paid. So let us see how we can do it for free (and in a better way imo). 
+
+Just follow along the images and you will have it ready!
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img7(halation).webp)
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img8(halation).webp)
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img9(halation).webp)
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img10(halation).webp)
+
+If you want to see what changes exactly is introduced by each node click on it and then press CMD/ctrl + D. Essentially what happens is that in the linear space light directly gets added to our original video, with the highlights blured out, adding the halation effect!
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img11(Vin).webp)
+
+Now no film look is ever complete without some vinette, the default vinetting of davinci is not that great and you can achieve a much better look using a mask!
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/2img12(film_damage).webp)
+
+This is something that I seldom use but it does add a pretty look, these are the white film damage look. 
+
+> I skipped one node, that is the grain node. As that too is paid in davinci. I will recommend using an overlay and changing the composite mode to "overlay" this is the one I use [FILL_THIS]. Additionally there is another node you can experiment with "Glow".
+
+Now these methodology will get you the closestest to a cinematic look. In most scenarios I believe you do not need to learn any more things, buttttt let's go over!
+
+### Advanced
+
+At this point if you have been practicing you must have understood the flow. 
+
+Fix the exposure, contrast, WB, saturation, protect the skins, add you look, add your effects. 
+
+These steps do not usually change, the means of doing each does tho over time. Now let us understand what are the ideal way of doing some of these steps. 
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/3img1.webp)
+
+Instead of changing the exposure using the primary wheels, you get much more fine grained control by doing them using the HDR wheels 
+
+(I still mostly use primary wheels tho)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/3img3.webp)
+
+A better method to achieve constrast is by changing the curves.
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/3img4.webp)
+
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/3img5.webp)
+
+The best method to add beautiful saturation to your video is to follow the above method. HSV stands for Hue, Saturation, Vibrance. By only keeping the saturation active and increasing gamma, you achieve a much better and smoother saturation. 
+
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/3img7.webp)
+
+This I feel is a super secret sauce, just follow the above idea and it adds a beautiful warmth to your video! 
+
+> I personally use a mix of the advanced and intermediate concepts. Whatever you believe was skipped, was mostly covered in intermediate 
+
+### Professional 
+
+Now this is going to be tough, and even I do not use these techniques in most cases. But for brevity's sake I have included them here.
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img2.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img3.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img4.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img5.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img6.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img7.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img8.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img9.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img10.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img11.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img12.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img13.webp)
+
+![overview of the color page of davinci](/assets/blog_assets/content_creation/4img14.webp)
+
 
 ### CST (Color Space Transform Node)
 
@@ -274,15 +445,6 @@ As a rule of thumb, you want to apply your creative nodes (glow, halation, dust,
 
 Sometimes you might see some light moving/twisting weird after CST, this is called artifacts, you can usually fix it by changing the gamut mapping to saturation compression. (It is in the CST settings)
 
-### LUT (Look Up Table Node)
-
-Keying is your friend, listen to it. 
-
-### VIN (Vinette Node)
-
-### GLOW ()
-
-I am skipping it here because it starts feeling a bit much rather quickly
 
 ### Tips
 
@@ -320,6 +482,8 @@ The fundamental knowledge is
 
 * keyframes 
 * curves
+
+## On 3D
 
 ## On Storytelling 
 
