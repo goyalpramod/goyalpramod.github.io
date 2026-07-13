@@ -412,30 +412,59 @@ Now this is going to be tough, and even I do not use these techniques in most ca
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img2.webp)
 
+You get much wider editing range if you work in davinci wide gamut. So create a CST in which converts from your log footage to davinci wide gamut and CST out that gives out Rec 709
+
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img3.webp)
+
+The first step as always is color correction, but even in this. We are going to first improve the lights, increase the contrast, make the video itself pop first!
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img4.webp)
 
+Create an HDR node (exposure), and edit it using the HDR sliders as we did previously.
+
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img5.webp)
 
-![overview of the color page of davinci](/assets/blog_assets/content_creation/4img6.webp)
+Now to change the WB we will not use the sliders as we had been so far. Create a WB node and make the gamma linear, now to change the temperature, move the primaries of Gain. 
+
+This gives a much smoother WB.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img7.webp)
 
+Now let's add some contrast. 
+
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img8.webp)
+
+Previously we were eyeballing it, but to be much more concise we should place a point on the pivot point. (You can find the pivot point online! check this out [ADD_LINK])
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img9.webp)
 
+Now to truly add depth to your videos, masking is the secret tool. You want to mask your subject, highlight it, and make everything else dimmer. (It truly is something that comes with time, but masking is the secret to both great photography and videography!)
+
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img10.webp)
+
+Trust me when I say it does not get harder than this (atleast to the best of my knowledge), Hue is the color of a color (I know sounds like a crazy sentence, but it essentially means, red looks red, but if you push the hue of red to green, everything red will look green, a red apple will turn into a green apple.), Saturation the way I see it is how strong that color is, or bright (Still different from luminance/brightness and Vibrance). 
+
+Hence, Hue Vs Saturation curve controls how strong each color looks!
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img11.webp)
 
+Now what weare trying to do is, roll off the shadows, make the highlights smooth and pop out the midtones. Because in most cases we want the midtones to be the hero! 
+
+(Again their are caveats to this, really depends on the look you are going for!)
+
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img12.webp)
+
+Let's get into color toning/grading now, the idea is to focus on one part of the color grading process at a time. We first focus on gamma or the midtones, as they occupy the majority of the video.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img13.webp)
 
+Then we edit the higlights and the shadows.
+
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img14.webp)
 
+The final step is color compression and mixing, Here you can change the way each individual pixel looks like. I still do not personally completely understand why this is done. But it does add a nice look to the final output. 
+
+And there you have it, a complete guide to color grading for each and all levels. This is the extent of my knowledge. Now let us move forward. 
 
 ### CST (Color Space Transform Node)
 
@@ -454,8 +483,11 @@ Sometimes you might see some light moving/twisting weird after CST, this is call
 
 ## On Fonts 
 
-Font in use {link}
-The other indian font site I love! 
+Font in use https://fontsinuse.com/
+
+https://fonts.google.com/
+
+https://fontshare.com/ 
 
 ## On Music
 
