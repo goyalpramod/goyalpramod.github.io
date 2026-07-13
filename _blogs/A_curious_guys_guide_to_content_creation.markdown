@@ -43,6 +43,10 @@ I urge people to do content creation, because it does truly change your life. Ma
 
 {add links to videos by Dan Koe, Hormonzi and the caleb guy whose content video you watched a long time ago}
 
+https://www.youtube.com/watch?v=Ch4Sl0POBhU&t=31s
+
+https://www.youtube.com/watch?v=MVz9mm0Z-7g&t=3s
+
 The unfortunate reality is that each platform has it's own kind of "major" audience (what I mean by that is, each platform has a mix of people in it. But it still ultimately caters to a specific kind). Now due to the variety of it, I am in way no expert in all of them (And I do lack the credibility beside two platforms too.), and different things work on different platforms and it keeps changing. 
 
 But the core idea remains the same. Identify the sub-part of the major audience which your content provides value to. 
@@ -105,7 +109,7 @@ So it is important to understand the secret to "virality", which is essentially 
 
 #### Value 
 
-Value in instagram is a dopamine rush, make them laugh, make them cry, make them happy, make them feel smart. Understand what insecurity you are targetting and fulfil that. 
+Value in instagram is a dopamine rush, make them laugh, make them cry, make them happy, make them feel smart. Understand what emotion you are targetting and fulfil that. 
 
 #### Monetization
 
@@ -121,69 +125,136 @@ Bro I am not that old....
 
 #### Audience 
 
+I personally do not have much experience with youtube shorts, but I know this that youtube does not care about cinematic content. I believe it is still mostly a value driven platform. Where real value outweighs everything else. 
 
 #### Value 
 
+In my eyes value in youtube has been and always will be knowledge. 
+
 #### Monetization
 
-### TikTok 
+* The shorts themselves can be monetized 
+* From affiliates & promotions like other platforms
+
+### TikTok
 
 #### Audience 
 
+I have seen my friends use TikTok and what I understand is that TikTok is for fast attention grabbing fun content. If that is you, this is perfect. 
+
 #### Value 
 
+Value in TikTok is entertainment. 
+
 #### Monetization
+
+* Affiliates & Promotions
 
 ### Medium
 
 #### Audience
 
+Medium is a mix of bags, if you are considering starting out by writing. This is a good platform to start with. The people mostly come here for short to medium sized blogs on specific topic. 
+
+For me it peronally revolves around tech, but their is a plethora of things people talk about. Business, Marketting, Writing etc.
+
 #### Value 
 
+I have seen that Medium is more knowledge driven than personal story driven, sharing specific resources, learning, explanations seems to be what the platform prioratizes.
+
 #### Monetization
+
+* Through paid articles 
 
 ### Substack 
 
 #### Audience 
 
+Substack is the next logical step after Medium, it is great if you have been considering starting a newsletter (I recently started one of my own!), Substack audience really comes for YOU! So the audience is litreally to whom you want to talk to. 
+
 #### Value 
 
+Really depends on the kind of value you are providing! 
+
 #### Monetization
+
+* Through paid articles
+* Possibly affiliates and promotions in the newsletter itself
 
 ### Blogsite
 
 #### Audience 
 
+If you wish to pursue blogging simply as a hobby, starting one of your is a great way to start. A simple way to set one up is using Jekyll, the audience can be limited to yourself, your friends & family or any random stranger on the internet.
+
 #### Value 
 
+It brings one peace and clarity in life.
+
 #### Monetization
+
+* Running Ads
 
 ### Reddit 
 
 #### Audience 
 
+Reddit is a wild place, the people here come for REALITY. Seriously, do not try to push an agenda or "AI Slop". The comments will demolish you, and you cannot sell a personal brand. 
+
+The best use of reddit I have seen is to get early adopters, customers, search through ideas etc. It is an amazing platform for specific usecases!
+
 #### Value 
 
+Share real stories, moments, thoughts, lessons.
+
 #### Monetization
+
+* Get early customers
+* I believe there is a karma system that pays, but I am not sure how it works.
 
 ### Podcasts (Spotify, Apple Music)
 
 #### Audience 
 
+The two things about podcasts are 
+
+1. It is inherently a long-form of content 
+2. It is almost always something done in the background along with other activities 
+
+And this is very important to understand because it helps you shape what kind of content you are creating. 
+
 #### Value 
 
+Value is provided here by providing knowledge or entertainment. (Truth be told I cannot think of any other information that can be created into content.)
+
 #### Monetization
+
+* Some platforms may be monetizable
+* Sponsors are the best bet 
 
 ### Books
 
 #### Audience 
 
+People read what you write, write well. 
+
 #### Value 
+
+It's your book, decide what value you are providing.
 
 #### Monetization
 
+* I hope I do not need to explain this. 
+
 ### Misc
+
 Fiverr, upwork, woop store
+
+There are a million different ways to make money on the internet, always remember what it is you are providing. 
+
+* Product (Media or Physical)
+* Service
+* Consultation
 
 ## On Content
 
@@ -216,6 +287,10 @@ Now to understand different kinds of frames, we first need to understand how cam
 Framing might be just one of those things that silengthly elevates and sets the mood of the sotry, the way I like to imagine it is. If someone can see your frames, you did bad framming. Good framming is invisible and blends into the story. 
 
 {add link to the frames video by that pay kay guy}
+
+https://www.youtube.com/playlist?list=PLTQtLjIqecdydlanOGh6iwoWOb9VxpDts
+
+https://www.youtube.com/watch?v=7W89eklcj3c&t=2s
 
 ## On Editing 
 
