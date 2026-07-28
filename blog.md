@@ -7,7 +7,7 @@ permalink: /blog/
 <div class="blog-container">
   <header class="blog-header">
     <h1 class="page-title">Blog</h1>
-    <p class="page-description">Here's where I share my insights about Machine Learning, AI, and Technology.</p>
+    <p class="page-description">Here's where I share my insights about Machine Learning, AI and Science.</p>
   </header>
   
   <div class="posts-grid">
