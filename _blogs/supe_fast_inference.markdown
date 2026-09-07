@@ -6,158 +6,212 @@ categories: [personal, technology]
 image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
 ---
 
-[Start with a GEMM, solve it using for loops and make it as efficient as possible]
+Throughout my circle I am known as the optimization guy, for my ability to squeeze out performance from each aspect of my life. Hence, I felt it was a damn shame I did not know how to do the same with my ML models. 
 
-[medium](https://medium.com/huggingface/training-larger-batches-practical-tips-on-1-gpu-multi-gpu-distributed-setups-ec88c3e51255)
+And hence we start out on this journey together to learn inference engine optimization. We will start by optimizing a GEMM (General Matrix Multiplication) as that is the backbone of everything ML/AI. Then we will move to Diffusion models, first image then video. (I believe there are plenty resources for text i.e LLMs, I will link them in the references for you to check out!)
 
-https://developer.nvidia.com/blog/mastering-llm-techniques-inference-optimization/
+Let us begin our endevour! 
 
-https://zeux.io/2024/03/15/llm-inference-sol/?s=08
+## GEMM 
 
-https://github.com/mlvu/worksheets/blob/master/Worksheet%205%2C%20Pytorch.ipynb
+I will go with the assumption that you are familiar with your Linear Algebra and move forward. 
+Let us first write a for loop that multiplies two 2d matrices of size aXb and bXc
 
-https://pytorch.org/blog/pytorch-vllm-%E2%99%A5%EF%B8%8F/
+The first is an extremely rudimentary 
 
-A few month's ago, I saw this [tweet](https://x.com/danielhanchen/status/1891194528931209644) by Daniel Han and it absolutely blew my mind. Not because of how much they were willing to offer, but because I couldn't solve any of the problems. That is when I decided, I will spend days and nights till 1 day I can confidently say I can solve each of those problems, and with ease. This Blog was originally me trying to solve them. But it evolved into more of a general guide into how to make your ML models more efficient. So we will role with that. 
+```python
+import numpy as np
 
+a = 5
+b = 10
+c = 5
 
-I didn't want to limit this blog to any particular "library" or "framework". But we all must have one medium of communication that we understand. Hence I am going forward with PyTorch as the library of choice, for the following reasons: 
+GEMM_1 = np.random.rand(a, b)
+GEMM_2 = np.random.rand(b, c)
 
-- reason 1 
-- reason 2 
-- reason 3 
+# 3-loop version: scalar multiply-accumulate, exposes every memory access
+ANS_triple = np.zeros((a, c))
 
-## Pytorch
+for i in range(a):
+    for j in range(c):        #notice we iterate over c here
+        for k in range(b):
+            ANS_triple[i, j] += GEMM_1[i, k] * GEMM_2[k, j]
 
+# Both should match numpy's built-in matmul
+assert np.allclose(ANS_triple, GEMM_1 @ GEMM_2)
+```
 
-### Tensors 
 
-Understanding Tensor Memory Management in PyTorch
 
-In PyTorch, tensors might look multi-dimensional, but they're actually stored sequentially in memory. Each element occupies a fixed space (4 bytes for integers), and PyTorch uses a clever indexing system with strides to access specific elements.
+```python
+# 2-loop version: vectorized dot product per output element
+ANS_double = []
 
-To access a particular index it uses a formula like the following:
-index_1*stride_1 + index_2*stride_2 + ... index_n*stride_n = {location of the data in storage}
+for i in range(a):
+    temp_arr = []
+    for j in range(c):
+        temp_arr.append(np.sum(GEMM_1[i, :] * GEMM_2[:, j]))
+    ANS_double.append(temp_arr)
 
-Here's what's fascinating:
+ANS_double = np.array(ANS)  # shape (a, c)
+assert np.allclose(ANS_double, GEMM_1 @ GEMM_2)
+```
 
-When you use .view(), you're creating a new way to look at the same data - without actually moving anything in memory.
-The .stride() method reveals how PyTorch jumps through memory to access elements.
-Operations like .transpose() physically reorganize data in memory, potentially making it non-contiguous.
+We can optimize it further by calling the internal numpy matmul 
 
-Understanding the difference between .view() and .reshape() is crucial:
+```python
+ANS = GEMM_1@GEMM_2
+assert np.allclose(ANS, GEMM_1 @ GEMM_2)
+```
 
-* .view() only works with contiguous tensors
-* .reshape() works with both, but creates a copy for non-contiguous data
-* .transpose()
-* unsqueeze
+This is the extent of optimization most people will go with, but we are not most people. Let's go further down the rabit hole and optimize this further! 
 
-https://stackoverflow.com/questions/49643225/whats-the-difference-between-reshape-and-view-in-pytorch -> 2ndanswer 
+(Some might say we skipped over the internals and just used numpy implementations, those some will be correct. To understand more of the internal optimization I recommend checking out these excellent posts [Blog 1](https://siboehm.com/articles/22/Fast-MMM-on-CPU) & [Blog 2](https://salykova.github.io/gemm-cpu))
 
-https://stackoverflow.com/questions/57237352/what-does-unsqueeze-do-in-pytorch
+> Aside: If you would like to understand how numpy shapes work better I will recommend reading this [blog series](https://ajcr.net/stride-guide-part-1/), this knowlege will prove to be essential as we will move forward!
 
-Changes in a .view() tensor reflect in the original, making it memory-efficient
+**Blog 3: Super Fast Inference** *(VIRGIL-relevant)*
 
-This knowledge is essential for optimizing deep learning models and understanding memory management in PyTorch.
+1. Hook: Start with a GEMM
+   - Naive triple loop → optimized → why this matters for everything that follows
 
-https://www.linkedin.com/posts/goyalpramod_memory-allocation-in-python-activity-7273940017410928640-FZji?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADbSv4QB6z8hG-KISdXHiYSLLfD-84W0wuQ
+2. How to profile inference — measure before you optimize
+   - torch.profiler, nsys, memory_profiler
+   - https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html
+   - https://pytorch.org/docs/stable/torch.cuda.html#memory-management
 
+3. The fundamental bottleneck — memory bandwidth vs compute
+   - This is the mental model for everything else
+   - https://horace.io/brrr_intro.html ← read this first, it's the best thing on this list
 
-https://medium.com/analytics-vidhya/pytorch-contiguous-vs-non-contiguous-tensor-view-understanding-view-reshape-73e10cdfa0dd
-https://blog.ezyang.com/2019/05/pytorch-internals/
+4. dtypes in practice
+   - fp32 → bf16 → fp16 → fp8 → int8 → int4, with actual VRAM measurements
+   - https://huggingface.co/docs/diffusers/optimization/fp16
+   - https://pytorch.org/docs/stable/amp.html
 
+5. Quantization
+   - bitsandbytes: https://huggingface.co/docs/bitsandbytes
+   - torchao (what HF is pushing for Flux): https://github.com/pytorch/ao
+   - GGUF for diffusion models: https://github.com/city96/ComfyUI-GGUF
 
-### AutoGrad
+6. Attention optimization
+   - Why vanilla attention is memory bandwidth bound (derive the complexity)
+   - Flash Attention — read intro + section 2: https://arxiv.org/abs/2205.14135
+   - flash-attn repo: https://github.com/Dao-AILab/flash-attention
+   - xformers: https://github.com/facebookresearch/xformers
 
-https://www.linkedin.com/posts/goyalpramod_autograd-mechanics-activity-7277299201581981696-yVmr?utm_source=social_share_send&utm_medium=member_desktop_web&rcm=ACoAADbSv4QB6z8hG-KISdXHiYSLLfD-84W0wuQ
+7. torch.compile
+   - Graph capture model, what causes graph breaks, how to debug them
+   - https://pytorch.org/tutorials/intermediate/torch_compile_tutorial.html
+   - https://blog.ezyang.com/2024/11/ways-to-use-torch-compile/
 
+8. CPU offloading & model sharding
+   - What `enable_model_cpu_offload()` actually does under the hood
+   - https://huggingface.co/docs/diffusers/optimization/memory
 
+9. Triton — write your first custom kernel
+   - https://triton-lang.org/main/getting-started/tutorials/ (do all in order)
+   - https://github.com/linkedin/Liger-Kernel (production kernels to read)
 
-Understanding PyTorch Autograd: A Deep Dive into Automatic Differentiation
+10. CUDA — going deeper
+    - https://siboehm.com/ (SGEMM post specifically)
+    - https://docs.nvidia.com/cuda/cuda-c-programming-guide/ (ch 1-4)
+    - https://www.youtube.com/@cudamode
 
-As machine learning practitioners, understanding how neural networks learn is crucial. At the heart of this learning process lies PyTorch's Autograd system - a powerful implementation of reverse-mode automatic differentiation.
+---
 
-Let me break down how Autograd works:
+Blog 3 is the one to write first — it's directly VIRGIL-relevant and has the tightest narrative arc (GEMM → profiling → bottleneck theory → practical optimizations → kernel writing). The other two are supporting material you'll have naturally by the time you're done.
 
-At its core, Autograd is an automatic differentiation system that computes gradients by applying the chain rule in reverse order through a computation graph. When we create a tensor with requires_grad=True, we essentially tell PyTorch to track all operations performed on this tensor.
-Here's what happens under the hood:
+## CUDA 
 
-PyTorch constructs a computational graph for each operation
-When we call .backward(), the multiplication function retrieves the context from this graph
+Lets first start by understanding how a GPU usually looks like and what it's components are 
 
-The next_functions in the graph represent tensor connections:
-AccumulateGrad points to tensor 'a'
-None points to tensor 'b' (when requires_grad=False)
+What is important to understand is, There are grids, grids have blocks inside of them and blocks have threads. 
 
-Let's look at a practical example:
-For a simple computation where c = a * b:
+the row moves along y axis and column moves along x axis 
 
-dc/dc = 1 (derivative of a value with respect to itself)
-dc/da = 3 (as dc/da = da/dab = 1*3 = 3)
-If tensor 'b' had requires_grad=True, dc/db would be 2 (as dc/db = adb/db = 2*1 = 2)
+It is stored in row major format 
 
-The beauty of Autograd lies in its ability to handle complex computational graphs while maintaining computational efficiency. All gradients are automatically stored in the computation graph when requires_grad is enabled, making backpropagation seamless.
+If we write a simple kernel (A gpu function) for matrix multiplication it will look something like this 
 
-http://youtube.com/watch?v=MswxJw-8PvE
+```cpp
+__global__ void simple_matmul(const float* X, const float* y,float* output, int M, int N, int K){
+   int gid = threadIdx.x + blockDim.x*blockIdx.x; //-> Important to understand 
+ 
+   int temp = 0
 
-### Computation Graph
-https://pytorch.org/blog/computational-graphs-constructed-in-pytorch/
-https://pytorch.org/blog/how-computational-graphs-are-executed-in-pytorch/
-https://weiliu2k.github.io/CITS4012/pytorch/computational_graph.html
-https://docs.pytorch.org/tutorials/beginner/blitz/autograd_tutorial.html
-https://huggingface.co/blog/andmholm/what-is-automatic-differentiation
+   for(int i = 0; i<K; i++){
+      temp += X[gid*N + i]*y[i*N + gid]; // -> a good heuristic to remember is (row*width + col)
+   }
 
+   if(gid<M*N){ // -> Very important, because threads can be more than...
+      output[gid] = temp;
+   }
+}
+```
 
-https://jingnanshi.com/blog/autodiff.html
-https://rufflewind.com/2016-12-30/reverse-mode-automatic-differentiation
+This may seem complex initially but once you start working with it. It starts getting easier to make sense. 
 
-### Forward Mode Automatic Differentiation 
-https://liqimai.github.io/blog/Forward-Automatic-Differentiation/
+Now lets look at how a GPU is to understand the problem with our kernel and how we can optimize it 
 
+The first problem is that when a thread calculates the matrix multiplication it has to do a value look up again and again from the DRAM which is inefficient. It would be much better if it was present inside the block shared memory. The look up is significantly faster in that. 
 
+And it is quite complex to work with a 2d matrix and representing it in 1d. So we will make our representation 2d too using dim3 
 
-### Reverse Mode Automatic Differentiation 
+Now the optimized kernel will look something like this 
 
-### Broadcasting
+```cpp
+#define TILE_SIZE 16
 
+__global__ void tiled_matmul(const float* X, const float* y, float* output, int M, int N, int K){
+   int row = blockIdx.y*TILE_SIZE;
+   int col = blockIdx.x*TILE_SIZE;
 
-### Dispatcher
+   int temp = 0;
 
-https://blog.ezyang.com/2020/09/lets-talk-about-the-pytorch-dispatcher/
+   __shared__ A_TILE[TILE_SIZE][TILE_SIZE];
+   __shared__ B_TILE[TILE_SIZE][TILE_SIZE];
 
-### Torch.Compile
-https://blog.ezyang.com/2024/11/ways-to-use-torch-compile/
+   int numTiles = (K + TILE_SIZE - 1)/TILE_SIZE;
 
-### Bottleneck 
+   for(int t = 0;t<numTiles;t++){
+      //DANG FORGOT THE tile element. FIX IT!
+      if(row < M&& col <K){
+         A_TILE[row][col] = A[];
+      }else{
+         A_TILE[row][col] = 0;
+      }if(row < K && col <N){
+         B_TILE[row][col] = B[];
+      }else{
+         B_TILE[row][col] = 0;
+      }
 
-https://horace.io/brrr_intro.html
+      __syncthreads();
 
-## JIT 
+      for(int kk = 0;kk<K;k++){
+         temp += A_TILE[][]*B[][];
+      }
 
-## CUDA
+      __syncthreads();
+   }
 
+   if(){
+      output[] = temp
+   }
 
-## Triton
+}
+```
 
-https://huggingface.co/docs/diffusers/en/optimization/fp16
+This is pretty good, but it has problems too. The main problem being that each thread is only doing computation for one output. It would be more efficient if it did it for more than one 
 
+Why you ask? 
 
-## Einsum
+This is why... 
 
-https://rockt.ai/2018/04/30/einsum
-https://eli.thegreenplace.net/2025/understanding-numpys-einsum/
-https://ajcr.net/Basic-guide-to-einsum/
-https://ejenner.com/post/einsum/
-https://theaisummer.com/einsum-attention/
+Ok, now lets code that out! 
 
-What is nn.Module? 
-Why do we always do super()__init__() whenever we start a new class in PyTorch
+```cpp
 
-## The Questions, with their answers
+```
 
-1. Convert nf4 / BnB 4bit to Triton
-2. Make FSDP2 work with QLoRA
-3. Remove graph breaks in torch.compile
-4. Help solve Unsloth issues!
-5. Memory Efficient Backprop
- -->
+Okay that was good, if you understand everything we did so far. YOU ARE AMAZING, but if you didnt. Its okay, Even reaching this point took me quite some time.  -->

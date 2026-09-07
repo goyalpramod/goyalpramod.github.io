@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: blog
 title: "A Curious Guy's Guide to Content Creation"
 date: 2025-06-12 12:00:00 +0530
@@ -576,6 +576,13 @@ I believe their are only 4 funamental sound effects in content creation
 * Whoosh 
 * 
 
+
+Whoosh for zoom in zoom out 
+Riser to build up tension and then payoff 
+clicks for any mechnical object 
+UI pop up when you show something on screen 
+Score for enviorment mood setting
+
 ## On VFX
 
 This is something I am still actively working on but I believe there are a few popular ones that I love 
@@ -589,6 +596,25 @@ The fundamental knowledge is
 
 * keyframes 
 * curves
+
+### Text Animation 
+
+I saw this amazing [video](https://www.youtube.com/watch?v=h5F3QM72PY0) 
+
+The important key bindings 
+
+Ctrl + alt + shift + t -> add text layer
+S -> Scale 
+P -> Position 
+R -> Rotation 
+A -> Anchor Point 
+T -> Opacity/Transperency
+U -> show/ Hide all keyframes 
+Ctrl + F -> opens the find dialog box 
+Ctrl + D -> Duplicate Layer 
+Spacebar -> Play/Preview the composition 
+Ctrl + Z -> Undo 
+f9 -> ease ease 
 
 ## On 3D
 
@@ -686,4 +712,4 @@ We can rave about these for days, but there are so many ways to mess one's story
 ### Plugins
 
 ## Conclusion
- -->
+

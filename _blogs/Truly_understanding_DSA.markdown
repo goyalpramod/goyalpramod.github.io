@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: blog
 title: "Truly Understanding DSA & System Design"
 date: 2025-06-12 12:00:00 +0530
@@ -12,4 +12,4 @@ I love this book
 
 https://cp-algorithms.com/index.html
 https://cses.fi/book/book.pdf
- -->
+
