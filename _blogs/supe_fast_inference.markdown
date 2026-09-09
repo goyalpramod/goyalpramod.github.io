@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: blog
 title: "Super Fast Inference"
 date: 2025-01-3 12:00:00 +0530
@@ -214,4 +214,4 @@ Ok, now lets code that out!
 
 ```
 
-Okay that was good, if you understand everything we did so far. YOU ARE AMAZING, but if you didnt. Its okay, Even reaching this point took me quite some time.  -->
+Okay that was good, if you understand everything we did so far. YOU ARE AMAZING, but if you didnt. Its okay, Even reaching this point took me quite some time. 

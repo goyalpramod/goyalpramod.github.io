@@ -18,11 +18,7 @@ Here is the table of content, I strongly recommened going through them in order.
 - On Writing 
 - On Audio 
 - On Video
-- On Framming 
-- On Color Grading 
-- On Fonts
-- On SFX 
-- On VFX 
+- On Editing
 - On Secrets
 
 ## On Reason 
@@ -268,7 +264,25 @@ The harsh reality is no matter what kind of content creation you pick or the pla
 
 ## On Audio 
 
-Assumiing you chose a platform where you do more than just writing, speaking is going to be the next important thing. Becuase no matter how good your visuals are, if one cant here or understand you, they wont stick around. 
+Assuming you chose a platform where you do more than just writing, speaking is going to be the next important thing. Becuase no matter how good your visuals are, if one cant here or understand you, they won't stick around. 
+
+The simple fact is get a good enough mic, denoise it and add a bit of vocal enhancer/ Equalizer. Every editing software has something for that. 
+
+### On SFX
+
+It is extremely easy to overcomplicate this but - I believe their are only 4 funamental sound effects in content creation:
+
+* [Score](https://pixabay.com/sound-effects/search/score/) 
+* [Whoosh](https://pixabay.com/sound-effects/search/whoosh/) 
+* [Click](https://pixabay.com/sound-effects/search/click/) 
+* [Riser](https://pixabay.com/sound-effects/search/riser/) 
+
+Whoosh for zoom in zoom out, or transitions
+Riser to build up tension and then payoff 
+Clicks for any mechnical object or any pop up on your screen
+Score for enviorment mood setting
+
+That's about it, one does not really need to complicate these things. There is another segment of sound design which this [video](https://www.youtube.com/watch?v=9jBic4IDfxA) breaks down really well!
 
 ## On Video 
 
@@ -278,11 +292,23 @@ Now to understand different kinds of frames, we first need to understand how cam
 
 ### ISO 
 
+The simplest way to explain ISO will be to see it as the sensitivity of your camera to light. So lower the ISO lesser the sensitivity and vice versa. 
+
+From the above statement, we can infer that we should also have the highest ISO then right? Well no, because noise is correlated with ISO. So as you increase ISO the noise of your video increases as well. 
+
+A good range of ISO is around 400-3200 (it largely depends on your camera and I will recommend looking it up online)
+
 ### FPS 
+
+24/25/30 FPS is good for normal cinematic videos, 60/120 is good if you want to do slow motions. A good rule of thumb is shutter speed = 1/(2*FPS).
 
 ### Apperture 
 
-## On framming 
+A good rule of thumb... Lower is better. 
+
+(I also usually just increase my apperture when I am shooting outside and it is too sunny. The ideal solution is to use an NF filter)
+
+### On framming 
 
 Framing might be just one of those things that silengthly elevates and sets the mood of the sotry, the way I like to imagine it is. If someone can see your frames, you did bad framming. Good framming is invisible and blends into the story. 
 
@@ -292,17 +318,40 @@ https://www.youtube.com/playlist?list=PLTQtLjIqecdydlanOGh6iwoWOb9VxpDts
 
 https://www.youtube.com/watch?v=7W89eklcj3c&t=2s
 
-## On Editing 
+Some of my favourite frames are:
 
-### Import settings
+Rule of third
 
-### Types of cuts
+![Image example of rule of third](/assets/blog_assets/content_creation/rule_of_third.webp)
 
-### Useful shortcuts
 
-### Export settings
+Image taken from [here](https://stillslab.com/filter?search=rule+of+third)
 
-## On Color Grading 
+Over the shoulder 
+
+![Image example of rule of third](/assets/blog_assets/content_creation/over_the_shoulder.webp)
+
+Image taken from [here](https://stillslab.com/gallery/obsession)
+
+Symmetry 
+
+![Image example of rule of third](/assets/blog_assets/content_creation/symmetry.webp)
+
+Image taken from [here](https://stillslab.com/filter?search=symmetry)
+
+Golden Ration 
+
+![Image example of rule of third](/assets/blog_assets/content_creation/golden_ration.webp)
+
+Image taken from [here](https://stillslab.com/filter?search=%2Bgolden%2Bratio)
+
+Close ups 
+
+![Image example of rule of third](/assets/blog_assets/content_creation/close_up.webp)
+
+Image taken from [here](https://stillslab.com/filter?size=Close+Up)
+
+### On Color Grading 
 
 I believe this might be one of my favourite things to talk about, this journey started for me with photography in college and I was awed after I watched a few videos by gawxart. Surprisingly for the longest time all I did was BnW photography, colors really bought... colors to my art.
 
@@ -556,33 +605,6 @@ Sometimes you might see some light moving/twisting weird after CST, this is call
 * Use adjustment layer for color grading 
 * Name your nodes
 
-## On Fonts 
-
-Font in use https://fontsinuse.com/
-
-https://fonts.google.com/
-
-https://fontshare.com/ 
-
-## On Music
-
-Music sets the mood, no music in my opinion is still much better than wrong music
-
-## On SFX
-
-I believe their are only 4 funamental sound effects in content creation
-
-* Score 
-* Whoosh 
-* 
-
-
-Whoosh for zoom in zoom out 
-Riser to build up tension and then payoff 
-clicks for any mechnical object 
-UI pop up when you show something on screen 
-Score for enviorment mood setting
-
 ## On VFX
 
 This is something I am still actively working on but I believe there are a few popular ones that I love 
@@ -592,31 +614,69 @@ This is something I am still actively working on but I believe there are a few p
 * Text Animations 
 * 3d camera
 
-The fundamental knowledge is 
+The fundamental thing that you need to get good at is keyframes & curves.
 
-* keyframes 
-* curves
+Most of these can be done in davinci fusion, that is what I primarily use. I am not good enough to explain it in great detail at the moment. I will for the time being attach some tutorials that helped me a lot. 
+
+
+
+## On Editing 
+
+I do everything in Davinci, and I recommmend that as well. Though it may seem daunting at first, but in my opinion it has the highest payoff. 
+
+### Import settings
+
+The most important project settings in my opinion are: 
+
+* Resolution 
+* FPS 
+
+One useful thing I often do is that I work with proxies of 4k video instead of working directly with 4k, this makes the video not lag between different edits {Show how it is done}
+
+### Types of cuts
+
+* Jump Cut 
+* L cut 
+* J cut 
+* Zoom cut 
+* Match cut
+
+### Useful shortcuts
+
+It is very useful to create and setup shortcuts, I have made personal keybinds for myself that has cut my editing time significantly. 
+
+1 -> play back (Speed it as well)
+2 -> play 
+3 -> Play forward 
+w -> Cut at playhead 
+q -> Delete everything before playhead 
+e -> Delete everything after playhead 
+
+Other very useful one's are 
+Shift + Delete -> Ripple delete
+b -> blade 
+v -> select cursor {Check if it is v or a}
+
+### Export settings
+
+Export is extremely platform dependent, but its usually a good idea to export your video in the resolution you shot at. 
+
+### On Fonts 
+
+These are some great places to get fonts and inspiration. 
+
+* [Font in use](https://fontsinuse.com/) 
+* [Google fonts](https://fonts.google.com/) 
+* [Font Share](https://fontshare.com/)
+
 
 ### Text Animation 
 
-I saw this amazing [video](https://www.youtube.com/watch?v=h5F3QM72PY0) 
+To be written when I can do it.
 
-The important key bindings 
+### On 3D
 
-Ctrl + alt + shift + t -> add text layer
-S -> Scale 
-P -> Position 
-R -> Rotation 
-A -> Anchor Point 
-T -> Opacity/Transperency
-U -> show/ Hide all keyframes 
-Ctrl + F -> opens the find dialog box 
-Ctrl + D -> Duplicate Layer 
-Spacebar -> Play/Preview the composition 
-Ctrl + Z -> Undo 
-f9 -> ease ease 
-
-## On 3D
+To be written when I can do it.
 
 ## On Storytelling 
 
@@ -626,13 +686,15 @@ Let me provide you the different steps to tell a good story
 
 ### Storyboarding 
 
+The way I see storyboarding is as a means to put your ideas into a simple story structure. For that, one needs inspirations so grab a bunch of [movie/film shots](https://stillslab.com/), some [edits](https://eyecannndy.com/) you loved and create your shot list. 
+
 ### Types of story 
 
-#### Three Act Structure
+Sometimes it is hard to come up with a story from scratch. So having some structure always helps, here are some popular one's:
 
-#### Freytag's Pyramid
-
-#### The Hero's Journey
+* [Three Act Structure](https://reedsy.com/blog/guide/story-structure/three-act-structure/)
+* [Freytag's Pyramid](https://writers.com/freytags-pyramid)
+* [The Hero's Journey](https://reedsy.com/blog/guide/story-structure/heros-journey/)
 
 ### Structures of a story
 
@@ -644,25 +706,17 @@ This is one of the most important part of the video. It comprises about 5% but m
 
 The hook as the name says hooks the user to the content, their are multiple differnt 
 
-##### Video Hook 
+* Video Hook -> This is the most common kind of hook, here you cause a visual pattern break by engaging the visuals of the user.
 
-This is the most common kind of hook, here are some examples of it... 
+* Audio Hook -> Rare, but still amazing. Done best with music. 
 
-{}
-
-##### Audio Hook 
-
-Rare, but still amazing. Done best with music, some examples 
-
-{}
+(P.S. Obviously your script still needs to have a good initial hook writing)
 
 ##### Thumbnail
 
 YouTube will benefit the most from this knowledge, I can do a big deep dive on how to make the best thumbnail out there which may perform well. (it is always a probablitsitc model)
 
 But I will not, instead feel free to watch this video which does a much better job...
-
-
 
 #### Content 
 
@@ -710,6 +764,10 @@ We can rave about these for days, but there are so many ways to mess one's story
 * Understand curves, like seriously. 
 
 ### Plugins
+
+* AutoSubs (Use this often)
+* FontSearch 
+* Roto
 
 ## Conclusion
 
