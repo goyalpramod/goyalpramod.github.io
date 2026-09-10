@@ -6,11 +6,11 @@ categories: [ML, Content Creation, Art]
 image: assets/blog_assets/ai_agents/meme.webp
 ---
 
-For almost the past 2 years I have been actively doing content creation in some platform (LinkedIn, X & blogsite) ,and thinking of doing it on some other platforms (YouTube, Insta). Through my efforts I have gathered over 20k people who enjoy what I put out. 
+For almost the past 2 years I have been actively doing content creation on some platforms (LinkedIn, X & blogsite), and thinking of doing it on others (YouTube, Insta). Through my efforts I have gathered over 20k people who enjoy what I put out.
 
-I was quite confused where to put this, it's not exactly an AI/ML blog, but these are not my random thoughts or projects either. I have researched and put together this document as a current as well as a future guide for my self and any other curious mind who is trying to get into content. Staying true to my way of writing, this is going to be another long & dense blog. But I can assure you, after it you will have a new found respect for content creation, and hopefully a new desire to do it yourself. 
+I was quite confused where to put this, it's not exactly an AI/ML blog, but these are not my random thoughts or projects either. I have researched and put together this document as both a current and a future guide for myself and any other curious mind who is trying to get into content. Staying true to my way of writing, this is going to be another long & dense blog. But I can assure you, after it you will have a newfound respect for content creation, and hopefully a new desire to do it yourself.
 
-Here is the table of content, I strongly recommened going through them in order. But if you find any topic more interesting than the other, feel free to skip to that one! 
+Here is the table of contents. I strongly recommend going through them in order, but if you find one topic more interesting than another, feel free to skip to that one!
 
 - On Reason
 - On Platform 
@@ -23,15 +23,15 @@ Here is the table of content, I strongly recommened going through them in order.
 
 ## On Reason 
 
-From experience I can assure you content creation is not easy, it is easy to see the outliers where someone from their bedroom with a bad cell phone camera has a million followers. But look past them, it is a journey which tests your own self-worth (because in the end content is extremely transparent about you and if people like your thoughts and ideas).
+From experience I can assure you content creation is not easy. It is easy to see the outliers, where someone from their bedroom with a bad cell phone camera has a million followers. But look past them: it is a journey which tests your own self-worth (because in the end content is extremely transparent about you and whether people like your thoughts and ideas).
 
-And this generally is not easy without having a strong reason. I personally believe you can have any of the three following reasons. (Originally inspired by Ali Abdul {paste link} from his video on how to do content creation {paste link})
+And this generally is not easy without having a strong reason. I personally believe you can have any of the three following reasons. (Originally inspired by Ali Abdaal {paste link} from his video on how to do content creation {paste link})
 
 * Logging (Personal Hobby)
 * Hiring (Personal Career)
 * Business (Personal Branding)
 
-The above list is in the order of ease, Let's go through each of them one by one. 
+The above list is in order of ease. Let's go through each of them one by one.
 
 I urge people to do content creation, because it does truly change your life. Maybe it is not for you, but I hope to change that by the end of this.
 
@@ -43,37 +43,37 @@ https://www.youtube.com/watch?v=Ch4Sl0POBhU&t=31s
 
 https://www.youtube.com/watch?v=MVz9mm0Z-7g&t=3s
 
-The unfortunate reality is that each platform has it's own kind of "major" audience (what I mean by that is, each platform has a mix of people in it. But it still ultimately caters to a specific kind). Now due to the variety of it, I am in way no expert in all of them (And I do lack the credibility beside two platforms too.), and different things work on different platforms and it keeps changing. 
+The unfortunate reality is that each platform has its own kind of "major" audience (what I mean by that is, each platform has a mix of people in it, but it still ultimately caters to a specific kind). Now due to the variety of it, I am in no way an expert in all of them (and I do lack credibility beyond two platforms too), and different things work on different platforms and it keeps changing.
 
 But the core idea remains the same. Identify the sub-part of the major audience which your content provides value to. 
 
-The whole of this entire blog and in fact for all of content creation can be summed up in two words in my opinion; **AUDIENCE** & **VALUE**. You would also obviously be interested into how to monetize it, so I'll dabble a bit on that and add it here.
+This entire blog, and in fact all of content creation, can be summed up in two words in my opinion: **AUDIENCE** & **VALUE**. You would also obviously be interested in how to monetize it, so I'll touch on that a bit and add it here.
 
 ### X (formerly Twitter)
 
 #### Audience 
 
-X in my opinion is one of the easiest to start with and still one of the hardest to penetrate. The simple reason being that people who spend time here are usually tech people and people in a hurry. They want information as soon as possible. So you have a very short window to provide value to them. Density and Complexity is rewarded here. 
+X in my opinion is one of the easiest to start with and still one of the hardest to penetrate. The simple reason being that people who spend time here are usually tech people and people in a hurry. They want information as soon as possible, so you have a very short window to provide value to them. Density and complexity are rewarded here.
 
 #### Value 
 
-From my observation, long threads, long articles, quick witty tweets and links to unknown sources work well. As they provide a lot of information very quickly. 
-People here from my observation are tech focused (AI).
+From my observation, long threads, long articles, quick witty tweets and links to unknown sources work well, as they provide a lot of information very quickly.
+People here are largely tech focused (AI).
 
 #### Monetization
 
-* From the platform (Certain criterias, not tough after 6 months of consistency)
+* From the platform (certain criteria, not tough after 6 months of consistency)
 * From affiliates & promotions
 
 ### LinkedIn 
 
 #### Audience 
 
-This is one of those platform which has a chunk of two kinds of people, business people looking to learn/hire/connect and upskillers. 
+This is one of those platforms that has a chunk of two kinds of people: business people looking to learn/hire/connect, and upskillers.
 
 #### Value 
 
-Talking about business, talking about courses, sharing multiple links in a single post works great. Because people come here with the expectaction to learn in entirety about current trends, additionally sharing novel ideas and knowledge works wonder too. (But that generally works well everywhere)
+Talking about business, talking about courses, and sharing multiple links in a single post works great, because people come here with the expectation to learn in full about current trends. Sharing novel ideas and knowledge works wonders too. (But that generally works well everywhere.)
 
 #### Monetization
 
@@ -84,11 +84,11 @@ Talking about business, talking about courses, sharing multiple links in a singl
 
 #### Audience
 
-Talking about Audience in YouTube is not exactly straightforward, because their are all kinds of things people use youtube for. Entertainment, Education, Background noise, COOKING. But in all in all it boils down to, people come here for LONG FORM of entertainment.
+Talking about audience on YouTube is not exactly straightforward, because there are all kinds of things people use YouTube for. Entertainment, Education, Background noise, COOKING. But all in all it boils down to this: people come here for the LONG FORM of entertainment.
 
 #### Value 
 
-Value in YouTube really depends on your audience, but the structure of most videos in my opinion is the same. At the end of the video the audience feels like either they had fun or they learnt something. And as long as you can do that, it will work out well! 
+Value on YouTube really depends on your audience, but the structure of most videos in my opinion is the same. At the end of the video the audience feels like either they had fun or they learnt something. And as long as you can do that, it will work out well!
 
 #### Monetization
 
@@ -99,13 +99,13 @@ Value in YouTube really depends on your audience, but the structure of most vide
 
 #### Audience 
 
-The funny thing about Instagram is, everyone is equal to the platform. (which is kind of the case for most platforms now) anyone can get viral. It really does not matter if you have a million followers or not. 
+The funny thing about Instagram is that everyone is equal in the eyes of the platform (which is kind of the case for most platforms now); anyone can go viral. It really does not matter if you have a million followers or not.
 
-So it is important to understand the secret to "virality", which is essentially high quality cinematic content. Unless you are genius with a very unique taste and content. The cheatcode is to make beautiful content. In youtube mediocre quality with great content works, not with instagram. 
+So it is important to understand the secret to "virality", which is essentially high quality cinematic content. Unless you are a genius with very unique taste and content, the cheat code is to make beautiful content. On YouTube, mediocre quality with great content works; not on Instagram.
 
 #### Value 
 
-Value in instagram is a dopamine rush, make them laugh, make them cry, make them happy, make them feel smart. Understand what emotion you are targetting and fulfil that. 
+Value on Instagram is a dopamine rush: make them laugh, make them cry, make them happy, make them feel smart. Understand what emotion you are targeting and fulfil that.
 
 #### Monetization
 
@@ -121,11 +121,11 @@ Bro I am not that old....
 
 #### Audience 
 
-I personally do not have much experience with youtube shorts, but I know this that youtube does not care about cinematic content. I believe it is still mostly a value driven platform. Where real value outweighs everything else. 
+I personally do not have much experience with YouTube Shorts, but I do know that YouTube does not care about cinematic content here. I believe it is still mostly a value driven platform, where real value outweighs everything else.
 
 #### Value 
 
-In my eyes value in youtube has been and always will be knowledge. 
+In my eyes, value on YouTube has been and always will be knowledge.
 
 #### Monetization
 
@@ -136,11 +136,11 @@ In my eyes value in youtube has been and always will be knowledge.
 
 #### Audience 
 
-I have seen my friends use TikTok and what I understand is that TikTok is for fast attention grabbing fun content. If that is you, this is perfect. 
+I have seen my friends use TikTok, and what I understand is that TikTok is for fast, attention-grabbing, fun content. If that is you, this is perfect.
 
 #### Value 
 
-Value in TikTok is entertainment. 
+Value on TikTok is entertainment.
 
 #### Monetization
 
@@ -150,13 +150,13 @@ Value in TikTok is entertainment.
 
 #### Audience
 
-Medium is a mix of bags, if you are considering starting out by writing. This is a good platform to start with. The people mostly come here for short to medium sized blogs on specific topic. 
+Medium is a mixed bag. If you are considering starting out by writing, this is a good platform to start with. People mostly come here for short to medium sized blogs on a specific topic.
 
-For me it peronally revolves around tech, but their is a plethora of things people talk about. Business, Marketting, Writing etc.
+For me it personally revolves around tech, but there is a plethora of things people talk about. Business, Marketing, Writing, etc.
 
 #### Value 
 
-I have seen that Medium is more knowledge driven than personal story driven, sharing specific resources, learning, explanations seems to be what the platform prioratizes.
+I have seen that Medium is more knowledge driven than personal story driven; sharing specific resources, learnings and explanations seems to be what the platform prioritizes.
 
 #### Monetization
 
@@ -166,7 +166,7 @@ I have seen that Medium is more knowledge driven than personal story driven, sha
 
 #### Audience 
 
-Substack is the next logical step after Medium, it is great if you have been considering starting a newsletter (I recently started one of my own!), Substack audience really comes for YOU! So the audience is litreally to whom you want to talk to. 
+Substack is the next logical step after Medium. It is great if you have been considering starting a newsletter (I recently started one of my own!). The Substack audience really comes for YOU, so the audience is literally whoever you want to talk to.
 
 #### Value 
 
@@ -181,7 +181,7 @@ Really depends on the kind of value you are providing!
 
 #### Audience 
 
-If you wish to pursue blogging simply as a hobby, starting one of your is a great way to start. A simple way to set one up is using Jekyll, the audience can be limited to yourself, your friends & family or any random stranger on the internet.
+If you wish to pursue blogging simply as a hobby, starting one of your own is a great way to begin. A simple way to set one up is using Jekyll; the audience can be limited to yourself, your friends & family, or any random stranger on the internet.
 
 #### Value 
 
@@ -195,9 +195,9 @@ It brings one peace and clarity in life.
 
 #### Audience 
 
-Reddit is a wild place, the people here come for REALITY. Seriously, do not try to push an agenda or "AI Slop". The comments will demolish you, and you cannot sell a personal brand. 
+Reddit is a wild place; the people here come for REALITY. Seriously, do not try to push an agenda or "AI Slop". The comments will demolish you, and you cannot sell a personal brand.
 
-The best use of reddit I have seen is to get early adopters, customers, search through ideas etc. It is an amazing platform for specific usecases!
+The best use of Reddit I have seen is to get early adopters and customers, search through ideas, etc. It is an amazing platform for specific use cases!
 
 #### Value 
 
@@ -212,10 +212,10 @@ Share real stories, moments, thoughts, lessons.
 
 #### Audience 
 
-The two things about podcasts are 
+The two things about podcasts are:
 
-1. It is inherently a long-form of content 
-2. It is almost always something done in the background along with other activities 
+1. It is inherently a long form of content
+2. It is almost always something done in the background alongside other activities
 
 And this is very important to understand because it helps you shape what kind of content you are creating. 
 
@@ -246,7 +246,7 @@ It's your book, decide what value you are providing.
 
 Fiverr, upwork, woop store
 
-There are a million different ways to make money on the internet, always remember what it is you are providing. 
+There are a million different ways to make money on the internet; always remember what it is you are providing.
 
 * Product (Media or Physical)
 * Service
@@ -256,61 +256,61 @@ There are a million different ways to make money on the internet, always remembe
 
 {links to vid by chris do too!}
 
-The amazing thing is, you can create all kinds of content depending on what you like 
+The amazing thing is, you can create all kinds of content depending on what you like.
 
 ## On Writing 
 
-The harsh reality is no matter what kind of content creation you pick or the platform you pick, writing is the first thing you will be doing. So you better get good at it
+The harsh reality is that no matter what kind of content creation you pick, or the platform you pick, writing is the first thing you will be doing. So you had better get good at it.
 
 ## On Audio 
 
-Assuming you chose a platform where you do more than just writing, speaking is going to be the next important thing. Becuase no matter how good your visuals are, if one cant here or understand you, they won't stick around. 
+Assuming you chose a platform where you do more than just writing, speaking is going to be the next important thing. Because no matter how good your visuals are, if one can't hear or understand you, they won't stick around.
 
-The simple fact is get a good enough mic, denoise it and add a bit of vocal enhancer/ Equalizer. Every editing software has something for that. 
+The simple fact is: get a good enough mic, denoise it, and add a bit of vocal enhancer / equalizer. Every editing software has something for that.
 
 ### On SFX
 
-It is extremely easy to overcomplicate this but - I believe their are only 4 funamental sound effects in content creation:
+It is extremely easy to overcomplicate this, but I believe there are only 4 fundamental sound effects in content creation:
 
 * [Score](https://pixabay.com/sound-effects/search/score/) 
 * [Whoosh](https://pixabay.com/sound-effects/search/whoosh/) 
 * [Click](https://pixabay.com/sound-effects/search/click/) 
 * [Riser](https://pixabay.com/sound-effects/search/riser/) 
 
-Whoosh for zoom in zoom out, or transitions
-Riser to build up tension and then payoff 
-Clicks for any mechnical object or any pop up on your screen
-Score for enviorment mood setting
+Whoosh for zoom in, zoom out, or transitions
+Riser to build up tension and then pay off
+Clicks for any mechanical object or any pop-up on your screen
+Score for environment and mood setting
 
-That's about it, one does not really need to complicate these things. There is another segment of sound design which this [video](https://www.youtube.com/watch?v=9jBic4IDfxA) breaks down really well!
+That's about it; one does not really need to complicate these things. There is another segment of sound design which this [video](https://www.youtube.com/watch?v=9jBic4IDfxA) breaks down really well!
 
 ## On Video 
 
-Ok I lied, this exactly isn't a part on video but more on lighting. Blame bad lighting first before you ever blame your camera. 
+Ok I lied, this isn't exactly a part on video but more on lighting. Blame bad lighting first before you ever blame your camera.
 
-Now to understand different kinds of frames, we first need to understand how cameras work
+Now, to understand different kinds of frames, we first need to understand how cameras work.
 
 ### ISO 
 
-The simplest way to explain ISO will be to see it as the sensitivity of your camera to light. So lower the ISO lesser the sensitivity and vice versa. 
+The simplest way to explain ISO will be to see it as the sensitivity of your camera to light. So the lower the ISO, the lesser the sensitivity, and vice versa.
 
-From the above statement, we can infer that we should also have the highest ISO then right? Well no, because noise is correlated with ISO. So as you increase ISO the noise of your video increases as well. 
+From the above statement, we can infer that we should just use the highest ISO then, right? Well, no, because noise is correlated with ISO. So as you increase ISO, the noise of your video increases as well.
 
-A good range of ISO is around 400-3200 (it largely depends on your camera and I will recommend looking it up online)
+A good range of ISO is around 400-3200 (it largely depends on your camera, and I recommend looking it up online).
 
 ### FPS 
 
-24/25/30 FPS is good for normal cinematic videos, 60/120 is good if you want to do slow motions. A good rule of thumb is shutter speed = 1/(2*FPS).
+24/25/30 FPS is good for normal cinematic videos; 60/120 is good if you want to do slow motion. A good rule of thumb is shutter speed = 1/(2*FPS).
 
-### Apperture 
+### Aperture
 
-A good rule of thumb... Lower is better. 
+A good rule of thumb... lower is better.
 
-(I also usually just increase my apperture when I am shooting outside and it is too sunny. The ideal solution is to use an NF filter)
+(I also usually just stop down my aperture when I am shooting outside and it is too sunny. The ideal solution is to use an ND filter.)
 
-### On framming 
+### On Framing
 
-Framing might be just one of those things that silengthly elevates and sets the mood of the sotry, the way I like to imagine it is. If someone can see your frames, you did bad framming. Good framming is invisible and blends into the story. 
+Framing might be just one of those things that silently elevates and sets the mood of the story. The way I like to imagine it: if someone can see your frames, you did bad framing. Good framing is invisible and blends into the story.
 
 {add link to the frames video by that pay kay guy}
 
@@ -327,35 +327,35 @@ Rule of third
 
 Image taken from [here](https://stillslab.com/filter?search=rule+of+third)
 
-Over the shoulder 
+Over the shoulder
 
-![Image example of rule of third](/assets/blog_assets/content_creation/over_the_shoulder.webp)
+![Image example of an over the shoulder shot](/assets/blog_assets/content_creation/over_the_shoulder.webp)
 
 Image taken from [here](https://stillslab.com/gallery/obsession)
 
-Symmetry 
+Symmetry
 
-![Image example of rule of third](/assets/blog_assets/content_creation/symmetry.webp)
+![Image example of symmetry](/assets/blog_assets/content_creation/symmetry.webp)
 
 Image taken from [here](https://stillslab.com/filter?search=symmetry)
 
-Golden Ration 
+Golden Ratio
 
-![Image example of rule of third](/assets/blog_assets/content_creation/golden_ration.webp)
+![Image example of the golden ratio](/assets/blog_assets/content_creation/golden_ration.webp)
 
 Image taken from [here](https://stillslab.com/filter?search=%2Bgolden%2Bratio)
 
-Close ups 
+Close ups
 
-![Image example of rule of third](/assets/blog_assets/content_creation/close_up.webp)
+![Image example of a close up](/assets/blog_assets/content_creation/close_up.webp)
 
 Image taken from [here](https://stillslab.com/filter?size=Close+Up)
 
 ### On Color Grading 
 
-I believe this might be one of my favourite things to talk about, this journey started for me with photography in college and I was awed after I watched a few videos by gawxart. Surprisingly for the longest time all I did was BnW photography, colors really bought... colors to my art.
+I believe this might be one of my favourite things to talk about. This journey started for me with photography in college, and I was awed after I watched a few videos by gawxart. Surprisingly, for the longest time all I did was BnW photography; colors really brought... color to my art.
 
-I will mainly be diving deep into Davinci Resolve in this one (I know adobe recently introduced there own color grading tool in lumiere, but I have not used it much so I cannot do it justice.), if you wish other tools, that is fine too as most of this knowledge is transferable and will be helpful everywhere. 
+I will mainly be diving deep into DaVinci Resolve in this one (I know Adobe recently introduced their own color grading tool in Lumetri, but I have not used it much so I cannot do it justice). If you wish to use other tools, that is fine too, as most of this knowledge is transferable and will be helpful everywhere.
 
 * https://www.youtube.com/watch?v=gPZ4-CF_osk&t=3s 
 * https://www.youtube.com/watch?v=45z60vnPOBw&t=827s
@@ -366,7 +366,7 @@ I will mainly be diving deep into Davinci Resolve in this one (I know adobe rece
 
 option + s (or alt + s) to add a serial node
 
-Separation of concers is good in most things in life, each part does exactly one thing and it does it well. For the following nodes, you are free to change them as you see fit, mix and merge as well. I am just going with what seems most pragmatic and simple to me. 
+Separation of concerns is good in most things in life: each part does exactly one thing and it does it well. For the following nodes, you are free to change them as you see fit, and mix and merge as well. I am just going with what seems most pragmatic and simple to me.
 
 
 
@@ -376,56 +376,56 @@ Contrast using curves
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/img.webp)
 
-Starting with color grading can be over-whelming at first. But there are a few things we can do to make our lives easier. 
+Starting with color grading can be overwhelming at first, but there are a few things we can do to make our lives easier.
 
-Making ourselves familiar with the different tools, along with the methodolody helps. Study the image above to understand what the different parts do, as we move forward I will explain more things. 
+Making ourselves familiar with the different tools, along with the methodology, helps. Study the image above to understand what the different parts do; as we move forward I will explain more things.
 
-Color grading is a two step process, first is color correction; where you fix the exposure and contrast of the video. Once you have a good correction which looks like it has depth, we start adding the grade to that. 
+Color grading is a two-step process. First is color correction, where you fix the exposure and contrast of the video. Once you have a good correction which looks like it has depth, we start adding the grade to that.
 
-There are multiple ways of doing this and everyone has their own methodology, I will break down the above videos I have mentioned and essentially write it in three parts 
+There are multiple ways of doing this and everyone has their own methodology. I will break down the videos I have mentioned above and essentially write it in four parts:
 
-1. Beginner 
-2. Intermediate 
-3. Advanced 
+1. Beginner
+2. Intermediate
+3. Advanced
 4. Professional
 
-I am still stuck at Intermediate myself and I try to take some inspirations from the more advanced ideas.(I am still not great at it though.)
+I am still stuck at Intermediate myself, and I try to take some inspiration from the more advanced ideas. (I am still not great at it though.)
 
 ### Beginner
 
 ![Inspiration image](/assets/blog_assets/content_creation/img2.webp)
 
-No matter at what stage of a creative process you are at, it is always great to have some inspirations. 
+No matter what stage of a creative process you are at, it is always great to have some inspiration.
 
-Another point to mention is, always pick a hero frame of the video, this is a clean frame that lets you easily apply your grade. (essentially do not pick something with movements, or if it is out of focus and so on)
+Another point to mention: always pick a hero frame of the video. This is a clean frame that lets you easily apply your grade. (Essentially, do not pick something with movement, or something out of focus, and so on.)
 
 ![Setting up basic nodes](/assets/blog_assets/content_creation/img3.webp)
 
-Over here I have added 4 serial nodes (shortcut is alt/option + s), I have adjusted the exposure using the primary wheels. Lift correlates to shadows, Gamma to midtones, Gain to highlights (These are photography terms and not same as blacks and whites, to learn more about them go here [ADD_LINK]). 
+Over here I have added 4 serial nodes (shortcut is alt/option + s), and I have adjusted the exposure using the primary wheels. Lift correlates to shadows, Gamma to midtones, Gain to highlights (these are photography terms and not the same as blacks and whites; to learn more about them go here [ADD_LINK]).
 
-Offset is used to change everything at once, play around with these wheels to get the hang of it. 
+Offset is used to change everything at once. Play around with these wheels to get the hang of it.
 
-One of the most important thing to remember is, we want to do incremenatal changes, never make large changes, .05 can be a lot too at times, We gradually add or subtract the image as we want it. 
+One of the most important things to remember is that we want to do incremental changes. Never make large changes; .05 can be a lot at times. We gradually add to or subtract from the image as we want it.
 
-for **exposure** I just adjusted the wheels, and as a begineer you can change the saturation and contrast using the primary too (see above the wheel you will see the option). 
+For **exposure** I just adjusted the wheels, and as a beginner you can change the saturation and contrast using the primary too (look above the wheel and you will see the option).
 
-> It is helpful to always label your nodes, you can right click on a node and label it as you see fit. 
+> It is helpful to always label your nodes; you can right-click on a node and label it as you see fit.
 
 > Most tutorials will tell you against changing contrast and saturation from primaries, but it is a good beginning tool imo. 
 
 Before adding a look (or grade) to our image, we have to make sure we protect the skin. 
 
-> A good rule of thumb is, as long as Black looks black, white looks white and skin looks like skin. You can sell any grade as real. 
+> A good rule of thumb is: as long as black looks black, white looks white and skin looks like skin, you can sell any grade as real.
 
 ![Setting up basic nodes](/assets/blog_assets/content_creation/img4.webp)
 
-We add a layer node to our 4th node 
+We add a layer node to our 4th node.
 
-| Important caveat, whatever is at the bottom, is actually at the top layer.
+> Important caveat: whatever is at the bottom is actually the top layer.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/img5.webp)
 
-Now selecting the node at top. And chossing the qualifier, by hovering over your skin (I used my face) and clicking on it, you can select the color range you want to protect (Press Shift + H to see the mask that has been selected). This is a delecate fight and it is tough to get exactly what you want at times.
+Now select the node at the top and choose the qualifier. By hovering over your skin (I used my face) and clicking on it, you can select the color range you want to protect (press Shift + H to see the mask that has been selected). This is a delicate fight and it is tough to get exactly what you want at times.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/img6.webp)
 
@@ -433,102 +433,102 @@ Now we can go to the node on top of our skin and apply grading to that, one of t
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/img7.webp)
 
-Another cheat code to protecting your skins is just masking them and motion tracking them using the powerful davnici motion tracker. This will make your grade look much cleaner. (Otherwise you start getting weird grainy artifacts). And thats it! 
+Another cheat code to protecting your skins is just masking them and motion tracking them using the powerful DaVinci motion tracker. This will make your grade look much cleaner. (Otherwise you start getting weird grainy artifacts.) And that's it!
 
-As this was the beginner way we skipped an imense amount of things, including CST!!! your next task, if you choose to accept it. Is to dive deeper into each of these nodes and customize each part. 
+As this was the beginner way, we skipped an immense amount of things, including CST!!! Your next task, if you choose to accept it, is to dive deeper into each of these nodes and customize each part.
 
 
 ### Intermediate
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img1.webp)
 
-Now it is going to get a bit tougher but it is completely worth it. If you shot your video in log profile as we discussed in the [video] section. You know it completely flattens it. 
+Now it is going to get a bit tougher, but it is completely worth it. If you shot your video in a log profile as we discussed in the [video] section, you know it completely flattens it.
 
-Now that is because the video is in a different color space from what we are used to in media (which is usually rec709, if you wish to understand about the different types of color profile, [check this out]). So we have to convert it from our log profile to a film profile!
+Now that is because the video is in a different color space from what we are used to in media (which is usually Rec709; if you wish to understand the different types of color profile, [check this out]). So we have to convert it from our log profile to a film profile!
 
 > Log profile depends on your camera, as I was using a canon. I applied my settings accordingly.
 
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img2.webp)
 
-A LUT (Lookup table) is like a pre-set. It let's you change the colors, the simplest way to imagine it is. It is a mapping from one color to another, so red in rec709 will be turned into scarlet in another LUT. 
+A LUT (Lookup Table) is like a pre-set. The simplest way to imagine it: it is a mapping from one color to another, so red in Rec709 will be turned into scarlet in another LUT.
 
-Pick the LUT you like, I like Kodak so I chose that the difference between D55, D60, D65 is ....{fill this}
+Pick the LUT you like. I like Kodak so I chose that. The D55, D60 and D65 in the name refer to the white point (daylight reference) the LUT is built around: D65 (~6500K) is the standard for Rec709/sRGB video and looks neutral, D60 (~6000K) is the ACES/digital cinema white point and sits slightly warmer, and D55 (~5500K) is the classic motion-picture film white point and gives the warmest, most "vintage" cast. I usually reach for D55 or D60 when I want that filmic warmth and D65 when I want to stay closer to a modern, neutral look.
 
-Now the problem with LUTs is, they can be too powerful at times. That is why we use something called keying. You can select keying (3rd one from the right. The one that looks like a rectangle with a hole) and decrease the intensity of the LUT. I am leaving it as it is for now because I like the way it looks.
+Now the problem with LUTs is that they can be too powerful at times. That is why we use something called the Key palette. You can select Key (3rd one from the right, the one that looks like a rectangle with a hole) and decrease the intensity of the LUT with the Key Output Gain. I am leaving it as it is for now because I like the way it looks.
 
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img3.webp)
 
-If you notice out video (or image in this case) is already looking so beautiful. Now to push the look we will add a bit of warmth using the temperature, and make the highlights slightly warmer by changing the gain (You can go the direction you like for the look. Changing temp, tint and primary wheels is a common way of achieving the look you want!)
+If you notice, our video (or image in this case) is already looking so beautiful. Now to push the look we will add a bit of warmth using the temperature, and make the highlights slightly warmer by changing the gain. (You can go in whichever direction you like for the look. Changing temp, tint and primary wheels is a common way of achieving the look you want!)
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img4.webp)
 
-Now we add balance to our image by fixing the exposure, as this is the shot with a window in it, it is way too bright which needs to be fixed. So I have crancked the gain way down, you have to adjust according to your video. 
+Now we add balance to our image by fixing the exposure. As this is the shot with a window in it, it is way too bright, which needs to be fixed. So I have cranked the gain way down; you have to adjust according to your video.
 
 > In retrospect, we could have added a separate contrast and saturation node, and used what we learnt in the beginner course. I personally use what we will learn in advanced!
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img5.webp)
 
-Now to add some film looks/elements, it is a bit of a controversial topic of where to add these nodes. The best practice would be to add them after your LUT node as for these you do not need a high dynamic range unlike for exposure/saturation/contrast. But I am used to this and this is how I learned so I just follow this. (In my head, I believe it should not make much difference. Please comment if you believe I am wrong.)
+Now to add some film looks/elements. It is a bit of a controversial topic where to add these nodes. The best practice would be to add them after your LUT node, as for these you do not need a high dynamic range, unlike exposure/saturation/contrast. But I am used to this and this is how I learned, so I just follow this. (In my head, I believe it should not make much difference. Please comment if you believe I am wrong.)
 
-Over at the first node we add a bit of softness using gaussian blur. 
+Over at the first node we add a bit of softness using Gaussian blur.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img6(halation).webp)
 
-Now to add my absolutely favourite node, HALATION. Davinci does have one, but it is paid. So let us see how we can do it for free (and in a better way imo). 
+Now to add my absolutely favourite node, HALATION. DaVinci does have one, but it is paid. So let us see how we can do it for free (and in a better way imo).
 
-Just follow along the images and you will have it ready!
+Just follow along with the images and you will have it ready!
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img7(halation).webp)
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img8(halation).webp)
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img9(halation).webp)
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img10(halation).webp)
 
-If you want to see what changes exactly is introduced by each node click on it and then press CMD/ctrl + D. Essentially what happens is that in the linear space light directly gets added to our original video, with the highlights blured out, adding the halation effect!
+If you want to see exactly what changes each node introduces, click on it and then press CMD/Ctrl + D. Essentially what happens is that in the linear space, light directly gets added to our original video, with the highlights blurred out, adding the halation effect!
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img11(Vin).webp)
 
-Now no film look is ever complete without some vinette, the default vinetting of davinci is not that great and you can achieve a much better look using a mask!
+Now, no film look is ever complete without some vignette. The default vignetting of DaVinci is not that great, and you can achieve a much better look using a mask!
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/2img12(film_damage).webp)
 
-This is something that I seldom use but it does add a pretty look, these are the white film damage look. 
+This is something that I seldom use, but it does add a pretty look. This is the white film-damage effect.
 
-> I skipped one node, that is the grain node. As that too is paid in davinci. I will recommend using an overlay and changing the composite mode to "overlay" this is the one I use [FILL_THIS]. Additionally there is another node you can experiment with "Glow".
+> I skipped one node, the grain node, as that too is paid in DaVinci. I recommend using a grain overlay and changing its composite mode to "overlay". This is the one I use: [FILL_THIS]. Additionally, there is another node you can experiment with, "Glow".
 
-Now these methodology will get you the closestest to a cinematic look. In most scenarios I believe you do not need to learn any more things, buttttt let's go over!
+Now, this methodology will get you closest to a cinematic look. In most scenarios I believe you do not need to learn anything more, buttttt let's keep going!
 
 ### Advanced
 
 At this point if you have been practicing you must have understood the flow. 
 
-Fix the exposure, contrast, WB, saturation, protect the skins, add you look, add your effects. 
+Fix the exposure, contrast, WB and saturation, protect the skins, add your look, add your effects.
 
-These steps do not usually change, the means of doing each does tho over time. Now let us understand what are the ideal way of doing some of these steps. 
+These steps do not usually change; the means of doing each does change over time, though. Now let us understand what the ideal way of doing some of these steps is.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/3img1.webp)
 
-Instead of changing the exposure using the primary wheels, you get much more fine grained control by doing them using the HDR wheels 
+Instead of changing the exposure using the primary wheels, you get much more fine-grained control by doing it using the HDR wheels.
 
 (I still mostly use primary wheels tho)
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/3img3.webp)
 
-A better method to achieve constrast is by changing the curves.
+A better method to achieve contrast is by changing the curves.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/3img4.webp)
 
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/3img5.webp)
 
-The best method to add beautiful saturation to your video is to follow the above method. HSV stands for Hue, Saturation, Vibrance. By only keeping the saturation active and increasing gamma, you achieve a much better and smoother saturation. 
+The best method to add beautiful saturation to your video is to follow the above method. HSV stands for Hue, Saturation, Value. By only keeping the saturation active and increasing gamma, you achieve a much better and smoother saturation.
 
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/3img7.webp)
 
 This I feel is a super secret sauce, just follow the above idea and it adds a beautiful warmth to your video! 
 
-> I personally use a mix of the advanced and intermediate concepts. Whatever you believe was skipped, was mostly covered in intermediate 
+> I personally use a mix of the advanced and intermediate concepts. Whatever you believe was skipped was mostly covered in intermediate.
 
 ### Professional 
 
@@ -536,11 +536,11 @@ Now this is going to be tough, and even I do not use these techniques in most ca
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img2.webp)
 
-You get much wider editing range if you work in davinci wide gamut. So create a CST in which converts from your log footage to davinci wide gamut and CST out that gives out Rec 709
+You get a much wider editing range if you work in DaVinci Wide Gamut. So create a CST In that converts from your log footage to DaVinci Wide Gamut, and a CST Out that gives out Rec 709.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img3.webp)
 
-The first step as always is color correction, but even in this. We are going to first improve the lights, increase the contrast, make the video itself pop first!
+The first step, as always, is color correction. But even in this, we are going to first improve the lights, increase the contrast, and make the video itself pop!
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img4.webp)
 
@@ -548,7 +548,7 @@ Create an HDR node (exposure), and edit it using the HDR sliders as we did previ
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img5.webp)
 
-Now to change the WB we will not use the sliders as we had been so far. Create a WB node and make the gamma linear, now to change the temperature, move the primaries of Gain. 
+Now to change the WB we will not use the sliders as we had been so far. Create a WB node and make the gamma linear; then, to change the temperature, move the Gain primaries.
 
 This gives a much smoother WB.
 
@@ -558,71 +558,71 @@ Now let's add some contrast.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img8.webp)
 
-Previously we were eyeballing it, but to be much more concise we should place a point on the pivot point. (You can find the pivot point online! check this out [ADD_LINK])
+Previously we were eyeballing it, but to be much more precise we should place a point on the pivot point. (You can find the pivot point online! Check this out [ADD_LINK].)
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img9.webp)
 
-Now to truly add depth to your videos, masking is the secret tool. You want to mask your subject, highlight it, and make everything else dimmer. (It truly is something that comes with time, but masking is the secret to both great photography and videography!)
+Now, to truly add depth to your videos, masking is the secret tool. You want to mask your subject, highlight it, and make everything else dimmer. (It truly is something that comes with time, but masking is the secret to both great photography and videography!)
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img10.webp)
 
-Trust me when I say it does not get harder than this (atleast to the best of my knowledge), Hue is the color of a color (I know sounds like a crazy sentence, but it essentially means, red looks red, but if you push the hue of red to green, everything red will look green, a red apple will turn into a green apple.), Saturation the way I see it is how strong that color is, or bright (Still different from luminance/brightness and Vibrance). 
+Trust me when I say it does not get harder than this (at least to the best of my knowledge). Hue is the color of a color (I know, sounds like a crazy sentence, but it essentially means: red looks red, but if you push the hue of red to green, everything red will look green, a red apple will turn into a green apple). Saturation, the way I see it, is how strong or bright that color is (still different from luminance/brightness and vibrance).
 
 Hence, Hue Vs Saturation curve controls how strong each color looks!
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img11.webp)
 
-Now what weare trying to do is, roll off the shadows, make the highlights smooth and pop out the midtones. Because in most cases we want the midtones to be the hero! 
+Now what we are trying to do is roll off the shadows, make the highlights smooth, and pop out the midtones. Because in most cases we want the midtones to be the hero!
 
-(Again their are caveats to this, really depends on the look you are going for!)
+(Again, there are caveats to this; it really depends on the look you are going for!)
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img12.webp)
 
-Let's get into color toning/grading now, the idea is to focus on one part of the color grading process at a time. We first focus on gamma or the midtones, as they occupy the majority of the video.
+Let's get into color toning/grading now. The idea is to focus on one part of the color grading process at a time. We first focus on gamma, or the midtones, as they occupy the majority of the video.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img13.webp)
 
-Then we edit the higlights and the shadows.
+Then we edit the highlights and the shadows.
 
 ![overview of the color page of davinci](/assets/blog_assets/content_creation/4img14.webp)
 
-The final step is color compression and mixing, Here you can change the way each individual pixel looks like. I still do not personally completely understand why this is done. But it does add a nice look to the final output. 
+The final step is color compression and mixing. Here you can change the way each individual pixel looks. I still do not personally completely understand why this is done, but it does add a nice look to the final output.
 
-And there you have it, a complete guide to color grading for each and all levels. This is the extent of my knowledge. Now let us move forward. 
+And there you have it, a complete guide to color grading for each and every level. This is the extent of my knowledge. Now let us move forward.
 
 ### CST (Color Space Transform Node)
 
-As a rule of thumb, you want to apply your creative nodes (glow, halation, dust, grain etc) after CST and color grading nodes (WB, EXP, Look) before it. 
+As a rule of thumb, you want to apply your creative nodes (glow, halation, dust, grain, etc.) after CST, and color grading nodes (WB, EXP, Look) before it.
 
 > This is just a good rule of thumb and people break it all the time, including me in this blog!
 
-Sometimes you might see some light moving/twisting weird after CST, this is called artifacts, you can usually fix it by changing the gamut mapping to saturation compression. (It is in the CST settings)
+Sometimes you might see some light moving/twisting weirdly after CST; this is called an artifact. You can usually fix it by changing the gamut mapping to saturation compression. (It is in the CST settings.)
 
 
 ### Tips
 
-* Group similar clips in color page, and switch between them in the top
-* Use adjustment layer for color grading 
+* Group similar clips in the color page, and switch between them at the top
+* Use an adjustment layer for color grading
 * Name your nodes
 
 ## On VFX
 
-This is something I am still actively working on but I believe there are a few popular ones that I love 
+This is something I am still actively working on, but I believe there are a few popular ones that I love:
 
-* Background 
-* Texture 
-* Text Animations 
-* 3d camera
+* Background
+* Texture
+* Text Animations
+* 3D camera
 
 The fundamental thing that you need to get good at is keyframes & curves.
 
-Most of these can be done in davinci fusion, that is what I primarily use. I am not good enough to explain it in great detail at the moment. I will for the time being attach some tutorials that helped me a lot. 
+Most of these can be done in DaVinci Fusion, which is what I primarily use. I am not good enough to explain it in great detail at the moment. For the time being I will attach some tutorials that helped me a lot.
 
 
 
 ## On Editing 
 
-I do everything in Davinci, and I recommmend that as well. Though it may seem daunting at first, but in my opinion it has the highest payoff. 
+I do everything in DaVinci, and I recommend that as well. Though it may seem daunting at first, in my opinion it has the highest payoff.
 
 ### Import settings
 
@@ -631,7 +631,7 @@ The most important project settings in my opinion are:
 * Resolution 
 * FPS 
 
-One useful thing I often do is that I work with proxies of 4k video instead of working directly with 4k, this makes the video not lag between different edits {Show how it is done}
+One useful thing I often do is work with proxies instead of the raw 4K footage; this keeps playback from lagging while I edit. In DaVinci you can do this by selecting your clips in the Media Pool, right-clicking, and choosing "Generate Proxy Media" (then set Playback → Proxy Handling to "Prefer Proxies"). When you export, DaVinci automatically switches back to the full-resolution originals. {Show how it is done}
 
 ### Types of cuts
 
@@ -643,23 +643,23 @@ One useful thing I often do is that I work with proxies of 4k video instead of w
 
 ### Useful shortcuts
 
-It is very useful to create and setup shortcuts, I have made personal keybinds for myself that has cut my editing time significantly. 
+It is very useful to create and set up shortcuts. I have made personal keybinds for myself that have cut my editing time significantly.
 
-1 -> play back (Speed it as well)
-2 -> play 
-3 -> Play forward 
-w -> Cut at playhead 
-q -> Delete everything before playhead 
-e -> Delete everything after playhead 
+1 -> play backward (sped up)
+2 -> play
+3 -> play forward (sped up)
+w -> cut at playhead
+q -> delete everything before playhead
+e -> delete everything after playhead
 
-Other very useful one's are 
+Other very useful ones are
 Shift + Delete -> Ripple delete
-b -> blade 
-v -> select cursor {Check if it is v or a}
+b -> blade
+a -> selection cursor
 
 ### Export settings
 
-Export is extremely platform dependent, but its usually a good idea to export your video in the resolution you shot at. 
+Export is extremely platform dependent, but it's usually a good idea to export your video in the resolution you shot at.
 
 ### On Fonts 
 
@@ -680,17 +680,17 @@ To be written when I can do it.
 
 ## On Storytelling 
 
-All the above are a means to an end, just clogs in a machine. The machine; is the story. So you have to understnad how each part works, to make the story correct and beautiful. So it is very important to understand "THE COG COMPLEMENTS THE STORY" Do not let any part of the means take over the story, the story is the hero. Now for most beginners (including me!) storytelling just doesnt come naturally. But I believe as an engineer that everything is a science and it can be broken down into individual simple components.
+All the above are a means to an end, just cogs in a machine. The machine is the story. So you have to understand how each part works to make the story correct and beautiful. It is very important to understand: "THE COG COMPLEMENTS THE STORY". Do not let any part of the means take over the story; the story is the hero. Now, for most beginners (including me!) storytelling just doesn't come naturally. But I believe, as an engineer, that everything is a science and it can be broken down into individual simple components.
 
-Let me provide you the different steps to tell a good story 
+Let me walk you through the different steps to tell a good story.
 
 ### Storyboarding 
 
-The way I see storyboarding is as a means to put your ideas into a simple story structure. For that, one needs inspirations so grab a bunch of [movie/film shots](https://stillslab.com/), some [edits](https://eyecannndy.com/) you loved and create your shot list. 
+The way I see storyboarding is as a means to put your ideas into a simple story structure. For that, one needs inspiration, so grab a bunch of [movie/film shots](https://stillslab.com/) and some [edits](https://eyecannndy.com/) you loved, and create your shot list.
 
 ### Types of story 
 
-Sometimes it is hard to come up with a story from scratch. So having some structure always helps, here are some popular one's:
+Sometimes it is hard to come up with a story from scratch, so having some structure always helps. Here are some popular ones:
 
 * [Three Act Structure](https://reedsy.com/blog/guide/story-structure/three-act-structure/)
 * [Freytag's Pyramid](https://writers.com/freytags-pyramid)
@@ -698,59 +698,59 @@ Sometimes it is hard to come up with a story from scratch. So having some struct
 
 ### Structures of a story
 
-Now the above methods work great for a long form of video, they specifically go into the content section of this part. But we can still divide it essentially into 3 parts.
+Now, the above methods work great for a long form of video; they specifically go into the content section of this part. But we can still divide it essentially into 3 parts.
 
 #### hook 
 
-This is one of the most important part of the video. It comprises about 5% but makes up for 50%. So pay attention. 
+This is one of the most important parts of the video. It comprises about 5% of the video but accounts for 50% of its impact. So pay attention.
 
-The hook as the name says hooks the user to the content, their are multiple differnt 
+The hook, as the name says, hooks the viewer to the content. There are multiple different kinds:
 
-* Video Hook -> This is the most common kind of hook, here you cause a visual pattern break by engaging the visuals of the user.
+* Video Hook -> This is the most common kind of hook. Here you cause a visual pattern break by engaging the viewer's visuals.
 
-* Audio Hook -> Rare, but still amazing. Done best with music. 
+* Audio Hook -> Rare, but still amazing. Done best with music.
 
-(P.S. Obviously your script still needs to have a good initial hook writing)
+(P.S. Obviously your script still needs a good written hook to begin with.)
 
 ##### Thumbnail
 
-YouTube will benefit the most from this knowledge, I can do a big deep dive on how to make the best thumbnail out there which may perform well. (it is always a probablitsitc model)
+YouTube will benefit the most from this knowledge. I could do a big deep dive on how to make the best thumbnail out there, which may perform well. (It is always a probabilistic model.)
 
-But I will not, instead feel free to watch this video which does a much better job...
+But I will not; instead, feel free to watch this video which does a much better job...
 
 #### Content 
 
-Now finding content, this is one of THE QUESTION of social media. I'll say it is mostly irrelevant for a beginner. Because initially noone cares about what you put out because you are essentially a nobody. 
+Now, finding content: this is one of THE questions of social media. I'll say it is mostly irrelevant for a beginner, because initially no one cares about what you put out, since you are essentially a nobody.
 
-So here is some advice to find your content 
+So here is some advice on finding your content:
 
-* Make or post what you wish existed in the world. For instance,I love to read articles and blogs. And I really wished someone would post interesting things they were reading, so that is what I started doing on X. surprise surprise, a lot of people wished for that too!
+* Make or post what you wish existed in the world. For instance, I love to read articles and blogs, and I really wished someone would post interesting things they were reading, so that is what I started doing on X. Surprise surprise, a lot of people wished for that too!
 
-* Do what you would have done anyhoo, it's much easier to do something you like than to do something you think others will like. 
+* Do what you would have done anyhoo. It's much easier to do something you like than to do something you think others will like.
 
-* Be you, that is your biggest moat. There is no competing with the real you, because you are like noone, and noone is like you! 
+* Be you, that is your biggest moat. There is no competing with the real you, because you are like no one, and no one is like you!
 
 #### CTA
 
-CTA stands for the call to action. They can be multiple things 
+CTA stands for call to action. It can be multiple things:
 
-* Links to your courses/products/affiliates 
+* Links to your courses/products/affiliates
 * Engagement
 * Other social media
 
-I used to think having a CTA was like selling snake oil, but a fabulous friend of mine changed my opinion on it. The example was something along the lines "If steve jobs started a design academy and charged 100 dollars for it, will you not pay for it" (Obviously steve jobs wouldnt need movie and he most likely will not do it for that much too, the idea was that if person X who is the one of the best in Y, it is completely reasonable for him to charge for the years of work he has put in his field. You pay for the years of time & experience, not the course itself.)
+I used to think having a CTA was like selling snake oil, but a fabulous friend of mine changed my opinion on it. The example was something along the lines of "If Steve Jobs started a design academy and charged 100 dollars for it, would you not pay for it?" (Obviously Steve Jobs wouldn't need to, and he most likely would not do it for that little either. The idea was that if person X is one of the best in Y, it is completely reasonable for them to charge for the years of work they have put into their field. You pay for the years of time & experience, not the course itself.)
 
-Also another thought that I liked was that in courses, it's rarely the material that you are charged for. But the structure, because we live in a day and age where you have access to all kinds of information. The hard thing is to know the right kind of information for you!
+Also another thought that I liked was that in courses, it's rarely the material that you are charged for, but the structure — because we live in a day and age where you have access to all kinds of information. The hard thing is to know the right kind of information for you!
 
 The reasoning can be extended to everything, but what I am trying to say is... be a good person, use this knowledge to make the world a better place. 
 
 ### Tips 
 
-We can rave about these for days, but there are so many ways to mess one's story and so few ways to get it correct 
+We can rave about these for days, but there are so many ways to mess up one's story and so few ways to get it correct.
 
-* Filter (Human personality) (Speak through a mental filter)
+* Filter (human personality) (speak through a mental filter)
 * Voice (personal touch)
-* But, therefore not and, then (South park creators)
+* "But" and "therefore", not "and then" (South Park creators)
 
 
 ## On Secrets 
