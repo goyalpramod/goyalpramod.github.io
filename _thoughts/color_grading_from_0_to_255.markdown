@@ -3,10 +3,8 @@ layout: thought
 title: "Color Grading from 0 to 255"
 last_modified_at: 2026-09-11 12:00:00 +0530
 categories: [Content Creation, Color Grading, Art]
-image: assets/blog_assets/content_creation/img.webp
+image: assets/cover_images/birds.JPG
 ---
-
-## Color Grading
 
 I believe this might be one of my favourite things to talk about. This journey started for me with photography in college, and I was awed after I watched a few videos by gawxart. Surprisingly, for the longest time all I did was BnW photography; colors really brought... color to my art.
 
