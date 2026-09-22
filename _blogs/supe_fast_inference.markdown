@@ -214,4 +214,106 @@ Ok, now lets code that out!
 
 ```
 
-Okay that was good, if you understand everything we did so far. YOU ARE AMAZING, but if you didnt. Its okay, Even reaching this point took me quite some time.  -->
+Okay that was good, if you understand everything we did so far. YOU ARE AMAZING, but if you didnt. Its okay, Even reaching this point took me quite some time. 
+
+
+## Notes on CUDA #1 
+
+These are my notes as I learn CUDA, here I will try to breakdown things and represent them the way it makes the most sense to me. I like to truly understand things internally, so I will try to explain it enough length to make complete sense of it. 
+
+I believe the best way to go about this is to actually write CUDA kernels ourselves and improve over time. 
+
+I will like these series to be exhaustive enough to bring any newbie upto SOTA level. I will mention blogs/books/videos as I keep learning and growing. 
+
+> Note: This is an adaptive blog and I will keep adding (and sometimes removing) as I gain a better understanding of things. 
+
+Now let us begin with... understanding the hardware. Now hear me out, when it comes to CUDA. Understanding what GPU you have and how it works is equally important as understaning the code. Because these are tightly coupled. 
+
+### Understanding the GPU 
+
+Now one obvious question arrises is why do we even have GPUs, aren't CPUs enough? Can we not combine them*? Why have a separate module at all?
+
+This is how a CPU looks like 
+
+[CREATE_IMAGE_OF_CPU_INTERNAL]
+(Inspired from first chapter of PMPP)
+the different parts are 
+
+DRAM 
+CACHE 
+CONTROL 
+ALU 
+
+Now this is great if you want to do things in sequence, one after the other. In cpus we even have multiple cores so you can run multiple computation in parallel (multi-threading, parallelism ,and async are all different ideas)
+
+Now imagine a matrix multiplication, the core of most of AI. It is an operation which if you think about it can be run in parallel, each output value can be calculated independently of the other output values all you need is the row and column bector for that i and j values. 
+
+[MAKE_DIAGRAM_SHOWING_HOW_IT_IS_PARALLEL]
+
+And to enable this what would we need differently from the CPU... well it isnt hard to answer more ALUS!!! because we want to compute these values asap and that is why a GPU in general looks like this 
+
+[IMAGE_OF_GPU]
+(inspired from first chapter of PMPP)
+
+>NOTE: Both the CPU and GPU architecture are an oversimplification. But they have necessary info to get the point across. As we get more advanced, we will add on to our existing knowledge and make the diagrams more complex!
+
+
+
+*interestingly this is exactly what apple did, you can understand more about it here ....
+
+### Understanding CUDA 
+
+Now we can start understaning the internals of CUDA itself. The hardware is divided into hierchie 
+
+Grid -> block -> thread 
+
+the individual computation block is the thread. 
+
+This is how they are laid out 
+
+[CREATE_IMAGE_OF_LAYOUT]
+
+### Simple MatMul 
+
+Now we are prepared to write a matrix multiplication. If we wrote it in python, it would look something like this. 
+
+
+```python
+import numpy as np
+
+a = 5
+b = 10
+c = 5
+
+GEMM_1 = np.random.rand(a, b)
+GEMM_2 = np.random.rand(b, c)
+
+# 3-loop version: scalar multiply-accumulate, exposes every memory access
+ANS_triple = np.zeros((a, c))
+
+for i in range(a):
+    for j in range(c):        #notice we iterate over c here
+        for k in range(b):
+            ANS_triple[i, j] += GEMM_1[i, k] * GEMM_2[k, j]
+
+# Both should match numpy's built-in matmul
+assert np.allclose(ANS_triple, GEMM_1 @ GEMM_2)
+```
+
+The simplest idea that we have to keep in mind while working with cuda is that we have multiple threads, running at once, and we want to get them running simultaneously. 
+
+The worst matmul that you can write is 
+
+```cpp
+// A -> M X K 
+// B -> K X N
+// output -> M X N
+
+__global__ void super_bad_matmul_kernel(const float* A, const float* B, float* output, int M, int N, int K){
+   int tid = threadIdx.x + blockDim.x*blockIdx.x;
+
+   for(int i = 0; i<)
+
+}
+
+``` -->
