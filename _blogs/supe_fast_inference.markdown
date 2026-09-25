@@ -210,6 +210,10 @@ If you would like to put the knowledge you have acquired to the test, I will rec
 * [GPU Puzzles](https://github.com/srush/gpu-puzzles)
 * [LeetGPU](https://leetgpu.com/)
 
+This was a real simplification of a lot of ideas, in the next part we will understand what are bottlenecks in a CUDA code, how do we identify it and how we can optimize it. Along with understanding the relevant parts of the GPU for it. 
+
+Also if you have read this far, I will just assume you liked it. So you and I are essentially friends at this point, and as a friend. Consider helping me and your other friends by sharing it with them! 
+
 <!-- ## NOtes on CUDA #2  
 
 In our last blog we understood how CUDA works and how a general GPU will look like 
