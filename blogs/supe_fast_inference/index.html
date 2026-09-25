@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Super Fast Inference | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Super Fast Inference" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Notes on CUDA #1" />
+<meta property="og:description" content="Notes on CUDA #1" />
+<link rel="canonical" href="https://goyalpramod.github.io/blogs/supe_fast_inference/" />
+<meta property="og:url" content="https://goyalpramod.github.io/blogs/supe_fast_inference/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/blog_assets/supe_fast_inference/b20vm4.jpeg" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-09-25T06:30:00+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/blog_assets/supe_fast_inference/b20vm4.jpeg" />
+<meta property="twitter:title" content="Super Fast Inference" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-09-25T06:30:00+00:00","datePublished":"2026-09-25T06:30:00+00:00","description":"Notes on CUDA #1","headline":"Super Fast Inference","image":"https://goyalpramod.github.io/assets/blog_assets/supe_fast_inference/b20vm4.jpeg","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/blogs/supe_fast_inference/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/blogs/supe_fast_inference/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/blog_assets/supe_fast_inference/b20vm4.jpeg" alt="Super Fast Inference" class="featured-image">
+</div>
+
+
+<article class="blog-post">
+  <h1>Super Fast Inference</h1>
+  <p class="meta">September 25, 2026</p><button id="toc-toggle" class="toc-toggle" aria-label="Toggle Table of Contents">
+    <i class="fas fa-list-ul"></i>
+  </button>
+  
+  <div class="toc-wrapper">
+    <div class="toc">
+      <div class="toc-header">
+        Table of Contents
+        <button class="toc-close" aria-label="Close Table of Contents">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="toc-nav" id="toc">
+        <!-- ToC content will be dynamically inserted here by JavaScript -->
+      </nav>
+    </div>
+  </div>
+  <h2 id="notes-on-cuda-1">Notes on CUDA #1</h2>
+
+<p>These are my notes as I learn CUDA, here I will try to breakdown things and represent them the way it makes the most sense to me. I like to truly understand things internally, so I will try to explain it enough length to make complete sense of it.</p>
+
+<p>I believe the best way to go about this is to actually write CUDA kernels ourselves and improve over time.</p>
+
+<p>I will like these series to be exhaustive enough to bring any newbie upto SOTA level. I will mention blogs/books/videos as I keep learning and growing.</p>
+
+<blockquote>
+  <p>Note: This is an adaptive blog and I will keep adding (and sometimes removing) as I gain a better understanding of things.</p>
+</blockquote>
+
+<p>Now let us begin with… understanding the hardware. Now hear me out, when it comes to CUDA. Understanding what GPU you have and how it works is equally important as understanding the code. Because these are tightly coupled.</p>
+
+<h3 id="understanding-the-gpu">Understanding the GPU</h3>
+
+<p>Now one obvious question that arises is why do we even have GPUs, aren’t CPUs enough? Can we not combine them*? Why have a separate module at all?</p>
+
+<p>*interestingly this is exactly what apple did, you can understand more about it <a href="https://discussions.apple.com/thread/255191914?sortBy=rank">here</a> (I remember watching a beautiful video explaining this in greater depth, I forgot about it. If you know what I am talking about, please reach out!).</p>
+
+<p>This is how a CPU looks like</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_1.webp" alt="Image of CPU Internal" />
+(Inspired from <a href="https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/">PMPP</a>)</p>
+
+<p>the different parts are</p>
+
+<p>DRAM -&gt; Dynamic Random Access Memory, this is where data gets stored before computation</p>
+
+<p>CACHE -&gt; Temporary memory space to store on the fly computational values</p>
+
+<p>CONTROL -&gt; Determines where to send the computation, where to store data. It’s the control center!</p>
+
+<p>ALU -&gt; Arithmetic Logic Unit, this is the part that takes care of computation.</p>
+
+<blockquote>
+  <p>Note: This is a gross over simplification of how CPUs look like (even GPUs when we get to it), this is meant to help you understand the core components and how they work. As we go through the blog we will gradually break down these high level components to their individual sub parts and understand how they work!</p>
+</blockquote>
+
+<p>Now this is great if you want to do things in sequence,i.e one after the other. In CPUs we even have multiple cores so you can run multiple computation in parallel (multi-threading, parallelism ,and async are all different ideas consider <a href="https://stackoverflow.com/questions/27435284/multiprocessing-vs-multithreading-vs-asyncio">reading</a> this to understand the difference.)</p>
+
+<p>Now imagine a matrix multiplication, the core of most of AI. It is an operation which if you think about can be run in parallel, each output value can be calculated independently of the other output values all you need is the row and column vector for that i and j values.</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_7.webp" alt="Image of Matrix Multiplication" /></p>
+
+<p>And to enable this what would we need differently from the CPU… well it isn’t hard to answer more ALUS!!! because we want to compute these values ASAP and that is why a GPU in general looks like this</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_2.webp" alt="Image of GPU Internal" />
+(Inspired from <a href="https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/">PMPP</a>)</p>
+
+<blockquote>
+  <p>NOTE: Again, this GPU architecture is an oversimplification. But it is necessary info to get the point across. As we get more advanced, we will add on to our existing knowledge and make the diagrams more complex!</p>
+</blockquote>
+
+<p>As you can see above, we have way more ALUs. Let’s understand them better by looking at what the individual parts are called. We will explore them a bit more in detail unlike the CPU section above as this blog is all about understanding GPUs and CUDA.</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_5.webp" alt="Memory layout of the internal of a GPU" />
+Image inspired from this <a href="https://damek.github.io/random/basic-facts-about-gpus/#fn:12">blog</a></p>
+
+<p>The most basic fact that we need to understand is that, the higher the memory storage, slower the speed. And vice versa. (I do not completely understand the reason behind it right now, but when I do. I will write it!).</p>
+
+<p>Global Memory or VRAM is the advertised GPU storage, an SM (or streaming multiprocessor) has multiple parts to it like tensor cores, threads, warp scheduler and much more stuff.</p>
+
+<p>For this current blog, we need not dive that much into it! So we will look at the core ideas for now. The most important thing to understand is that SMs have blocks inside of them, these blocks have threads in them, the threads of a block has access to the shared memory of that block ONLY.</p>
+
+<p>All threads are arranged in a 32 thread warp! Essentially a warp runs all the threads simultaneously. 
+(If this does not make a lot of sense right now, do not worry. As we move forward it will start making more sense!)</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_6.webp" alt="Data transfer from VRAM to SM" /></p>
+
+<p>The transfer of data from global memory to an SM is an extremely inefficient operation, <a href="https://horace.io/">horace he</a> has an amazing blog “<a href="https://horace.io/brrr_intro.html">Making GPUs go Brrr</a>” that explains it quite well. Check it out. So ideally we would like to take our data, give it to the SM do all the necessary computation there. And only send it back once we are done computing.</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_4.webp" alt="Data transfer from VRAM to SM" /></p>
+
+<p>The above image is a simplification of how an SM looks like. Now we have a good general understanding of why GPUs exist and how they look like! This knowledge will prove to be useful when we start getting really knee deep into this.</p>
+
+<h3 id="understanding-cuda">Understanding CUDA</h3>
+
+<p>Now we can start understanding the internals of CUDA itself.</p>
+
+<p>In CUDA we have grids, which have blocks inside of them, and the blocks have threads. They can be laid out in a 3d manner as presented below, but generally everyone just works with a 2d layout so we will use that majority of the time.</p>
+
+<p>As I find the 1d model easier to understand as a beginner, I will use that in this part. And we will start with the multi-dimensional part starting next blog.</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_3.webp" alt="Internals of CUDA code" /></p>
+
+<p>Now the above diagram can be a lot to take in while starting out, but let’s break it down component by component.</p>
+
+<p>We have a host where we write the CUDA kernel which is run in the device. The host is the CPU, a kernel is essentially a function and the GPU is the device.</p>
+
+<p>In a kernel we define the number of blocks in a grid, and then the number of threads in each block.</p>
+
+<p>To traverse the blocks and grids, we have the dimensions and indexes. (Look carefully, you will see both are very different thing. One helps move in a direction the other defines the length of that direction)</p>
+
+<h3 id="simple-matmul">Simple MatMul</h3>
+
+<p>Now let us write simple matrix multiplication in Python or CPU code, then we will write a CUDA kernel using what we have learned so far!</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="n">np</span>
+
+<span class="n">a</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">b</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">c</span> <span class="o">=</span> <span class="mi">5</span>
+
+<span class="n">GEMM_1</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">GEMM_2</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">random</span><span class="p">.</span><span class="n">rand</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
+
+<span class="n">ANS_triple</span> <span class="o">=</span> <span class="n">np</span><span class="p">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">a</span><span class="p">,</span> <span class="n">c</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">a</span><span class="p">):</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>      
+        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
+            <span class="n">ANS_triple</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span> <span class="o">+=</span> <span class="n">GEMM_1</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">k</span><span class="p">]</span> <span class="o">*</span> <span class="n">GEMM_2</span><span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+
+<span class="c1"># Both should match numpy's built-in matmul
+</span><span class="k">assert</span> <span class="n">np</span><span class="p">.</span><span class="n">allclose</span><span class="p">(</span><span class="n">ANS_triple</span><span class="p">,</span> <span class="n">GEMM_1</span> <span class="o">@</span> <span class="n">GEMM_2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>The simplest idea that we have to keep in mind while working with cuda is that we have multiple threads, running at once, and we want to get them running simultaneously.</p>
+
+<p>The worst matmul that you can write is</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A -&gt; M X K </span>
+<span class="c1">// B -&gt; K X N</span>
+<span class="c1">// output -&gt; M X N</span>
+
+<span class="n">__global__</span> <span class="kt">void</span> <span class="nf">super_bad_matmul_kernel</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">output</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">K</span><span class="p">){</span>
+   <span class="kt">float</span> <span class="n">temp_val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+   <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">i</span><span class="o">&lt;</span><span class="n">M</span><span class="p">;</span> <span class="n">i</span><span class="o">++</span><span class="p">){</span>
+      <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">j</span><span class="o">&lt;</span><span class="n">N</span><span class="p">;</span> <span class="n">j</span><span class="o">++</span><span class="p">){</span>
+         <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">k</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">k</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span> <span class="n">k</span><span class="o">++</span><span class="p">){</span>
+            <span class="n">temp_val</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">K</span> <span class="o">+</span> <span class="n">k</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="n">K</span><span class="o">*</span><span class="n">k</span> <span class="o">+</span> <span class="n">j</span><span class="p">];</span>
+         <span class="p">}</span>
+         <span class="n">output</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">N</span> <span class="o">+</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_val</span><span class="p">;</span>
+      <span class="p">}</span>
+   <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">extern</span> <span class="s">"C"</span> <span class="kt">void</span> <span class="n">solve</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">output</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">K</span><span class="p">)</span> <span class="p">{</span>
+   <span class="n">super_bad_matmul_kernel</span><span class="o">&lt;&lt;&lt;</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>The above code is terrible, the main reason being we are not utilising the fact that the code can be parallelized and multiple threads can each calculate one output value. Notice that <code class="language-plaintext highlighter-rouge">solve</code> only launches a single thread (<code class="language-plaintext highlighter-rouge">&lt;&lt;&lt;1, 1&gt;&gt;&gt;</code>), so even though it’s running on the GPU, that one thread still does the entire triple loop by itself, exactly like the CPU version, we haven’t used any of the GPU’s parallelism yet.</p>
+
+<p>Let’s write the naive CUDA solution, and then I will explain what each part does and why it looks the way it does!</p>
+
+<div class="language-cpp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// A -&gt; M X K </span>
+<span class="c1">// B -&gt; K X N</span>
+<span class="c1">// output -&gt; M X N</span>
+
+<span class="n">__global__</span> <span class="kt">void</span> <span class="nf">naive_matmul</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">output</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">K</span><span class="p">){</span>
+   <span class="kt">int</span> <span class="n">gid</span> <span class="o">=</span> <span class="n">threadIdx</span><span class="p">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">blockDim</span><span class="p">.</span><span class="n">x</span><span class="o">*</span><span class="n">blockIdx</span><span class="p">.</span><span class="n">x</span><span class="p">;</span>
+   <span class="k">if</span><span class="p">(</span><span class="n">gid</span><span class="o">&gt;=</span> <span class="n">M</span><span class="o">*</span><span class="n">N</span><span class="p">)</span> <span class="k">return</span><span class="p">;</span>
+
+   <span class="kt">int</span> <span class="n">row</span> <span class="o">=</span> <span class="n">gid</span><span class="o">/</span><span class="n">N</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">col</span> <span class="o">=</span> <span class="n">gid</span><span class="o">%</span><span class="n">N</span><span class="p">;</span>
+
+   <span class="kt">float</span> <span class="n">temp_val</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+   <span class="k">for</span><span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span><span class="n">i</span><span class="o">&lt;</span><span class="n">K</span><span class="p">;</span><span class="n">i</span><span class="o">++</span><span class="p">){</span>
+      <span class="n">temp_val</span> <span class="o">+=</span> <span class="n">A</span><span class="p">[</span><span class="n">row</span><span class="o">*</span><span class="n">K</span> <span class="o">+</span> <span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">B</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="n">N</span> <span class="o">+</span> <span class="n">col</span><span class="p">];</span>
+   <span class="p">}</span>
+
+   <span class="n">output</span><span class="p">[</span><span class="n">gid</span><span class="p">]</span> <span class="o">=</span> <span class="n">temp_val</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">extern</span> <span class="s">"C"</span> <span class="kt">void</span> <span class="n">solve</span><span class="p">(</span><span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">A</span><span class="p">,</span> <span class="k">const</span> <span class="kt">float</span><span class="o">*</span> <span class="n">B</span><span class="p">,</span> <span class="kt">float</span><span class="o">*</span> <span class="n">output</span><span class="p">,</span> <span class="kt">int</span> <span class="n">M</span><span class="p">,</span> <span class="kt">int</span> <span class="n">N</span><span class="p">,</span> <span class="kt">int</span> <span class="n">K</span><span class="p">)</span> <span class="p">{</span>
+   <span class="kt">int</span> <span class="n">threadsPerBlock</span> <span class="o">=</span> <span class="mi">256</span><span class="p">;</span>
+   <span class="kt">int</span> <span class="n">blocksPerGrid</span> <span class="o">=</span> <span class="p">(</span><span class="n">M</span><span class="o">*</span><span class="n">N</span> <span class="o">+</span> <span class="n">threadsPerBlock</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">/</span><span class="n">threadsPerBlock</span><span class="p">;</span>
+ 
+   <span class="n">naive_matmul</span><span class="o">&lt;&lt;&lt;</span><span class="n">blocksPerGrid</span><span class="p">,</span> <span class="n">threadsPerBlock</span><span class="o">&gt;&gt;&gt;</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">B</span><span class="p">,</span> <span class="n">output</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">K</span><span class="p">);</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>The above one although not a great implementation shows the value. There is one idea that we have not talked about so far which sits at the center of CUDA. And that is the actual memory layout of the data is one dimensional and it is stored in a row major form.</p>
+
+<p>We know that our output will be of the shape, MxN. But in memory we cannot have 2d layouts, we only have 1d. So instead of a MxN layout we have M rows of N values stacked after each other, which looks something like the below image.</p>
+
+<p><img src="/assets/blog_assets/supe_fast_inference/notes_on_cuda_8.webp" alt="how row major happens in memory" /></p>
+
+<p>(You can imagine the similar for 3d)</p>
+
+<p>Hence, if we breakdown gid (I like to call it global id; tid, or thread id, is the number of the thread within a block, and since we have defined the block size as 256, tid will never exceed that). It consists of threadIdx, blockDim, and blockIdx. Idx means index and dim means dimension.</p>
+
+<p>It is important you visualize and understand how this is working; threadIdx gives you the current thread you are on in a block. Multiplying the block index (blockIdx) by the block dimension (blockDim) tells you how many threads came before this block.</p>
+
+<p>A good way to understand is by thinking backwards. We want each thread to calculate one value. So we need MxN threads. Which is not possible.</p>
+
+<p>So we set 256 threads and then we define the number of blocks based on this, that is where the ceiling equation comes from</p>
+
+<p><code class="language-plaintext highlighter-rouge">blocksPerGrid = (M*N + threadsPerBlock - 1)/threadsPerBlock;</code></p>
+
+<p>this will give us enough blocks with enough threads to take care of this computation, now as this is a ceiling function we can have a number of threads which exceed MxN. And hence the reason we have added a check</p>
+
+<p><code class="language-plaintext highlighter-rouge">if(gid&gt;= M*N) return;</code></p>
+
+<p>read this part a few more times, try to think it in your terms and it should make sense!</p>
+
+<h3 id="where-do-we-go-from-here">Where do we go from here?</h3>
+
+<p>If you would like to put the knowledge you have acquired to the test, I will recommend checking out</p>
+
+<ul>
+  <li><a href="https://github.com/srush/gpu-puzzles">GPU Puzzles</a></li>
+  <li><a href="https://leetgpu.com/">LeetGPU</a></li>
+</ul>
+
+<p>This was a real simplification of a lot of ideas, in the next part we will understand what are bottlenecks in a CUDA code, how do we identify it and how we can optimize it. Along with understanding the relevant parts of the GPU for it.</p>
+
+<p>Also if you have read this far, I will just assume you liked it. So you and I are essentially friends at this point, and as a friend. Consider helping me and your other friends by sharing it with them!</p>
+
+<!-- ## NOtes on CUDA #2  
+
+In our last blog we understood how CUDA works and how a general GPU will look like 
+
+Now let us optimize it 
+
+The few things we will learn are 
+
+* Warp divergence 
+* Bank conflicts 
+* Shared memory 
+
+https://damek.github.io/random/basic-facts-about-gpus/ -> Good overview of GPU -->
+
+<!-- Throughout my circle I am known as the optimization guy, for my ability to squeeze out performance from each aspect of my life. Hence, I felt it was a damn shame I did not know how to do the same with my ML models. 
+
+And hence we start out on this journey together to learn inference engine optimization. We will start by optimizing a GEMM (General Matrix Multiplication) as that is the backbone of everything ML/AI. Then we will move to Diffusion models, first image then video. (I believe there are plenty resources for text i.e LLMs, I will link them in the references for you to check out!)
+
+Let us begin our endevour! 
+
+## GEMM 
+
+I will go with the assumption that you are familiar with your Linear Algebra and move forward. 
+Let us first write a for loop that multiplies two 2d matrices of size aXb and bXc
+
+The first is an extremely rudimentary 
+
+```python
+import numpy as np
+
+a = 5
+b = 10
+c = 5
+
+GEMM_1 = np.random.rand(a, b)
+GEMM_2 = np.random.rand(b, c)
+
+# 3-loop version: scalar multiply-accumulate, exposes every memory access
+ANS_triple = np.zeros((a, c))
+
+for i in range(a):
+    for j in range(c):        #notice we iterate over c here
+        for k in range(b):
+            ANS_triple[i, j] += GEMM_1[i, k] * GEMM_2[k, j]
+
+# Both should match numpy's built-in matmul
+assert np.allclose(ANS_triple, GEMM_1 @ GEMM_2)
+```
+
+
+
+```python
+# 2-loop version: vectorized dot product per output element
+ANS_double = []
+
+for i in range(a):
+    temp_arr = []
+    for j in range(c):
+        temp_arr.append(np.sum(GEMM_1[i, :] * GEMM_2[:, j]))
+    ANS_double.append(temp_arr)
+
+ANS_double = np.array(ANS)  # shape (a, c)
+assert np.allclose(ANS_double, GEMM_1 @ GEMM_2)
+```
+
+We can optimize it further by calling the internal numpy matmul 
+
+```python
+ANS = GEMM_1@GEMM_2
+assert np.allclose(ANS, GEMM_1 @ GEMM_2)
+```
+
+This is the extent of optimization most people will go with, but we are not most people. Let's go further down the rabit hole and optimize this further! 
+
+(Some might say we skipped over the internals and just used numpy implementations, those some will be correct. To understand more of the internal optimization I recommend checking out these excellent posts [Blog 1](https://siboehm.com/articles/22/Fast-MMM-on-CPU) & [Blog 2](https://salykova.github.io/gemm-cpu))
+
+> Aside: If you would like to understand how numpy shapes work better I will recommend reading this [blog series](https://ajcr.net/stride-guide-part-1/), this knowlege will prove to be essential as we will move forward!
+
+**Blog 3: Super Fast Inference** *(VIRGIL-relevant)*
+
+1. Hook: Start with a GEMM
+   - Naive triple loop → optimized → why this matters for everything that follows
+
+2. How to profile inference — measure before you optimize
+   - torch.profiler, nsys, memory_profiler
+   - https://pytorch.org/tutorials/recipes/recipes/profiler_recipe.html
+   - https://pytorch.org/docs/stable/torch.cuda.html#memory-management
+
+3. The fundamental bottleneck — memory bandwidth vs compute
+   - This is the mental model for everything else
+   - https://horace.io/brrr_intro.html ← read this first, it's the best thing on this list
+
+4. dtypes in practice
+   - fp32 → bf16 → fp16 → fp8 → int8 → int4, with actual VRAM measurements
+   - https://huggingface.co/docs/diffusers/optimization/fp16
+   - https://pytorch.org/docs/stable/amp.html
+
+5. Quantization
+   - bitsandbytes: https://huggingface.co/docs/bitsandbytes
+   - torchao (what HF is pushing for Flux): https://github.com/pytorch/ao
+   - GGUF for diffusion models: https://github.com/city96/ComfyUI-GGUF
+
+6. Attention optimization
+   - Why vanilla attention is memory bandwidth bound (derive the complexity)
+   - Flash Attention — read intro + section 2: https://arxiv.org/abs/2205.14135
+   - flash-attn repo: https://github.com/Dao-AILab/flash-attention
+   - xformers: https://github.com/facebookresearch/xformers
+
+7. torch.compile
+   - Graph capture model, what causes graph breaks, how to debug them
+   - https://pytorch.org/tutorials/intermediate/torch_compile_tutorial.html
+   - https://blog.ezyang.com/2024/11/ways-to-use-torch-compile/
+
+8. CPU offloading & model sharding
+   - What `enable_model_cpu_offload()` actually does under the hood
+   - https://huggingface.co/docs/diffusers/optimization/memory
+
+9. Triton — write your first custom kernel
+   - https://triton-lang.org/main/getting-started/tutorials/ (do all in order)
+   - https://github.com/linkedin/Liger-Kernel (production kernels to read)
+
+10. CUDA — going deeper
+    - https://siboehm.com/ (SGEMM post specifically)
+    - https://docs.nvidia.com/cuda/cuda-c-programming-guide/ (ch 1-4)
+    - https://www.youtube.com/@cudamode
+
+---
+
+Blog 3 is the one to write first — it's directly VIRGIL-relevant and has the tightest narrative arc (GEMM → profiling → bottleneck theory → practical optimizations → kernel writing). The other two are supporting material you'll have naturally by the time you're done.
+
+## CUDA 
+
+Lets first start by understanding how a GPU usually looks like and what it's components are 
+
+What is important to understand is, There are grids, grids have blocks inside of them and blocks have threads. 
+
+the row moves along y axis and column moves along x axis 
+
+It is stored in row major format 
+
+If we write a simple kernel (A gpu function) for matrix multiplication it will look something like this 
+
+```cpp
+__global__ void simple_matmul(const float* X, const float* y,float* output, int M, int N, int K){
+   int gid = threadIdx.x + blockDim.x*blockIdx.x; //-> Important to understand 
+ 
+   int temp = 0
+
+   for(int i = 0; i<K; i++){
+      temp += X[gid*N + i]*y[i*N + gid]; // -> a good heuristic to remember is (row*width + col)
+   }
+
+   if(gid<M*N){ // -> Very important, because threads can be more than...
+      output[gid] = temp;
+   }
+}
+```
+
+This may seem complex initially but once you start working with it. It starts getting easier to make sense. 
+
+Now lets look at how a GPU is to understand the problem with our kernel and how we can optimize it 
+
+The first problem is that when a thread calculates the matrix multiplication it has to do a value look up again and again from the DRAM which is inefficient. It would be much better if it was present inside the block shared memory. The look up is significantly faster in that. 
+
+And it is quite complex to work with a 2d matrix and representing it in 1d. So we will make our representation 2d too using dim3 
+
+Now the optimized kernel will look something like this 
+
+```cpp
+#define TILE_SIZE 16
+
+__global__ void tiled_matmul(const float* X, const float* y, float* output, int M, int N, int K){
+   int row = blockIdx.y*TILE_SIZE;
+   int col = blockIdx.x*TILE_SIZE;
+
+   int temp = 0;
+
+   __shared__ A_TILE[TILE_SIZE][TILE_SIZE];
+   __shared__ B_TILE[TILE_SIZE][TILE_SIZE];
+
+   int numTiles = (K + TILE_SIZE - 1)/TILE_SIZE;
+
+   for(int t = 0;t<numTiles;t++){
+      //DANG FORGOT THE tile element. FIX IT!
+      if(row < M&& col <K){
+         A_TILE[row][col] = A[];
+      }else{
+         A_TILE[row][col] = 0;
+      }if(row < K && col <N){
+         B_TILE[row][col] = B[];
+      }else{
+         B_TILE[row][col] = 0;
+      }
+
+      __syncthreads();
+
+      for(int kk = 0;kk<K;k++){
+         temp += A_TILE[][]*B[][];
+      }
+
+      __syncthreads();
+   }
+
+   if(){
+      output[] = temp
+   }
+
+}
+```
+
+This is pretty good, but it has problems too. The main problem being that each thread is only doing computation for one output. It would be more efficient if it did it for more than one 
+
+Why you ask? 
+
+This is why... 
+
+Ok, now lets code that out! 
+
+```cpp
+
+```
+
+Okay that was good, if you understand everything we did so far. YOU ARE AMAZING, but if you didnt. Its okay, Even reaching this point took me quite some time.  -->
+
+  <div class="voting-buttons" data-post-id="blogs-supe-fast-inference">
+    <button class="vote-btn upvote" aria-label="Upvote">
+      <i class="vote-icon fas fa-arrow-up"></i>
+      <span class="vote-count upvote-count">0</span>
+    </button>
+    <button class="vote-btn downvote" aria-label="Downvote">
+      <i class="vote-icon fas fa-arrow-down"></i>
+      <span class="vote-count downvote-count">0</span>
+    </button>
+  </div>
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2Fsupe_fast_inference%2F&text=Super+Fast+Inference" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2Fsupe_fast_inference%2F&title=Super+Fast+Inference" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2Fsupe_fast_inference%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fblogs%2Fsupe_fast_inference%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+</article>
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2026 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>

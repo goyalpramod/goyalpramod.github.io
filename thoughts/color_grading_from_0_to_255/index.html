@@ -1,0 +1,1201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Add this block before head.html include -->
+<script>
+  (function() {
+    // Immediately set the theme before any content loads
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Prevent Flash Of Incorrect Theme (FOIT)
+    document.documentElement.style.visibility = 'hidden';
+    
+    window.addEventListener('DOMContentLoaded', function() {
+      document.documentElement.style.visibility = '';
+    });
+  })();
+</script>
+
+<style>
+  /* Critical CSS to prevent layout shift */
+  html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .wrapper {
+    max-width: 710px;
+    margin: 0 auto;
+    padding: 0 15px;
+    position: relative;
+    left: 0;
+  }
+  
+</style><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Color Grading from 0 to 255 | Pramod’s Blog</title>
+<meta name="generator" content="Jekyll v3.10.0" />
+<meta property="og:title" content="Color Grading from 0 to 255" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="I believe this might be one of my favourite things to talk about. This journey started for me with photography in college, and I was awed after I watched a few videos by gawxart. Surprisingly, for the longest time all I did was BnW photography; colors really brought… color to my art." />
+<meta property="og:description" content="I believe this might be one of my favourite things to talk about. This journey started for me with photography in college, and I was awed after I watched a few videos by gawxart. Surprisingly, for the longest time all I did was BnW photography; colors really brought… color to my art." />
+<link rel="canonical" href="https://goyalpramod.github.io/thoughts/color_grading_from_0_to_255/" />
+<meta property="og:url" content="https://goyalpramod.github.io/thoughts/color_grading_from_0_to_255/" />
+<meta property="og:site_name" content="Pramod’s Blog" />
+<meta property="og:image" content="https://goyalpramod.github.io/assets/cover_images/birds.JPG" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2026-09-25T18:57:50+00:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://goyalpramod.github.io/assets/cover_images/birds.JPG" />
+<meta property="twitter:title" content="Color Grading from 0 to 255" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2026-09-11T06:30:00+00:00","datePublished":"2026-09-25T18:57:50+00:00","description":"I believe this might be one of my favourite things to talk about. This journey started for me with photography in college, and I was awed after I watched a few videos by gawxart. Surprisingly, for the longest time all I did was BnW photography; colors really brought… color to my art.","headline":"Color Grading from 0 to 255","image":"https://goyalpramod.github.io/assets/cover_images/birds.JPG","mainEntityOfPage":{"@type":"WebPage","@id":"https://goyalpramod.github.io/thoughts/color_grading_from_0_to_255/"},"publisher":{"@type":"Organization","logo":{"@type":"ImageObject","url":"https://goyalpramod.github.io/assets/images/img.webp"}},"url":"https://goyalpramod.github.io/thoughts/color_grading_from_0_to_255/"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="https://goyalpramod.github.io/feed.xml" title="Pramod&apos;s Blog" /><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script></head>
+<!-- Add favicon right after head.html include -->
+  <link rel="icon" type="image/png" href="/assets/icon.png">
+  <link rel="shortcut icon" type="image/png" href="/assets/icon.png">
+  <link rel="apple-touch-icon" href="/assets/icon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Lora:ital,wght@0,400..700;1,400..700&family=Merriweather:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=STIX+Two+Text:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+      font-optical-sizing: auto;
+      font-size: 18px;         
+      font-weight: 400;        
+      font-style: normal;
+      line-height: 1.6; 
+    }
+    @media screen and (max-width: 768px) {
+      body {
+        font-size: 16px;      // Slightly smaller for mobile
+      }
+    }
+
+    .post-content,
+    .blog-post,
+    .thought-post {
+      p {
+        margin-bottom: 1.5em;
+        font-weight: 400;    
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 600;   
+        margin-top: 2em;
+        margin-bottom: 0.8em;
+      }
+    }
+  </style>
+
+  <body class="preload"><header class="site-header">
+  <!-- Add Google Analytics only in production --><!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EW6BCL046P"></script>
+<script>
+  window['ga-disable-G-EW6BCL046P'] = window.doNotTrack === "1" || navigator.doNotTrack === "1" || navigator.doNotTrack === "yes" || navigator.msDoNotTrack === "1";
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){window.dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EW6BCL046P');
+</script><!-- Add X-Frame-Options meta tag -->
+  <meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+
+  <div class="wrapper">
+    <a class="site-title" href="/">Pramod's Blog</a>
+    <nav class="site-nav">
+      <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+      <label for="nav-trigger">
+        <span class="menu-icon" aria-label="Menu">
+          <svg viewBox="0 0 18 15" width="18px" height="15px" aria-hidden="true">
+            <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,12.031,18,12.696,18,13.516L18,13.516z"/>
+          </svg>
+        </span>
+      </label>
+
+      <div class="trigger">
+        <a class="page-link" href="/blog/">Blog</a>
+        <a class="page-link" href="/thoughts/">Thoughts</a>
+        <a class="page-link" href="/projects/">Projects</a>
+        <a class="page-link" href="/resume/">CV</a>
+      </div>
+    </nav>
+  </div>
+
+  
+  <script>
+    MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['$$', '$$'], ['\\[', '\\]']],
+        processEscapes: true
+      },
+      svg: {
+        fontCache: 'global'
+      }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  
+</header><main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        
+<div class="featured-image-container">
+  <img src="/assets/cover_images/birds.JPG" alt="Color Grading from 0 to 255" class="featured-image">
+</div>
+
+
+<article class="thought">
+  <h1>Color Grading from 0 to 255</h1>
+  <p class="meta">Last updated: September 11, 2026</p>
+
+  <!-- Add this right after the <article> opening tag --><button id="toc-toggle" class="toc-toggle" aria-label="Toggle Table of Contents">
+    <i class="fas fa-list-ul"></i>
+  </button>
+  
+  <div class="toc-wrapper">
+    <div class="toc">
+      <div class="toc-header">
+        Table of Contents
+        <button class="toc-close" aria-label="Close Table of Contents">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <nav class="toc-nav" id="toc">
+        <!-- ToC content will be dynamically inserted here by JavaScript -->
+      </nav>
+    </div>
+  </div>
+  <p>I believe this might be one of my favourite things to talk about. This journey started for me with photography in college, and I was awed after I watched a few videos by gawxart. Surprisingly, for the longest time all I did was BnW photography; colors really brought… color to my art.</p>
+
+<p>I will mainly be diving deep into DaVinci Resolve in this one (I know Adobe recently introduced their own color grading tool in Lumetri, but I have not used it much so I cannot do it justice). If you wish to use other tools, that is fine too, as most of this knowledge is transferable and will be helpful everywhere.</p>
+
+<blockquote>
+  <p>NOTE: Separation of concerns is good in most things in life: each part does exactly one thing and it does it well. For the following nodes(you will understand once we get there), you are free to change them as you see fit, and mix and merge as well. I am just going with what seems most pragmatic and simple to me.</p>
+</blockquote>
+
+<h3 id="quick-overview">Quick overview</h3>
+
+<p><img src="/assets/blog_assets/content_creation/img.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Starting with color grading can be overwhelming at first, but there are a few things we can do to make our lives easier.</p>
+
+<p>Making ourselves familiar with the different tools, along with the methodology, helps. Study the image above to understand what the different parts do; as we move forward I will explain more things.</p>
+
+<p>Color grading is a two-step process. First is color correction, where you fix the exposure and contrast of the video. Once you have a good correction which looks like it has depth, we start adding the grade to that.</p>
+
+<p>There are multiple ways of doing this and everyone has their own methodology. I will break down the videos I have seen and essentially write it in four parts:</p>
+
+<ul>
+  <li><a href="https://www.youtube.com/watch?v=gPZ4-CF_osk&amp;t=3s">Beginner</a></li>
+  <li><a href="https://www.youtube.com/watch?v=45z60vnPOBw&amp;t=827s">Intermediate</a></li>
+  <li><a href="https://www.youtube.com/watch?v=7imay44H3_Q">Advanced</a></li>
+  <li><a href="https://www.youtube.com/watch?v=53gcbJPP5eA">Professional</a></li>
+</ul>
+
+<p>I am still stuck at Intermediate myself, and I try to take some inspiration from the more advanced ideas. (I am still not great at it though.)</p>
+
+<h3 id="beginner">Beginner</h3>
+
+<p><img src="/assets/blog_assets/content_creation/img2.webp" alt="Inspiration image" /></p>
+
+<p>No matter what stage of a creative process you are at, it is always great to have some inspiration.</p>
+
+<p>Another point to mention: always pick a hero frame of the video. This is a clean frame that lets you easily apply your grade. (Essentially, do not pick something with movement, or something out of focus, and so on.)</p>
+
+<p><img src="/assets/blog_assets/content_creation/img3.webp" alt="Setting up basic nodes" /></p>
+
+<p>Over here I have added 4 serial nodes (shortcut is alt/option + s), and I have adjusted the exposure using the primary wheels. Lift correlates to shadows, Gamma to midtones, Gain to highlights (these are photography terms and not the same as blacks and whites; to learn more about them go here [ADD_LINK]).</p>
+
+<p>Offset is used to change everything at once. Play around with these wheels to get the hang of it.</p>
+
+<p>One of the most important things to remember is that we want to do incremental changes. Never make large changes; .05 can be a lot at times. We gradually add to or subtract from the image as we want it.</p>
+
+<p>For <strong>exposure</strong> I just adjusted the wheels, and as a beginner you can change the saturation and contrast using the primary too (look above the wheel and you will see the option).</p>
+
+<blockquote>
+  <p>It is helpful to always label your nodes; you can right-click on a node and label it as you see fit.</p>
+</blockquote>
+
+<blockquote>
+  <p>Most tutorials will tell you against changing contrast and saturation from primaries, but it is a good beginning tool imo.</p>
+</blockquote>
+
+<p>Before adding a look (or grade) to our image, we have to make sure we protect the skin.</p>
+
+<blockquote>
+  <p>A good rule of thumb is: as long as black looks black, white looks white and skin looks like skin, you can sell any grade as real.</p>
+</blockquote>
+
+<p><img src="/assets/blog_assets/content_creation/img4.webp" alt="Setting up basic nodes" /></p>
+
+<p>We add a layer node to our 4th node.</p>
+
+<blockquote>
+  <p>Important caveat: whatever is at the bottom is actually the top layer.</p>
+</blockquote>
+
+<p><img src="/assets/blog_assets/content_creation/img5.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now select the node at the top and choose the qualifier. By hovering over your skin (I used my face) and clicking on it, you can select the color range you want to protect (press Shift + H to see the mask that has been selected). This is a delicate fight and it is tough to get exactly what you want at times.</p>
+
+<p><img src="/assets/blog_assets/content_creation/img6.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now we can go to the node on top of our skin and apply grading to that, one of the easiest ways (and the safest) is to go to curves, and change them as you like it!</p>
+
+<p><img src="/assets/blog_assets/content_creation/img7.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Another cheat code to protecting your skins is just masking them and motion tracking them using the powerful DaVinci motion tracker. This will make your grade look much cleaner. (Otherwise you start getting weird grainy artifacts.) And that’s it!</p>
+
+<p>As this was the beginner way, we skipped an immense amount of things, including CST!!! Your next task, if you choose to accept it, is to dive deeper into each of these nodes and customize each part.</p>
+
+<h3 id="intermediate">Intermediate</h3>
+
+<p><img src="/assets/blog_assets/content_creation/2img1.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now it is going to get a bit tougher, but it is completely worth it. If you shot your video in a log profile as we discussed in the [video] section, you know it completely flattens it.</p>
+
+<p>Now that is because the video is in a different color space from what we are used to in media (which is usually Rec709; if you wish to understand the different types of color profile, [check this out]). So we have to convert it from our log profile to a film profile!</p>
+
+<blockquote>
+  <p>Log profile depends on your camera, as I was using a canon. I applied my settings accordingly.</p>
+</blockquote>
+
+<p><img src="/assets/blog_assets/content_creation/2img2.webp" alt="overview of the color page of davinci" /></p>
+
+<p>A LUT (Lookup Table) is like a pre-set. The simplest way to imagine it: it is a mapping from one color to another, so red in Rec709 will be turned into scarlet in another LUT.</p>
+
+<p>Pick the LUT you like. I like Kodak so I chose that. The D55, D60 and D65 in the name refer to the white point (daylight reference) the LUT is built around: D65 (~6500K) is the standard for Rec709/sRGB video and looks neutral, D60 (~6000K) is the ACES/digital cinema white point and sits slightly warmer, and D55 (~5500K) is the classic motion-picture film white point and gives the warmest, most “vintage” cast. I usually reach for D55 or D60 when I want that filmic warmth and D65 when I want to stay closer to a modern, neutral look.</p>
+
+<p>Now the problem with LUTs is that they can be too powerful at times. That is why we use something called the Key palette. You can select Key (3rd one from the right, the one that looks like a rectangle with a hole) and decrease the intensity of the LUT with the Key Output Gain. I am leaving it as it is for now because I like the way it looks.</p>
+
+<p><img src="/assets/blog_assets/content_creation/2img3.webp" alt="overview of the color page of davinci" /></p>
+
+<p>If you notice, our video (or image in this case) is already looking so beautiful. Now to push the look we will add a bit of warmth using the temperature, and make the highlights slightly warmer by changing the gain. (You can go in whichever direction you like for the look. Changing temp, tint and primary wheels is a common way of achieving the look you want!)</p>
+
+<p><img src="/assets/blog_assets/content_creation/2img4.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now we add balance to our image by fixing the exposure. As this is the shot with a window in it, it is way too bright, which needs to be fixed. So I have cranked the gain way down; you have to adjust according to your video.</p>
+
+<blockquote>
+  <p>In retrospect, we could have added a separate contrast and saturation node, and used what we learnt in the beginner course. I personally use what we will learn in advanced!</p>
+</blockquote>
+
+<p><img src="/assets/blog_assets/content_creation/2img5.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now to add some film looks/elements. It is a bit of a controversial topic where to add these nodes. The best practice would be to add them after your LUT node, as for these you do not need a high dynamic range, unlike exposure/saturation/contrast. But I am used to this and this is how I learned, so I just follow this. (In my head, I believe it should not make much difference. Please comment if you believe I am wrong.)</p>
+
+<p>Over at the first node we add a bit of softness using Gaussian blur.</p>
+
+<p><img src="/assets/blog_assets/content_creation/2img6(halation).webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now to add my absolutely favourite node, HALATION. DaVinci does have one, but it is paid. So let us see how we can do it for free (and in a better way imo).</p>
+
+<p>Just follow along with the images and you will have it ready!
+<img src="/assets/blog_assets/content_creation/2img7(halation).webp" alt="overview of the color page of davinci" />
+<img src="/assets/blog_assets/content_creation/2img8(halation).webp" alt="overview of the color page of davinci" />
+<img src="/assets/blog_assets/content_creation/2img9(halation).webp" alt="overview of the color page of davinci" />
+<img src="/assets/blog_assets/content_creation/2img10(halation).webp" alt="overview of the color page of davinci" /></p>
+
+<p>If you want to see exactly what changes each node introduces, click on it and then press CMD/Ctrl + D. Essentially what happens is that in the linear space, light directly gets added to our original video, with the highlights blurred out, adding the halation effect!</p>
+
+<p><img src="/assets/blog_assets/content_creation/2img11(Vin).webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now, no film look is ever complete without some vignette. The default vignetting of DaVinci is not that great, and you can achieve a much better look using a mask!</p>
+
+<p><img src="/assets/blog_assets/content_creation/2img12(film_damage).webp" alt="overview of the color page of davinci" /></p>
+
+<p>This is something that I seldom use, but it does add a pretty look. This is the white film-damage effect.</p>
+
+<blockquote>
+  <p>I skipped one node, the grain node, as that too is paid in DaVinci. I recommend using a grain overlay and changing its composite mode to “overlay”. This is the one I use: [FILL_THIS]. Additionally, there is another node you can experiment with, “Glow”.</p>
+</blockquote>
+
+<p>Now, this methodology will get you closest to a cinematic look. In most scenarios I believe you do not need to learn anything more, buttttt let’s keep going!</p>
+
+<h3 id="advanced">Advanced</h3>
+
+<p>At this point if you have been practicing you must have understood the flow.</p>
+
+<p>Fix the exposure, contrast, WB and saturation, protect the skins, add your look, add your effects.</p>
+
+<p>These steps do not usually change; the means of doing each does change over time, though. Now let us understand what the ideal way of doing some of these steps is.</p>
+
+<p><img src="/assets/blog_assets/content_creation/3img1.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Instead of changing the exposure using the primary wheels, you get much more fine-grained control by doing it using the HDR wheels.</p>
+
+<p>(I still mostly use primary wheels tho)</p>
+
+<p><img src="/assets/blog_assets/content_creation/3img3.webp" alt="overview of the color page of davinci" /></p>
+
+<p>A better method to achieve contrast is by changing the curves.</p>
+
+<p><img src="/assets/blog_assets/content_creation/3img4.webp" alt="overview of the color page of davinci" /></p>
+
+<p><img src="/assets/blog_assets/content_creation/3img5.webp" alt="overview of the color page of davinci" /></p>
+
+<p>The best method to add beautiful saturation to your video is to follow the above method. HSV stands for Hue, Saturation, Value. By only keeping the saturation active and increasing gamma, you achieve a much better and smoother saturation.</p>
+
+<p><img src="/assets/blog_assets/content_creation/3img7.webp" alt="overview of the color page of davinci" /></p>
+
+<p>This I feel is a super secret sauce, just follow the above idea and it adds a beautiful warmth to your video!</p>
+
+<blockquote>
+  <p>I personally use a mix of the advanced and intermediate concepts. Whatever you believe was skipped was mostly covered in intermediate.</p>
+</blockquote>
+
+<h3 id="professional">Professional</h3>
+
+<p>Now this is going to be tough, and even I do not use these techniques in most cases. But for brevity’s sake I have included them here.</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img2.webp" alt="overview of the color page of davinci" /></p>
+
+<p>You get a much wider editing range if you work in DaVinci Wide Gamut. So create a CST In that converts from your log footage to DaVinci Wide Gamut, and a CST Out that gives out Rec 709.</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img3.webp" alt="overview of the color page of davinci" /></p>
+
+<p>The first step, as always, is color correction. But even in this, we are going to first improve the lights, increase the contrast, and make the video itself pop!</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img4.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Create an HDR node (exposure), and edit it using the HDR sliders as we did previously.</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img5.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now to change the WB we will not use the sliders as we had been so far. Create a WB node and make the gamma linear; then, to change the temperature, move the Gain primaries.</p>
+
+<p>This gives a much smoother WB.</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img7.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now let’s add some contrast.</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img8.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Previously we were eyeballing it, but to be much more precise we should place a point on the pivot point. (You can find the pivot point online! Check this out [ADD_LINK].)</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img9.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now, to truly add depth to your videos, masking is the secret tool. You want to mask your subject, highlight it, and make everything else dimmer. (It truly is something that comes with time, but masking is the secret to both great photography and videography!)</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img10.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Trust me when I say it does not get harder than this (at least to the best of my knowledge). Hue is the color of a color (I know, sounds like a crazy sentence, but it essentially means: red looks red, but if you push the hue of red to green, everything red will look green, a red apple will turn into a green apple). Saturation, the way I see it, is how strong or bright that color is (still different from luminance/brightness and vibrance).</p>
+
+<p>Hence, Hue Vs Saturation curve controls how strong each color looks!</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img11.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Now what we are trying to do is roll off the shadows, make the highlights smooth, and pop out the midtones. Because in most cases we want the midtones to be the hero!</p>
+
+<p>(Again, there are caveats to this; it really depends on the look you are going for!)</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img12.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Let’s get into color toning/grading now. The idea is to focus on one part of the color grading process at a time. We first focus on gamma, or the midtones, as they occupy the majority of the video.</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img13.webp" alt="overview of the color page of davinci" /></p>
+
+<p>Then we edit the highlights and the shadows.</p>
+
+<p><img src="/assets/blog_assets/content_creation/4img14.webp" alt="overview of the color page of davinci" /></p>
+
+<p>The final step is color compression and mixing. Here you can change the way each individual pixel looks. I still do not personally completely understand why this is done, but it does add a nice look to the final output.</p>
+
+<p>And there you have it, a complete guide to color grading for each and every level. This is the extent of my knowledge. Now let us move forward.</p>
+
+<h3 id="cst-color-space-transform-node">CST (Color Space Transform Node)</h3>
+
+<p>As a rule of thumb, you want to apply your creative nodes (glow, halation, dust, grain, etc.) after CST, and color grading nodes (WB, EXP, Look) before it.</p>
+
+<blockquote>
+  <p>This is just a good rule of thumb and people break it all the time, including me in this blog!</p>
+</blockquote>
+
+<p>Sometimes you might see some light moving/twisting weirdly after CST; this is called an artifact. You can usually fix it by changing the gamut mapping to saturation compression. (It is in the CST settings.)</p>
+
+<h3 id="tips">Tips</h3>
+
+<ul>
+  <li>Group similar clips in the color page, and switch between them at the top</li>
+  <li>Use an adjustment layer for color grading</li>
+  <li>Name your nodes</li>
+</ul>
+
+<h2 id="note">Note</h2>
+
+<p>I originally started this to write about Content Creation, but I don’t believe I know enough yet to explain it in depth. These are some additional sections I wrote along the way — feel free to check them out. I will try to finish it later ideally.</p>
+
+<p>For almost the past 2 years I have been actively doing content creation on some platforms (LinkedIn, X &amp; blogsite), and thinking of doing it on others (YouTube, Insta). Through my efforts I have gathered over 20k people who enjoy what I put out.</p>
+
+<p>I was quite confused where to put this, it’s not exactly an AI/ML blog, but these are not my random thoughts or projects either. I have researched and put together this document as both a current and a future guide for myself and any other curious mind who is trying to get into content. Staying true to my way of writing, this is going to be another long &amp; dense blog. But I can assure you, after it you will have a newfound respect for content creation, and hopefully a new desire to do it yourself.</p>
+
+<p>Here is the table of contents. I strongly recommend going through them in order, but if you find one topic more interesting than another, feel free to skip to that one!</p>
+
+<ul>
+  <li>On Reason</li>
+  <li>On Platform</li>
+  <li>On Content</li>
+  <li>On Writing</li>
+  <li>On Audio</li>
+  <li>On Video</li>
+  <li>On Editing</li>
+  <li>On Secrets</li>
+</ul>
+
+<h2 id="on-reason">On Reason</h2>
+
+<p>From experience I can assure you content creation is not easy. It is easy to see the outliers, where someone from their bedroom with a bad cell phone camera has a million followers. But look past them: it is a journey which tests your own self-worth (because in the end content is extremely transparent about you and whether people like your thoughts and ideas).</p>
+
+<p>And this generally is not easy without having a strong reason. I personally believe you can have any of the three following reasons. (Originally inspired by Ali Abdaal {paste link} from his video on how to do content creation {paste link})</p>
+
+<ul>
+  <li>Logging (Personal Hobby)</li>
+  <li>Hiring (Personal Career)</li>
+  <li>Business (Personal Branding)</li>
+</ul>
+
+<p>The above list is in order of ease. Let’s go through each of them one by one.</p>
+
+<p>I urge people to do content creation, because it does truly change your life. Maybe it is not for you, but I hope to change that by the end of this.</p>
+
+<h2 id="on-platform">On Platform</h2>
+
+<p>{add links to videos by Dan Koe, Hormonzi and the caleb guy whose content video you watched a long time ago}</p>
+
+<p>https://www.youtube.com/watch?v=Ch4Sl0POBhU&amp;t=31s</p>
+
+<p>https://www.youtube.com/watch?v=MVz9mm0Z-7g&amp;t=3s</p>
+
+<p>The unfortunate reality is that each platform has its own kind of “major” audience (what I mean by that is, each platform has a mix of people in it, but it still ultimately caters to a specific kind). Now due to the variety of it, I am in no way an expert in all of them (and I do lack credibility beyond two platforms too), and different things work on different platforms and it keeps changing.</p>
+
+<p>But the core idea remains the same. Identify the sub-part of the major audience which your content provides value to.</p>
+
+<p>This entire blog, and in fact all of content creation, can be summed up in two words in my opinion: <strong>AUDIENCE</strong> &amp; <strong>VALUE</strong>. You would also obviously be interested in how to monetize it, so I’ll touch on that a bit and add it here.</p>
+
+<h3 id="x-formerly-twitter">X (formerly Twitter)</h3>
+
+<h4 id="audience">Audience</h4>
+
+<p>X in my opinion is one of the easiest to start with and still one of the hardest to penetrate. The simple reason being that people who spend time here are usually tech people and people in a hurry. They want information as soon as possible, so you have a very short window to provide value to them. Density and complexity are rewarded here.</p>
+
+<h4 id="value">Value</h4>
+
+<p>From my observation, long threads, long articles, quick witty tweets and links to unknown sources work well, as they provide a lot of information very quickly.
+People here are largely tech focused (AI).</p>
+
+<h4 id="monetization">Monetization</h4>
+
+<ul>
+  <li>From the platform (certain criteria, not tough after 6 months of consistency)</li>
+  <li>From affiliates &amp; promotions</li>
+</ul>
+
+<h3 id="linkedin">LinkedIn</h3>
+
+<h4 id="audience-1">Audience</h4>
+
+<p>This is one of those platforms that has a chunk of two kinds of people: business people looking to learn/hire/connect, and upskillers.</p>
+
+<h4 id="value-1">Value</h4>
+
+<p>Talking about business, talking about courses, and sharing multiple links in a single post works great, because people come here with the expectation to learn in full about current trends. Sharing novel ideas and knowledge works wonders too. (But that generally works well everywhere.)</p>
+
+<h4 id="monetization-1">Monetization</h4>
+
+<ul>
+  <li>From affiliates &amp; promotions</li>
+  <li>I will say it is much better and easier to get a good job through LinkedIn if you have a good profile.</li>
+</ul>
+
+<h3 id="youtube">YouTube</h3>
+
+<h4 id="audience-2">Audience</h4>
+
+<p>Talking about audience on YouTube is not exactly straightforward, because there are all kinds of things people use YouTube for. Entertainment, Education, Background noise, COOKING. But all in all it boils down to this: people come here for the LONG FORM of entertainment.</p>
+
+<h4 id="value-2">Value</h4>
+
+<p>Value on YouTube really depends on your audience, but the structure of most videos in my opinion is the same. At the end of the video the audience feels like either they had fun or they learnt something. And as long as you can do that, it will work out well!</p>
+
+<h4 id="monetization-2">Monetization</h4>
+
+<ul>
+  <li>From the platform (Probably the best)</li>
+  <li>From affiliates &amp; promotions</li>
+</ul>
+
+<h3 id="instagram">Instagram</h3>
+
+<h4 id="audience-3">Audience</h4>
+
+<p>The funny thing about Instagram is that everyone is equal in the eyes of the platform (which is kind of the case for most platforms now); anyone can go viral. It really does not matter if you have a million followers or not.</p>
+
+<p>So it is important to understand the secret to “virality”, which is essentially high quality cinematic content. Unless you are a genius with very unique taste and content, the cheat code is to make beautiful content. On YouTube, mediocre quality with great content works; not on Instagram.</p>
+
+<h4 id="value-3">Value</h4>
+
+<p>Value on Instagram is a dopamine rush: make them laugh, make them cry, make them happy, make them feel smart. Understand what emotion you are targeting and fulfil that.</p>
+
+<h4 id="monetization-3">Monetization</h4>
+
+<ul>
+  <li>I do not think the platform pays (will need to check)</li>
+  <li>From affiliates &amp; promotions (Probably the best)</li>
+</ul>
+
+<h3 id="facebook">Facebook</h3>
+
+<p>Bro I am not that old….</p>
+
+<h3 id="youtube-shorts">YouTube Shorts</h3>
+
+<h4 id="audience-4">Audience</h4>
+
+<p>I personally do not have much experience with YouTube Shorts, but I do know that YouTube does not care about cinematic content here. I believe it is still mostly a value driven platform, where real value outweighs everything else.</p>
+
+<h4 id="value-4">Value</h4>
+
+<p>In my eyes, value on YouTube has been and always will be knowledge.</p>
+
+<h4 id="monetization-4">Monetization</h4>
+
+<ul>
+  <li>The shorts themselves can be monetized</li>
+  <li>From affiliates &amp; promotions like other platforms</li>
+</ul>
+
+<h3 id="tiktok">TikTok</h3>
+
+<h4 id="audience-5">Audience</h4>
+
+<p>I have seen my friends use TikTok, and what I understand is that TikTok is for fast, attention-grabbing, fun content. If that is you, this is perfect.</p>
+
+<h4 id="value-5">Value</h4>
+
+<p>Value on TikTok is entertainment.</p>
+
+<h4 id="monetization-5">Monetization</h4>
+
+<ul>
+  <li>Affiliates &amp; Promotions</li>
+</ul>
+
+<h3 id="medium">Medium</h3>
+
+<h4 id="audience-6">Audience</h4>
+
+<p>Medium is a mixed bag. If you are considering starting out by writing, this is a good platform to start with. People mostly come here for short to medium sized blogs on a specific topic.</p>
+
+<p>For me it personally revolves around tech, but there is a plethora of things people talk about. Business, Marketing, Writing, etc.</p>
+
+<h4 id="value-6">Value</h4>
+
+<p>I have seen that Medium is more knowledge driven than personal story driven; sharing specific resources, learnings and explanations seems to be what the platform prioritizes.</p>
+
+<h4 id="monetization-6">Monetization</h4>
+
+<ul>
+  <li>Through paid articles</li>
+</ul>
+
+<h3 id="substack">Substack</h3>
+
+<h4 id="audience-7">Audience</h4>
+
+<p>Substack is the next logical step after Medium. It is great if you have been considering starting a newsletter (I recently started one of my own!). The Substack audience really comes for YOU, so the audience is literally whoever you want to talk to.</p>
+
+<h4 id="value-7">Value</h4>
+
+<p>Really depends on the kind of value you are providing!</p>
+
+<h4 id="monetization-7">Monetization</h4>
+
+<ul>
+  <li>Through paid articles</li>
+  <li>Possibly affiliates and promotions in the newsletter itself</li>
+</ul>
+
+<h3 id="blogsite">Blogsite</h3>
+
+<h4 id="audience-8">Audience</h4>
+
+<p>If you wish to pursue blogging simply as a hobby, starting one of your own is a great way to begin. A simple way to set one up is using Jekyll; the audience can be limited to yourself, your friends &amp; family, or any random stranger on the internet.</p>
+
+<h4 id="value-8">Value</h4>
+
+<p>It brings one peace and clarity in life.</p>
+
+<h4 id="monetization-8">Monetization</h4>
+
+<ul>
+  <li>Running Ads</li>
+</ul>
+
+<h3 id="reddit">Reddit</h3>
+
+<h4 id="audience-9">Audience</h4>
+
+<p>Reddit is a wild place; the people here come for REALITY. Seriously, do not try to push an agenda or “AI Slop”. The comments will demolish you, and you cannot sell a personal brand.</p>
+
+<p>The best use of Reddit I have seen is to get early adopters and customers, search through ideas, etc. It is an amazing platform for specific use cases!</p>
+
+<h4 id="value-9">Value</h4>
+
+<p>Share real stories, moments, thoughts, lessons.</p>
+
+<h4 id="monetization-9">Monetization</h4>
+
+<ul>
+  <li>Get early customers</li>
+  <li>I believe there is a karma system that pays, but I am not sure how it works.</li>
+</ul>
+
+<h3 id="podcasts-spotify-apple-music">Podcasts (Spotify, Apple Music)</h3>
+
+<h4 id="audience-10">Audience</h4>
+
+<p>The two things about podcasts are:</p>
+
+<ol>
+  <li>It is inherently a long form of content</li>
+  <li>It is almost always something done in the background alongside other activities</li>
+</ol>
+
+<p>And this is very important to understand because it helps you shape what kind of content you are creating.</p>
+
+<h4 id="value-10">Value</h4>
+
+<p>Value is provided here by providing knowledge or entertainment. (Truth be told I cannot think of any other information that can be created into content.)</p>
+
+<h4 id="monetization-10">Monetization</h4>
+
+<ul>
+  <li>Some platforms may be monetizable</li>
+  <li>Sponsors are the best bet</li>
+</ul>
+
+<h3 id="books">Books</h3>
+
+<h4 id="audience-11">Audience</h4>
+
+<p>People read what you write, write well.</p>
+
+<h4 id="value-11">Value</h4>
+
+<p>It’s your book, decide what value you are providing.</p>
+
+<h4 id="monetization-11">Monetization</h4>
+
+<ul>
+  <li>I hope I do not need to explain this.</li>
+</ul>
+
+<h3 id="misc">Misc</h3>
+
+<p>Fiverr, upwork, woop store</p>
+
+<p>There are a million different ways to make money on the internet; always remember what it is you are providing.</p>
+
+<ul>
+  <li>Product (Media or Physical)</li>
+  <li>Service</li>
+  <li>Consultation</li>
+</ul>
+
+<h2 id="on-content">On Content</h2>
+
+<p>{links to vid by chris do too!}</p>
+
+<p>The amazing thing is, you can create all kinds of content depending on what you like.</p>
+
+<h2 id="on-writing">On Writing</h2>
+
+<p>The harsh reality is that no matter what kind of content creation you pick, or the platform you pick, writing is the first thing you will be doing. So you had better get good at it.</p>
+
+<p>The best advice I got is this:</p>
+
+<p><img src="/assets/blog_assets/content_creation/writing.webp" alt="The day you became a better writer by scott adams" /></p>
+
+<p><a href="https://sorfis.com/wp-content/uploads/2021/09/Writing-Tips-Scott-Adams-DFW-Sowin-compilation-Zweig.pdf">Source</a></p>
+
+<h2 id="on-audio">On Audio</h2>
+
+<p>Assuming you chose a platform where you do more than just writing, speaking is going to be the next important thing. Because no matter how good your visuals are, if one can’t hear or understand you, they won’t stick around.</p>
+
+<p>The simple fact is: get a good enough mic, denoise it, and add a bit of vocal enhancer / equalizer. Every editing software has something for that.</p>
+
+<h3 id="on-sfx">On SFX</h3>
+
+<p>It is extremely easy to overcomplicate this, but I believe there are only 4 fundamental sound effects in content creation:</p>
+
+<ul>
+  <li><a href="https://pixabay.com/sound-effects/search/score/">Score</a></li>
+  <li><a href="https://pixabay.com/sound-effects/search/whoosh/">Whoosh</a></li>
+  <li><a href="https://pixabay.com/sound-effects/search/click/">Click</a></li>
+  <li><a href="https://pixabay.com/sound-effects/search/riser/">Riser</a></li>
+</ul>
+
+<p>Whoosh for zoom in, zoom out, or transitions
+Riser to build up tension and then pay off
+Clicks for any mechanical object or any pop-up on your screen
+Score for environment and mood setting</p>
+
+<p>That’s about it; one does not really need to complicate these things. There is another segment of sound design which this <a href="https://www.youtube.com/watch?v=9jBic4IDfxA">video</a> breaks down really well!</p>
+
+<h2 id="on-video">On Video</h2>
+
+<p>Ok I lied, this isn’t exactly a part on video but more on lighting. Blame bad lighting first before you ever blame your camera.</p>
+
+<p>Now, to understand different kinds of frames, we first need to understand how cameras work.</p>
+
+<h3 id="iso">ISO</h3>
+
+<p>The simplest way to explain ISO will be to see it as the sensitivity of your camera to light. So the lower the ISO, the lesser the sensitivity, and vice versa.</p>
+
+<p>From the above statement, we can infer that we should just use the highest ISO then, right? Well, no, because noise is correlated with ISO. So as you increase ISO, the noise of your video increases as well.</p>
+
+<p>A good range of ISO is around 400-3200 (it largely depends on your camera, and I recommend looking it up online).</p>
+
+<h3 id="fps">FPS</h3>
+
+<p>24/25/30 FPS is good for normal cinematic videos; 60/120 is good if you want to do slow motion. A good rule of thumb is shutter speed = 1/(2*FPS).</p>
+
+<h3 id="aperture">Aperture</h3>
+
+<p>A good rule of thumb… lower is better.</p>
+
+<p>(I also usually just stop down my aperture when I am shooting outside and it is too sunny. The ideal solution is to use an ND filter.)</p>
+
+<h3 id="on-framing">On Framing</h3>
+
+<p>Framing might be just one of those things that silently elevates and sets the mood of the story. The way I like to imagine it: if someone can see your frames, you did bad framing. Good framing is invisible and blends into the story.</p>
+
+<p>{add link to the frames video by that pay kay guy}</p>
+
+<p>https://www.youtube.com/playlist?list=PLTQtLjIqecdydlanOGh6iwoWOb9VxpDts</p>
+
+<p>https://www.youtube.com/watch?v=7W89eklcj3c&amp;t=2s</p>
+
+<p>Some of my favourite frames are:</p>
+
+<p>Rule of third</p>
+
+<p><img src="/assets/blog_assets/content_creation/rule_of_third.webp" alt="Image example of rule of third" /></p>
+
+<p>Image taken from <a href="https://stillslab.com/filter?search=rule+of+third">here</a></p>
+
+<p>Over the shoulder</p>
+
+<p><img src="/assets/blog_assets/content_creation/over_the_shoulder.webp" alt="Image example of an over the shoulder shot" /></p>
+
+<p>Image taken from <a href="https://stillslab.com/gallery/obsession">here</a></p>
+
+<p>Symmetry</p>
+
+<p><img src="/assets/blog_assets/content_creation/symmetry.webp" alt="Image example of symmetry" /></p>
+
+<p>Image taken from <a href="https://stillslab.com/filter?search=symmetry">here</a></p>
+
+<p>Golden Ratio</p>
+
+<p><img src="/assets/blog_assets/content_creation/golden_ration.webp" alt="Image example of the golden ratio" /></p>
+
+<p>Image taken from <a href="https://stillslab.com/filter?search=%2Bgolden%2Bratio">here</a></p>
+
+<p>Close ups</p>
+
+<p><img src="/assets/blog_assets/content_creation/close_up.webp" alt="Image example of a close up" /></p>
+
+<p>Image taken from <a href="https://stillslab.com/filter?size=Close+Up">here</a></p>
+
+<h2 id="on-vfx">On VFX</h2>
+
+<p>This is something I am still actively working on, but I believe there are a few popular ones that I love:</p>
+
+<ul>
+  <li>Background</li>
+  <li>Texture</li>
+  <li>Text Animations</li>
+  <li>3D camera</li>
+</ul>
+
+<p>The fundamental thing that you need to get good at is keyframes &amp; curves.</p>
+
+<p>Most of these can be done in DaVinci Fusion, which is what I primarily use. I am not good enough to explain it in great detail at the moment. For the time being I will attach some tutorials that helped me a lot.</p>
+
+<h2 id="on-editing">On Editing</h2>
+
+<p>I do everything in DaVinci, and I recommend that as well. Though it may seem daunting at first, in my opinion it has the highest payoff.</p>
+
+<h3 id="import-settings">Import settings</h3>
+
+<p>The most important project settings in my opinion are:</p>
+
+<ul>
+  <li>Resolution</li>
+  <li>FPS</li>
+</ul>
+
+<p>One useful thing I often do is work with proxies instead of the raw 4K footage; this keeps playback from lagging while I edit. In DaVinci you can do this by selecting your clips in the Media Pool, right-clicking, and choosing “Generate Proxy Media” (then set Playback → Proxy Handling to “Prefer Proxies”). When you export, DaVinci automatically switches back to the full-resolution originals. {Show how it is done}</p>
+
+<h3 id="types-of-cuts">Types of cuts</h3>
+
+<ul>
+  <li>Jump Cut</li>
+  <li>L cut</li>
+  <li>J cut</li>
+  <li>Zoom cut</li>
+  <li>Match cut</li>
+</ul>
+
+<h3 id="useful-shortcuts">Useful shortcuts</h3>
+
+<p>It is very useful to create and set up shortcuts. I have made personal keybinds for myself that have cut my editing time significantly.</p>
+
+<p>1 -&gt; play backward (sped up)
+2 -&gt; play
+3 -&gt; play forward (sped up)
+w -&gt; cut at playhead
+q -&gt; delete everything before playhead
+e -&gt; delete everything after playhead</p>
+
+<p>Other very useful ones are
+Shift + Delete -&gt; Ripple delete
+b -&gt; blade
+a -&gt; selection cursor</p>
+
+<h3 id="export-settings">Export settings</h3>
+
+<p>Export is extremely platform dependent, but it’s usually a good idea to export your video in the resolution you shot at.</p>
+
+<h3 id="on-fonts">On Fonts</h3>
+
+<p>These are some great places to get fonts and inspiration.</p>
+
+<ul>
+  <li><a href="https://fontsinuse.com/">Font in use</a></li>
+  <li><a href="https://fonts.google.com/">Google fonts</a></li>
+  <li><a href="https://fontshare.com/">Font Share</a></li>
+</ul>
+
+<h3 id="text-animation">Text Animation</h3>
+
+<p>To be written when I can do it.</p>
+
+<h3 id="on-3d">On 3D</h3>
+
+<p>To be written when I can do it.</p>
+
+<h2 id="on-storytelling">On Storytelling</h2>
+
+<p>All the above are a means to an end, just cogs in a machine. The machine is the story. So you have to understand how each part works to make the story correct and beautiful. It is very important to understand: “THE COG COMPLEMENTS THE STORY”. Do not let any part of the means take over the story; the story is the hero. Now, for most beginners (including me!) storytelling just doesn’t come naturally. But I believe, as an engineer, that everything is a science and it can be broken down into individual simple components.</p>
+
+<p>Let me walk you through the different steps to tell a good story.</p>
+
+<h3 id="storyboarding">Storyboarding</h3>
+
+<p>The way I see storyboarding is as a means to put your ideas into a simple story structure. For that, one needs inspiration, so grab a bunch of <a href="https://stillslab.com/">movie/film shots</a> and some <a href="https://eyecannndy.com/">edits</a> you loved, and create your shot list.</p>
+
+<h3 id="types-of-story">Types of story</h3>
+
+<p>Sometimes it is hard to come up with a story from scratch, so having some structure always helps. Here are some popular ones:</p>
+
+<ul>
+  <li><a href="https://reedsy.com/blog/guide/story-structure/three-act-structure/">Three Act Structure</a></li>
+  <li><a href="https://writers.com/freytags-pyramid">Freytag’s Pyramid</a></li>
+  <li><a href="https://reedsy.com/blog/guide/story-structure/heros-journey/">The Hero’s Journey</a></li>
+</ul>
+
+<h3 id="structures-of-a-story">Structures of a story</h3>
+
+<p>Now, the above methods work great for a long form of video; they specifically go into the content section of this part. But we can still divide it essentially into 3 parts.</p>
+
+<h4 id="hook">hook</h4>
+
+<p>This is one of the most important parts of the video. It comprises about 5% of the video but accounts for 50% of its impact. So pay attention.</p>
+
+<p>The hook, as the name says, hooks the viewer to the content. There are multiple different kinds:</p>
+
+<ul>
+  <li>
+    <p>Video Hook -&gt; This is the most common kind of hook. Here you cause a visual pattern break by engaging the viewer’s visuals.</p>
+  </li>
+  <li>
+    <p>Audio Hook -&gt; Rare, but still amazing. Done best with music.</p>
+  </li>
+</ul>
+
+<p>(P.S. Obviously your script still needs a good written hook to begin with.)</p>
+
+<h5 id="thumbnail">Thumbnail</h5>
+
+<p>YouTube will benefit the most from this knowledge. I could do a big deep dive on how to make the best thumbnail out there, which may perform well. (It is always a probabilistic model.)</p>
+
+<p>But I will not; instead, feel free to watch this video which does a much better job…</p>
+
+<h4 id="content">Content</h4>
+
+<p>Now, finding content: this is one of THE questions of social media. I’ll say it is mostly irrelevant for a beginner, because initially no one cares about what you put out, since you are essentially a nobody.</p>
+
+<p>So here is some advice on finding your content:</p>
+
+<ul>
+  <li>
+    <p>Make or post what you wish existed in the world. For instance, I love to read articles and blogs, and I really wished someone would post interesting things they were reading, so that is what I started doing on X. Surprise surprise, a lot of people wished for that too!</p>
+  </li>
+  <li>
+    <p>Do what you would have done anyhoo. It’s much easier to do something you like than to do something you think others will like.</p>
+  </li>
+  <li>
+    <p>Be you, that is your biggest moat. There is no competing with the real you, because you are like no one, and no one is like you!</p>
+  </li>
+</ul>
+
+<h4 id="cta">CTA</h4>
+
+<p>CTA stands for call to action. It can be multiple things:</p>
+
+<ul>
+  <li>Links to your courses/products/affiliates</li>
+  <li>Engagement</li>
+  <li>Other social media</li>
+</ul>
+
+<p>I used to think having a CTA was like selling snake oil, but a fabulous friend of mine changed my opinion on it. The example was something along the lines of “If Steve Jobs started a design academy and charged 100 dollars for it, would you not pay for it?” (Obviously Steve Jobs wouldn’t need to, and he most likely would not do it for that little either. The idea was that if person X is one of the best in Y, it is completely reasonable for them to charge for the years of work they have put into their field. You pay for the years of time &amp; experience, not the course itself.)</p>
+
+<p>Also another thought that I liked was that in courses, it’s rarely the material that you are charged for, but the structure — because we live in a day and age where you have access to all kinds of information. The hard thing is to know the right kind of information for you!</p>
+
+<p>The reasoning can be extended to everything, but what I am trying to say is… be a good person, use this knowledge to make the world a better place.</p>
+
+<h3 id="tips-1">Tips</h3>
+
+<p>We can rave about these for days, but there are so many ways to mess up one’s story and so few ways to get it correct.</p>
+
+<ul>
+  <li>Filter (human personality) (speak through a mental filter)</li>
+  <li>Voice (personal touch)</li>
+  <li>“But” and “therefore”, not “and then” (South Park creators)</li>
+</ul>
+
+<h2 id="on-secrets">On Secrets</h2>
+
+<ul>
+  <li>Do what you like to do, delegate the rest when you can</li>
+  <li>HIRE AN EDITOR</li>
+  <li>Use shortcuts</li>
+  <li>Have structure</li>
+  <li>LUTs</li>
+  <li>Cut on the beat</li>
+  <li>Understand curves, like seriously.</li>
+</ul>
+
+<h3 id="plugins">Plugins</h3>
+
+<ul>
+  <li>AutoSubs (Use this often)</li>
+  <li>FontSearch</li>
+  <li>Roto</li>
+</ul>
+
+<h2 id="conclusion">Conclusion</h2>
+
+
+  <div class="voting-buttons" data-post-id="thoughts-color-grading-from-0-to-255">
+    <button class="vote-btn upvote">
+      <span class="vote-icon">↑</span>
+      <span class="vote-count upvote-count">0</span>
+    </button>
+    <button class="vote-btn downvote">
+      <span class="vote-icon">↓</span>
+      <span class="vote-count downvote-count">0</span>
+    </button>
+  </div>
+
+  <!-- Social sharing section -->
+  <div class="share-section mt-4">
+    <h5 class="share-title">Share this post with your friends!!</h5>
+    <div class="share-buttons">
+      <a href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fcolor_grading_from_0_to_255%2F&text=Color+Grading+from+0+to+255" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-twitter"></i> Twitter
+      </a>
+      
+      <a href="https://reddit.com/submit?url=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fcolor_grading_from_0_to_255%2F&title=Color+Grading+from+0+to+255" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-reddit"></i> Reddit
+      </a>
+      
+      <a href="https://www.linkedin.com/sharing/share-offsite/?url=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fcolor_grading_from_0_to_255%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-linkedin"></i> LinkedIn
+      </a>
+      
+      <a href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fgoyalpramod.github.io%2Fthoughts%2Fcolor_grading_from_0_to_255%2F" 
+         class="share-btn" 
+         target="_blank"
+         rel="noopener noreferrer">
+        <i class="fab fa-facebook"></i> Facebook
+      </a>
+    </div>
+  </div>
+
+  <!-- Comments section -->
+  
+  <div class="comments-section mt-5">
+    <h5 class="comments-title mb-4">Comments</h5>
+    <script src="https://utteranc.es/client.js"
+            repo="goyalpramod/goyalpramod.github.io"
+            issue-term="pathname"
+            label="💬 comments"
+            theme="github-light"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+  
+  <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+</article>
+
+      </div>
+    </main><footer class="site-footer">
+  <div class="wrapper">
+    <div class="footer-row">
+      <!-- Left side description -->
+      <div class="footer-description">
+        <p>A space for Machine Learning, Philosophy, Life, Food or whatever I fancy at the moment.</p>
+      </div>
+
+      <!-- Right side social links -->
+      <div class="social-links">
+        
+        <a href="https://github.com/goyalpramod" target="_blank" aria-label="GitHub">
+          <i class="fa-brands fa-github"></i>
+        </a>
+        
+        
+        
+        <a href="https://twitter.com/goyal__pramod" target="_blank" aria-label="Twitter">
+          <i class="fa-brands fa-x-twitter"></i>
+        </a>
+        
+        
+        
+        <a href="https://linkedin.com/in/goyalpramod" target="_blank" aria-label="LinkedIn">
+          <i class="fa-brands fa-linkedin"></i>
+        </a>
+        
+        
+        
+        <a href="https://youtube.com/@goyal_pramod" target="_blank" aria-label="YouTube">
+          <i class="fa-brands fa-youtube"></i>
+        </a>
+        
+      </div>
+    </div>
+
+    <div class="footer-copyright">
+      <p>&copy; 2026 Pramod's Blog</p>
+    </div>
+  </div>
+</footer><!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- D3.js for visualizations -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Copy Code Script -->
+    <script src="/assets/scripts/copyCode.js"></script>
+    <!-- Back to Top Script -->
+    <script src="/assets/scripts/backToTop.js"></script>
+    <!-- Table of Contents Script -->
+    <script src="/assets/scripts/toc.js"></script>
+    <script src="/assets/scripts/dark-mode.js"></script>
+
+    <!-- Firebase --><script type="module">
+    // Import the functions you need from the SDKs you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-analytics.js";
+    // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+  
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+      apiKey: "AIzaSyBJBUmmGWVR0KUYBiSJF-hLmWdJV1n3JX8",
+      authDomain: "blog-5c804.firebaseapp.com",
+      projectId: "blog-5c804",
+      storageBucket: "blog-5c804.firebasestorage.app",
+      messagingSenderId: "800555725459",
+      appId: "1:800555725459:web:b9bfbb95b2cf89f3e0d366",
+      measurementId: "G-3E5CXE5JTX"
+    };
+  
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+
+    // Export the initialized app
+    window.firebaseApp = app;
+</script><!-- Add voting.js script -->
+    <script type="module" src="/assets/scripts/voting.js"></script>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        // More specific selector to target all links in content areas
+        const contentLinks = document.querySelectorAll(`
+          .note a,
+          .latest-post-card a,
+          .blog-post a,
+          .thought-post a,
+          article a
+        `);
+        
+        contentLinks.forEach(link => {
+          // Check if the link is pointing to an external site
+          const isExternalLink = link.hostname !== window.location.hostname;
+          
+          // Only add target="_blank" to external links within content
+          if (isExternalLink) {
+            link.setAttribute('target', '_blank');
+            link.setAttribute('rel', 'noopener noreferrer');
+            link.classList.add('content-link');
+          }
+        });
+      });
+    </script>
+
+  </body>
+
+</html>
