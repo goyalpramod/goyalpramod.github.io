@@ -229,37 +229,70 @@ I will like these series to be exhaustive enough to bring any newbie upto SOTA l
 
 Now let us begin with... understanding the hardware. Now hear me out, when it comes to CUDA. Understanding what GPU you have and how it works is equally important as understaning the code. Because these are tightly coupled. 
 
+NOTES: 
+1. Mention device and host 
+2. Mention how data is allocated and freed using CudaMalloc etc 
+3. Define and differentiate between and kernel and so on! 
+4. [ADD PART OF COMPUTE AND MEMORY PROBLEM WHEN IT COMES TO GPUs]
+
+
 ### Understanding the GPU 
 
 Now one obvious question arrises is why do we even have GPUs, aren't CPUs enough? Can we not combine them*? Why have a separate module at all?
 
+*interestingly this is exactly what apple did, you can understand more about it [here](https://discussions.apple.com/thread/255191914?sortBy=rank) (I remember watching a beautiful video explaining this in greater depth, I forgot about it. If you know what I am talking about, please reach out!).
+
 This is how a CPU looks like 
 
-[CREATE_IMAGE_OF_CPU_INTERNAL]
-(Inspired from first chapter of PMPP)
+![Image of CPU Internal](/assets/blog_assets/supe_fast_inference/notes_on_cuda_1.webp)
+(Inspired form [PMPP](https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/))
+
 the different parts are 
 
-DRAM 
-CACHE 
-CONTROL 
-ALU 
+DRAM -> Dynamic Random Access Memory, this is where data gets stored before computation
 
-Now this is great if you want to do things in sequence, one after the other. In cpus we even have multiple cores so you can run multiple computation in parallel (multi-threading, parallelism ,and async are all different ideas)
+CACHE -> Temporary memory space to store on the fly computational values
 
-Now imagine a matrix multiplication, the core of most of AI. It is an operation which if you think about it can be run in parallel, each output value can be calculated independently of the other output values all you need is the row and column bector for that i and j values. 
+CONTROL -> Determines where to send the computation, where to store data. It's the control center! 
 
-[MAKE_DIAGRAM_SHOWING_HOW_IT_IS_PARALLEL]
+ALU -> Arithmetic Logic Unit, this is the part that takes care of computation. 
 
-And to enable this what would we need differently from the CPU... well it isnt hard to answer more ALUS!!! because we want to compute these values asap and that is why a GPU in general looks like this 
+> Note: This is a gross over simpliffication of how CPUs look like (even GPUs when we get to it), this is meant to help you understand the core components and how they work. As we go through the blog we will gradudally break down these high level components to their individual sub parts and understand how they work! 
 
-[IMAGE_OF_GPU]
-(inspired from first chapter of PMPP)
+Now this is great if you want to do things in sequence,i.e one after the other. In CPUs we even have multiple cores so you can run multiple computation in parallel (multi-threading, parallelism ,and async are all different ideas consider [reading](https://stackoverflow.com/questions/27435284/multiprocessing-vs-multithreading-vs-asyncio) this to understand the difference.)
 
->NOTE: Both the CPU and GPU architecture are an oversimplification. But they have necessary info to get the point across. As we get more advanced, we will add on to our existing knowledge and make the diagrams more complex!
+Now imagine a matrix multiplication, the core of most of AI. It is an operation which if you think about can be run in parallel, each output value can be calculated independently of the other output values all you need is the row and column vector for that i and j values. 
 
+![Image of Matrix Multiplication](/assets/blog_assets/supe_fast_inference/notes_on_cuda_7.webp)
 
+And to enable this what would we need differently from the CPU... well it isn't hard to answer more ALUS!!! because we want to compute these values ASAP and that is why a GPU in general looks like this 
 
-*interestingly this is exactly what apple did, you can understand more about it here ....
+![Image of GPU Internal](/assets/blog_assets/supe_fast_inference/notes_on_cuda_2.webp)
+(Inspired form [PMPP](https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/))
+
+>NOTE: Again, this GPU architecture is an oversimplification. But it is necessary info to get the point across. As we get more advanced, we will add on to our existing knowledge and make the diagrams more complex!
+
+As you can see above, we have way more ALUs. Let's understand them better by looking at what the inidividual parts are called. We will explore them a bit more in detail unlike the CPU section above as this blog is all abount understanding GPUs and CUDA. 
+
+![Memory layout of the internal of a GPU](/assets/blog_assets/supe_fast_inference/notes_on_cuda_5.webp)
+Image inspired from this [blog](https://damek.github.io/random/basic-facts-about-gpus/#fn:12)
+
+The most basic fact that we need to understand is that, the higher the memory storage, slower the speed. And vice versa. (I do not completely understand the reason behind it right now, but when I do. I will write it!).
+
+Global Memory or VRAM is the advertised GPU storage, an SM (or streaming multiprocessor) has multiple parts to it like tensor cores, threads, warp scheduler and much more stuff. 
+
+For this current blog, we need not dive that much into it! So we will look at the core ideas for now. The most important thing to understand is that SMs have blocks inside of them, these blocks have threads in them, the threads of a block has access to the shared memory of that block ONLY. 
+
+All threads are arranged in a 32 thread warp! Essentially a warp runs all the threads simultaneously. 
+(If this does not make a lot of sense right now, do not worry. As we move forward it will start making more sense!)
+
+![Data transfer from VRAM to SM](/assets/blog_assets/supe_fast_inference/notes_on_cuda_6.webp)
+
+The transfer of data from global memory to an SM is an extremely inefficient operation, [horace he](https://horace.io/) has an amazing blog "[Making GPUs go Brrr](https://horace.io/brrr_intro.html)" that explains it quite well. Check it out. So ideally we would like to take our data, give it to the SM do all the necessary computation there. And only send it back once we are done computing. 
+
+![Data transfer from VRAM to SM](/assets/blog_assets/supe_fast_inference/notes_on_cuda_4.webp)
+
+The above image is a simplification of how an SM looks like. 
 
 ### Understanding CUDA 
 
@@ -316,4 +349,20 @@ __global__ void super_bad_matmul_kernel(const float* A, const float* B, float* o
 
 }
 
-``` -->
+```
+
+
+
+## NOtes on CUDA #2  
+
+In our last blog we understood how CUDA works and how a general GPU will look like 
+
+Now let us optimize it 
+
+The few things we will learn are 
+
+* Warp divergence 
+* Bank conflicts 
+* Shared memory 
+
+https://damek.github.io/random/basic-facts-about-gpus/ -> Good overview of GPU -->
