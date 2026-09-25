@@ -1,9 +1,9 @@
 ---
 layout: blog
 title: "Super Fast Inference"
-date: 2025-01-3 12:00:00 +0530
+date: 2026-09-25 12:00:00 +0530
 categories: [personal, technology]
-image: assets/blog_assets/demystifying_diffusion_models/temp_meme_img.webp
+image: assets/blog_assets/supe_fast_inference/b20vm4.jpeg
 ---
 
 ## Notes on CUDA #1 
@@ -16,25 +16,18 @@ I will like these series to be exhaustive enough to bring any newbie upto SOTA l
 
 > Note: This is an adaptive blog and I will keep adding (and sometimes removing) as I gain a better understanding of things. 
 
-Now let us begin with... understanding the hardware. Now hear me out, when it comes to CUDA. Understanding what GPU you have and how it works is equally important as understaning the code. Because these are tightly coupled. 
-
-NOTES: 
-1. Mention device and host 
-2. Mention how data is allocated and freed using CudaMalloc etc 
-3. Define and differentiate between and kernel and so on! 
-4. [ADD PART OF COMPUTE AND MEMORY PROBLEM WHEN IT COMES TO GPUs]
-
+Now let us begin with... understanding the hardware. Now hear me out, when it comes to CUDA. Understanding what GPU you have and how it works is equally important as understanding the code. Because these are tightly coupled. 
 
 ### Understanding the GPU 
 
-Now one obvious question arrises is why do we even have GPUs, aren't CPUs enough? Can we not combine them*? Why have a separate module at all?
+Now one obvious question that arises is why do we even have GPUs, aren't CPUs enough? Can we not combine them*? Why have a separate module at all?
 
 *interestingly this is exactly what apple did, you can understand more about it [here](https://discussions.apple.com/thread/255191914?sortBy=rank) (I remember watching a beautiful video explaining this in greater depth, I forgot about it. If you know what I am talking about, please reach out!).
 
 This is how a CPU looks like 
 
 ![Image of CPU Internal](/assets/blog_assets/supe_fast_inference/notes_on_cuda_1.webp)
-(Inspired form [PMPP](https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/))
+(Inspired from [PMPP](https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/))
 
 the different parts are 
 
@@ -46,7 +39,7 @@ CONTROL -> Determines where to send the computation, where to store data. It's t
 
 ALU -> Arithmetic Logic Unit, this is the part that takes care of computation. 
 
-> Note: This is a gross over simpliffication of how CPUs look like (even GPUs when we get to it), this is meant to help you understand the core components and how they work. As we go through the blog we will gradudally break down these high level components to their individual sub parts and understand how they work! 
+> Note: This is a gross over simplification of how CPUs look like (even GPUs when we get to it), this is meant to help you understand the core components and how they work. As we go through the blog we will gradually break down these high level components to their individual sub parts and understand how they work! 
 
 Now this is great if you want to do things in sequence,i.e one after the other. In CPUs we even have multiple cores so you can run multiple computation in parallel (multi-threading, parallelism ,and async are all different ideas consider [reading](https://stackoverflow.com/questions/27435284/multiprocessing-vs-multithreading-vs-asyncio) this to understand the difference.)
 
@@ -57,11 +50,11 @@ Now imagine a matrix multiplication, the core of most of AI. It is an operation 
 And to enable this what would we need differently from the CPU... well it isn't hard to answer more ALUS!!! because we want to compute these values ASAP and that is why a GPU in general looks like this 
 
 ![Image of GPU Internal](/assets/blog_assets/supe_fast_inference/notes_on_cuda_2.webp)
-(Inspired form [PMPP](https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/))
+(Inspired from [PMPP](https://www.oreilly.com/library/view/programming-massively-parallel/9780323984638/))
 
 >NOTE: Again, this GPU architecture is an oversimplification. But it is necessary info to get the point across. As we get more advanced, we will add on to our existing knowledge and make the diagrams more complex!
 
-As you can see above, we have way more ALUs. Let's understand them better by looking at what the inidividual parts are called. We will explore them a bit more in detail unlike the CPU section above as this blog is all abount understanding GPUs and CUDA. 
+As you can see above, we have way more ALUs. Let's understand them better by looking at what the individual parts are called. We will explore them a bit more in detail unlike the CPU section above as this blog is all about understanding GPUs and CUDA.
 
 ![Memory layout of the internal of a GPU](/assets/blog_assets/supe_fast_inference/notes_on_cuda_5.webp)
 Image inspired from this [blog](https://damek.github.io/random/basic-facts-about-gpus/#fn:12)
@@ -85,11 +78,11 @@ The above image is a simplification of how an SM looks like. Now we have a good 
 
 ### Understanding CUDA 
 
-Now we can start understaning the internals of CUDA itself.
+Now we can start understanding the internals of CUDA itself.
 
 In CUDA we have grids, which have blocks inside of them, and the blocks have threads. They can be laid out in a 3d manner as presented below, but generally everyone just works with a 2d layout so we will use that majority of the time. 
 
-As I find the 1d model easier to understand as a beginner, I will use that in this part. And we will start with the multi-dimentional part starting next blog. 
+As I find the 1d model easier to understand as a beginner, I will use that in this part. And we will start with the multi-dimensional part starting next blog.
 
 ![Internals of CUDA code](/assets/blog_assets/supe_fast_inference/notes_on_cuda_3.webp)
 
@@ -148,15 +141,15 @@ __global__ void super_bad_matmul_kernel(const float* A, const float* B, float* o
    }
 }
 
-// Fix the below code
-extern "C" void solve(const float* input, float* output, int N, int C, int H, int W,
-                      int kernel_size, int stride, int padding) {
-                        int threadsPerBlock = 256;
-                        int blocksPerGrid = (N*C*H*W + threadsPerBlock - 1)/threadsPerBlock;
-                      }
+extern "C" void solve(const float* A, const float* B, float* output, int M, int N, int K) {
+   int threadsPerBlock = 256;
+   int blocksPerGrid = (M*N + threadsPerBlock - 1)/threadsPerBlock;
+
+   super_bad_matmul_kernel<<<blocksPerGrid, threadsPerBlock>>>(A, B, output, M, N, K);
+}
 ```
 
-The above code is terrible, the main reason being we are not utilising the fact the the code can be parallalized and multiple threads can each calculate one output value. 
+The above code is terrible, the main reason being we are not utilising the fact that the code can be parallelized and multiple threads can each calculate one output value. Notice that even though `solve` launches hundreds of threads, every single one of them runs the entire triple loop and recomputes the whole output on its own, that's the actual waste, not the launch itself.
 
 Let's write the naive CUDA solution, and then I will explain what each part does and why it looks the way it does!
 
@@ -181,7 +174,7 @@ __global__ void naive_matmul(const float* A, const float* B, float* output, int 
 }
 ```
 
-The above one although not a great implementation shows the value. There is one idea that we have not talked about so far which sits at the center of CUDA. And that is the actual memory layout of the data is one dimentional and it is stored in a row major form. 
+The above one although not a great implementation shows the value. There is one idea that we have not talked about so far which sits at the center of CUDA. And that is the actual memory layout of the data is one dimensional and it is stored in a row major form.
 
 We know that our output will be of the shape, MxN. But in memory we cannot have 2d layouts, we only have 1d. So instead of a MxN layout we have M rows of N values stacked after each other, which looks something like the below image. 
 
@@ -189,17 +182,17 @@ We know that our output will be of the shape, MxN. But in memory we cannot have 
 
 (You can imagine the similar for 3d)
 
-Hence, if we breakdown gid (I like to call it global id, tid id thread id and is the number of the thread within a block. Here we have defined it as 256, so that will never exceed 256). It consists of threadIdx, blockDim, and blockIdx. Idx means index and dim means dimension. 
+Hence, if we breakdown gid (I like to call it global id; tid, or thread id, is the number of the thread within a block, and since we have defined the block size as 256, tid will never exceed that). It consists of threadIdx, blockDim, and blockIdx. Idx means index and dim means dimension.
 
-It is important you visualize and understand how this is working; threadIdx gives you the current thread you are on in a block. Multiplying the index of the block (blockIdx) with the dimension tells you how many previous blocks you have completed. 
+It is important you visualize and understand how this is working; threadIdx gives you the current thread you are on in a block. Multiplying the block index (blockIdx) by the block dimension (blockDim) tells you how many threads came before this block.
 
 A good way to understand is by thinking backwards. We want each thread to calculate one value. So we need MxN threads. Which is not possible. 
 
 So we set 256 threads and then we define the number of blocks based on this, that is where the ceiling equation comes from 
 
-`blocksPerGrid = (M*N + threadsPerBLock - 1)/threadsPerBlock;`
+`blocksPerGrid = (M*N + threadsPerBlock - 1)/threadsPerBlock;`
 
-this will give us enough blocks with enough threads to take care of this computation, now as this is a ceiling function we can have number of threads which exceed MxN. And hence the reason we have added a check 
+this will give us enough blocks with enough threads to take care of this computation, now as this is a ceiling function we can have a number of threads which exceed MxN. And hence the reason we have added a check
 
 `if(gid>= M*N) return;`
 
@@ -207,7 +200,7 @@ read this part a few more times, try to think it in your terms and it should mak
 
 ### Where do we go from here? 
 
-If you would like to put the knowledge you have aquired to the test, I will recommend checking out 
+If you would like to put the knowledge you have acquired to the test, I will recommend checking out
 
 * [GPU Puzzles](https://github.com/srush/gpu-puzzles)
 * [LeetGPU](https://leetgpu.com/)
