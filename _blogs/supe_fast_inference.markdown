@@ -142,14 +142,11 @@ __global__ void super_bad_matmul_kernel(const float* A, const float* B, float* o
 }
 
 extern "C" void solve(const float* A, const float* B, float* output, int M, int N, int K) {
-   int threadsPerBlock = 256;
-   int blocksPerGrid = (M*N + threadsPerBlock - 1)/threadsPerBlock;
-
-   super_bad_matmul_kernel<<<blocksPerGrid, threadsPerBlock>>>(A, B, output, M, N, K);
+   super_bad_matmul_kernel<<<1, 1>>>(A, B, output, M, N, K);
 }
 ```
 
-The above code is terrible, the main reason being we are not utilising the fact that the code can be parallelized and multiple threads can each calculate one output value. Notice that even though `solve` launches hundreds of threads, every single one of them runs the entire triple loop and recomputes the whole output on its own, that's the actual waste, not the launch itself.
+The above code is terrible, the main reason being we are not utilising the fact that the code can be parallelized and multiple threads can each calculate one output value. Notice that `solve` only launches a single thread (`<<<1, 1>>>`), so even though it's running on the GPU, that one thread still does the entire triple loop by itself, exactly like the CPU version, we haven't used any of the GPU's parallelism yet.
 
 Let's write the naive CUDA solution, and then I will explain what each part does and why it looks the way it does!
 
@@ -172,6 +169,14 @@ __global__ void naive_matmul(const float* A, const float* B, float* output, int 
 
    output[gid] = temp_val;
 }
+
+extern "C" void solve(const float* A, const float* B, float* output, int M, int N, int K) {
+   int threadsPerBlock = 256;
+   int blocksPerGrid = (M*N + threadsPerBlock - 1)/threadsPerBlock;
+ 
+   naive_matmul<<<blocksPerGrid, threadsPerBlock>>>(A, B, output, M, N, K);
+}
+
 ```
 
 The above one although not a great implementation shows the value. There is one idea that we have not talked about so far which sits at the center of CUDA. And that is the actual memory layout of the data is one dimensional and it is stored in a row major form.
