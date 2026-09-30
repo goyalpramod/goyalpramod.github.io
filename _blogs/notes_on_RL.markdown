@@ -105,6 +105,123 @@ You keep doing this for a while, but you are not getting the returns you would l
 
 So you put on your thinking cap again. 
 
+"What if I assume every machine gives me instead of 0 a value of 10 as the initial reward, this way. I will be incentivized to try every machine at least one!" 
+
+And he has done it again! How do you even do it? 
+
+so now you modify your algorithm by changing Q(a) = 10
+
+You do this for a while, but again, you are distraugt with the results. Because as you keep playing, you are also keeping track of how much money you are making and losing, and the graph does not look as good as you would like it to. The obvious answer seems that because even after you try all the machines, in the end you still get stuck with a few machines, because you have no incentive to explore. 
+
+So you realise, 
+
+"What if, I give these a high initial value. Try them all, and also keep a track of which machine I have tried how many times, this way if I have been exploiting a specific machine for too long, I can look which are the machines I have tried the least and operate them. As these are machines I have used the least, it has the highest chance of having wrong q estimate" 
+
+Oh my my my, are you [Edward O. Thorp](https://en.wikipedia.org/wiki/Edward_O._Thorp) by any chance? You are on fire!!!
+
+You modify action as At
+.
+= argmax a
+"
+Qt(a)+ c
+s
+ln t
+Nt(a)
+#
+,
+
+Nt(a) is the number of times you have pulled the lever of a specific machine and lnt is the total number of pulls. This will give a greater bonus to machines you have not tried at all! (Now now, you are a smart person, think for a minute and realise this is simpler than it looks!)
+
+You employ this method, get an absurd amount of money and leave home. 
+
+You come next day, again to milk these losers. 
+
+You start playing.. and after a while you realise... the mean of all the machine keeps changing over time. YOU ARE SHOCKED! 
+
+"are these guys changing the expected return of a machine over time?" 
+
+Guess what, the casino caught on to your tricks again, and they changed the machines overnight to have a moving value of expected mean. 
+
+You are in a dismal state, you have lost faith, time and money. You think of giving up, that is when you think of papa john, and realise he would have never given up on making pizza to feed his family. So you... take out your notebook one more time. To teach these casino that you are better than them. 
+
+You look at your formula, you realise the fatal flaw is in the step multiplier, because now the value of 1/n does not matter. Because these values are never going to converge to one value. So you decide to replace that with a constant alpha! 
+
+this small changes everything. Now you are back on track and winning some more! 
+
+(The above problem is called non-assoicative reward in RL terms!)
+
+The casino has had it with you and your math! The manager sends goons towards you to chase you out! You run towards the back exit
+
+and just when you thought you had escaped your hell, and were a free man. That is when you realise... the back gate led to a maze. With only two ends, a dangerous fite pit, or the gates of saintsburry (This is what we want!). Our hero, is again at peril. 
+
+That is when you take out your trusted sci-fi robo wolfie! Now you must write an algorithm to run wolfie on so wolfie can find the gates of saintsburry for you so you can escape this maze! 
+
+Ok now designing an algo for wolfie is going to be an arduous task, so you start first by breaking down your variables. 
+
+[INSERT_IMAGE]
+
+Wolfie is your agent, who interacts with the enviornment, and where he is in the enviornment is his current state, and we would also like to give wolfie a reward if he gets the job done and saves us from this peril we are stuck in. 
+
+We can express the above idea in a simple diagram like below 
+
+[INSERT_IMAGE]
+
+We can also rationalize that we start with a state s0 take an action a0 and get a reward r0, based on that we end up in s1, from s1 we take action a1, and get a reward r1 and so on... till we reach the end (or the terminal state)
+
+we can write this mathematically as 
+
+p(s0
+,r|s, a) .
+= Pr{St =s0
+,Rt =r | St1 =s, At1 =a},
+
+As you start forumating the problem, one of the first thing that we realise is. How do we even define the rewards, because when you send wolfie out he has no idea about which state is good or bad, he just knows that he needs to reach the end as that is what is valuable. But he has no notion of reward for each individual state. 
+
+The reason being we do not know how many states there are or which state is closest to the gate or the firepit (The reason being... WE IN A MAZE!)
+
+The thing working in your favour is wolfie is essentially immortal, because you can spawn him everytime he dies. 
+
+So you think, okay maybe I can initialize a value for each state, then let wolfie run and keep a running reward of how close each state gets me to the end goal. 
+
+(Woah that was a hard sentence to say, let's break it down)
+
+Instead of like the previous problem where we got our reward immediately, here we get our reward after an interval so we can keep track of all the rewards within one run as 
+
+Gt = Rt + Rt+1 + Rt+2 ... Rn (Total rewards you can get from that state taking optimal action [we will expand on optimal action in a bit])
+
+But the problem with the above will be that it can potentially explode (i.e numerically untractable because the sum can get extremely large for large mazes) also another problem can be that the agent will look far too much into the future and valuing each state as equal (This can lead wolfie to wander to get all rewards, what we want him to do is get us out ASAP) so what we can do is introduce an exponential weighting value 
+
+Gt
+.
+= Rt+1 + Rt+2 + 2Rt+3 + ··· = X1
+k=0
+kRt+k+1,
+
+This is our discounted return, now using this discounted return we can determine how valuable any current state is as 
+
+v⇡(s) .
+= E⇡[Gt | St =s]= E⇡
+"
+X1
+k=0
+kRt+k+1
+
+
+
+
+
+St =s
+#
+, for all s 2 S,
+
+
+
+That is when you are met with... the manager? "No you fool, I am the managers brother. John!" 
+"Papa john???"
+"What no, stop this malarky. Anyhoo if you wish to exit. You must answer this query of mine 
+
+
+
 
 [Story line, Create comics! You go to casino, u start losing money, so you make a plan to maximize your reward. The casino people find out and chase you out, but as you are running away, u get stuck in a maze, now with the casino people after you, you must think of a quick plan to escape!! Thats when you recall that your friend Jack gave you a beautiful bot named maurice who you can program to do anything! You can spawn a new maurice only after 5 min of one maurice dying]
 
