@@ -1,245 +1,427 @@
 <!-- ---
 layout: blog
-title: "Transformers Laid Out"
-date: 2025-01-3 12:00:00 +0530
+title: "Notes on RL"
+date: 2026-10-01 12:00:00 +0530
 categories: [personal, technology]
-image: /assets/transformers_laid_out/meme.png
 ---
 
-# Notes on RL 
+Now I am aware you must have been looking forward to the second part of my [CUDA blog](/blogs/supe_fast_inference/) (if you haven't read it yet, check it out!), but hey! A man can have varied interests. And I believe if you are trying to be a great ML engineer or developer, or are just EXTREMELY enthusiastic about the space, Reinforcement Learning must have tickled your brain as well.
 
+In my opinion, if AI is magic to Computer Science, RL is magic to AI.
 
-Now I am aware you must have been looking forward to the second part to my CUDA blog (if you haven't read it yet, check it out!), but hey! a man can have varied interests. And I believe if you are trying to be a great ML engineer, developer or are just EXTREMELY enthusiatic about the space. Reinforcement learning must have tickled your brain as well. 
+The usual school of thought while talking about RL (or any other ML topic for the most part) is to first lay out a table of contents, show what will be covered, what the problems are, yada yada yada. We are gonna do none of that. We are innovative people and we laugh in the face of the old ways.
 
-In my opinion If AI is magic to Computer Science, RL is magic to AI. 
+So we will do what innovators do: we will think of the simplest problem we can, make a few assumptions, try to solve it, and slowly make it more complex.
 
-The usual school of thoght while talking about RL (or any other ML topic for the most point) is to first lay out a table of content, show what will be, what are the problems yada yada ya. We are gonna do none of that, we are innovative people and we laugh at the face of the old ways. 
-
-So we will do what innovators do, we will think of the simplest problem we can think of, make a few assumptions, try to solve it and slowly make it complex. 
-
-I invite you to read the following work with an OPEN MIND. So let us begin by first framing a problem. 
+I invite you to read the following work with an OPEN MIND. So let us begin by first framing a problem.
 
 ## The first problem
 
-Let's say you did some odd job for your neighbour and your naive lil self just got his/her first paycheck!
+Let's say you did some odd job for your neighbour and your naive lil self just got your first paycheck!
 
 [INSERT_IMAGE]
 
-Now as you are walking the street, you find this amazing place called a "Casino" and they tell you that you can double your money here. So you walk in...
+Now as you are walking down the street, you find this amazing place called a "Casino" and they tell you that you can double your money here. So you walk in...
 
 [INSERT_IMAGE]
 
-oh god what is this ungodly place, you are startled with all the bright lights, money flying around, vomit colored carpet. But you are filled with joy, because you are about to double your money!!!
+Oh god, what is this ungodly place! You are startled by all the bright lights, the money flying around, the vomit-colored carpet. But you are filled with joy, because you are about to double your money!!!
 
 [INSERT_IMAGE_FROM_WIKI_WITH_COMIC]
 
-As you are walking through this labryinth, you discover a fairly simple looking machinery. Well a bunch of them infact lined up one after the other, they are slot machines! 
+As you are walking through this labyrinth, you discover a fairly simple-looking machine. Well, a bunch of them in fact, lined up one after the other. They are slot machines!
 
 [INSERT_IMAGE_OF_SELF_AND_SLOT_MACHINES]
 
-You think, maybe you should try your luck here, as they seem simpler then poker and you just need to put money, and get money. 
+You think maybe you should try your luck here, as they seem simpler than poker: you just need to put money in, and get money out.
 
-You try the first machine (lets assume we give a dollar and if we win we get an unspecified amount of money back, if we lose. THE MACHINE EATS OUR MONEY!!!), after 30 tries you find that instead of having more money, you have lost a significant amount. 
+You try the first machine (let's assume we put in a dollar and if we win we get an unspecified amount of money back; if we lose, THE MACHINE EATS OUR MONEY!!!). After 30 tries you find that instead of having more money, you have lost a significant amount.
 
-This cannot be right, the hording said that the house never cheats (oh you naive kid, if only the world was as innocent as you are). And that I will in fact get double the money. And on an average, if you play enough times, you will lose some but if the above assumption is true you should win more! 
+This cannot be right, the hoarding said that the house never cheats (oh you naive kid, if only the world was as innocent as you are), and that you will in fact double your money. Sure, you will lose some tries, but if the claim is true, then on average, if you play enough times, you should win more than you lose!
 
-So you start thinking, and looking around, that's when you observe that the man on machine number 3 seems to be winning quite a fair bit. So you wait for him to leave, and once he does. You go to that machine and try it 30 times, low and behold... you have made more money than you started with! that's when you realise... "THE HOUSE IN FACT CHEATS!" (Who would have guessed right?), now you are an interprid person, who decides to fight back this indignance with math and statistics. 
+So you start thinking and looking around, and that's when you observe that the man on machine number 3 seems to be winning quite a fair bit. So you wait for him to leave, and once he does, you go to that machine and try it 30 times. Low and behold... you have made more money than you started with! That's when you realise... "THE HOUSE DOES IN FACT CHEAT!" (Who would have guessed, right?) Now, you are an intrepid person, who decides to fight back against this indignity with math and statistics.
 
-So you formulate how you can win more money. 
+So you formulate how you can win more money.
 
-Let us assume we have N tries (The amount of money), and we have k options in front of us (The amount of slot machines). We can assume that each of these k options has an expected return, i.e. a mean around which there is some variance, but if played enough times it will converge to its true value. (Regress to the mean, essentially given enough tries the black box will give its average output. Read more here!)
+Let us assume we have $N$ tries (the amount of money), and we have $k$ options in front of us (the number of slot machines). We can assume that each of these $k$ options has an expected return, i.e. a mean around which there is some variance, but if played enough times, the average of what it gives back will converge to its true value. (This is the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers): given enough tries, the black box will give its average output.)
 
-So let's assume this perfect actual value of a slot machine can be represented as Q(a(subscript k)), but the problem is any time we use it, it does not return the perfect Q(a(subscript k)) (Because if it did, everyone will play all the slot machines once and figure out which gives the highest payout and just use that!), so we can create a running q value that is the sum of expected return. q(a(subscript k))
+So let's assume this perfect, actual value of a slot machine $a$ can be represented as $q_\ast(a)$. But the problem is, any time we use it, it does not return the perfect $q_\ast(a)$ (because if it did, everyone would play all the slot machines once, figure out which gives the highest payout and just use that!). So instead we keep a running estimate $Q_n(a)$, which is the average of the rewards we have received from that machine so far.
 
-Which we can write as 
+We can write the true value as
 
-q⇤(a) .= E[Rt | At =a] .
+$$
+q_*(a) \doteq \mathbb{E}[R_t \mid A_t = a]
+$$
 
-The expected return for an action (here an action is you choosing a particular slot machine)
+i.e. the expected reward $R_t$ given that we took the action $A_t = a$ (here an action is you choosing a particular slot machine).
 
-We can write the q value for any nth try as 
+We can write our estimate of a machine after it has been played $n-1$ times as
 
-qn = r1 + r2 + r3... rn-1/n-1
+$$
+Q_n = \frac{R_1 + R_2 + \cdots + R_{n-1}}{n-1}
+$$
 
-This can be simplified as 
+This can be simplified (so that we do not need to store every single reward we have ever received). The estimate after $n$ rewards is
 
-qn+1 = 1/n summation R from i = 0 to n
-[WRITE THE REST OF THE DERIVATION HERE PLEASE AI]
+$$
+\begin{aligned}
+Q_{n+1} &= \frac{1}{n}\sum_{i=1}^{n} R_i \\
+&= \frac{1}{n}\left(R_n + \sum_{i=1}^{n-1} R_i\right) \\
+&= \frac{1}{n}\left(R_n + (n-1)\frac{1}{n-1}\sum_{i=1}^{n-1} R_i\right) \\
+&= \frac{1}{n}\big(R_n + (n-1)Q_n\big) \\
+&= \frac{1}{n}\big(R_n + nQ_n - Q_n\big) \\
+&= Q_n + \frac{1}{n}\big[R_n - Q_n\big]
+\end{aligned}
+$$
 
-All in all we can estimate the expected value of any slot machine simply by 
+In the third line we multiplied and divided by $(n-1)$, which lets us spot that $\frac{1}{n-1}\sum_{i=1}^{n-1} R_i$ is just our old estimate $Q_n$. So now for each machine we only need to remember two numbers: the current estimate $Q_n$ and the count $n$.
 
-NewEstimate = OldEstimate + step*[reward-OldEstimate]
+All in all, we can estimate the expected value of any slot machine simply by
 
-You try this with the 3 machines, find the one which gave you the highest expected reward, made a huge buck and left for home happy. 
-You come the next day, only to realise the casinos caught on to what you were doing. So instead of 3 slot machines, they have now 10!!! machines. 
+$$
+\text{NewEstimate} \leftarrow \text{OldEstimate} + \text{StepSize}\big[\text{Reward} - \text{OldEstimate}\big]
+$$
+
+where the step size here is $\frac{1}{n}$.
+
+You try this with the 3 machines, find the one which gave you the highest expected reward, make a huge buck and leave for home happy.
+You come back the next day, only to realise the casino caught on to what you were doing. So instead of 3 slot machines, they now have 10!!! machines.
 
 [INSERT_IMAGE]
 
-Your previous method will not work any more, because you will waste a lot of tries just trying to find the optimal solution. 
+Your previous method will not work anymore, because you will waste a lot of tries just trying to find the optimal machine.
 
-So you pull out your trusty notebook and start thinking 
+So you pull out your trusty notebook and start thinking:
 
-"What if we I assume that every machine gives on average 0 returns, and then I will try a machine, keep that estimate. Now that is my highest returning machine at the moment. So I will keep exploiting that and at random times (Lets say eta times) I will explore and try a new machine, if that gives me greater reward than my current estimate for my current machine. I will stick to that!" 
+"What if I assume that every machine gives on average 0 returns, then I try a machine and keep that estimate. Now that is my highest returning machine at the moment, so I will keep exploiting it, and at random times (let's say $\varepsilon$ of the time) I will explore and try a random machine. If that gives me a greater reward than my current estimate for my current machine, I will stick to that!"
 
-Wow you mad genuis. You write down your forumla as such (Mad genuises need algorithms to work for some reason)
+Wow, you mad genius. You write down your formula as such (mad geniuses need algorithms to work for some reason):
 
-"
-Initialize, for a = 1 to k:
-Q(a) 0
-N(a) 0
-Loop forever:
-A
-⇢ argmaxa Q(a) with probability 1  " (breaking ties randomly)
-a random action with probability "
-R bandit(A)
-N(A) N(A)+1
-Q(A) Q(A)+ 1
-N(A)
-⇥
-R  Q(A)
-⇤
-"
-[WRITE THE CODE PLEASE AI]
+> Note: This method is called *ε-greedy* action selection formally, and the dilemma is of exploitation (Just using the machine that gave you a high average score) or exploring to find other machines which can have a potential higher average score. We vary the value of epsilon to figure out what best works for us!
 
-You keep doing this for a while, but you are not getting the returns you would like, mostly because you are stuck exploiting only a few machines, while there are many more which could have potentially much higher rewards. 
+```python
+import numpy as np
 
-So you put on your thinking cap again. 
+rng = np.random.default_rng()
 
-"What if I assume every machine gives me instead of 0 a value of 10 as the initial reward, this way. I will be incentivized to try every machine at least one!" 
+def bandit(q_true, action):
+    # the slot machine: pays out a noisy reward around its (hidden) true value
+    return rng.normal(loc=q_true[action], scale=1.0)
 
-And he has done it again! How do you even do it? 
+def epsilon_greedy(q_true, epsilon=0.1, steps=1000, initial_value=0.0):
+    k = len(q_true)
+    Q = np.full(k, initial_value)  # our estimate of each machine
+    N = np.zeros(k)                # how many times we have played each machine
+    rewards = np.zeros(steps)
 
-so now you modify your algorithm by changing Q(a) = 10
+    for t in range(steps):
+        if rng.random() < epsilon:
+            A = rng.integers(k)                           # explore
+        else:
+            A = rng.choice(np.flatnonzero(Q == Q.max()))  # exploit, breaking ties randomly
+        R = bandit(q_true, A)
+        N[A] += 1
+        Q[A] += (1 / N[A]) * (R - Q[A])
+        rewards[t] = R
 
-You do this for a while, but again, you are distraugt with the results. Because as you keep playing, you are also keeping track of how much money you are making and losing, and the graph does not look as good as you would like it to. The obvious answer seems that because even after you try all the machines, in the end you still get stuck with a few machines, because you have no incentive to explore. 
+    return Q, rewards
 
-So you realise, 
+q_true = rng.normal(0, 1, size=10)  # 10 machines, each with a hidden true value
+Q, rewards = epsilon_greedy(q_true, epsilon=0.1)
+print("best machine:", q_true.argmax(), "| our best guess:", Q.argmax())
+print("average reward:", rewards.mean())
+```
 
-"What if, I give these a high initial value. Try them all, and also keep a track of which machine I have tried how many times, this way if I have been exploiting a specific machine for too long, I can look which are the machines I have tried the least and operate them. As these are machines I have used the least, it has the highest chance of having wrong q estimate" 
+You keep doing this for a while, but you are not getting the returns you would like, mostly because you are stuck exploiting only a few machines, while there are many more which could potentially have much higher rewards.
+
+So you put on your thinking cap again.
+
+"What if I assume every machine gives me, instead of 0, a value of 10 as the initial reward? This way I will be incentivized to try every machine at least once!"
+
+And you have done it again! How do you even do it?
+
+So now you modify your algorithm by changing $Q(a) \leftarrow 10$ (in the code above, that is just `initial_value=10`).
+
+> Formally this is called optimistic initial value, the idea is to force the agent to explore all options atleast once! But it has a problem as we will see soon...
+
+You do this for a while, but again, you are distraught with the results. Because as you keep playing, you are also keeping track of how much money you are making and losing, and the graph does not look as good as you would like it to. The obvious answer seems to be that even after you try all the machines, in the end you still get stuck with a few machines, because you have no incentive to explore.
+
+So you realise,
+
+"What if I give these a high initial value, try them all, and also keep track of how many times I have tried each machine? This way, if I have been exploiting a specific machine for too long, I can look at which machines I have tried the least and play them. As these are the machines I have used the least, they have the highest chance of having a wrong $Q$ estimate."
 
 Oh my my my, are you [Edward O. Thorp](https://en.wikipedia.org/wiki/Edward_O._Thorp) by any chance? You are on fire!!!
 
-You modify action as At
-.
-= argmax a
-"
-Qt(a)+ c
-s
-ln t
-Nt(a)
-#
-,
+You modify how you pick your action $A_t$ as
 
-Nt(a) is the number of times you have pulled the lever of a specific machine and lnt is the total number of pulls. This will give a greater bonus to machines you have not tried at all! (Now now, you are a smart person, think for a minute and realise this is simpler than it looks!)
+$$
+A_t \doteq \arg\max_a \left[ Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}} \right]
+$$
 
-You employ this method, get an absurd amount of money and leave home. 
+$N_t(a)$ is the number of times you have pulled the lever of a specific machine, $t$ is the total number of pulls so far (and $\ln t$ is its natural log, so the bonus grows slowly over time), and $c > 0$ controls how much you care about exploring. This will give a greater bonus to the machines you have tried the least, and a machine you have not tried at all ($N_t(a) = 0$) is treated as the best choice! (Now now, you are a smart person, think for a minute and realise this is simpler than it looks!)
 
-You come next day, again to milk these losers. 
+> NOTE: This is *Upper Confidence Bound (UCB)* action selection. The square-root term is the 'uncertainty' in the estimate. It shrinks as you play a machine more ($N_t(a)$ grows) and slowly grows for machines you ignore (because $\ln t$ keeps growing).
 
-You start playing.. and after a while you realise... the mean of all the machine keeps changing over time. YOU ARE SHOCKED! 
+You employ this method, get an absurd amount of money and go home.
 
-"are these guys changing the expected return of a machine over time?" 
+You come back the next day, again to milk these losers.
 
-Guess what, the casino caught on to your tricks again, and they changed the machines overnight to have a moving value of expected mean. 
+You start playing... and after a while you realise... the mean of all the machines keeps changing over time. YOU ARE SHOCKED!
 
-You are in a dismal state, you have lost faith, time and money. You think of giving up, that is when you think of papa john, and realise he would have never given up on making pizza to feed his family. So you... take out your notebook one more time. To teach these casino that you are better than them. 
+"Are these guys changing the expected return of a machine over time?"
 
-You look at your formula, you realise the fatal flaw is in the step multiplier, because now the value of 1/n does not matter. Because these values are never going to converge to one value. So you decide to replace that with a constant alpha! 
+Guess what, the casino caught on to your tricks again, and they changed the machines overnight to have a moving expected mean.
 
-this small changes everything. Now you are back on track and winning some more! 
+You are in a dismal state, you have lost faith, time and money. You think of giving up. That is when you think of Papa John, and realise he would never have given up on making pizza to feed his family. So you... take out your notebook one more time, to teach this casino that you are better than them.
 
-(The above problem is called non-assoicative reward in RL terms!)
+You look at your formula and realise the fatal flaw is in the step multiplier. With $\frac{1}{n}$, every new reward matters less and less as $n$ grows, which only makes sense if the values converge to one value. But now these values are never going to converge to one value. So you decide to replace that with a constant $\alpha$, so that recent rewards always count more than old ones!
 
-The casino has had it with you and your math! The manager sends goons towards you to chase you out! You run towards the back exit
+$$
+Q_{n+1} = Q_n + \alpha\big[R_n - Q_n\big], \qquad \alpha \in (0, 1]
+$$
 
-and just when you thought you had escaped your hell, and were a free man. That is when you realise... the back gate led to a maze. With only two ends, a dangerous fite pit, or the gates of saintsburry (This is what we want!). Our hero, is again at peril. 
+This small change changes everything. Now you are back on track and winning some more!
 
-That is when you take out your trusted sci-fi robo wolfie! Now you must write an algorithm to run wolfie on so wolfie can find the gates of saintsburry for you so you can escape this maze! 
+> Note: In RL terms, a problem where the true values keep changing over time is called a *nonstationary* problem. And the whole slot machine setup, where there is only one situation and you just keep picking an action, is called a *non-associative* problem, or the *$k$-armed bandit* problem.
 
-Ok now designing an algo for wolfie is going to be an arduous task, so you start first by breaking down your variables. 
+The casino has had it with you and your math! The manager sends goons towards you to chase you out! You run towards the back exit...
+
+...and just when you thought you had escaped your hell and were a free man, you realise... the back gate led to a maze, with only two ends: a dangerous fire pit, or the gates of Saintsbury (this is what we want!). Our hero is again in peril.
+
+Just as you are about to lose hope, you spot something pinned on the wall by the entrance... A MAP of the maze! It shows every corridor, every dead end, where each turn leads, and where the fire pit and the gates of Saintsbury are. (How convenient... almost too convenient. But you are in no position to complain.)
+
+[INSERT_IMAGE_OF_MAP]
+
+That is when you take out your trusty sci-fi robo dog, Maurice! Now you must write an algorithm to run Maurice on, so Maurice can find the gates of Saintsbury for you and you can escape this maze!
+
+Okay, now designing an algo for Maurice is going to be an arduous task, so you start by first breaking down your variables.
 
 [INSERT_IMAGE]
 
-Wolfie is your agent, who interacts with the enviornment, and where he is in the enviornment is his current state, and we would also like to give wolfie a reward if he gets the job done and saves us from this peril we are stuck in. 
+Maurice is your **agent**, who interacts with the **environment**, and where he is in the environment is his current **state**. Maurice can take **actions** (move up, down, left, right), and we would also like to give Maurice a **reward** if he gets the job done and saves us from this peril we are stuck in.
 
-We can express the above idea in a simple diagram like below 
+We can express the above idea in a simple diagram like below
 
 [INSERT_IMAGE]
 
-We can also rationalize that we start with a state s0 take an action a0 and get a reward r0, based on that we end up in s1, from s1 we take action a1, and get a reward r1 and so on... till we reach the end (or the terminal state)
+We can also rationalize that we start in a state $S_0$, take an action $A_0$, and because of that get a reward $R_1$ and end up in state $S_1$. From $S_1$ we take action $A_1$, get a reward $R_2$, and so on... till we reach the end (the terminal state):
 
-we can write this mathematically as 
+$$
+S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, R_3, \dots
+$$
 
-p(s0
-,r|s, a) .
-= Pr{St =s0
-,Rt =r | St1 =s, At1 =a},
+(Notice that the reward for the action taken at time $t$ is called $R_{t+1}$, because it arrives together with the next state $S_{t+1}$.)
 
-As you start forumating the problem, one of the first thing that we realise is. How do we even define the rewards, because when you send wolfie out he has no idea about which state is good or bad, he just knows that he needs to reach the end as that is what is valuable. But he has no notion of reward for each individual state. 
+The probability of ending up in state $s'$ with reward $r$, given that we were in state $s$ and took action $a$, can be written mathematically as
 
-The reason being we do not know how many states there are or which state is closest to the gate or the firepit (The reason being... WE IN A MAZE!)
+$$
+p(s', r \mid s, a) \doteq \Pr\{S_t = s', R_t = r \mid S_{t-1} = s, A_{t-1} = a\}
+$$
 
-The thing working in your favour is wolfie is essentially immortal, because you can spawn him everytime he dies. 
+And this is exactly what the map gives us! For every state and every action, we can read off where Maurice will end up and what reward he will get. (In a simple maze, each move takes you to exactly one next cell, so $p$ is just $1$ for that cell and $0$ for everything else. We write it as a probability so that it also works for trickier worlds, say a slippery floor that sometimes sends you somewhere else.)
 
-So you think, okay maybe I can initialize a value for each state, then let wolfie run and keep a running reward of how close each state gets me to the end goal. 
+Notice that $p$ only depends on where Maurice is *now* and what he does *now*, not on the whole path that got him there. This is called the **Markov property**, and a problem set up like this (states, actions, rewards and $p$) is called a **Markov Decision Process (MDP)**.
 
-(Woah that was a hard sentence to say, let's break it down)
+As you start formulating the problem, one of the first things that you realise is: the rewards are the easy part. Reaching the gates of Saintsbury gets $+1$, falling into the fire pit gets $-1$, and every other step gets $0$. But that is not enough! When Maurice is standing in some corridor in the middle of the maze, the reward there is $0$, which tells him nothing about whether he is one step from freedom or one step from the fire pit (the reason being... WE IN A MAZE! Every corridor looks the same!).
 
-Instead of like the previous problem where we got our reward immediately, here we get our reward after an interval so we can keep track of all the rewards within one run as 
+What Maurice needs is not the reward of each state, but how *good* each state is in the long run, i.e. how much reward he can expect to collect from there onwards. We call this the **value** of a state. Rewards are what the maze hands out, values are what Maurice has to figure out.
 
-Gt = Rt + Rt+1 + Rt+2 ... Rn (Total rewards you can get from that state taking optimal action [we will expand on optimal action in a bit])
+The thing working in your favour is the map. Since we know the whole maze, Maurice does not need to take a single step to work these values out. He can sit right here and *think*. (Also he is essentially immortal, because you can respawn him every time he dies, but let's not test that.)
 
-But the problem with the above will be that it can potentially explode (i.e numerically untractable because the sum can get extremely large for large mazes) also another problem can be that the agent will look far too much into the future and valuing each state as equal (This can lead wolfie to wander to get all rewards, what we want him to do is get us out ASAP) so what we can do is introduce an exponential weighting value 
+So you think, okay, maybe I can initialize a value for each state, then use the map to keep updating how close each state gets me to the end goal.
 
-Gt
-.
-= Rt+1 + Rt+2 + 2Rt+3 + ··· = X1
-k=0
-kRt+k+1,
+(Woah, that was a hard sentence to say, let's break it down.)
 
-This is our discounted return, now using this discounted return we can determine how valuable any current state is as 
+Unlike the previous problem, where we got our reward immediately, here we get our reward after a while, so we can keep track of all the rewards within one run as
 
-v⇡(s) .
-= E⇡[Gt | St =s]= E⇡
+$$
+G_t \doteq R_{t+1} + R_{t+2} + R_{t+3} + \cdots + R_T
+$$
+
+(the total reward you collect from time $t$ until the run ends at time $T$, by following whatever way of acting Maurice currently has. We call this the **return**, and we will talk about the optimal way of acting in a bit.)
+
+But the problem with the above is that it can potentially explode (i.e. become numerically intractable, because the sum can get extremely large for large mazes, or even infinite if the task never ends). Another problem is that the agent will look far too much into the future, valuing every reward equally no matter how far away it is (this can lead Maurice to wander around collecting all the rewards, while what we want him to do is get us out ASAP). So what we can do is introduce an exponential weighting value $\gamma$ (with $0 \le \gamma \le 1$), called the **discount factor**:
+
+$$
+G_t \doteq R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
+$$
+
+[OPUS 5.5 NOTE: Skipped: *episodic vs. continuing tasks* (§3.3–3.4). The maze is episodic (it ends at the gate or the pit), so the sum stops at $T$. A continuing task (e.g. a thermostat) never ends, so the sum is infinite and discounting with $\gamma < 1$ is *required* to keep it finite. That is the real reason behind your "it can potentially explode" point. The book unifies both by treating the terminal state as an absorbing state with reward 0 forever.]
+
+This is our discounted return. Now, using this discounted return, we can determine how valuable any current state is as
+
+$$
+v_\pi(s) \doteq \mathbb{E}_\pi[G_t \mid S_t = s] = \mathbb{E}_\pi\left[\sum_{k=0}^{\infty} \gamma^k R_{t+k+1} \,\middle|\, S_t = s\right], \quad \text{for all } s \in \mathcal{S}
+$$
+
+Here $\pi$ is Maurice's **policy**, i.e. his way of behaving: $\pi(a \mid s)$ is the probability that Maurice picks action $a$ when he is in state $s$. How valuable a state is depends on how Maurice behaves from there on, which is why $v$ carries that little $\pi$.
+
+Now the problem with the above formulation is that we cannot really work with it, so we have to break it down into what we understand.
+
+We can break it down as the following
+
+$$
+\begin{aligned}
+v_\pi(s) &\doteq \mathbb{E}_\pi[G_t \mid S_t = s] \\
+&= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s] \\
+&= \sum_a \pi(a \mid s) \sum_{s'} \sum_r p(s', r \mid s, a) \Big[ r + \gamma\, \mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s'] \Big] \\
+&= \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \big[ r + \gamma\, v_\pi(s') \big], \quad \text{for all } s \in \mathcal{S}
+\end{aligned}
+$$
+
+Let's go through it line by line.
+
+**Line 1 → Line 2.** The return has a recursive structure. Pull the first reward out of the sum, and what is left is just the return from the next step, discounted once:
+
+$$
+\begin{aligned}
+G_t &= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots \\
+&= R_{t+1} + \gamma\big(R_{t+2} + \gamma R_{t+3} + \cdots\big) \\
+&= R_{t+1} + \gamma G_{t+1}
+\end{aligned}
+$$
+
+So "everything from now on" = "the next reward" + $\gamma$ × "everything from the next step on".
+
+**Line 2 → Line 3.** The expectation is an average over everything random that happens in one step. Starting in state $s$, two random things happen:
+
+1. Maurice picks an action $a$, with probability $\pi(a \mid s)$ (his policy).
+2. The maze responds with a next state $s'$ and a reward $r$, with probability $p(s', r \mid s, a)$.
+
+So we average over both: we weight every possible $(a, s', r)$ combination by its probability $\pi(a \mid s)\, p(s', r \mid s, a)$, and for each one, what we get is the reward $r$ plus $\gamma$ times the expected return from wherever we landed, $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']$. (Why can we condition only on $s'$ and forget $s$ and $a$? The Markov property again: once you know where Maurice is now, how he got there does not change what happens next.)
+
+**Line 3 → Line 4.** Look at $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']$. It is "the expected return when starting from state $s'$ and following $\pi$", which is exactly the definition of $v_\pi(s')$! So we swap it in. (We also write $\sum_{s'}\sum_r$ as $\sum_{s',r}$ to save some ink.)
+
+And that is the magic: the value of a state is now written in terms of the immediate reward plus the discounted values of the states right after it. We no longer need to sum over the infinite future, we just look one step ahead.
+
+This is popularly called the **Bellman equation** for $v_\pi$ (the state-value function).
+
+[OPUS 5.5 NOTE: Skipped, and promised earlier ('we will talk about the optimal way of acting in a bit'): (1) the *action-value function* $q_\pi(s,a)$, i.e. the value of taking action $a$ in $s$ and following $\pi$ afterwards; (2) the *optimal* value functions $v_\ast(s) = \max_\pi v_\pi(s)$ and $q_\ast(s,a)$; (3) the *Bellman optimality equation*, $v_\ast(s) = \max_a \sum_{s',r} p(s',r \mid s,a)[r + \gamma v_\ast(s')]$. Value iteration below is literally this equation turned into an update, so introducing it here makes value iteration feel obvious instead of magic. Your Exercises 3.12, 3.13, 3.17, 3.25 and 3.26 already have all the pieces.]
+
+We have the map and we have the Bellman equation, but we still need an algorithm to actually compute these values, right? How do we do that?
+
+This family of methods, where you use a perfect model of the world (our map, i.e. $p$) to compute values by repeatedly applying the Bellman equation, is called **Dynamic Programming (DP)**. Notice that Maurice never actually walks the maze here, all of it is done by *thinking* with the map. This is also called **planning**.
+
+The first piece is what we call **policy evaluation**: given a policy $\pi$, compute $v_\pi$. The trick is to turn the Bellman equation into an update rule. Start with arbitrary guesses for $V(s)$, then sweep through all the states, replacing each $V(s)$ with the right-hand side of the Bellman equation computed using the current guesses. Keep sweeping until the values stop changing.
+
+```
+Iterative Policy Evaluation, for estimating V ≈ v_π
+
+Input: π, the policy to be evaluated
+Algorithm parameter: a small threshold θ > 0 determining accuracy of estimation
+Initialize V(s) arbitrarily, for all s ∈ S, except that V(terminal) = 0
+
+Loop:
+    Δ ← 0
+    Loop for each s ∈ S:
+        v ← V(s)
+        V(s) ← Σ_a π(a|s) Σ_{s',r} p(s',r|s,a) [r + γ V(s')]
+        Δ ← max(Δ, |v − V(s)|)
+until Δ < θ
+```
+
+This gives us the value of every state under the policy, but now we need to run Maurice on it, so he can find the values and follow them. "Following them" means that in every state, Maurice picks the action that leads to the best $r + \gamma V(s')$ (this is called **policy improvement**). But once the policy changes, its values change too, so we evaluate again, improve again, and keep going until the policy stops changing. This is called **policy iteration**:
+
+[OPUS 5.5 NOTE: The 'policy improvement' sentences above were added by me. Also skipped: the *policy improvement theorem* (§4.2), i.e. *why* acting greedily with respect to $v_\pi$ is guaranteed to give a policy at least as good as $\pi$. Without it, policy iteration looks like a heuristic rather than something guaranteed to reach the optimum.]
+
+```
+Policy Iteration (using iterative policy evaluation) for estimating π ≈ π*
+
+1. Initialization
+   V(s) ∈ ℝ and π(s) ∈ A(s) arbitrarily for all s ∈ S; V(terminal) = 0
+
+2. Policy Evaluation
+   Loop:
+       Δ ← 0
+       Loop for each s ∈ S:
+           v ← V(s)
+           V(s) ← Σ_{s',r} p(s',r|s,π(s)) [r + γ V(s')]
+           Δ ← max(Δ, |v − V(s)|)
+   until Δ < θ (a small positive number determining the accuracy of estimation)
+
+3. Policy Improvement
+   policy-stable ← true
+   For each s ∈ S:
+       old-action ← π(s)
+       π(s) ← argmax_a Σ_{s',r} p(s',r|s,a) [r + γ V(s')]
+       If old-action ≠ π(s), then policy-stable ← false
+   If policy-stable, then stop and return V ≈ v* and π ≈ π*; else go to 2
+```
+
+We let Maurice go wild after telling him that he has to follow this algorithm.
+
+But the problem that we realise is, Maurice is taking far too long! Because every round of policy evaluation sweeps through the whole maze again and again until the values have fully settled, and only then do we improve the policy a little. It would be much better if, in every sweep, Maurice directly used the value of the best action (the max) instead of waiting for the values of the current policy to settle. That way evaluation and improvement happen together in a single sweep. This is called **value iteration** and we can implement it as such!
+
+[OPUS 5.5 NOTE: Optional, skipped: *generalized policy iteration* (§4.6), the big-picture idea that evaluation and improvement are two processes pulling against each other until they agree. Policy iteration, value iteration and almost every later RL algorithm are versions of it, so it is a strong closing idea for chapter 4. *Asynchronous DP* (§4.5) is fine to skip.]
+
+```
+Value Iteration, for estimating π ≈ π*
+
+Algorithm parameter: a small threshold θ > 0 determining accuracy of estimation
+Initialize V(s), for all s ∈ S⁺, arbitrarily except that V(terminal) = 0
+
+Loop:
+    Δ ← 0
+    Loop for each s ∈ S:
+        v ← V(s)
+        V(s) ← max_a Σ_{s',r} p(s',r|s,a) [r + γ V(s')]
+        Δ ← max(Δ, |v − V(s)|)
+until Δ < θ
+
+Output a deterministic policy, π ≈ π*, such that
+    π(s) = argmax_a Σ_{s',r} p(s',r|s,a) [r + γ V(s')]
+```
+
+You stick this new algo inside of Maurice, he performs superbly and gets you the best path in only 5 iterations. Now you follow it, dancing and frog-leaping in happiness, because you have made so much money and have ESCAPED!!! with your freedom. As you reach near the gates of Saintsbury, you see a sight. A sight that shakes you, that mortifies you with fear!!
+
+"Oh no, it is the manager!!!"
+
+"No you fool, I am the manager's brother. John!"
+
+"Papa John???"
+
+"What, no! Stop this malarkey. Anyhoo, if you wish to exit, you must answer this query of mine..."
+
 "
-X1
-k=0
-kRt+k+1
+[INSERT_QUESTION]
+"
+
+Wow, that is some question, quite perplexing if I say so myself. But our hero is left undaunted. You got this, let's think it through, what do we know?
+
+"
+ANSWER STEP BY STEP 
+" 
+
+Our hero triumphs once again! You have been through numerous challenges, and you walk out of the gates of Saintsbury only to find out... it was all a ruse!!! No wonder the map was so conveniently placed there.
+
+The manager is a mischievous man, he is playing with you. He is enjoying putting you through all this misery. But fret not, these little encumbrances will not shake your willpower.
+
+This time we have no map, and the maze is as complex as it can be....
 
 
+AND that's all folks, join in for the next article to find out how our hero escapes this problem.
 
+## Where to go from here
 
+If you would like, I will recommend reading [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book-2nd.html) by Sutton and Barto (it is free online!). You should have all the background needed to make sense of it now. If you do run into some issues and have trouble understanding, TELL ME, that will help me understand what exactly it was that I could not encapsulate.
 
-St =s
-#
-, for all s 2 S,
-
-
-
-That is when you are met with... the manager? "No you fool, I am the managers brother. John!" 
-"Papa john???"
-"What no, stop this malarky. Anyhoo if you wish to exit. You must answer this query of mine 
-
-
-
-
-[Story line, Create comics! You go to casino, u start losing money, so you make a plan to maximize your reward. The casino people find out and chase you out, but as you are running away, u get stuck in a maze, now with the casino people after you, you must think of a quick plan to escape!! Thats when you recall that your friend Jack gave you a beautiful bot named maurice who you can program to do anything! You can spawn a new maurice only after 5 min of one maurice dying]
+Now, if I have helped you, even as a mere spectator, through an arduous journey filled with perils, laughs, cries and joy, then I have but one request: consider sharing this with your friends, so they can go on a very cool and fun journey as well!
 
 -----
 
+<!-- 
+
+These are my personal notes from MSAI635 (Reinforcement Learning) here at UMD, as I go through the book *Reinforcement Learning: An Introduction* by Richard Sutton and Andrew Barto.
+
+I will try to explain each chapter as I understood it, as well as do the exercises!
 
 
-These are my personal notes from MSAI635 (Reinforcement Learning) over here in UMD, and as I go through the book RL by richard and Barto 
-
-I will try to explain each chapter as I understood it as well as do the excercises! 
-
-
-## CHapter 2 k-armed bandits 
+## Chapter 2: k-armed Bandits
 
 Exercise 2.1 In $\varepsilon$-greedy action selection, for the case of two actions and $\varepsilon = 0.5$, what is
 the probability that the greedy action is selected?
 
-Ans -> I believe it will be.
+Ans -> I believe it will be:
 
 $$P(\text{greedy}) = (1-\varepsilon) \cdot 1 + \varepsilon \cdot \frac{1}{n}$$
 
@@ -249,16 +431,28 @@ Plugging in $\varepsilon = 0.5$, $n = 2$:
 
 $$P(\text{greedy}) = 0.5 \cdot 1 + 0.5 \cdot \frac{1}{2} = 0.5 + 0.25 = 0.75$$
 
-Exercise 2.2: Bandit example Consider a k-armed bandit problem with k = 4 actions,
+Exercise 2.2: Bandit example Consider a $k$-armed bandit problem with $k = 4$ actions,
 denoted 1, 2, 3, and 4. Consider applying to this problem a bandit algorithm using
-"-greedy action selection, sample-average action-value estimates, and initial estimates
-of Q1(a) = 0, for all a. Suppose the initial sequence of actions and rewards is A1 = 1,
-R1 = 1, A2 = 2, R2 = 1, A3 = 2, R3 = 2, A4 = 2, R4 = 2, A5 = 3, R5 = 0. On some
-of these time steps the " case may have occurred, causing an action to be selected at
+$\varepsilon$-greedy action selection, sample-average action-value estimates, and initial estimates
+of $Q_1(a) = 0$, for all $a$. Suppose the initial sequence of actions and rewards is $A_1 = 1$,
+$R_1 = -1$, $A_2 = 2$, $R_2 = 1$, $A_3 = 2$, $R_3 = -2$, $A_4 = 2$, $R_4 = 2$, $A_5 = 3$, $R_5 = 0$. On some
+of these time steps the $\varepsilon$ case may have occurred, causing an action to be selected at
 random. On which time steps did this definitely occur? On which time steps could this
-possibly have occurred? ⇤
+possibly have occurred?
 
-Ans -> I believe A2 and A5 are when the random epsilon occured as in these times the greedy action was not taken! 
+Ans -> I believe A2 and A5 are when the random epsilon occurred, as at these times the greedy action was not taken!
+
+**OPUS 5.5 correction ->** The PDF copy dropped two minus signs: it is $R_1 = -1$ and $R_3 = -2$. Redoing it with the correct rewards (sample averages, starting from $Q = [0, 0, 0, 0]$):
+
+| Step | $Q$ before acting | Greedy action(s) | Taken | Verdict |
+|---|---|---|---|---|
+| 1 | $[0, 0, 0, 0]$ | 1, 2, 3, 4 (tie) | 1 | possibly random |
+| 2 | $[-1, 0, 0, 0]$ | 2, 3, 4 (tie) | 2 | possibly random |
+| 3 | $[-1, 1, 0, 0]$ | 2 | 2 | possibly random |
+| 4 | $[-1, -0.5, 0, 0]$ | 3, 4 (tie) | 2 | **definitely random** |
+| 5 | $[-1, 1/3, 0, 0]$ | 2 | 3 | **definitely random** |
+
+So the $\varepsilon$ case *definitely* occurred at steps 4 and 5, and *could possibly* have occurred at every step (1 through 5). A random pick can land on the greedy action by chance, so any step that looks greedy might still have been an exploration step.
 
 Exercise 2.3 In the comparison shown in Figure 2.2, which method will perform best in
 the long run in terms of cumulative reward and probability of selecting the best action?
@@ -284,8 +478,8 @@ The same logic applies to reward. The average value of the best of 10 arms (draw
 
 So $\varepsilon = 0.01$ ends up roughly 10% higher in both cumulative reward and probability of picking the optimal action.
 
-Exercise 2.4 If the step-size parameters, ↵n, are not constant, then the estimate Qn is
-a weighted average of previously received rewards with a weighting di↵erent from that
+Exercise 2.4 If the step-size parameters, $\alpha_n$, are not constant, then the estimate $Q_n$ is
+a weighted average of previously received rewards with a weighting different from that
 given by (2.6). What is the weighting on each prior reward for the general case, analogous
 to (2.6), in terms of the sequence of step-size parameters?
 
@@ -307,12 +501,12 @@ $(1-\alpha)^{n-i}$ and recovers (2.6) exactly — that simplification is only va
 step-size case, which is why it can't appear in the general answer here.
 
 Exercise 2.5 (programming) Design and conduct an experiment to demonstrate the
-diculties that sample-average methods have for nonstationary problems. Use a modified
-version of the 10-armed testbed in which all the q⇤(a) start out equal and then take
+difficulties that sample-average methods have for nonstationary problems. Use a modified
+version of the 10-armed testbed in which all the $q_\ast(a)$ start out equal and then take
 independent random walks (say by adding a normally distributed increment with mean 0
-and standard deviation 0.01 to all the q⇤(a) on each step). Prepare plots like Figure 2.2
+and standard deviation 0.01 to all the $q_\ast(a)$ on each step). Prepare plots like Figure 2.2
 for an action-value method using sample averages, incrementally computed, and another
-action-value method using a constant step-size parameter, ↵ =0.1. Use " =0.1 and
+action-value method using a constant step-size parameter, $\alpha = 0.1$. Use $\varepsilon = 0.1$ and
 longer runs, say of 10,000 steps.
 
 
@@ -326,7 +520,7 @@ epsilon = 0.1
 def step(q):
     mean = 0
     std_dev = 0.01
-    
+
     value = rng.normal(loc=mean, scale=std_dev, size=10)
     q += value
     return q
@@ -338,15 +532,15 @@ class Agent:
 
     def sample_average(self, action):
         self.n[action] += 1
-        q_star = rng.normal(loc=Q[action] , scale=1)
-        self.q[action] += (1/(self.n[action]))*(q_star - self.q[action])
-        return self.q[action]
+        reward = rng.normal(loc=Q[action], scale=1)
+        self.q[action] += (1 / self.n[action]) * (reward - self.q[action])
+        return reward
 
-    def constant_step_size(self, action, alpha = 0.1):
+    def constant_step_size(self, action, alpha=0.1):
         self.n[action] += 1
-        q_star = rng.normal(loc=Q[action] , scale=1)
-        self.q[action] += (alpha)*(q_star - self.q[action])
-        return self.q[action]
+        reward = rng.normal(loc=Q[action], scale=1)
+        self.q[action] += alpha * (reward - self.q[action])
+        return reward
 
 reward_sum_1 = np.zeros(10000)
 reward_sum_2 = np.zeros(10000)
@@ -354,23 +548,23 @@ optimal_count_1 = np.zeros(10000)
 optimal_count_2 = np.zeros(10000)
 
 for j in range(2000):
-    agent_1 = Agent();
-    agent_2 = Agent();
+    agent_1 = Agent()
+    agent_2 = Agent()
 
-    Q = [5.0]*10
+    Q = [5.0] * 10
     Q = np.asarray(Q)
-    
+
     for i in range(10000):
         Q = step(Q)
-        value_1 = random.random();
-        value_2 = random.random();
+        value_1 = random.random()
+        value_2 = random.random()
 
-        if(value_1 > epsilon):
+        if value_1 > epsilon:
             action_1 = agent_1.q.index(max(agent_1.q))
         else:
             action_1 = random.randint(0, 9)
-        
-        if(value_2 > epsilon):
+
+        if value_2 > epsilon:
             action_2 = agent_2.q.index(max(agent_2.q))
         else:
             action_2 = random.randint(0, 9)
@@ -381,15 +575,11 @@ for j in range(2000):
         reward_sum_1[i] += reward_1
         reward_sum_2[i] += reward_2
 
-        if (action_1 == Q.argmax()):
+        if action_1 == Q.argmax():
             optimal_count_1[i] += 1
-        else:
-            continue
-            
-        if (action_2 == Q.argmax()):
+
+        if action_2 == Q.argmax():
             optimal_count_2[i] += 1
-        else:
-            continue
 
 avg_reward_1 = reward_sum_1 / 2000
 pct_optimal_1 = optimal_count_1 / 2000 * 100
@@ -407,6 +597,13 @@ plt.xlabel("Steps")
 plt.ylabel("Average reward")
 plt.legend()
 plt.show()
+
+plt.plot(pct_optimal_1, label="sample average")
+plt.plot(pct_optimal_2, label="constant step-size")
+plt.xlabel("Steps")
+plt.ylabel("% Optimal action")
+plt.legend()
+plt.show()
 ```
 
 
@@ -416,7 +613,9 @@ Why, then, are there oscillations and spikes in the early part of the curve for 
 method? In other words, what might make this method perform particularly better or
 worse, on average, on particular early steps?
 
-Ans -> As the number of bandit is  restricted to 10, the optimistic one is going to try all 10 of them, and one of them is likely to be the most optimal action, and equally one with the least optimal action. That is why we see oscilations early on. 
+Ans -> As the number of bandits is restricted to 10, the optimistic one is going to try all 10 of them, and one of them is likely to be the most optimal action, and equally one is likely to be the least optimal action. That is why we see oscillations early on.
+
+**OPUS 5.5 correction ->** Partly right, but the key mechanism is what happens *after* the first round. With $Q_1(a) = +5$ and purely greedy selection, the first ~10 steps try every arm once (each pull drags that arm's estimate below $5$, so an untried arm always wins). After that round, the arm whose estimate dropped the *least* is most likely the truly best arm, so greedy picks it, and that produces the spike (around step 11). But one pull doesn't bring the estimate down to its true value (with $\alpha = 0.1$ it moves only 10% of the way), so pulling it again pushes it below the other arms' still-inflated estimates. Greedy then switches away to the other arms, which causes the dip. The "every arm is still optimistic" effect wears off over the next few rounds, so the oscillation dies down. It shows up in the 2000-run *average* because every run goes through the same "try all, then pick the best" schedule at the same steps.
 
 
 Exercise 2.7: Unbiased Constant-Step-Size Trick In most of this chapter we have used
@@ -752,22 +951,26 @@ Example (non-RL): $X$ = height of a random person, $Y$ = their country. $P(X=180
 So in something like $v_\pi(s) = \mathbb{E}_\pi[q_\pi(s,A_t)\mid S_t=s]$: $q_\pi(s,A_t)$ is already a *value* (an expected return), $A_t$ is the random variable being averaged over, and its conditional distribution $\pi(a\mid s)$ supplies the weights — the output $v_\pi(s)$ is a value, not a probability.
 
 Exercise 3.1 Devise three example tasks of your own that fit into the MDP framework,
-identifying for each its states, actions, and rewards. Make the three examples as di↵erent
+identifying for each its states, actions, and rewards. Make the three examples as different
 from each other as possible. The framework is abstract and flexible and can be applied in
-many di↵erent ways. Stretch its limits in some way in at least one of your examples. ⇤
+many different ways. Stretch its limits in some way in at least one of your examples.
 
-Ans. 
-1. A pizza making robot, the state can be the current state of the pizza and the actions can be the amount of ingredients to put and the reward will be if the user liked it or not 
+Ans.
+1. A pizza making robot: the state can be the current state of the pizza, the actions can be the amount of each ingredient to put on, and the reward will be whether the user liked it or not.
 
-2. A Water heater, the action is heating up the copper wire, state is the current temperature of the water, reward is how close is it to the expected water temperature 
+2. A water heater: the action is heating up the copper wire, the state is the current temperature of the water, and the reward is how close it is to the expected water temperature.
 
-3. Teaching a one legged robot to walk, the motors can be the action, the current position and if it is upright is state, the distance traveled is the reward.
+3. Teaching a one-legged robot to walk: the motor commands are the actions, the current position and whether it is upright is the state, and the distance traveled is the reward.
 
 
 Exercise 3.2 Is the MDP framework adequate to usefully represent all goal-directed
-learning tasks? Can you think of any clear exceptions? ⇤
+learning tasks? Can you think of any clear exceptions?
 
-Ans. No it is not, as it expects that the current state depends exclusively on the previous state and disregards all the history prior to that. This can fail in tasks where all the states are important. An example can be equity bot which sells equity, the worth of an equity cannot be directly valued by what it was in the previous state, we also have to look at when it was bought and for how much, depending on a prior step!
+Ans. No, it is not, as it expects that the current state depends exclusively on the previous state and disregards all the history prior to that. This can fail in tasks where all the past states are important. An example can be an equity bot which sells equity: the worth of an equity cannot be directly valued by what it was in the previous state, we also have to look at when it was bought and for how much, depending on a prior step!
+
+**OPUS 5.5 correction ->** The Markov property is a property of *how you define the state*, not of the problem itself. In the equity example you can include the purchase price and time in the state, and then it is Markov again. So that is not a true exception. Better exceptions are:
+- **Partial observability**: the agent cannot observe the information it would need (e.g. poker, where opponents' cards are hidden), so no state it can build is Markov.
+- **Goals that cannot be reduced to a single scalar reward**: multiple conflicting objectives, or goals defined over whole trajectories (e.g. "visit A *before* B") that a per-step scalar reward cannot express cleanly.
 
 
 Exercise 3.3 Consider the problem of driving. You could define the actions in terms of
@@ -780,15 +983,22 @@ What is the right level, the right place to draw the line between agent and envi
 On what basis is one location of the line to be preferred over another? Is there any
 fundamental reason for preferring one location over another, or is it a free choice? 
 
-Ans. Let us look at first what does not work. 
+Ans. Let us first look at what does not work.
 
-Rubber meets the road does not work obviously as we have no control over that and we can not have well defined actions over it! 
+Rubber meets the road obviously does not work, as we have no control over that and we cannot have well-defined actions over it!
 
-Brain meets body, well it does provide actions it cannot be constratined. It has far too many variables. 
+Brain meets body, well, it does provide actions, but they cannot be constrained. It has far too many variables.
 
-Where to drive is not the right level as well, because the destination is constant the path to reach it are multiple. We have to define a level in which we have control, defined variables, and something that we can optimize. 
+Where to drive is not the right level either, because the destination is constant while the paths to reach it are multiple. We have to define a level at which we have control, defined variables, and something that we can optimize.
 
-After the process of elimination the only reasonable answer left is actions in terms of brakes, acceleration...
+After this process of elimination, the only reasonable answer left is actions in terms of brakes, acceleration...
+
+**OPUS 5.5 correction ->** The book's point is that there is no single right level. It is largely a free choice that depends on the task. The general rule is that the agent–environment boundary is drawn at the **limit of the agent's absolute control**: anything the agent cannot change arbitrarily belongs to the environment. All four levels can be valid:
+- Tire torques are directly controllable for a self-driving car's low-level controller.
+- Muscle twitches are the right level if you are modelling a human motor-control system.
+- "Where to drive" is the right level for a route-planning agent, which hands the actual driving off to a lower-level controller.
+
+What makes one level better than another is practical: the actions should be ones the agent can actually execute reliably, and the level should match the decisions you want to learn.
 
 
 Exercise 3.4 Give a table analogous to that in Example 3.3, but for $p(s', r \mid s, a)$. It
@@ -834,9 +1044,9 @@ $\mathcal{S}$ (the nonterminal states):
 $$\sum_{s' \in \mathcal{S}^+} \sum_{r \in \mathcal{R}} p(s', r \mid s, a) = 1, \quad \text{for all } s \in \mathcal{S}, a \in \mathcal{A}(s)$$
 
 Exercise 3.6 Suppose you treated pole-balancing as an episodic task but also used
-discounting, with all rewards zero except for -1 upon failure. What then would the
-return be at each time? How does this return di↵er from that in the discounted, continuing
-formulation of this task? ⇤
+discounting, with all rewards zero except for $-1$ upon failure. What then would the
+return be at each time? How does this return differ from that in the discounted, continuing
+formulation of this task?
 
 [Ans.] Since every reward is $0$ except $-1$ at the moment of failure, in $G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}$ almost every term vanishes — only the term landing exactly on a failure time survives.
 
@@ -857,14 +1067,18 @@ reward of +1 for escaping from the maze and a reward of zero at all other times.
 seems to break down naturally into episodes—the successive runs through the maze—so
 you decide to treat it as an episodic task, where the goal is to maximize expected total
 reward (3.7). After running the learning agent for a while, you find that it is showing
-no improvement in escaping from the maze. What is going wrong? Have you e↵ectively
-communicated to the agent what you want it to achieve? ⇤
+no improvement in escaping from the maze. What is going wrong? Have you effectively
+communicated to the agent what you want it to achieve?
 
 [Ans.] No, because the agent has no metric of knowing if it has improved over time. Nor any other incentive to do so.
 
-Exercise 3.8 Suppose  =0.5 and the following sequence of rewards is received R1 = -1,
-R2 = 2, R3 = 6, R4 = 3, and R5 = 2, with T = 5. What are G0, G1, ..., G5? Hint:
-Work backwards. ⇤
+**OPUS 5.5 correction ->** The more precise reason: the goal is to maximize the *undiscounted* total reward (3.7), and the only reward is $+1$ at the exit. So **every policy that eventually escapes gets exactly the same return, $G_0 = 1$**, whether it takes 10 steps or 10,000. From the agent's point of view, a random wander that eventually stumbles out is already optimal, so there is nothing to improve. You have told it *that* escaping is good, but not that escaping *quickly* is better. Fixes:
+- Give $-1$ per time step, so a shorter path means a higher return, or
+- Use discounting ($\gamma < 1$), so a $+1$ received later is worth less: $G_0 = \gamma^{T-1}$.
+
+Exercise 3.8 Suppose $\gamma = 0.5$ and the following sequence of rewards is received $R_1 = -1$,
+$R_2 = 2$, $R_3 = 6$, $R_4 = 3$, and $R_5 = 2$, with $T = 5$. What are $G_0, G_1, \dots, G_5$? Hint:
+Work backwards.
 
 [Ans.] Working backwards with $G_t = R_{t+1} + \gamma G_{t+1}$:
 
@@ -876,8 +1090,8 @@ Work backwards. ⇤
 - $G_0 = R_1 + \gamma G_1 = -1 + 0.5(6) = 2$
 
 
-Exercise 3.9 Suppose  =0.9 and the reward sequence is R1 = 2 followed by an infinite
-sequence of 7s. What are G1 and G0? ⇤
+Exercise 3.9 Suppose $\gamma = 0.9$ and the reward sequence is $R_1 = 2$ followed by an infinite
+sequence of 7s. What are $G_1$ and $G_0$?
 
 [Ans.] $G_1 = R_2 + \gamma R_3 + \gamma^2 R_4 + \dots = 7(1+\gamma+\gamma^2+\dots) = \dfrac{7}{1-\gamma} = \dfrac{7}{0.1} = 70$
 
@@ -885,11 +1099,12 @@ $G_0 = R_1 + \gamma G_1 = 2 + 0.9(70) = 2 + 63 = 65$
 
 
 Exercise 3.10 Prove the second equality in (3.10).
+
 Ans -> Sum of GP
 
-**[IMPORTANT]** Exercise 3.11 If the current state is St, and actions are selected according to a stochastic
-policy ⇡, then what is the expectation of Rt+1 in terms of ⇡ and the four-argument
-function p (3.2)?
+**[IMPORTANT]** Exercise 3.11 If the current state is $S_t$, and actions are selected according to a stochastic
+policy $\pi$, then what is the expectation of $R_{t+1}$ in terms of $\pi$ and the four-argument
+function $p$ (3.2)?
 
 [Ans.] For a fixed action $a$, the expected reward averages $r$ over the joint distribution of $(s',r)$ given by the four-argument $p$:
 
@@ -951,9 +1166,9 @@ $$q_\pi(s,a) = \sum_{s'}\sum_r r\cdot p(s',r\mid s,a) + \gamma\sum_{s'}\sum_r p(
 $$q_\pi(s,a) = \sum_{s'}\sum_r p(s',r\mid s,a)\,\big[r + \gamma\, v_\pi(s')\big]$$
 
 Exercise 3.14 The Bellman equation (3.14) must hold for each state for the value function
-v⇡ shown in Figure 3.2 (right) of Example 3.5. Show numerically that this equation holds
-for the center state, valued at +0.7, with respect to its four neighboring states, valued at
-+2.3, +0.4, 0.4, and +0.7. (These numbers are accurate only to one decimal place.) ⇤
+$v_\pi$ shown in Figure 3.2 (right) of Example 3.5. Show numerically that this equation holds
+for the center state, valued at $+0.7$, with respect to its four neighboring states, valued at
+$+2.3$, $+0.4$, $-0.4$, and $+0.7$. (These numbers are accurate only to one decimal place.)
 
 [Ans.] Under the equiprobable random policy $\pi(a\mid s)=0.25$ for each of the four actions; each action deterministically moves to one neighboring cell with reward $r=0$; $\gamma=0.9$:
 
@@ -966,9 +1181,9 @@ which matches the stated value of $+0.7$ (to the one-decimal-place accuracy give
 Exercise 3.15 In the gridworld example, rewards are positive for goals, negative for
 running into the edge of the world, and zero the rest of the time. Are the signs of these
 rewards important, or only the intervals between them? Prove, using (3.8), that adding a
-constant c to all the rewards adds a constant, vc, to the values of all states, and thus
-does not a↵ect the relative values of any states under any policies. What is vc in terms
-of c and ? ⇤
+constant $c$ to all the rewards adds a constant, $v_c$, to the values of all states, and thus
+does not affect the relative values of any states under any policies. What is $v_c$ in terms
+of $c$ and $\gamma$?
 
 [Ans.] Only the intervals between rewards matter, not their absolute signs — adding a constant $c$ shifts every state's value by the same fixed amount, so the relative ordering of states (and hence which policy is better than which) is unchanged.
 
@@ -983,7 +1198,7 @@ $$v_c = c\sum_{k=0}^{\infty}\gamma^k = \frac{c}{1-\gamma}$$
 So $G_t' = G_t + v_c$ for every state and every policy — the shift is identical everywhere, so it adds the same constant to $v_\pi(s)$ for every $s$ under every $\pi$, leaving all relative comparisons between states/policies unaffected.
 
 Exercise 3.16 Now consider adding a constant c to all the rewards in an episodic task,
-such as maze running. Would this have any e↵ect, or would it leave the task unchanged
+such as maze running. Would this have any effect, or would it leave the task unchanged
 as in the continuing task above? Why or why not? Give an example.
 
 [Ans.] Unlike the continuing case, this does have an effect — the sign of $c$ matters here.
@@ -997,10 +1212,8 @@ and this constant contribution now depends on $T$ — the episode length — whi
 Concretely, in the maze example, rewards are $0$ per step and $+1$ upon escaping. Adding $c>0$ to every reward turns this into $c$ per step and $1+c$ upon escaping — so every extra time step spent wandering before escaping now earns an additional $+c$. This gives the agent an incentive to *prolong* the episode rather than escape quickly (or, in the undiscounted case, to never escape at all, accumulating $c$ indefinitely), which directly undermines the original goal of finding the exit as fast as possible.
 
 **[IMPORTANT]** Exercise 3.17 What is the Bellman equation for action values, that
-is, for q⇡? It must give the action value q⇡(s, a) in terms of the action
-values, q⇡(s0
-,a0
-), of possible successors to the state–action pair (s, a).
+is, for $q_\pi$? It must give the action value $q_\pi(s, a)$ in terms of the action
+values, $q_\pi(s', a')$, of possible successors to the state–action pair $(s, a)$.
 Hint: The backup diagram to the right corresponds to this equation.
 Show the sequence of equations analogous to (3.14), but for action
 values.
@@ -1021,18 +1234,14 @@ $$q_\pi(s,a) = \sum_{s',r} p(s',r\mid s,a)\left[r+\gamma\sum_{a'}\pi(a'\mid s')\
 state and on how likely each action is to be taken under the current policy. We can
 think of this in terms of a small backup diagram rooted at the state and considering each
 possible action:
-s
-taken with
-probability ⇡(a|s)
-v⇡(s)
-q⇡(s, a)
-a1 a2 a3
-Give the equation corresponding to this intuition and diagram for the value at the root
 
-node, v⇡(s), in terms of the value at the expected leaf node, q⇡(s, a), given St = s. This
-equation should include an expectation conditioned on following the policy, ⇡. Then give
-a second equation in which the expected value is written out explicitly in terms of ⇡(a|s)
-such that no expected value notation appears in the equation. ⇤
+*[Backup diagram: root state $s$ with value $v_\pi(s)$, branching to actions $a_1, a_2, a_3$, each taken with probability $\pi(a \mid s)$, with leaf values $q_\pi(s, a)$.]*
+
+Give the equation corresponding to this intuition and diagram for the value at the root
+node, $v_\pi(s)$, in terms of the value at the expected leaf node, $q_\pi(s, a)$, given $S_t = s$. This
+equation should include an expectation conditioned on following the policy, $\pi$. Then give
+a second equation in which the expected value is written out explicitly in terms of $\pi(a \mid s)$
+such that no expected value notation appears in the equation.
 
 [Ans.] The root's value is the average of the leaf values $q_\pi(s,a)$, where the averaging is over which action $A_t$ the policy randomly picks:
 
@@ -1043,25 +1252,18 @@ Writing that expectation out explicitly, weighting each leaf $q_\pi(s,a)$ by the
 $$v_\pi(s) = \sum_a \pi(a\mid s)\, q_\pi(s,a)$$
 
 
-**[IMPORTANT]** Exercise 3.19 The value of an action, q⇡(s, a), depends on the expected next reward and
+**[IMPORTANT]** Exercise 3.19 The value of an action, $q_\pi(s, a)$, depends on the expected next reward and
 the expected sum of the remaining rewards. Again we can think of this in terms of a
 small backup diagram, this one rooted at an action (state–action pair) and branching to
 the possible next states:
-s, a q⇡(s, a)
-s0
-3 s0
-2 s0
-1
-r1 r2 r3 v⇡(s0
-)
-expected
-rewards
+
+*[Backup diagram: root state–action pair $(s, a)$ with value $q_\pi(s, a)$, branching via expected rewards $r_1, r_2, r_3$ to next states $s'_1, s'_2, s'_3$ with values $v_\pi(s')$.]*
+
 Give the equation corresponding to this intuition and diagram for the action value,
-q⇡(s, a), in terms of the expected next reward, Rt+1, and the expected next state value,
-v⇡(St+1), given that St =s and At =a. This equation should include an expectation but
+$q_\pi(s, a)$, in terms of the expected next reward, $R_{t+1}$, and the expected next state value,
+$v_\pi(S_{t+1})$, given that $S_t = s$ and $A_t = a$. This equation should include an expectation but
 not one conditioned on following the policy. Then give a second equation, writing out the
-expected value explicitly in terms of p(s0
-,r|s, a) defined by (3.2), such that no expected
+expected value explicitly in terms of $p(s', r \mid s, a)$ defined by (3.2), such that no expected
 value notation appears in the equation.
 
 [Ans.] With $S_t=s$ and $A_t=a$ both already fixed, the only remaining randomness is the environment's response — no $\pi$ needed:
@@ -1074,23 +1276,24 @@ Writing the expectation out explicitly over the four-argument $p$ (same expansio
 
 $$q_\pi(s,a) = \sum_{s',r} p(s',r\mid s,a)\big[r + \gamma\, v_\pi(s')\big]$$
 
-Exercise 3.20 Draw or describe the optimal state-value function for the golf example. ⇤
+Exercise 3.20 Draw or describe the optimal state-value function for the golf example.
 
 [Ans.] $v_{putt}(s)$ (the value of always putting) has contours near the hole labeled $-1, -2, -3,\dots$, growing outward, with a very deep dip over the sand trap since escaping it by putting alone takes many strokes. $v_*(s)$ matches $v_{putt}(s)$ exactly within putting range of the hole, since putter is already optimal there. Everywhere farther out, $v_*(s) \geq v_{putt}(s)$ and generally strictly greater: the driver covers far more distance per stroke, so locations that would take 3+ putts to hole out can be reached in 2 strokes (drive, then putt) under the optimal policy. So the $-2$ contour of $v_*$ extends much farther from the hole than the $-2$ contour of $v_{putt}$. The sand trap is still a locally low-value region under $v_*$ (an extra stroke is still needed to escape it), just less catastrophic than under $v_{putt}$.
 
 Exercise 3.21 Draw or describe the contours of the optimal action-value function for
-putting, q⇤(s, putter), for the golf example. ⇤
+putting, $q_\ast(s, \text{putter})$, for the golf example.
 
 [Ans.] $q_*(s,\text{putter})$ equals $v_{putt}(s)$ (and equals $v_*(s)$) within putting range, since committing to the putter there is already optimal. Outside putting range, $q_*(s,\text{putter})$ is the value of being *forced* to putt once from $s$ (a short move), then playing optimally afterward (switching to the driver if useful). This sits between the other two: worse than $v_*(s)$ (which would use the driver immediately, from wherever is genuinely optimal), but better than $v_{putt}(s)$ (which forces putting for every remaining stroke, not just the first). So its contours look like $v_{putt}(s)$'s contours shifted outward by roughly the distance covered in one putt, since after that first forced putt the agent recovers optimal play.
-0 +2 +1 0
-left right
+
 Exercise 3.22 Consider the continuing MDP shown to the
 right. The only decision to be made is that in the top state,
 where two actions are available, left and right. The numbers
 show the rewards that are received deterministically after
 each action. There are exactly two deterministic policies,
-⇡left and ⇡right. What policy is optimal if  = 0? If  =0.9?
-If  =0.5?
+$\pi_{left}$ and $\pi_{right}$. What policy is optimal if $\gamma = 0$? If $\gamma = 0.9$?
+If $\gamma = 0.5$?
+
+*[Diagram: from the top state, `left` gives reward $+1$ then $0$ on the way back; `right` gives $0$ then $+2$ on the way back.]*
 
 [Ans.] Each policy sends the agent around a length-2 cycle back to the top state: $\pi_{left}$ gives rewards $1,0,1,0,\dots$; $\pi_{right}$ gives rewards $0,2,0,2,\dots$. Since each reward reappears every 2 steps, both values are geometric series in $\gamma^2$:
 
@@ -1104,7 +1307,7 @@ Both share the same positive denominator, so comparing them reduces to comparing
 - $\gamma=0.9$: $2\gamma=1.8>1 \Rightarrow \pi_{right}$ optimal.
 - $\gamma=0.5$: $2\gamma=1 \Rightarrow$ tied, both optimal.
 
-Exercise 3.23 Give the Bellman equation for q⇤ for the recycling robot. ⇤
+Exercise 3.23 Give the Bellman equation for $q_\ast$ for the recycling robot.
 
 [Ans.] Applying $q_*(s,a) = \sum_{s',r} p(s',r\mid s,a)[r+\gamma\max_{a'} q_*(s',a')]$ to each state-action pair, using the transition table from Exercise 3.4:
 
@@ -1120,7 +1323,7 @@ $$q_*(\text{low,recharge}) = \gamma\max_{a'}q_*(\text{high},a')$$
 
 Exercise 3.24 Figure 3.5 gives the optimal value of the best state of the gridworld as
 24.4, to one decimal place. Use your knowledge of the optimal policy and (3.8) to express
-this value symbolically, and then to compute it to three decimal places. ⇤
+this value symbolically, and then to compute it to three decimal places.
 
 [Ans.] The best state is $A$. The optimal policy jumps immediately from $A$ to $A'$ (reward $+10$), then takes the shortest path back to $A$ — 4 steps, each with reward $0$ — before jumping again. So reward $+10$ recurs every 5 steps, giving a repeating geometric pattern:
 
@@ -1131,42 +1334,45 @@ With $\gamma=0.9$: $\gamma^5 = 0.9^5 = 0.59049$, so
 $$v_*(A) = \frac{10}{1-0.59049} = \frac{10}{0.40951} \approx 24.419$$
 
 which matches the figure's $24.4$ (to one decimal place).
-Exercise 3.25 Give an equation for v⇤ in terms of q⇤. ⇤
+
+Exercise 3.25 Give an equation for $v_\ast$ in terms of $q_\ast$.
 
 [Ans.] The optimal policy is greedy — it puts all its probability on whichever action maximizes $q_*(s,a)$, so the weighted average from Exercise 3.12 ($v_\pi(s)=\sum_a \pi(a\mid s)q_\pi(s,a)$) collapses to a simple max, with no $\pi$ involved:
 
 $$v_*(s) = \max_a q_*(s,a)$$
 
-Exercise 3.26 Give an equation for q⇤ in terms of v⇤ and the four-argument p. ⇤
+Exercise 3.26 Give an equation for $q_\ast$ in terms of $v_\ast$ and the four-argument $p$.
 
 [Ans.] Same structure as Exercise 3.13, with $*$ in place of $\pi$ — this relationship only involves the environment's dynamics $p$, not any particular policy:
 
 $$q_*(s,a) = \sum_{s',r} p(s',r\mid s,a)\big[r+\gamma\, v_*(s')\big]$$
 
-Exercise 3.27 Give an equation for ⇡⇤ in terms of q⇤. ⇤
-Exercise 3.28 Give an equation for ⇡⇤ in terms of v⇤ and the four-argument p. ⇤
-Exercise 3.29 Rewrite the four Bellman equations for the four value functions (v⇡, v⇤, q⇡,
-and q⇤) in terms of the three argument function p (3.4) and the two-argument function r
+Exercise 3.27 Give an equation for $\pi_\ast$ in terms of $q_\ast$.
+
+Exercise 3.28 Give an equation for $\pi_\ast$ in terms of $v_\ast$ and the four-argument $p$.
+
+Exercise 3.29 Rewrite the four Bellman equations for the four value functions ($v_\pi$, $v_\ast$, $q_\pi$,
+and $q_\ast$) in terms of the three-argument function $p$ (3.4) and the two-argument function $r$
 (3.5).
 
-### Notes while reading Chapter 3 
+### Notes while reading Chapter 3
 
-reward hypothesis:
-That all of what we mean by goals and purposes can be well thought of as
-the maximization of the expected value of the cumulative sum of a received
-scalar signal (called reward). (pg 53)
+**Reward hypothesis:**
+> That all of what we mean by goals and purposes can be well thought of as
+> the maximization of the expected value of the cumulative sum of a received
+> scalar signal (called reward). (pg 53)
 
-The reward signal is your way of communicating to
-the agent what you want achieved, not how you want it achieved. (pg 54)
+> The reward signal is your way of communicating to
+> the agent what you want achieved, not how you want it achieved. (pg 54)
 
-## Chapter 4 Dynamic Programming 
+## Chapter 4: Dynamic Programming
 
-zDP algorithms are obtained by
-turning Bellman equations such as these into assignments, that is, into update rules for
-improving approximations of the desired value functions.
+> DP algorithms are obtained by
+> turning Bellman equations such as these into assignments, that is, into update rules for
+> improving approximations of the desired value functions.
 
-Exercise 4.1 In Example 4.1, if ⇡ is the equiprobable random policy, what is q⇡(11, down)?
-What is q⇡(7, down)?
+Exercise 4.1 In Example 4.1, if $\pi$ is the equiprobable random policy, what is $q_\pi(11, \texttt{down})$?
+What is $q_\pi(7, \texttt{down})$?
 
 [Ans.] Every transition is deterministic here and $\gamma=1$, so $q_\pi(s,a) = r + v_\pi(s')$ where $s'$ is wherever action $a$ leads.
 
@@ -1177,9 +1383,9 @@ $$q_\pi(7,\texttt{down}) = -1 + v_\pi(11) = -1 + (-14) = -15$$
 Exercise 4.2 In Example 4.1, suppose a new state 15 is added to the gridworld just below
 state 13, and its actions, left, up, right, and down, take the agent to states 12, 13, 14,
 and 15, respectively. Assume that the transitions from the original states are unchanged.
-What, then, is v⇡(15) for the equiprobable random policy? Now suppose the dynamics of
+What, then, is $v_\pi(15)$ for the equiprobable random policy? Now suppose the dynamics of
 state 13 are also changed, such that action down from state 13 takes the agent to the new
-state 15. What is v⇡(15) for the equiprobable random policy in this case? ⇤
+state 15. What is $v_\pi(15)$ for the equiprobable random policy in this case?
 
 [Ans.] **First part:** state 15's actions are left$\to12$, up$\to13$, right$\to14$, down$\to$itself, and the original states are unchanged, so $v(12)=-22,v(13)=-20,v(14)=-14$ still hold. Letting $x=v_\pi(15)$:
 
@@ -1193,7 +1399,7 @@ $$y = \frac{1}{4}\big[(-1-22)+(-1+x)+(-1-14)+(-1+y)\big] = \frac{1}{4}(-40+x+y) 
 
 Solving simultaneously: $x=3(4x+60)+40=12x+220 \Rightarrow x=-20$, then $y=4(-20)+60=-20$. So $v_\pi(13)=-20$ (unchanged) and $v_\pi(15)=-20$ — the same value as the first part.
 
-Exercise 4.3 What are the equations analogous to (4.3), (4.4), and (4.5), but for actionvalue functions instead of state-value functions?
+Exercise 4.3 What are the equations analogous to (4.3), (4.4), and (4.5), but for action-value functions instead of state-value functions?
 
 [Ans.] Mirroring each of (4.3)-(4.5) for $q_\pi$ instead of $v_\pi$:
 
@@ -1212,30 +1418,30 @@ $$q_{k+1}(s,a) \doteq \sum_{s',r} p(s',r\mid s,a)\Big[r+\gamma\sum_{a'}\pi(a'\mi
 Exercise 4.4 The policy iteration algorithm on page 80 has a subtle bug in that it may
 never terminate if the policy continually switches between two or more policies that are
 equally good. This is okay for pedagogy, but not for actual use. Modify the pseudocode
-so that convergence is guaranteed. ⇤
+so that convergence is guaranteed.
 
-Ans. 
+Ans.
 
 Exercise 4.5 How would policy iteration be defined for action values? Give a complete
-algorithm for computing q⇤, analogous to that on page 80 for computing v⇤. Please pay
+algorithm for computing $q_\ast$, analogous to that on page 80 for computing $v_\ast$. Please pay
 special attention to this exercise, because the ideas involved will be used throughout the
-rest of the book. ⇤
+rest of the book.
 
 
-Exercise 4.6 Suppose you are restricted to considering only policies that are "-soft,
-meaning that the probability of selecting each action in each state, s, is at least "/|A(s)|.
+Exercise 4.6 Suppose you are restricted to considering only policies that are $\varepsilon$-soft,
+meaning that the probability of selecting each action in each state, $s$, is at least $\varepsilon / |\mathcal{A}(s)|$.
 Describe qualitatively the changes that would be required in each of the steps 3, 2, and 1,
-in that order, of the policy iteration algorithm for v⇤ on page 80. ⇤
+in that order, of the policy iteration algorithm for $v_\ast$ on page 80.
 
 
 
 Exercise 4.7 (programming) Write a program for policy iteration and re-solve Jack’s car
 rental problem with the following changes. One of Jack’s employees at the first location
 rides a bus home each night and lives near the second location. She is happy to shuttle
-one car to the second location for free. Each additional car still costs $2, as do all cars
+one car to the second location for free. Each additional car still costs 2 dollars, as do all cars
 moved in the other direction. In addition, Jack has limited parking space at each location.
 If more than 10 cars are kept overnight at a location (after any moving of cars), then an
-additional cost of $4 must be incurred to use a second parking lot (independent of how
+additional cost of 4 dollars must be incurred to use a second parking lot (independent of how
 many cars are kept there). These sorts of nonlinearities and arbitrary dynamics often
 occur in real problems and cannot easily be handled by optimization methods other than
 dynamic programming. To check your program, first replicate the results given for the
@@ -1244,20 +1450,20 @@ original problem.
 
 Exercise 4.8 Why does the optimal
 policy for the gambler’s problem have such a curious form? In particular, for capital of 50
-it bets it all on one flip, but for capital of 51 it does not. Why is this a good policy? ⇤
+it bets it all on one flip, but for capital of 51 it does not. Why is this a good policy?
 
 
 
 Exercise 4.9 (programming) Implement value iteration for the gambler’s problem and
-solve it for ph =0.25 and ph =0.55. In programming, you may find it convenient to
+solve it for $p_h = 0.25$ and $p_h = 0.55$. In programming, you may find it convenient to
 introduce two dummy states corresponding to termination with capital of 0 and 100,
 giving them values of 0 and 1 respectively. Show your results graphically, as in Figure 4.3.
-Are your results stable as ✓ ! 0? ⇤
+Are your results stable as $\theta \to 0$?
 
 
 
 Exercise 4.10 What is the analog of the value iteration update (4.10) for action values,
-qk+1(s, a)?
+$q_{k+1}(s, a)$?
 
 
-Note -> chapter 4 dont make a lot of sennse especisally page 83 (of the book) -->
+Note -> Chapter 4 doesn't make a lot of sense, especially page 83 (of the book). --> -->
