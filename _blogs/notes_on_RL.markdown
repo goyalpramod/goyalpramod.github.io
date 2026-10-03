@@ -1,4 +1,4 @@
-<!-- ---
+---
 layout: blog
 title: "Notes on RL"
 date: 2026-10-01 12:00:00 +0530
@@ -19,19 +19,19 @@ I invite you to read the following work with an OPEN MIND. So let us begin by fi
 
 Let's say you did some odd job for your neighbour and your naive lil self just got your first paycheck!
 
-[INSERT_IMAGE]
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_1.webp)
 
 Now as you are walking down the street, you find this amazing place called a "Casino" and they tell you that you can double your money here. So you walk in...
 
-[INSERT_IMAGE]
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_2.webp)
 
 Oh god, what is this ungodly place! You are startled by all the bright lights, the money flying around, the vomit-colored carpet. But you are filled with joy, because you are about to double your money!!!
 
-[INSERT_IMAGE_FROM_WIKI_WITH_COMIC]
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_3.webp)
 
 As you are walking through this labyrinth, you discover a fairly simple-looking machine. Well, a bunch of them in fact, lined up one after the other. They are slot machines!
 
-[INSERT_IMAGE_OF_SELF_AND_SLOT_MACHINES]
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_4.webp)
 
 You think maybe you should try your luck here, as they seem simpler than poker: you just need to put money in, and get money out.
 
@@ -39,7 +39,7 @@ You try the first machine (let's assume we put in a dollar and if we win we get 
 
 This cannot be right, the hoarding said that the house never cheats (oh you naive kid, if only the world was as innocent as you are), and that you will in fact double your money. Sure, you will lose some tries, but if the claim is true, then on average, if you play enough times, you should win more than you lose!
 
-So you start thinking and looking around, and that's when you observe that the man on machine number 3 seems to be winning quite a fair bit. So you wait for him to leave, and once he does, you go to that machine and try it 30 times. Low and behold... you have made more money than you started with! That's when you realise... "THE HOUSE DOES IN FACT CHEAT!" (Who would have guessed, right?) Now, you are an intrepid person, who decides to fight back against this indignity with math and statistics.
+So you start thinking and looking around, and that's when you observe that the man on machine number 3 seems to be winning quite a fair bit. So you wait for him to leave, and once he does, you go to that machine and try it 30 times. Lo and behold... you have made more money than you started with! That's when you realise... "THE HOUSE DOES IN FACT CHEAT!" (Who would have guessed, right?) Now, you are an intrepid person, who decides to fight back against this indignity with math and statistics.
 
 So you formulate how you can win more money.
 
@@ -54,6 +54,30 @@ q_*(a) \doteq \mathbb{E}[R_t \mid A_t = a]
 $$
 
 i.e. the expected reward $R_t$ given that we took the action $A_t = a$ (here an action is you choosing a particular slot machine).
+
+> If this is your first time seeing $\mathbb{E}[X]$, it essentially is the weighted mean of a distribution. In simpler terms it can be written as
+>
+> $$\mathbb{E}[X] = \sum_i x_i \, p(x_i)$$
+>
+> i.e. the value of any given $x$ multiplied by the probability of that $x$ appearing, all added up. (Now if it is a uniform distribution, the probability of any given value occurring is $\frac{1}{\text{number of values}}$, so for something like the expected value of a die it would be
+>
+> $$\mathbb{E}[\text{die}] = 1 \cdot \tfrac{1}{6} + 2 \cdot \tfrac{1}{6} + 3 \cdot \tfrac{1}{6} + 4 \cdot \tfrac{1}{6} + 5 \cdot \tfrac{1}{6} + 6 \cdot \tfrac{1}{6} = \frac{21}{6} = 3.5$$
+>
+> Notice that you can never actually roll a $3.5$! The expected value is not "the most likely outcome", it is the average you would get if you rolled the die a huge number of times, which is exactly the Law of Large Numbers from above.)
+
+> If this is your first time seeing the notation $\mathbb{E}[X \mid Y]$, it comes from conditional probability. $P(A \mid B)$ means: given that $B$ happened, what is the probability that $A$ also happened? I like to imagine this using Venn diagrams. Once we know $B$ happened, $B$ becomes our whole world, and we ask how much of that world is also $A$:
+>
+> $$P(A \mid B) = \frac{P(A \cap B)}{P(B)}$$
+>
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_13.webp)
+>
+> The conditional *expectation* $\mathbb{E}[X \mid Y = y]$ uses this same idea, but instead of a probability it gives you an average: given that $y$ happened, what is the average value of $X$? It is just the weighted mean from above, with the conditional probabilities as the weights: $\mathbb{E}[X \mid Y = y] = \sum_x x \, P(X = x \mid Y = y)$. So $\mathbb{E}[R_t \mid A_t = a]$ reads "the average reward, given that we picked machine $a$".
+
+> A further explanation of the above idea comes from introducing the ideas of posterior, prior, likelihood and marginal probability. While these sound like super complex words, they are quite simple to understand. We can write [Bayes' theorem](https://en.wikipedia.org/wiki/Bayes%27_theorem) as
+>
+> $$P(A \mid B) = \frac{P(B \mid A)\, P(A)}{P(B)}$$
+>
+> Here $P(A \mid B)$ is the **posterior**, essentially the thing we are trying to find out (our belief about $A$ *after* seeing $B$). $P(A)$ is the **prior**, what we already believed about $A$ *before* seeing anything. $P(B \mid A)$ is the **likelihood**, how likely the evidence $B$ would be if $A$ were true. And $P(B)$ is called the **marginal probability** (or evidence), the overall probability of seeing $B$ at all.
 
 We can write our estimate of a machine after it has been played $n-1$ times as
 
@@ -76,6 +100,8 @@ $$
 
 In the third line we multiplied and divided by $(n-1)$, which lets us spot that $\frac{1}{n-1}\sum_{i=1}^{n-1} R_i$ is just our old estimate $Q_n$. So now for each machine we only need to remember two numbers: the current estimate $Q_n$ and the count $n$.
 
+> This is a common trick in a lot of machine learning and you will see it in many papers. It is so common, in fact, that they often skip this exact derivation.
+
 All in all, we can estimate the expected value of any slot machine simply by
 
 $$
@@ -87,7 +113,7 @@ where the step size here is $\frac{1}{n}$.
 You try this with the 3 machines, find the one which gave you the highest expected reward, make a huge buck and leave for home happy.
 You come back the next day, only to realise the casino caught on to what you were doing. So instead of 3 slot machines, they now have 10!!! machines.
 
-[INSERT_IMAGE]
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_5.webp)
 
 Your previous method will not work anymore, because you will waste a lot of tries just trying to find the optimal machine.
 
@@ -97,7 +123,7 @@ So you pull out your trusty notebook and start thinking:
 
 Wow, you mad genius. You write down your formula as such (mad geniuses need algorithms to work for some reason):
 
-> Note: This method is called *ε-greedy* action selection formally, and the dilemma is of exploitation (Just using the machine that gave you a high average score) or exploring to find other machines which can have a potential higher average score. We vary the value of epsilon to figure out what best works for us!
+> Note: This method is formally called *$\varepsilon$-greedy* action selection, and the dilemma here is between **exploitation** (just using the machine that has given you the highest average so far) and **exploration** (trying other machines which could potentially have a higher average). We vary the value of $\varepsilon$ to figure out what works best for us!
 
 ```python
 import numpy as np
@@ -132,6 +158,8 @@ print("best machine:", q_true.argmax(), "| our best guess:", Q.argmax())
 print("average reward:", rewards.mean())
 ```
 
+> Now now, I know it is tempting to skip reading the code above, but just give it a glance. It is quite simple and essential to our understanding.
+
 You keep doing this for a while, but you are not getting the returns you would like, mostly because you are stuck exploiting only a few machines, while there are many more which could potentially have much higher rewards.
 
 So you put on your thinking cap again.
@@ -142,7 +170,7 @@ And you have done it again! How do you even do it?
 
 So now you modify your algorithm by changing $Q(a) \leftarrow 10$ (in the code above, that is just `initial_value=10`).
 
-> Formally this is called optimistic initial value, the idea is to force the agent to explore all options atleast once! But it has a problem as we will see soon...
+> Formally this is called **optimistic initial values**, the idea is to force the agent to explore all options at least once! But it has a problem, as we will see soon...
 
 You do this for a while, but again, you are distraught with the results. Because as you keep playing, you are also keeping track of how much money you are making and losing, and the graph does not look as good as you would like it to. The obvious answer seems to be that even after you try all the machines, in the end you still get stuck with a few machines, because you have no incentive to explore.
 
@@ -157,6 +185,12 @@ You modify how you pick your action $A_t$ as
 $$
 A_t \doteq \arg\max_a \left[ Q_t(a) + c\sqrt{\frac{\ln t}{N_t(a)}} \right]
 $$
+
+> If the above equation feels like a big jump, let me simplify it. $\arg\max_a$ essentially means "pick the $a$ (the argument) that makes the thing in the brackets the biggest". Here the thing in the brackets is our estimate *plus* an exploration bonus, so it is not just the highest expected return at that moment. $\ln$ is log with the natural base $e \approx 2.718$ ([Euler's number](https://en.wikipedia.org/wiki/E_(mathematical_constant)), read more about it here!). The way I like to remember log is something like the following. Imagine we take log with base 10, we can write $\log_{10}(1000) = 3$, i.e. how many times do we need to multiply 10 by itself to get 1000? Or, $10^x = 1000$. Obviously I took a very easy number because it shows the idea. The main reason we use log is because it scales the value much better: it keeps growing, but slower and slower. Compare the two graphs below for yourself to understand what I mean!
+>
+> ![t vs ln t](/assets/blog_assets/notes_on_RL/notes_on_rl_12.webp)
+>
+> After 1000 pulls, $t$ is 1000 but $\ln t$ is only about 6.9. So the exploration bonus keeps nudging us to revisit neglected machines, but it never grows so fast that it drowns out what we have actually learned in $Q_t(a)$.
 
 $N_t(a)$ is the number of times you have pulled the lever of a specific machine, $t$ is the total number of pulls so far (and $\ln t$ is its natural log, so the bonus grows slowly over time), and $c > 0$ controls how much you care about exploring. This will give a greater bonus to the machines you have tried the least, and a machine you have not tried at all ($N_t(a) = 0$) is treated as the best choice! (Now now, you are a smart person, think for a minute and realise this is simpler than it looks!)
 
@@ -186,17 +220,22 @@ This small change changes everything. Now you are back on track and winning some
 
 The casino has had it with you and your math! The manager sends goons towards you to chase you out! You run towards the back exit...
 
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_6.webp)
+
 ...and just when you thought you had escaped your hell and were a free man, you realise... the back gate led to a maze, with only two ends: a dangerous fire pit, or the gates of Saintsbury (this is what we want!). Our hero is again in peril.
 
 Just as you are about to lose hope, you spot something pinned on the wall by the entrance... A MAP of the maze! It shows every corridor, every dead end, where each turn leads, and where the fire pit and the gates of Saintsbury are. (How convenient... almost too convenient. But you are in no position to complain.)
 
-[INSERT_IMAGE_OF_MAP]
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_7.webp)
 
-That is when you take out your trusty sci-fi robo dog, Maurice! Now you must write an algorithm to run Maurice on, so Maurice can find the gates of Saintsbury for you and you can escape this maze!
+Our hero is quite exhausted from all the trouble and is in no position to solve this complex maze by hand.
+(The maze only looks simple to us as spectators, but in reality it is far too complex to be solved in mere seconds!)
+
+That is when you take out your trusty sci-fi robo partner, Maurice! Now you must write an algorithm to run Maurice on, so Maurice can find the gates of Saintsbury for you and you can escape this maze!
 
 Okay, now designing an algo for Maurice is going to be an arduous task, so you start by first breaking down your variables.
 
-[INSERT_IMAGE]
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_10.webp)
 
 Maurice is your **agent**, who interacts with the **environment**, and where he is in the environment is his current **state**. Maurice can take **actions** (move up, down, left, right), and we would also like to give Maurice a **reward** if he gets the job done and saves us from this peril we are stuck in.
 
@@ -204,7 +243,7 @@ We can express the above idea in a simple diagram like below
 
 [INSERT_IMAGE]
 
-We can also rationalize that we start in a state $S_0$, take an action $A_0$, and because of that get a reward $R_1$ and end up in state $S_1$. From $S_1$ we take action $A_1$, get a reward $R_2$, and so on... till we reach the end (the terminal state):
+We can also rationalize that we start in a state $S_0$ (like standing at the entrance of the maze), take an action $A_0$ (like moving forward), and because of that get a reward $R_1$ (in this case the reward will be 0, because it is not like we got out!) and end up in state $S_1$ (the next tile). From $S_1$ we take action $A_1$, get a reward $R_2$, and so on... till we reach the end (the terminal state, in our case either impending doom in the fire pit or heaven by escaping through the gates of Saintsbury):
 
 $$
 S_0, A_0, R_1, S_1, A_1, R_2, S_2, A_2, R_3, \dots
@@ -218,15 +257,21 @@ $$
 p(s', r \mid s, a) \doteq \Pr\{S_t = s', R_t = r \mid S_{t-1} = s, A_{t-1} = a\}
 $$
 
+> Now now, this is nothing new, we already saw conditional probability in the beginning. This essentially says: given what is on the right is true (we are in a state and we took an action), what is the probability of the pair on the left (the state we will end up in and the reward we will get for it)!
+
 And this is exactly what the map gives us! For every state and every action, we can read off where Maurice will end up and what reward he will get. (In a simple maze, each move takes you to exactly one next cell, so $p$ is just $1$ for that cell and $0$ for everything else. We write it as a probability so that it also works for trickier worlds, say a slippery floor that sometimes sends you somewhere else.)
 
 Notice that $p$ only depends on where Maurice is *now* and what he does *now*, not on the whole path that got him there. This is called the **Markov property**, and a problem set up like this (states, actions, rewards and $p$) is called a **Markov Decision Process (MDP)**.
+
+> Take this assumption for now, but later on we will expand more on MDPs, show how they work in most scenarios, and why they are the cornerstone of RL.
 
 As you start formulating the problem, one of the first things that you realise is: the rewards are the easy part. Reaching the gates of Saintsbury gets $+1$, falling into the fire pit gets $-1$, and every other step gets $0$. But that is not enough! When Maurice is standing in some corridor in the middle of the maze, the reward there is $0$, which tells him nothing about whether he is one step from freedom or one step from the fire pit (the reason being... WE IN A MAZE! Every corridor looks the same!).
 
 What Maurice needs is not the reward of each state, but how *good* each state is in the long run, i.e. how much reward he can expect to collect from there onwards. We call this the **value** of a state. Rewards are what the maze hands out, values are what Maurice has to figure out.
 
-The thing working in your favour is the map. Since we know the whole maze, Maurice does not need to take a single step to work these values out. He can sit right here and *think*. (Also he is essentially immortal, because you can respawn him every time he dies, but let's not test that.)
+> Let us slow down a bit if that felt like too much. Work backwards: if we get out, that gives us a reward. Our current problem is that we do not know how close we are to getting rewarded from any given state, so we need this idea of value. For instance, the value of the tile just before the gates is obviously higher than that of a tile 5 steps before it (once we add a little trick called *discounting* in a moment, which makes rewards that are further away count for less). And the value of the tile just before the fire pit is lower than that of the tiles which bring us closer to the gate.
+
+The thing working in your favour is the map. Since we know the whole maze, Maurice does not need to take a single step to work these values out. He can sit right here and *think*. (Also I forgot to tell you, but he is essentially immortal, because you can respawn him every time he dies using your caller gadget, but let's not test that.)
 
 So you think, okay, maybe I can initialize a value for each state, then use the map to keep updating how close each state gets me to the end goal.
 
@@ -246,7 +291,9 @@ $$
 G_t \doteq R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1}
 $$
 
-[OPUS 5.5 NOTE: Skipped: *episodic vs. continuing tasks* (§3.3–3.4). The maze is episodic (it ends at the gate or the pit), so the sum stops at $T$. A continuing task (e.g. a thermostat) never ends, so the sum is infinite and discounting with $\gamma < 1$ is *required* to keep it finite. That is the real reason behind your "it can potentially explode" point. The book unifies both by treating the terminal state as an absorbing state with reward 0 forever.]
+> This is a good time to introduce a small idea called **episodic** and **continuing** tasks. The example we are dealing with now is episodic, i.e. it eventually ends. But there are multiple scenarios in real life where a task does not end. For instance, think of a thermostat trying to keep the temperature of a room constant. In all practicality it will never be done. Now you may wonder why we need to talk about the difference between episodic and continuing tasks. The big reason is that the math differs significantly between them. For instance, look at the above equation. It looks a lot like a [geometric progression](https://en.wikipedia.org/wiki/Geometric_series) (read more here), and the sum of an infinite GP is very different from a finite one. In an episodic task the sum stops at $T$, so it is always finite. In a continuing task it never stops, and without $\gamma$ it could blow up to infinity. Interestingly, for $0 \le \gamma < 1$, $\sum_{k=0}^{\infty} \gamma^k = \frac{1}{1-\gamma}$, a constant. So if every reward is at most $R_{\max}$, the return can never be bigger than $\frac{R_{\max}}{1-\gamma}$, finite no matter how long the task runs! (And as a bonus, if you add the same constant $c$ to every reward, every state's value just shifts by the same $\frac{c}{1-\gamma}$, so what really matters is the relative difference between rewards, not their actual values.) This part was more complex than I would have liked it to be, but as we move forward and do more RL, I will try to simplify it as we get more comfortable with this concept.
+
+> There is another benefit of $\gamma$ for the infinite case: it essentially makes the task pseudo-episodic from any state. For $n$ large enough, $\gamma^n$ will be very close to zero, so every reward after that point contributes almost nothing. (A handy rule of thumb: the agent effectively looks about $\frac{1}{1-\gamma}$ steps ahead, e.g. around 10 steps for $\gamma = 0.9$.)
 
 This is our discounted return. Now, using this discounted return, we can determine how valuable any current state is as
 
@@ -256,22 +303,30 @@ $$
 
 Here $\pi$ is Maurice's **policy**, i.e. his way of behaving: $\pi(a \mid s)$ is the probability that Maurice picks action $a$ when he is in state $s$. How valuable a state is depends on how Maurice behaves from there on, which is why $v$ carries that little $\pi$.
 
+> The above explanation makes sense logically, but let's break it down mathematically as well. When we write $\mathbb{E}_\pi[X]$ we essentially "mean" (haha, pun intended) the expected value of the random variable $X$ when Maurice behaves according to $\pi$. (Quick short note: a [random variable](https://en.wikipedia.org/wiki/Random_variable) is an idea from probability and not the same thing as a variable in computer science. It is a quantity whose value depends on a random outcome, like the number a die lands on. Read more about it here.) Which we can break down as follows.
+>
+> The return $G_t$ is a random variable: every time Maurice starts from $s$, he can end up taking a different path and collecting a different total reward. *Which* paths are likely depends on two things: Maurice's choices ($\pi$) and how the maze responds ($p$). The little $\pi$ under the $\mathbb{E}$ is a reminder that the probabilities we average with come from following $\pi$. So using the weighted-mean definition from the beginning:
+>
+> $$v_\pi(s) = \mathbb{E}_\pi[G_t \mid S_t = s] = \sum_{g} g \cdot \Pr_\pi(G_t = g \mid S_t = s)$$
+>
+> i.e. every possible return $g$, weighted by how likely Maurice is to get it when starting from $s$ and following $\pi$. A tiny example: say from tile $s$, Maurice goes left half of the time ($\pi(\text{left} \mid s) = 0.5$), which always ends up at the gates with a return of $+1$, and goes right the other half, which always ends in the fire pit with a return of $-1$. Then $v_\pi(s) = 0.5 \cdot (+1) + 0.5 \cdot (-1) = 0$. Change his policy to go left 90% of the time, and the same tile is now worth $0.9 - 0.1 = 0.8$. Same tile, same maze, different policy, different value. That is why $v$ needs its $\pi$!
+
 Now the problem with the above formulation is that we cannot really work with it, so we have to break it down into what we understand.
 
 We can break it down as the following
 
 $$
 \begin{aligned}
-v_\pi(s) &\doteq \mathbb{E}_\pi[G_t \mid S_t = s] \\
-&= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s] \\
-&= \sum_a \pi(a \mid s) \sum_{s'} \sum_r p(s', r \mid s, a) \Big[ r + \gamma\, \mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s'] \Big] \\
-&= \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \big[ r + \gamma\, v_\pi(s') \big], \quad \text{for all } s \in \mathcal{S}
+v_\pi(s) &\doteq \mathbb{E}_\pi[G_t \mid S_t = s] && (1) \\
+&= \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s] && (2) \\
+&= \sum_a \pi(a \mid s) \sum_{s'} \sum_r p(s', r \mid s, a) \Big[ r + \gamma\, \mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s'] \Big] && (3) \\
+&= \sum_a \pi(a \mid s) \sum_{s', r} p(s', r \mid s, a) \big[ r + \gamma\, v_\pi(s') \big], \quad \text{for all } s \in \mathcal{S} && (4)
 \end{aligned}
 $$
 
-Let's go through it line by line.
+Let's go through it step by step.
 
-**Line 1 → Line 2.** The return has a recursive structure. Pull the first reward out of the sum, and what is left is just the return from the next step, discounted once:
+**(1) → (2).** The return has a recursive structure. Pull the first reward out of the sum, and what is left is just the return from the next step, discounted once:
 
 $$
 \begin{aligned}
@@ -281,16 +336,73 @@ G_t &= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots \\
 \end{aligned}
 $$
 
+[SELF-NOTE-SIMPLIFY-FROM-HERE] 
+
 So "everything from now on" = "the next reward" + $\gamma$ × "everything from the next step on".
 
-**Line 2 → Line 3.** The expectation is an average over everything random that happens in one step. Starting in state $s$, two random things happen:
+**(2) → (3).** The expectation is an average over everything random that happens in one step. Starting in state $s$, two random things happen:
 
 1. Maurice picks an action $a$, with probability $\pi(a \mid s)$ (his policy).
 2. The maze responds with a next state $s'$ and a reward $r$, with probability $p(s', r \mid s, a)$.
 
 So we average over both: we weight every possible $(a, s', r)$ combination by its probability $\pi(a \mid s)\, p(s', r \mid s, a)$, and for each one, what we get is the reward $r$ plus $\gamma$ times the expected return from wherever we landed, $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']$. (Why can we condition only on $s'$ and forget $s$ and $a$? The Markov property again: once you know where Maurice is now, how he got there does not change what happens next.)
 
-**Line 3 → Line 4.** Look at $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']$. It is "the expected return when starting from state $s'$ and following $\pi$", which is exactly the definition of $v_\pi(s')$! So we swap it in. (We also write $\sum_{s'}\sum_r$ as $\sum_{s',r}$ to save some ink.)
+If you want to see exactly how (3) falls out of (2), here it is slowly. We need just one tool, the **law of total expectation**: to find an average, you can split the world into cases, find the average within each case, and then take a weighted mean of those averages using how likely each case is:
+
+$$
+\mathbb{E}[X \mid Y] = \sum_z P(Z = z \mid Y)\, \mathbb{E}[X \mid Y, Z = z]
+$$
+
+(Example: the average height in a class = (fraction of girls × average height of girls) + (fraction of boys × average height of boys).)
+
+> **The law of total expectation, slowly.** Think of it as "an average of averages, weighted by how likely each case is".
+>
+> Let's go back to the casino for a second. Say every evening you play machine A with probability $0.7$ and machine B with probability $0.3$. Machine A pays out $2$ on average and machine B pays out $10$ on average. What do you make on an average evening?
+>
+> $$\mathbb{E}[\text{payout}] = \underbrace{0.7}_{P(\text{A})} \times \underbrace{2}_{\mathbb{E}[\text{payout} \mid \text{A}]} + \underbrace{0.3}_{P(\text{B})} \times \underbrace{10}_{\mathbb{E}[\text{payout} \mid \text{B}]} = 1.4 + 3 = 4.4$$
+>
+> Notice what we did *not* need: the full list of every possible payout and its probability. We only needed the average *within* each case, and how likely each case is. That is the whole trick.
+>
+> **Why is it true?** Starting from the definition of expected value from the beginning, $\mathbb{E}[X] = \sum_x x \, P(X = x)$:
+>
+> $$
+> \begin{aligned}
+> \mathbb{E}[X] &= \sum_x x \, P(X = x) && \text{(definition of expected value)} \\
+> &= \sum_x x \sum_z P(X = x, Z = z) && \text{(split } P(X = x) \text{ over every case } z\text{)} \\
+> &= \sum_x x \sum_z P(Z = z)\, P(X = x \mid Z = z) && \text{(conditional probability, rearranged)} \\
+> &= \sum_z P(Z = z) \sum_x x \, P(X = x \mid Z = z) && \text{(swap the order of the sums)} \\
+> &= \sum_z P(Z = z)\, \mathbb{E}[X \mid Z = z] && \text{(the inner sum is the average within case } z\text{)}
+> \end{aligned}
+> $$
+>
+> The third line is just the Venn diagram formula $P(A \mid B) = \frac{P(A \cap B)}{P(B)}$ multiplied out: $P(A \cap B) = P(B)\, P(A \mid B)$.
+>
+> If we already know something, say $Y$ (for us, $S_t = s$), nothing changes. Every probability and expectation just gets a "$\mid Y$" attached, which gives the version written above.
+>
+> **One catch:** the cases $z$ must cover every possibility, and no two of them can happen at the same time (machine A *or* machine B each evening, never both and never neither). Otherwise the weights don't add up to 1 and the average comes out wrong.
+>
+> **In our maze**, the "something we already know" is $S_t = s$, and we split twice:
+> - first on Maurice's action: the cases are the actions $a$, weighted by $\pi(a \mid s)$,
+> - then on the maze's response: the cases are the $(s', r)$ pairs, weighted by $p(s', r \mid s, a)$.
+
+We apply it twice, first splitting on the action, then splitting on what the maze does:
+
+$$
+\begin{aligned}
+&\mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s] && (2) \\
+&= \sum_a \pi(a \mid s)\; \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s, A_t = a] && (2a) \\
+&= \sum_a \pi(a \mid s) \sum_{s'} \sum_r p(s', r \mid s, a)\; \mathbb{E}_\pi[R_{t+1} + \gamma G_{t+1} \mid S_t = s, A_t = a, S_{t+1} = s', R_{t+1} = r] && (2b) \\
+&= \sum_a \pi(a \mid s) \sum_{s'} \sum_r p(s', r \mid s, a) \Big[ r + \gamma\, \mathbb{E}_\pi[G_{t+1} \mid S_t = s, A_t = a, S_{t+1} = s', R_{t+1} = r] \Big] && (2c) \\
+&= \sum_a \pi(a \mid s) \sum_{s'} \sum_r p(s', r \mid s, a) \Big[ r + \gamma\, \mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s'] \Big] && (3)
+\end{aligned}
+$$
+
+- **(2) → (2a):** split on which action Maurice picks. The chance of each case is $\pi(a \mid s)$.
+- **(2a) → (2b):** within each action, split again on where the maze sends him and what reward it gives. The chance of each case is $p(s', r \mid s, a)$.
+- **(2b) → (2c):** inside the expectation we now *know* $R_{t+1} = r$, so it is no longer random and comes out as just $r$ (the average of a known number is the number itself). The $\gamma$ also comes out, since the expectation of a constant times something is the constant times its expectation.
+- **(2c) → (3):** the Markov property. The future return $G_{t+1}$ only depends on where Maurice is at $t+1$, so knowing $s$, $a$ and $r$ on top of $s'$ tells us nothing new, and we can drop them.
+
+**(3) → (4).** Look at $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']$. It is "the expected return when starting from state $s'$ and following $\pi$", which is exactly the definition of $v_\pi(s')$! So we swap it in. (We also write $\sum_{s'}\sum_r$ as $\sum_{s',r}$ to save some ink.)
 
 And that is the magic: the value of a state is now written in terms of the immediate reward plus the discounted values of the states right after it. We no longer need to sum over the infinite future, we just look one step ahead.
 
@@ -401,11 +513,21 @@ This time we have no map, and the maze is as complex as it can be....
 
 AND that's all folks, join in for the next article to find out how our hero escapes this problem.
 
+To add a bit of clarification if things went fast 
+
+
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_8.webp)
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_9.webp)
+![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_11.webp)
+
+
 ## Where to go from here
 
 If you would like, I will recommend reading [Reinforcement Learning: An Introduction](http://incompleteideas.net/book/the-book-2nd.html) by Sutton and Barto (it is free online!). You should have all the background needed to make sense of it now. If you do run into some issues and have trouble understanding, TELL ME, that will help me understand what exactly it was that I could not encapsulate.
 
 Now, if I have helped you, even as a mere spectator, through an arduous journey filled with perils, laughs, cries and joy, then I have but one request: consider sharing this with your friends, so they can go on a very cool and fun journey as well!
+
+
 
 -----
 
@@ -1466,4 +1588,4 @@ Exercise 4.10 What is the analog of the value iteration update (4.10) for action
 $q_{k+1}(s, a)$?
 
 
-Note -> Chapter 4 doesn't make a lot of sense, especially page 83 (of the book). --> -->
+Note -> Chapter 4 doesn't make a lot of sense, especially page 83 (of the book). -->
