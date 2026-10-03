@@ -19,19 +19,19 @@ I invite you to read the following work with an OPEN MIND. So let us begin by fi
 
 Let's say you did some odd job for your neighbour and your naive lil self just got your first paycheck!
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_1.webp)
+![Our hero receiving their first paycheck](/assets/blog_assets/notes_on_RL/notes_on_rl_1.webp)
 
 Now as you are walking down the street, you find this amazing place called a "Casino" and they tell you that you can double your money here. So you walk in...
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_2.webp)
+![The casino: double your money!](/assets/blog_assets/notes_on_RL/notes_on_rl_2.webp)
 
 Oh god, what is this ungodly place! You are startled by all the bright lights, the money flying around, the vomit-colored carpet. But you are filled with joy, because you are about to double your money!!!
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_3.webp)
+![Inside the casino](/assets/blog_assets/notes_on_RL/notes_on_rl_3.webp)
 
 As you are walking through this labyrinth, you discover a fairly simple-looking machine. Well, a bunch of them in fact, lined up one after the other. They are slot machines!
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_4.webp)
+![Three slot machines](/assets/blog_assets/notes_on_RL/notes_on_rl_4.webp)
 
 You think maybe you should try your luck here, as they seem simpler than poker: you just need to put money in, and get money out.
 
@@ -45,7 +45,7 @@ So you formulate how you can win more money.
 
 Let us assume we have $N$ tries (the amount of money), and we have $k$ options in front of us (the number of slot machines). We can assume that each of these $k$ options has an expected return, i.e. a mean around which there is some variance, but if played enough times, the average of what it gives back will converge to its true value. (This is the [Law of Large Numbers](https://en.wikipedia.org/wiki/Law_of_large_numbers): given enough tries, the black box will give its average output.)
 
-So let's assume this perfect, actual value of a slot machine $a$ can be represented as $q_\ast(a)$. But the problem is, any time we use it, it does not return the perfect $q_\ast(a)$ (because if it did, everyone would play all the slot machines once, figure out which gives the highest payout and just use that!). So instead we keep a running estimate $Q_n(a)$, which is the average of the rewards we have received from that machine so far.
+So let's assume this perfect, actual value of a slot machine $a$ can be represented as $q_\ast(a)$. But the problem is, any time we use it, it does not return the perfect $q_\ast(a)$ (because if it did, everyone would play all the slot machines once, figure out which gives the highest payout and just use that! So instead they follow a distribution with some variance and a mean). So instead we keep a running estimate $Q_n(a)$, which is the average of the rewards we have received from that machine so far.
 
 We can write the true value as
 
@@ -69,7 +69,7 @@ i.e. the expected reward $R_t$ given that we took the action $A_t = a$ (here an 
 >
 > $$P(A \mid B) = \frac{P(A \cap B)}{P(B)}$$
 >
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_13.webp)
+![Venn diagram of conditional probability](/assets/blog_assets/notes_on_RL/notes_on_rl_13.webp)
 >
 > The conditional *expectation* $\mathbb{E}[X \mid Y = y]$ uses this same idea, but instead of a probability it gives you an average: given that $y$ happened, what is the average value of $X$? It is just the weighted mean from above, with the conditional probabilities as the weights: $\mathbb{E}[X \mid Y = y] = \sum_x x \, P(X = x \mid Y = y)$. So $\mathbb{E}[R_t \mid A_t = a]$ reads "the average reward, given that we picked machine $a$".
 
@@ -113,7 +113,7 @@ where the step size here is $\frac{1}{n}$.
 You try this with the 3 machines, find the one which gave you the highest expected reward, make a huge buck and leave for home happy.
 You come back the next day, only to realise the casino caught on to what you were doing. So instead of 3 slot machines, they now have 10!!! machines.
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_5.webp)
+![The casino added more machines](/assets/blog_assets/notes_on_RL/notes_on_rl_5.webp)
 
 Your previous method will not work anymore, because you will waste a lot of tries just trying to find the optimal machine.
 
@@ -188,7 +188,7 @@ $$
 
 > If the above equation feels like a big jump, let me simplify it. $\arg\max_a$ essentially means "pick the $a$ (the argument) that makes the thing in the brackets the biggest". Here the thing in the brackets is our estimate *plus* an exploration bonus, so it is not just the highest expected return at that moment. $\ln$ is log with the natural base $e \approx 2.718$ ([Euler's number](https://en.wikipedia.org/wiki/E_(mathematical_constant)), read more about it here!). The way I like to remember log is something like the following. Imagine we take log with base 10, we can write $\log_{10}(1000) = 3$, i.e. how many times do we need to multiply 10 by itself to get 1000? Or, $10^x = 1000$. Obviously I took a very easy number because it shows the idea. The main reason we use log is because it scales the value much better: it keeps growing, but slower and slower. Compare the two graphs below for yourself to understand what I mean!
 >
-> ![t vs ln t](/assets/blog_assets/notes_on_RL/notes_on_rl_12.webp)
+> ![Linear vs log curve](/assets/blog_assets/notes_on_RL/notes_on_rl_12.webp)
 >
 > After 1000 pulls, $t$ is 1000 but $\ln t$ is only about 6.9. So the exploration bonus keeps nudging us to revisit neglected machines, but it never grows so fast that it drowns out what we have actually learned in $Q_t(a)$.
 
@@ -220,13 +220,13 @@ This small change changes everything. Now you are back on track and winning some
 
 The casino has had it with you and your math! The manager sends goons towards you to chase you out! You run towards the back exit...
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_6.webp)
+![The manager has had it with your maths](/assets/blog_assets/notes_on_RL/notes_on_rl_6.webp)
 
 ...and just when you thought you had escaped your hell and were a free man, you realise... the back gate led to a maze, with only two ends: a dangerous fire pit, or the gates of Saintsbury (this is what we want!). Our hero is again in peril.
 
 Just as you are about to lose hope, you spot something pinned on the wall by the entrance... A MAP of the maze! It shows every corridor, every dead end, where each turn leads, and where the fire pit and the gates of Saintsbury are. (How convenient... almost too convenient. But you are in no position to complain.)
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_7.webp)
+![The map of the maze](/assets/blog_assets/notes_on_RL/notes_on_rl_7.webp)
 
 Our hero is quite exhausted from all the trouble and is in no position to solve this complex maze by hand.
 (The maze only looks simple to us as spectators, but in reality it is far too complex to be solved in mere seconds!)
@@ -235,13 +235,13 @@ That is when you take out your trusty sci-fi robo partner, Maurice! Now you must
 
 Okay, now designing an algo for Maurice is going to be an arduous task, so you start by first breaking down your variables.
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_10.webp)
+![Agent, environment, actions and state](/assets/blog_assets/notes_on_RL/notes_on_rl_10.webp)
 
 Maurice is your **agent**, who interacts with the **environment**, and where he is in the environment is his current **state**. Maurice can take **actions** (move up, down, left, right), and we would also like to give Maurice a **reward** if he gets the job done and saves us from this peril we are stuck in.
 
 We can express the above idea in a simple diagram like below
 
-[INSERT_IMAGE]
+![The agent-environment loop](/assets/blog_assets/notes_on_RL/notes_on_rl_8.webp)
 
 We can also rationalize that we start in a state $S_0$ (like standing at the entrance of the maze), take an action $A_0$ (like moving forward), and because of that get a reward $R_1$ (in this case the reward will be 0, because it is not like we got out!) and end up in state $S_1$ (the next tile). From $S_1$ we take action $A_1$, get a reward $R_2$, and so on... till we reach the end (the terminal state, in our case either impending doom in the fire pit or heaven by escaping through the gates of Saintsbury):
 
@@ -266,6 +266,8 @@ Notice that $p$ only depends on where Maurice is *now* and what he does *now*, n
 > Take this assumption for now, but later on we will expand more on MDPs, show how they work in most scenarios, and why they are the cornerstone of RL.
 
 As you start formulating the problem, one of the first things that you realise is: the rewards are the easy part. Reaching the gates of Saintsbury gets $+1$, falling into the fire pit gets $-1$, and every other step gets $0$. But that is not enough! When Maurice is standing in some corridor in the middle of the maze, the reward there is $0$, which tells him nothing about whether he is one step from freedom or one step from the fire pit (the reason being... WE IN A MAZE! Every corridor looks the same!).
+
+> Notice that the only way we tell Maurice what we want is through rewards. This idea is at the heart of RL and is called the **reward hypothesis**: all goals can be described as the maximization of the expected cumulative reward. The reward tells the agent *what* we want achieved, not *how* to achieve it. (We never tell Maurice "go left at the third corridor", we just reward him for getting out.)
 
 What Maurice needs is not the reward of each state, but how *good* each state is in the long run, i.e. how much reward he can expect to collect from there onwards. We call this the **value** of a state. Rewards are what the maze hands out, values are what Maurice has to figure out.
 
@@ -303,6 +305,19 @@ $$
 
 Here $\pi$ is Maurice's **policy**, i.e. his way of behaving: $\pi(a \mid s)$ is the probability that Maurice picks action $a$ when he is in state $s$. How valuable a state is depends on how Maurice behaves from there on, which is why $v$ carries that little $\pi$.
 
+You can think of the policy as Maurice's brain: it takes in the state and tells him what to do. It can be **deterministic**, written $a = \pi(s)$, always picking the same action in a given state. Or it can be **stochastic**, written $\pi(a \mid s)$, giving a probability for each action (right 70% of the time, left 20%, and so on).
+
+![Deterministic vs stochastic policy](/assets/blog_assets/notes_on_RL/notes_on_rl_11.webp)
+
+Finding the best policy, the one that collects the most reward (we call it $\pi_\ast$), is the whole goal of RL. There are two broad ways to get there:
+
+- **Policy-based methods:** directly teach Maurice which action to take in each state.
+- **Value-based methods:** teach Maurice how valuable each state is, then let him take the action that leads to the most valuable state.
+
+![Policy based vs value based methods](/assets/blog_assets/notes_on_RL/notes_on_rl_9.webp)
+
+Everything we do in this post is value-based. We will meet policy-based methods later in the series.
+
 > The above explanation makes sense logically, but let's break it down mathematically as well. When we write $\mathbb{E}_\pi[X]$ we essentially "mean" (haha, pun intended) the expected value of the random variable $X$ when Maurice behaves according to $\pi$. (Quick short note: a [random variable](https://en.wikipedia.org/wiki/Random_variable) is an idea from probability and not the same thing as a variable in computer science. It is a quantity whose value depends on a random outcome, like the number a die lands on. Read more about it here.) Which we can break down as follows.
 >
 > The return $G_t$ is a random variable: every time Maurice starts from $s$, he can end up taking a different path and collecting a different total reward. *Which* paths are likely depends on two things: Maurice's choices ($\pi$) and how the maze responds ($p$). The little $\pi$ under the $\mathbb{E}$ is a reminder that the probabilities we average with come from following $\pi$. So using the weighted-mean definition from the beginning:
@@ -336,7 +351,6 @@ G_t &= R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots \\
 \end{aligned}
 $$
 
-[SELF-NOTE-SIMPLIFY-FROM-HERE] 
 
 So "everything from now on" = "the next reward" + $\gamma$ × "everything from the next step on".
 
@@ -347,7 +361,7 @@ So "everything from now on" = "the next reward" + $\gamma$ × "everything from t
 
 So we average over both: we weight every possible $(a, s', r)$ combination by its probability $\pi(a \mid s)\, p(s', r \mid s, a)$, and for each one, what we get is the reward $r$ plus $\gamma$ times the expected return from wherever we landed, $\mathbb{E}_\pi[G_{t+1} \mid S_{t+1} = s']$. (Why can we condition only on $s'$ and forget $s$ and $a$? The Markov property again: once you know where Maurice is now, how he got there does not change what happens next.)
 
-If you want to see exactly how (3) falls out of (2), here it is slowly. We need just one tool, the **law of total expectation**: to find an average, you can split the world into cases, find the average within each case, and then take a weighted mean of those averages using how likely each case is:
+Going from (2) to (3) might have felt like a big jump, let's make it simple. We need just one tool, the **law of total expectation**: to find an average, you can split the world into cases, find the average within each case, and then take a weighted mean of those averages using how likely each case is:
 
 $$
 \mathbb{E}[X \mid Y] = \sum_z P(Z = z \mid Y)\, \mathbb{E}[X \mid Y, Z = z]
@@ -355,7 +369,7 @@ $$
 
 (Example: the average height in a class = (fraction of girls × average height of girls) + (fraction of boys × average height of boys).)
 
-> **The law of total expectation, slowly.** Think of it as "an average of averages, weighted by how likely each case is".
+> Again, let's go through it. Think of it as "an average of averages, weighted by how likely each case is".
 >
 > Let's go back to the casino for a second. Say every evening you play machine A with probability $0.7$ and machine B with probability $0.3$. Machine A pays out $2$ on average and machine B pays out $10$ on average. What do you make on an average evening?
 >
@@ -408,13 +422,11 @@ And that is the magic: the value of a state is now written in terms of the immed
 
 This is popularly called the **Bellman equation** for $v_\pi$ (the state-value function).
 
-[OPUS 5.5 NOTE: Skipped, and promised earlier ('we will talk about the optimal way of acting in a bit'): (1) the *action-value function* $q_\pi(s,a)$, i.e. the value of taking action $a$ in $s$ and following $\pi$ afterwards; (2) the *optimal* value functions $v_\ast(s) = \max_\pi v_\pi(s)$ and $q_\ast(s,a)$; (3) the *Bellman optimality equation*, $v_\ast(s) = \max_a \sum_{s',r} p(s',r \mid s,a)[r + \gamma v_\ast(s')]$. Value iteration below is literally this equation turned into an update, so introducing it here makes value iteration feel obvious instead of magic. Your Exercises 3.12, 3.13, 3.17, 3.25 and 3.26 already have all the pieces.]
-
 We have the map and we have the Bellman equation, but we still need an algorithm to actually compute these values, right? How do we do that?
 
 This family of methods, where you use a perfect model of the world (our map, i.e. $p$) to compute values by repeatedly applying the Bellman equation, is called **Dynamic Programming (DP)**. Notice that Maurice never actually walks the maze here, all of it is done by *thinking* with the map. This is also called **planning**.
 
-The first piece is what we call **policy evaluation**: given a policy $\pi$, compute $v_\pi$. The trick is to turn the Bellman equation into an update rule. Start with arbitrary guesses for $V(s)$, then sweep through all the states, replacing each $V(s)$ with the right-hand side of the Bellman equation computed using the current guesses. Keep sweeping until the values stop changing.
+The first piece is what we call **policy evaluation**: given a policy $\pi$, compute $v_\pi$. The trick is to turn the Bellman equation into an update rule. Start with arbitrary guesses for $V(s)$, then go through all the states, replacing each $V(s)$ with the right-hand side of the Bellman equation computed using the current guesses. Keep going until the values stop changing.
 
 ```
 Iterative Policy Evaluation, for estimating V ≈ v_π
@@ -432,9 +444,63 @@ Loop:
 until Δ < θ
 ```
 
+Taken from Sutton and barto [ACTUALLY_ADD_THE_IMAGE]
+
+> In code, it looks something like this. To keep things small, we use the classic 4×4 grid from the book: the exits are the top-left and bottom-right corners, every step costs $-1$, and Maurice follows the random policy (each direction with probability $0.25$).
+
+```python
+import numpy as np
+
+GRID_SIZE = 4
+N_STATES = GRID_SIZE * GRID_SIZE
+TERMINALS = {0, 15}  # the two exits: top-left and bottom-right corners
+ACTIONS = {'up': (-1, 0), 'down': (1, 0), 'left': (0, -1), 'right': (0, 1)}
+GAMMA = 1.0          # no discounting needed, every step already costs -1
+
+def next_state(state, action):
+    row, col = divmod(state, GRID_SIZE)
+    d_row, d_col = ACTIONS[action]
+    # walking into a wall leaves you where you are
+    row = min(max(row + d_row, 0), GRID_SIZE - 1)
+    col = min(max(col + d_col, 0), GRID_SIZE - 1)
+    return row * GRID_SIZE + col
+
+def reward(state, action):
+    return -1  # every step hurts, so the shortest way out wins
+
+def policy_evaluation(policy, theta=1e-4):
+    V = np.zeros(N_STATES)  # V(terminal) stays 0 forever
+    while True:
+        delta = 0
+        for s in range(N_STATES):
+            if s in TERMINALS:
+                continue
+            v = V[s]
+            # the map is deterministic, so Σ_{s',r} p(s',r|s,a) collapses to a single next state
+            V[s] = sum(prob * (reward(s, a) + GAMMA * V[next_state(s, a)])
+                       for a, prob in policy[s].items())
+            delta = max(delta, abs(v - V[s]))
+        if delta < theta:
+            return V
+
+# the equiprobable random policy: every action with probability 0.25
+random_policy = {s: {a: 0.25 for a in ACTIONS} for s in range(N_STATES)}
+
+V = policy_evaluation(random_policy)
+print(V.reshape(GRID_SIZE, GRID_SIZE).round(1))
+```
+
+```
+[[  0. -14. -20. -22.]
+ [-14. -18. -20. -20.]
+ [-20. -20. -18. -14.]
+ [-22. -20. -14.   0.]]
+```
+
+Each number is "how many steps, on average, will a Maurice who wanders around *randomly* need to get out from here" (negated, since every step costs $-1$). Squares near an exit are worth more, squares far from both exits are worth the least.
+
 This gives us the value of every state under the policy, but now we need to run Maurice on it, so he can find the values and follow them. "Following them" means that in every state, Maurice picks the action that leads to the best $r + \gamma V(s')$ (this is called **policy improvement**). But once the policy changes, its values change too, so we evaluate again, improve again, and keep going until the policy stops changing. This is called **policy iteration**:
 
-[OPUS 5.5 NOTE: The 'policy improvement' sentences above were added by me. Also skipped: the *policy improvement theorem* (§4.2), i.e. *why* acting greedily with respect to $v_\pi$ is guaranteed to give a policy at least as good as $\pi$. Without it, policy iteration looks like a heuristic rather than something guaranteed to reach the optimum.]
 
 ```
 Policy Iteration (using iterative policy evaluation) for estimating π ≈ π*
@@ -460,11 +526,51 @@ Policy Iteration (using iterative policy evaluation) for estimating π ≈ π*
    If policy-stable, then stop and return V ≈ v* and π ≈ π*; else go to 2
 ```
 
+> Building on the code above, policy iteration is just a loop around `policy_evaluation`:
+
+```python
+def greedy_action(V, s):
+    # the action with the best one-step lookahead: r + γ V(s')
+    return max(ACTIONS, key=lambda a: reward(s, a) + GAMMA * V[next_state(s, a)])
+
+def policy_iteration():
+    policy = random_policy  # 1. Initialization: start with the random policy
+    while True:
+        V = policy_evaluation(policy)  # 2. Policy Evaluation
+        # 3. Policy Improvement: in every state, put all the probability on the greedy action
+        new_policy = {s: {greedy_action(V, s): 1.0} for s in range(N_STATES)}
+        if new_policy == policy:  # policy-stable, we are done
+            return V, policy
+        policy = new_policy
+
+ARROWS = {'up': '↑', 'down': '↓', 'left': '←', 'right': '→'}
+
+def show(V, policy):
+    print(V.reshape(GRID_SIZE, GRID_SIZE).round(1))
+    for row in range(GRID_SIZE):
+        print(' '.join('■' if s in TERMINALS else ARROWS[next(iter(policy[s]))]
+                       for s in range(row * GRID_SIZE, (row + 1) * GRID_SIZE)))
+
+V, policy = policy_iteration()
+show(V, policy)
+```
+
+```
+[[ 0. -1. -2. -3.]
+ [-1. -2. -3. -2.]
+ [-2. -3. -2. -1.]
+ [-3. -2. -1.  0.]]
+■ ← ← ↓
+↑ ↑ ↑ ↓
+↑ ↑ ↓ ↓
+↑ → → ■
+```
+
+Now every value is exactly minus the number of steps to the nearest exit, and the arrows show Maurice the shortest way out from every square.
+
 We let Maurice go wild after telling him that he has to follow this algorithm.
 
 But the problem that we realise is, Maurice is taking far too long! Because every round of policy evaluation sweeps through the whole maze again and again until the values have fully settled, and only then do we improve the policy a little. It would be much better if, in every sweep, Maurice directly used the value of the best action (the max) instead of waiting for the values of the current policy to settle. That way evaluation and improvement happen together in a single sweep. This is called **value iteration** and we can implement it as such!
-
-[OPUS 5.5 NOTE: Optional, skipped: *generalized policy iteration* (§4.6), the big-picture idea that evaluation and improvement are two processes pulling against each other until they agree. Policy iteration, value iteration and almost every later RL algorithm are versions of it, so it is a strong closing idea for chapter 4. *Asynchronous DP* (§4.5) is fine to skip.]
 
 ```
 Value Iteration, for estimating π ≈ π*
@@ -484,6 +590,48 @@ Output a deterministic policy, π ≈ π*, such that
     π(s) = argmax_a Σ_{s',r} p(s',r|s,a) [r + γ V(s')]
 ```
 
+The above algo can be implemented as
+
+```python
+def value_iteration(theta=1e-4):
+    V = np.zeros(N_STATES)
+    while True:
+        delta = 0
+        for s in range(N_STATES):
+            if s in TERMINALS:
+                continue
+            v = V[s]
+            # the ONLY change from policy evaluation: max over actions instead of a π-weighted sum
+            V[s] = max(reward(s, a) + GAMMA * V[next_state(s, a)] for a in ACTIONS)
+            delta = max(delta, abs(v - V[s]))
+        if delta < theta:
+            break
+    # output a deterministic policy: act greedily with respect to the final values
+    policy = {s: {greedy_action(V, s): 1.0} for s in range(N_STATES)}
+    return V, policy
+
+V, policy = value_iteration()
+show(V, policy)
+```
+
+```
+[[ 0. -1. -2. -3.]
+ [-1. -2. -3. -2.]
+ [-2. -3. -2. -1.]
+ [-3. -2. -1.  0.]]
+■ ← ← ↓
+↑ ↑ ↑ ↓
+↑ ↑ ↓ ↓
+↑ → → ■
+```
+
+Put `policy_evaluation` and `value_iteration` side by side and you will notice they are almost the same function. The only difference is one line:
+
+- **Policy evaluation:** a square's new value is the *average* over actions, weighted by how likely Maurice is to take each one ($\sum_a \pi(a \mid s) \ldots$).
+- **Value iteration:** a square's new value is the value of the *best* action ($\max_a \ldots$).
+
+That is the whole idea. Instead of asking "how good is this square if Maurice keeps doing what he is doing?", value iteration asks "how good is this square if Maurice does the best thing from here?". Each sweep, good news (being close to an exit) spreads one square further out, like ripples in a pond, until every square knows its shortest distance out. Then Maurice just follows the arrows. And we get the same answer as policy iteration, without ever having to fully evaluate a policy.
+
 You stick this new algo inside of Maurice, he performs superbly and gets you the best path in only 5 iterations. Now you follow it, dancing and frog-leaping in happiness, because you have made so much money and have ESCAPED!!! with your freedom. As you reach near the gates of Saintsbury, you see a sight. A sight that shakes you, that mortifies you with fear!!
 
 "Oh no, it is the manager!!!"
@@ -494,15 +642,39 @@ You stick this new algo inside of Maurice, he performs superbly and gets you the
 
 "What, no! Stop this malarkey. Anyhoo, if you wish to exit, you must answer this query of mine..."
 
-"
-[INSERT_QUESTION]
-"
+He pulls out a crumpled sheet of paper. It is the grid of values your Maurice computed earlier, back when he was wandering around *randomly* (squares numbered 0 to 15, left to right, top to bottom, with the exits at 0 and 15):
+
+| | | | |
+|:---:|:---:|:---:|:---:|
+| **0** <br> exit | **1** <br> $-14$ | **2** <br> $-20$ | **3** <br> $-22$ |
+| **4** <br> $-14$ | **5** <br> $-18$ | **6** <br> $-20$ | **7** <br> $-20$ |
+| **8** <br> $-20$ | **9** <br> $-20$ | **10** <br> $-18$ | **11** <br> $-14$ |
+| **12** <br> $-22$ | **13** <br> $-20$ | **14** <br> $-14$ | **15** <br> exit |
+
+"Say Maurice is standing on square 11. Instead of wandering, he makes *one* deliberate move, down, and only *then* goes back to wandering randomly like a fool. What is that move worth? And what if he is on square 7 and moves down?"
 
 Wow, that is some question, quite perplexing if I say so myself. But our hero is left undaunted. You got this, let's think it through, what do we know?
 
-"
-ANSWER STEP BY STEP 
-" 
+First, what do the numbers on the sheet mean? Each one is $v_\pi(s)$: what a square is worth if Maurice wanders randomly from there on. But John is asking something slightly different. He is fixing the *first* move, and only after that does Maurice go back to following $\pi$.
+
+So let's do exactly what the Bellman equation taught us: look one step ahead. Making a move earns the immediate reward, plus the value of wherever we land. The map is deterministic and $\gamma = 1$, so:
+
+$$
+\text{value of the move} = -1 + v_\pi(\text{square we land on})
+$$
+
+- **Square 11, down:** we land on square 15, the exit, worth $0$. So the move is worth $-1 + 0 = -1$.
+- **Square 7, down:** we land on square 11, worth $-14$. So the move is worth $-1 + (-14) = -15$.
+
+"Correct!" says John, visibly annoyed.
+
+And without realising it, you have just discovered a new quantity. The value of *taking action $a$ in state $s$, and following $\pi$ afterwards* is called the **action-value function**, written $q_\pi(s, a)$:
+
+$$
+q_\pi(s, a) = \sum_{s', r} p(s', r \mid s, a)\,\big[r + \gamma\, v_\pi(s')\big]
+$$
+
+> Want to double-check your answer? Square 11's value should be the *average* of the values of its four moves, since random Maurice picks each one with probability $0.25$. From square 11: down → exit gives $-1$, up → square 7 gives $-1 + (-20) = -21$, left → square 10 gives $-1 + (-18) = -19$, and right bumps into the wall and stays on 11, giving $-1 + (-14) = -15$. The average is $\frac{-1 - 21 - 19 - 15}{4} = \frac{-56}{4} = -14$, exactly $v_\pi(11)$! In general, $v_\pi(s) = \sum_a \pi(a \mid s)\, q_\pi(s, a)$: the value of a state is the average value of the moves you might make from it.
 
 Our hero triumphs once again! You have been through numerous challenges, and you walk out of the gates of Saintsbury only to find out... it was all a ruse!!! No wonder the map was so conveniently placed there.
 
@@ -513,13 +685,38 @@ This time we have no map, and the maze is as complex as it can be....
 
 AND that's all folks, join in for the next article to find out how our hero escapes this problem.
 
-To add a bit of clarification if things went fast 
+## A few loose ends
 
+Our hero moved fast, so there are a few ideas we rushed past. They are worth a minute each, because everything from the next article onwards builds on them.
 
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_8.webp)
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_9.webp)
-![Image of CPU Internal](/assets/blog_assets/notes_on_RL/notes_on_rl_11.webp)
+### The *optimal* way of acting
 
+Remember when we said "we will talk about the optimal way of acting in a bit"? Here it is. Out of all the possible policies, the best one, $\pi_\ast$, is the one whose values are the highest in every state. We call those values the **optimal value functions**:
+
+$$
+v_*(s) = \max_\pi v_\pi(s), \qquad q_*(s, a) = \max_\pi q_\pi(s, a)
+$$
+
+If you already knew $q_\ast$, acting optimally would be trivial: in every state, pick the move worth the most, $v_\ast(s) = \max_a q_\ast(s, a)$. Plugging that into the Bellman equation gives the **Bellman optimality equation**:
+
+$$
+v_*(s) = \max_a \sum_{s', r} p(s', r \mid s, a)\,\big[r + \gamma\, v_*(s')\big]
+$$
+
+Compare it to the Bellman equation for $v_\pi$. The only thing that changed is that the $\pi$-weighted average, $\sum_a \pi(a \mid s)$, became a $\max_a$. Look familiar? That is *exactly* the one line that turned `policy_evaluation` into `value_iteration`. Value iteration is just the Bellman optimality equation turned into an update rule.
+
+### Why does policy improvement always help?
+
+In policy iteration we kept making Maurice greedy and trusted that this never makes things worse. John's question shows why. Random Maurice on square 11 is worth $v_\pi(11) = -14$, but moving down once and *then* wandering is worth $q_\pi(11, \text{down}) = -1$. If making the better move *once* helps, then making it *every time* you are on that square can only help more. This is the **policy improvement theorem**: if $q_\pi(s, \pi'(s)) \ge v_\pi(s)$ in every state, then the new policy $\pi'$ is at least as good as $\pi$ everywhere. And since the greedy action is the *best* of the moves, it is always at least as good as their average, $v_\pi(s)$. Because there is only a finite number of policies and each round never makes things worse, policy iteration has to stop, and when it does, the policy is optimal.
+
+### The big picture: generalized policy iteration
+
+Step back and look at what we have been doing. There are always two processes pulling on each other:
+
+- **Evaluation:** make the values match the current policy.
+- **Improvement:** make the policy greedy with respect to the current values.
+
+Each one changes the ground under the other: a new policy makes the old values wrong, and new values make the old policy not greedy anymore. But they settle down together at exactly one place, the optimal policy and its values. Policy iteration runs evaluation all the way to the end before improving. Value iteration does just one sweep of evaluation before improving. Anything in between works too. This idea is called **generalized policy iteration (GPI)**, and almost every RL algorithm you will ever meet, including the ones in the next article where we lose the map, is some version of it.
 
 ## Where to go from here
 
