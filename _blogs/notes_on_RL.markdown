@@ -726,9 +726,16 @@ Now, if I have helped you, even as a mere spectator, through an arduous journey 
 
 
 
------
+*https://pytorch.org/blog/a-primer-on-llm-post-training/?shem=aimgspe,
+* https://cameronrwolfe.substack.com/p/understanding-and-using-supervised/comments#comment-39957381
+* https://huggingface.co/blog/async-rl-training-landscape
+* https://huggingface.co/spaces/AdithyaSK/rl-environments-guide#how-an-rl-training-system-fits-together
+* https://unsloth.ai/blog/rl-environments
+* https://mattlanders.net/dynamic-programming-for-mdps.html -> Brother got insnae notes!  
 
-<!-- 
+
+
+-----
 
 These are my personal notes from MSAI635 (Reinforcement Learning) here at UMD, as I go through the book *Reinforcement Learning: An Introduction* by Richard Sutton and Andrew Barto.
 
@@ -1785,4 +1792,28 @@ Exercise 4.10 What is the analog of the value iteration update (4.10) for action
 $q_{k+1}(s, a)$?
 
 
-Note -> Chapter 4 doesn't make a lot of sense, especially page 83 (of the book). -->
+Note -> Chapter 4 doesn't make a lot of sense, especially page 83 (of the book).
+
+## Chapter 5: Monte Carlo Methods 
+
+"here we do not assume complete
+knowledge of the environment. Monte Carlo methods require only experience—sample
+sequences of states, actions, and rewards from actual or simulated interaction with an
+environment."
+
+Exercise 5.1 Consider the diagrams on the right in Figure 5.1. Why does the estimated
+value function jump up for the last two rows in the rear? Why does it drop o↵ for the
+whole last row on the left? Why are the frontmost values higher in the upper diagrams
+than in the lower? ⇤
+
+
+Exercise 5.2 Suppose every-visit MC was used instead of first-visit MC on the blackjack
+task. Would you expect the results to be very di↵erent? Why or why not?
+
+Exercise 5.3 What is the backup diagram for Monte Carlo estimation of q⇡?
+
+Exercise 5.4 The pseudocode for Monte Carlo ES is inecient because, for each state–
+action pair, it maintains a list of all returns and repeatedly calculates their mean. It would
+be more ecient to use techniques similar to those explained in Section 2.4 to maintain
+just the mean and a count (for each state–action pair) and update them incrementally.
+Describe how the pseudocode would be altered to achieve this

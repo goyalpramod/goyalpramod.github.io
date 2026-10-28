@@ -1,0 +1,374 @@
+# Photos shown on /photography/, in display order.
+# Fill in location / note whenever you like. featured: true makes a photo span two columns.
+
+- file: sky-lantern-hands.webp
+  title: "Sky Lantern"
+  width: 3887
+  height: 6240
+  featured: false
+  date: "2023-11-13"
+  camera: "X-E4"
+  lens: "AF 27/2.8"
+  settings: "27mm · f/2.8 · 1/125s · ISO 2500"
+  location: ""
+  note: ""
+
+- file: langur-mother-and-baby.webp
+  title: "Mother and Child"
+  width: 5184
+  height: 3456
+  featured: true
+  date: "2023-06-19"
+  camera: "Canon EOS 700D"
+  lens: "EF-S55-250mm f/4-5.6 IS II"
+  settings: "250mm · f/5.6 · 1/25s · ISO 100"
+  location: ""
+  note: ""
+
+- file: dancer-in-the-doorway.webp
+  title: "Dancer in the Doorway"
+  width: 3106
+  height: 4346
+  featured: false
+  date: "2023-06-04"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "18mm · f/5.6 · 1/200s · ISO 100"
+  location: ""
+  note: ""
+
+- file: pastel-folds.webp
+  title: "Pastel Folds"
+  width: 2150
+  height: 2137
+  featured: false
+  date: "2023-05-21"
+  camera: "SM-G990E"
+  lens: ""
+  settings: "5.4mm · f/1.8 · 1/15s · ISO 800"
+  location: ""
+  note: ""
+
+- file: the-sketch-artist.webp
+  title: "The Sketch Artist"
+  width: 5184
+  height: 3456
+  featured: true
+  date: "2023-05-21"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/40s · ISO 400"
+  location: ""
+  note: ""
+
+- file: red-lit-portrait.webp
+  title: "In Red"
+  width: 3158
+  height: 4772
+  featured: false
+  date: "2023-10-07"
+  camera: "Canon EOS 1300D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/10s · ISO 800"
+  location: ""
+  note: ""
+
+- file: pylon-from-below.webp
+  title: "Looking Up"
+  width: 3456
+  height: 5184
+  featured: false
+  date: "2023-09-19"
+  camera: "Canon EOS 1300D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/800s · ISO 100"
+  location: ""
+  note: ""
+
+- file: green-eyed-cat.webp
+  title: "Green Eyes"
+  width: 4302
+  height: 2473
+  featured: false
+  date: "2023-12-12"
+  camera: "Canon EOS 1300D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/50s · ISO 200"
+  location: ""
+  note: ""
+
+- file: portrait-in-the-palms.webp
+  title: "Among the Palms"
+  width: 3648
+  height: 5472
+  featured: false
+  date: "2023-11-12"
+  camera: "Canon EOS 6D"
+  lens: "EF50mm f/1.8 STM"
+  settings: "50mm · f/1.8 · 1/500s · ISO 50"
+  location: ""
+  note: ""
+
+- file: sunset-on-the-shore.webp
+  title: "Sunset on the Shore"
+  width: 4661
+  height: 3406
+  featured: true
+  date: "2023-12-15"
+  camera: "Canon EOS 1300D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/250s · ISO 100"
+  location: ""
+  note: ""
+
+- file: coffee-in-hands.webp
+  title: "Coffee"
+  width: 4209
+  height: 3456
+  featured: false
+  date: "2023-06-04"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/50s · ISO 100"
+  location: ""
+  note: ""
+
+- file: robed-figures-red-corridor.webp
+  title: "The Red Corridor"
+  width: 2172
+  height: 3096
+  featured: false
+  date: "2023-05-21"
+  camera: "SM-G990E"
+  lens: ""
+  settings: "5.4mm · f/1.8 · 1/10s · ISO 800"
+  location: ""
+  note: ""
+
+- file: grazing-antelope.webp
+  title: "Grazing"
+  width: 3456
+  height: 5184
+  featured: false
+  date: "2023-06-19"
+  camera: "Canon EOS 700D"
+  lens: "EF-S55-250mm f/4-5.6 IS II"
+  settings: "250mm · f/5.6 · 1/100s · ISO 100"
+  location: ""
+  note: ""
+
+- file: city-skyline-silhouettes.webp
+  title: "Skyline"
+  width: 4869
+  height: 2236
+  featured: false
+  date: "2023-05-21"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/3200s · ISO 100"
+  location: ""
+  note: ""
+
+- file: skateboard-jump.webp
+  title: "Airborne"
+  width: 3425
+  height: 5392
+  featured: false
+  date: "2023-09-16"
+  camera: "Canon EOS M100"
+  lens: "EF-M15-45mm f/3.5-6.3 IS STM"
+  settings: "15mm · f/3.5 · 1/500s · ISO 1250"
+  location: ""
+  note: ""
+
+- file: silhouette-under-the-moon.webp
+  title: "Under the Moon"
+  width: 3456
+  height: 5184
+  featured: false
+  date: "2023-05-24"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "45mm · f/5.6 · 1/160s · ISO 1600"
+  location: ""
+  note: ""
+
+- file: ibis-in-golden-grass.webp
+  title: "Ibis in Golden Grass"
+  width: 4919
+  height: 3191
+  featured: true
+  date: "2023-05-24"
+  camera: "Canon EOS 700D"
+  lens: "EF-S55-250mm f/4-5.6 IS II"
+  settings: "250mm · f/5.6 · 1/250s · ISO 100"
+  location: ""
+  note: ""
+
+- file: red-light-ribbon.webp
+  title: "Red Ribbon"
+  width: 4640
+  height: 2610
+  featured: false
+  date: "2022-06-21"
+  camera: "Redmi Note 9 Pro Max"
+  lens: ""
+  settings: "5.43mm · f/1.9 · 1/25s · ISO 200"
+  location: ""
+  note: ""
+
+- file: bowed-head.webp
+  title: "Bowed"
+  width: 2798
+  height: 3456
+  featured: false
+  date: "2023-05-30"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "35mm · f/5.6 · 1/4s · ISO 100"
+  location: ""
+  note: ""
+
+- file: taj-palace-dome.webp
+  title: "The Dome"
+  width: 3240
+  height: 5070
+  featured: false
+  date: "2023-05-21"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/20s · ISO 100"
+  location: ""
+  note: ""
+
+- file: lone-boat-at-dusk.webp
+  title: "Lone Boat at Dusk"
+  width: 3456
+  height: 4744
+  featured: false
+  date: "2023-12-13"
+  camera: "Canon EOS 1300D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/60s · ISO 100"
+  location: ""
+  note: ""
+
+- file: reading-by-the-bookshelf.webp
+  title: "Reading"
+  width: 2048
+  height: 1365
+  featured: false
+  date: "2026-09-12"
+  camera: "Canon EOS R8"
+  lens: "RF24-105mm F4-7.1 IS STM"
+  settings: "35mm · f/4.5 · 1/60s · ISO 2500"
+  location: ""
+  note: ""
+
+- file: concrete-grid-facade.webp
+  title: "Concrete Grid"
+  width: 1001
+  height: 1960
+  featured: false
+  date: "2023-09-03"
+  camera: "Canon EOS 1300D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "18mm · f/5.6 · 1/50s · ISO 200"
+  location: ""
+  note: ""
+
+- file: birds-over-golden-cloud.webp
+  title: "Birds over a Golden Cloud"
+  width: 1440
+  height: 1440
+  featured: false
+  date: ""
+  camera: ""
+  lens: ""
+  settings: ""
+  location: ""
+  note: ""
+
+- file: lit-cart-in-the-dark.webp
+  title: "A Light in the Dark"
+  width: 4292
+  height: 2805
+  featured: false
+  date: "2023-12-13"
+  camera: "Canon EOS 1300D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "18mm · f/4.5 · 1/15s · ISO 800"
+  location: ""
+  note: ""
+
+- file: balcony-grid.webp
+  title: "Balconies"
+  width: 2558
+  height: 2920
+  featured: false
+  date: "2023-06-19"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/200s · ISO 100"
+  location: ""
+  note: ""
+
+- file: thinking-portrait.webp
+  title: "Lost in Thought"
+  width: 1004
+  height: 1004
+  featured: false
+  date: ""
+  camera: ""
+  lens: ""
+  settings: ""
+  location: ""
+  note: ""
+
+- file: red-stripes-and-shadow.webp
+  title: "Stripes"
+  width: 4528
+  height: 2593
+  featured: false
+  date: "2023-06-12"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "55mm · f/5.6 · 1/125s · ISO 100"
+  location: ""
+  note: ""
+
+- file: bird-in-blue-sky.webp
+  title: "Bird in Blue Sky"
+  width: 5109
+  height: 3200
+  featured: true
+  date: ""
+  camera: ""
+  lens: ""
+  settings: ""
+  location: ""
+  note: ""
+
+- file: diagonal-ridges.webp
+  title: "Edge"
+  width: 614
+  height: 795
+  featured: false
+  date: "2007-01-12"
+  camera: "DMC-FZ18"
+  lens: ""
+  settings: "4.6mm · f/2.8 · 1/40s · ISO 800"
+  location: ""
+  note: ""
+
+- file: twisted-knot.webp
+  title: "Knot"
+  width: 4540
+  height: 3134
+  featured: false
+  date: "2023-06-26"
+  camera: "Canon EOS 700D"
+  lens: "EF-S18-55mm f/3.5-5.6 IS II"
+  settings: "28mm · f/5.6 · 1/3200s · ISO 200"
+  location: ""
+  note: ""

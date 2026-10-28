@@ -1,0 +1,68 @@
+---
+layout: default
+title: Photography
+permalink: /photography/
+math: false
+---
+
+<div class="photo-page">
+  <header class="blog-header">
+    <h1 class="page-title">Photography</h1>
+    <p class="page-description">Moments I happened to be holding a camera for. Click any photo to see it larger, along with the story behind it.</p>
+  </header>
+
+  <div class="photo-grid" id="photo-grid">
+    {% for photo in site.data.photos %}
+      {% assign thumb_w = 1000 %}
+      {% assign thumb_h = photo.height | times: 1000 | divided_by: photo.width %}
+      {% if photo.height > photo.width %}
+        {% assign thumb_h = 1000 %}
+        {% assign thumb_w = photo.width | times: 1000 | divided_by: photo.height %}
+      {% endif %}
+      <figure class="photo-item{% if photo.featured %} is-featured{% endif %}"
+              tabindex="0"
+              data-index="{{ forloop.index0 }}"
+              data-full="{{ '/assets/photography/' | append: photo.file | relative_url }}"
+              data-title="{{ photo.title | escape }}"
+              data-location="{{ photo.location | escape }}"
+              data-date="{% if photo.date != '' %}{{ photo.date | date: '%B %Y' }}{% endif %}"
+              data-note="{{ photo.note | escape }}"
+              data-gear="{{ photo.camera | escape }}{% if photo.lens != '' %} · {{ photo.lens | escape }}{% endif %}"
+              data-settings="{{ photo.settings | escape }}">
+        <img src="{{ '/assets/photography/thumbs/' | append: photo.file | relative_url }}"
+             alt="{{ photo.title | escape }}"
+             width="{{ thumb_w }}" height="{{ thumb_h }}"
+             loading="lazy" decoding="async">
+        <figcaption class="photo-hover">
+          <span class="photo-hover-title">{{ photo.title }}</span>
+          <span class="photo-hover-meta">
+            {% if photo.location != '' %}{{ photo.location }}{% elsif photo.camera != '' %}{{ photo.camera }}{% endif %}
+            {% if photo.settings != '' %}<span class="photo-hover-settings">{{ photo.settings }}</span>{% endif %}
+          </span>
+        </figcaption>
+      </figure>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="photo-lightbox" id="photo-lightbox" role="dialog" aria-modal="true" aria-label="Photo viewer" hidden>
+  <button class="lb-btn lb-close" type="button" aria-label="Close">&times;</button>
+  <button class="lb-btn lb-prev" type="button" aria-label="Previous photo">&#8249;</button>
+  <button class="lb-btn lb-next" type="button" aria-label="Next photo">&#8250;</button>
+  <div class="lb-body">
+    <div class="lb-image-wrap">
+      <img class="lb-image" alt="">
+    </div>
+    <aside class="lb-panel">
+      <h2 class="lb-title"></h2>
+      <p class="lb-where"></p>
+      <p class="lb-note"></p>
+      <div class="lb-exif">
+        <span class="lb-gear"></span>
+        <span class="lb-settings"></span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script src="{{ '/assets/scripts/photography.js' | relative_url }}"></script>
