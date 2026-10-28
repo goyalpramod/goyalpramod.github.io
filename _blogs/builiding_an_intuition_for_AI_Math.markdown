@@ -1,4 +1,4 @@
----
+<!-- ---
 layout: blog
 title: "Building an Intuition for ML Math"
 date: 2026-09-25 12:00:00 +0530
@@ -375,4 +375,4 @@ References ->
 
 Maths
 * https://www.countbayesie.com/blog/2015/2/18/bayes-theorem-with-lego
-* https://colah.github.io/posts/2015-09-Visual-Information/
+* https://colah.github.io/posts/2015-09-Visual-Information/ -->

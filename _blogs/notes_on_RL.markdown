@@ -734,7 +734,7 @@ Now, if I have helped you, even as a mere spectator, through an arduous journey 
 * https://mattlanders.net/dynamic-programming-for-mdps.html -> Brother got insnae notes!  
 
 
-
+<!-- 
 -----
 
 These are my personal notes from MSAI635 (Reinforcement Learning) here at UMD, as I go through the book *Reinforcement Learning: An Introduction* by Richard Sutton and Andrew Barto.
@@ -1816,4 +1816,4 @@ Exercise 5.4 The pseudocode for Monte Carlo ES is inecient because, for each sta
 action pair, it maintains a list of all returns and repeatedly calculates their mean. It would
 be more ecient to use techniques similar to those explained in Section 2.4 to maintain
 just the mean and a count (for each state–action pair) and update them incrementally.
-Describe how the pseudocode would be altered to achieve this
+Describe how the pseudocode would be altered to achieve this -->
